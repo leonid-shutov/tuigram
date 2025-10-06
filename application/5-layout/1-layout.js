@@ -1,0 +1,4 @@
+({
+  selectable: true,
+  selected: undefined,
+});
