@@ -1,3 +1,1 @@
-const select = () => (sections.dialog.component.style.border.fg = "green");
-
-sections.dialog.select = select;
+() => (module.component.style.border.fg = "green");

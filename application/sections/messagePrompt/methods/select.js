@@ -1,4 +1,1 @@
-const select = () =>
-  (sections.messagePrompt.component.style.border.fg = "green");
-
-sections.messagePrompt.select = select;
+() => (module.component.style.border.fg = "green");
