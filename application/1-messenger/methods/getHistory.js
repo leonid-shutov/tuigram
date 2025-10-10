@@ -1,5 +1,5 @@
-(() => {
-  async function* getHistory(pageSize) {
+(() =>
+  async function* (pageSize) {
     const clientId = messenger.clientId;
 
     let offset;
@@ -12,7 +12,4 @@
       if (messages.next === undefined) return;
       offset = messages.next;
     }
-  }
-
-  return getHistory;
-})();
+  })();

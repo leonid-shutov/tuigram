@@ -1,4 +1,4 @@
-async () => {
+(async () => {
   const { TelegramClient } = npm["@mtcute/node"];
   const tg = new TelegramClient({
     apiId: process.env.API_ID,
@@ -6,4 +6,4 @@ async () => {
   });
   await tg.start();
   messenger.tg = tg;
-};
+})();
