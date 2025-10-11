@@ -18,10 +18,63 @@ nvim.client.on("notification", (method, args) => {
 });
 
 // TODO: support switching buffers
+//nvim.client.buffer.then((buffer) =>
+//buffer.listen("lines", async (...args) => {
+//console.dir({ args });
+//const lines = await buffer.lines;
+//ee.emit("lines", lines);
+//}),
+//);
+
 nvim.client.buffer.then((buffer) =>
-  buffer.listen("lines", async () => {
-    const lines = await buffer.lines;
-    ee.emit("lines", lines);
+  buffer.listen("lines", async (_buf, _tick, first, last, data, more) => {
+    if (more) throw new Error("Multi-part updates are not supported");
+    const updatedLines = Array.from(
+      { length: last - first },
+      (v, i) => first + i,
+    );
+    if (
+      first !== last &&
+      last === first + 1 &&
+      data.length === 1 &&
+      data[0] === ""
+    ) {
+      ee.emit("buffer:change", {
+        type: "clear",
+        first,
+        last,
+        data: [""],
+      });
+    } else if (first !== last && data.length === 1 && data[0] === "") {
+      ee.emit("buffer:change", {
+        type: "delete-multiple-empty",
+        first,
+        last,
+        data: [""],
+      });
+    } else if (first !== last && data.length === 0) {
+      ee.emit("buffer:change", {
+        type: "delete",
+        first,
+        last,
+        data: [],
+      });
+    } else if (first === last) {
+      if (first > 0 && data.length === 0) data.unshift("");
+      ee.emit("buffer:change", {
+        type: "insert",
+        first,
+        last,
+        data: [...data],
+      });
+    } else {
+      if (first >= 0 && data.length === 0) data.unshift("");
+      ee.emit("lines:replace", {
+        first,
+        last,
+        data: [...data],
+      });
+    }
   }),
 );
 

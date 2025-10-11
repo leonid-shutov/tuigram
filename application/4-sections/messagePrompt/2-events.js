@@ -1,8 +1,15 @@
 const input = module.component;
 
-nvim.on("lines", (lines) => {
+//nvim.on("lines", (lines) => {
+//if (!input.focused) return;
+//input.setContent(lines[0]);
+//screen.render();
+//});
+
+nvim.on("lines:replace", ({ first, last, data }) => {
   if (!input.focused) return;
-  input.setContent(lines[0]);
+  for (let i = 0; i < last - first; i++) input.deleteLine(first);
+  for (let i = 0; i < data.length; i++) input.insertLine(first + i, data[i]);
   screen.render();
 });
 
