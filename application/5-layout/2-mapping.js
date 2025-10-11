@@ -1,7 +1,12 @@
 const mapping = {
+  1: "sideBar",
+  2: "chat",
   3: "messagePrompt",
-  2: "dialog",
 };
+
+for (const [index, section] of Object.entries(mapping)) {
+  sections[section].component.setLabel(` ${index} `);
+}
 
 screen.on("keypress", (ch) => {
   if (!layout.selectable) return;
@@ -17,3 +22,5 @@ screen.on("keypress", (ch) => {
     screen.render();
   }
 });
+
+module.reserved = Object.keys(mapping);

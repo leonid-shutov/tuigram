@@ -10,9 +10,3 @@ nvim.on("cursor", ({ x, y }) => {
   if (!input.focused) return;
   screen.moveCursor(input.left + 1 + x, input.top + y);
 });
-
-input.on("keypress", (ch, key) => {
-  if (ch && ch.length === 1 && !key.ctrl && !key.meta) {
-    nvim.input(ch);
-  }
-});

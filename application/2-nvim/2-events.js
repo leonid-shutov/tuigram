@@ -5,6 +5,11 @@ const handlers = {
     const [y, x] = await nvim.client.window.cursor;
     ee.emit("cursor", { x, y });
   },
+  put: async () => {
+    const buffer = await nvim.client.buffer;
+    const lines = await buffer.lines;
+    ee.emit("lines", lines);
+  },
   mode_change: ([[mode]]) => ee.emit("mode", mode),
 };
 
@@ -16,13 +21,5 @@ nvim.client.on("notification", (method, args) => {
     if (handler !== undefined) handler(updates);
   }
 });
-
-// TODO: support switching buffers
-nvim.client.buffer.then((buffer) =>
-  buffer.listen("lines", async () => {
-    const lines = await buffer.lines;
-    ee.emit("lines", lines);
-  }),
-);
 
 nvim.ee = ee;

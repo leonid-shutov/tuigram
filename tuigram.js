@@ -1,5 +1,5 @@
 const uncommonjs = require("@leonid-shutov/uncommonjs");
-const blessed = require("blessed");
+const blessed = require("neo-neo-blessed");
 
 process.on("unhandledRejection", (reason, promise) => {
   console.dir({ promise });
