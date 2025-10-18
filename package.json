@@ -3,7 +3,7 @@
     "start": "dotenv -- node tuigram.js"
   },
   "dependencies": {
-    "@leonid-shutov/uncommonjs": "^1.0.0-alpha.3",
+    "@leonid-shutov/uncommonjs": "^1.0.0-alpha.4",
     "@mtcute/node": "^0.26.1",
     "blessed": "^0.1.81",
     "neo-neo-blessed": "^0.7.1",
