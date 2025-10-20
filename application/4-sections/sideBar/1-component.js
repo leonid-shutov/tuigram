@@ -1,11 +1,11 @@
-blessed.list({
+blessed.box({
   top: "10%",
   left: 0,
   width: "30%",
   border: "line",
-  items: ["bla", "bla", "bla"],
   keys: true,
   vi: true,
+  focusable: true,
   style: {
     selected: {
       bg: "blue",

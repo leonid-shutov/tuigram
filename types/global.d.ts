@@ -8,11 +8,9 @@ declare global {
   const blessed: typeof _blessed;
   const screen: typeof _blessed.Widgets.Screen;
   const nvim: NeovimClient;
-  const tg: TelegramClient;
 
-  namespace state {
-    const mode: "normal" | "insert";
-    const selected: "messagePrompt";
+  namespace messenger {
+    const tg: TelegramClient;
   }
 
   namespace node {

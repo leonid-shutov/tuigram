@@ -6,5 +6,4 @@ nvim.on("mode", (mode) => {
 
 screen.on("keypress", (ch) => {
   if (module.reserved.includes(ch)) return;
-  nvim.input(ch);
 });
