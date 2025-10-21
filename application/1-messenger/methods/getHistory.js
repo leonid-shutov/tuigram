@@ -1,12 +1,14 @@
 (() =>
-  async function* (pageSize) {
-    const clientId = messenger.clientId;
+  async function* (chatId, pageSize) {
+    const cachedMessages = module.cache.chats.get(chatId) ?? [];
+    cachedMessages.forEach(yield);
 
-    let offset;
+    let offset = cachedMessages.at(-1)?.next ?? undefined;
     while (true) {
       const params = { offset, limit: pageSize };
-      const messages = await tg.getHistory(clientId, params);
+      const messages = await messenger.tg.getHistory(chatId, params);
 
+      cachedMessages.push(messages);
       yield messages;
 
       if (messages.next === undefined) return;
