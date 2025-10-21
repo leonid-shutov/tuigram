@@ -1,11 +1,11 @@
 const mapping = {
-  1: "sideBar",
+  1: "dialogs",
   2: "chat",
   3: "messagePrompt",
 };
 
 for (const [index, section] of Object.entries(mapping)) {
-  sections[section].component.setLabel(` ${index} `);
+  sections[section].setLabel(` ${index} `);
 }
 
 screen.on("keypress", (ch) => {
@@ -17,7 +17,7 @@ screen.on("keypress", (ch) => {
       sections[layout.selected].deselect();
     }
     layout.selected = section;
-    sections[section].component.focus();
+    sections[section].focus();
     sections[section].select();
     screen.render();
   }

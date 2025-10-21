@@ -1,5 +1,4 @@
 nvim.on("mode", (mode) => {
-  sections.chat.component.setContent(mode);
   if (mode === "normal") layout.selectable = true;
   else layout.selectable = false;
 });
