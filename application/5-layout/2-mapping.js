@@ -23,4 +23,4 @@ screen.on("keypress", (ch) => {
   }
 });
 
-module.reserved = Object.keys(mapping);
+module.reserved.push(...Object.keys(mapping));

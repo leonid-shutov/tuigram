@@ -1,1 +1,1 @@
-() => (module.container.style.border.fg = "white");
+() => (module.ui.container.style.border.fg = "white");

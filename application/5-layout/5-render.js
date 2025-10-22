@@ -1,18 +1,7 @@
-for (const section of Object.values(sections)) {
-  section.appendTo(screen);
-}
-screen.render();
-
-sections.dialogs.addDialogs(
-  {
-    name: "Дмитрий Чугай",
-    lastMessage: "Здарова, как дела?",
-  },
-  { name: "Госпожа Аня Отбивная", lastMessage: "Ты бублик" },
-  { name: "Kek", lastMessage: "Hello world" },
-  { name: "Госпожа Аня Отбивная", lastMessage: "Ты бублик" },
-  { name: "Госпожа Аня Отбивная", lastMessage: "Ты бублик" },
-  { name: "Госпожа Аня Отбивная", lastMessage: "Ты бублик" },
-  { name: "Госпожа Аня Отбивная", lastMessage: "Ты бублик" },
-  { name: "Госпожа Аня Отбивная", lastMessage: "Ты бублик" },
-);
+(async () => {
+  await Promise.all(
+    Object.values(sections).map((section) => section.mount(screen)),
+  );
+  await node.timers.promises.setTimeout(1000);
+  await sections.dialogs.loadMore();
+})();
