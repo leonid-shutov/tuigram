@@ -1,1 +1,1 @@
-() => module.component.focus();
+() => module.ui.focus();

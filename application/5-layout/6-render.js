@@ -4,4 +4,5 @@
   );
   await node.timers.promises.setTimeout(1000);
   await sections.dialogs.loadMore();
+  screen.render();
 })();

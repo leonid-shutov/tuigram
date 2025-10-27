@@ -1,1 +1,1 @@
-(label) => module.component.setLabel(label);
+(label) => module.ui.setLabel(label);

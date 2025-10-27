@@ -35,4 +35,11 @@
   { name: "azazazaz", lastMessage: "Ты бублик" },
   { name: "Госпожа Аня Отбивная", lastMessage: "Ты бублик" },
   { name: "Госпожа Аня Отбивная", lastMessage: "Ты бублик" },
+  { name: "Госпожа Аня Отбивная", lastMessage: "Ты бублик" },
+  { name: "Kek", lastMessage: "Hello world" },
+  { name: "Госпожа Аня Отбивная", lastMessage: "Ты бублик" },
+  { name: "Госпожа Аня Отбивная", lastMessage: "Ты бублик" },
+  { name: "azazazaz", lastMessage: "Ты бублик" },
+  { name: "Госпожа Аня Отбивная", lastMessage: "Ты бублик" },
+  { name: "Госпожа Аня Отбивная", lastMessage: "Ты бублик" },
 ]);

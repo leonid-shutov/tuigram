@@ -1,5 +1,4 @@
 ((handlers) => (ch) => {
-  //console.dir({ ch });
   handlers[ch]();
 })({
   j: () => module.next(),

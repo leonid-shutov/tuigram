@@ -1,4 +1,4 @@
 (parent) => {
-  parent.append(module.component);
+  parent.append(module.ui.container);
   parent.render();
 };

@@ -1,1 +1,1 @@
-() => (module.component.style.border.fg = "green");
+() => module.ui.select();

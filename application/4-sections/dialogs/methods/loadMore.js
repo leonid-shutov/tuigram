@@ -7,4 +7,4 @@
     module.ui.addDialog(lastIndex + i + 1, dialog);
   }
   screen.render();
-})(messenger.getDialogs(3));
+})(messenger.getDialogs(10));
