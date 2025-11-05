@@ -13,5 +13,6 @@
     render: screen.render.bind(screen),
     on: screen.on.bind(screen),
     moveCursor: screen.program.move.bind(screen.program),
+    height: screen.height,
   };
 })();
