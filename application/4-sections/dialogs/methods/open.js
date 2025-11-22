@@ -1,6 +1,7 @@
 () => {
+  const maxDialogs = module.ui.config.maxDialogs;
   const oldOpened = module.brain.currentOpened;
-  module.ui.close(oldOpened.index);
+  const isOpenedWithinCurrPage = module.ui.close(oldOpened.index);
   const newOpened = module.brain.open();
   module.ui.open(newOpened.index);
   screen.render();

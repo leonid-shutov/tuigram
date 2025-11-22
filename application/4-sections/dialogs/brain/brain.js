@@ -31,4 +31,8 @@
   addDialog: (dialog) => {
     self.dialogs.push(dialog);
   },
+  currentPage: { index: 0 },
+  setPage: (index) => {
+    self.currentPage.index = index;
+  },
 });

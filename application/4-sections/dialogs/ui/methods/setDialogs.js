@@ -8,6 +8,4 @@
     const item = module.item(i, dialogs[i]);
     module.container.append(item);
   }
-
-  console.dir(1);
 };

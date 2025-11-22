@@ -6,8 +6,7 @@
     "@leonid-shutov/uncommonjs": "^1.0.0-alpha.4",
     "@mtcute/node": "^0.26.1",
     "blessed": "^0.1.81",
-    "neovim": "^5.4.0",
-    "request": "^2.88.2"
+    "neovim": "^5.4.0"
   },
   "devDependencies": {
     "@types/blessed": "^0.1.25",
