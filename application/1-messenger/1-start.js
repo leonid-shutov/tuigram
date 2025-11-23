@@ -4,6 +4,6 @@
     apiId: process.env.API_ID,
     apiHash: process.env.API_HASH,
   });
-  await tg.start();
+  //await tg.start();
   messenger.tg = tg;
 })();

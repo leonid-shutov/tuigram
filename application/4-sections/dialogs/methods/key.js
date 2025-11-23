@@ -1,7 +1,7 @@
 ((handlers) => (ch) => {
   handlers[ch]();
 })({
-  j: () => module.navigator.next(),
-  k: () => module.navigator.prev(),
+  j: () => module.next(),
+  k: () => module.prev(),
   "\r": () => module.open(),
 });
