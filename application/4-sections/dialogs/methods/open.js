@@ -1,5 +1,5 @@
 () => {
-  module.ui.open(newOpened.index);
-  screen.render();
+  const dialogs = module.state.open();
+  module.ui.setDialogs(dialogs);
   module.emit("open", newOpened.index.toString());
 };

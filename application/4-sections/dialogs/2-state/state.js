@@ -18,9 +18,9 @@
   },
 
   _prevWindow() {
-    const isLastWindow = self.window.end === self.dialogs.length - 1;
-    if (isLastWindow) return;
-    self.window = { start: self.window.start + 1, end: self.window.end + 1 };
+    const isFirstWindow = self.window.start === 0;
+    if (isFirstWindow) return;
+    self.window = { start: self.window.start - 1, end: self.window.end - 1 };
   },
 
   next() {
