@@ -38,6 +38,7 @@
       ...dialog,
       selected: self.selected !== null && dialog.index === self.selected.index,
       opened: self.opened !== null && dialog.index === self.opened.index,
+      isLast: self.window.end === dialog.index,
     }));
   },
 

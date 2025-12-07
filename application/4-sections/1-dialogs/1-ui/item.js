@@ -3,10 +3,10 @@ const trim = (text) => {
   return firstLine.slice(0, module.container.width - 5);
 };
 
-(i, { name, lastMessage, selected, opened }) => {
+(i, { name, lastMessage, selected, opened, isLast }) => {
   name = trim(name);
   lastMessage = trim(lastMessage);
-  const border = "⎽".repeat(module.container.width);
+  const border = isLast ? "" : "⎽".repeat(module.container.width);
   const padding = "  ";
 
   return blessed.box({
