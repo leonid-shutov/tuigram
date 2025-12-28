@@ -4,25 +4,32 @@ const getLongest = (lines) =>
     lines[0],
   );
 
-const getMessageStats = (message) => {
-  const lines = message.split("\n");
-  return {
-    maxLineLength: getLongest(lines).length,
-    numberOflines: lines.length,
-  };
+const PADDING = 1;
+const MARGIN = 2;
+
+const withRoundBorder = (text) => {
+  const lines = text.split("\n");
+  const borderLen = getLongest(lines).length + PADDING * 2;
+  text = lines
+    .map((line) => `│ ${line}${" ".repeat(borderLen - line.length - PADDING)}│`)
+    .join("\n");
+  const topLine = `╭${"─".repeat(borderLen)}╮`;
+  const bottomLine = `╰${"─".repeat(borderLen)}╯`;
+  return `${topLine}\n${text}\n${bottomLine}`;
 };
 
 (message, { top }) => {
-  const stats = getMessageStats(message.text);
+  const text = withRoundBorder(message.text);
+  const width = text.split("\n")[0].length;
 
   return blessed.box({
     top,
-    height: stats.numberOflines,
-    width: stats.maxLineLength,
-    ...(message.author.name === "me" ? { right: 2 } : { left: 2 }),
-    content: message.text,
+    width,
+    ...(message.author.name === "me" ? { right: MARGIN } : { left: MARGIN }),
+    tags: true,
+    content: text,
     style: {
-      //bg: "blue",
+      //bg: message.author.name === "me" ? "blue" : "green",
     },
   });
 };
