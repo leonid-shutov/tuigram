@@ -1,22 +1,38 @@
 const trim = (text) => {
   const firstLine = text.split("\n")[0];
-  return firstLine.slice(0, module.container.width - 5);
+  const maxLen = module.container.width - 7;
+  if (firstLine.length <= maxLen) return firstLine;
+  else return firstLine.substring(0, maxLen - 3) + "...";
 };
 
 (i, { name, lastMessage, selected, opened, isLast }) => {
   name = trim(name);
   lastMessage = trim(lastMessage);
-  //const border = isLast ? "" : "⎽".repeat(module.container.width) && "";
-  const padding = "  ";
+  if (selected) {
+    name = `{white-bg} {/white-bg}  {bold}${name}{/bold}`;
+    lastMessage = `{white-bg} {/white-bg}  {green-fg}${lastMessage}{/green-fg}`;
+  } else {
+    name = `   {bold}${name}{/bold}`;
+    lastMessage = `   {green-fg}${lastMessage}{/green-fg}`;
+  }
 
-  return blessed.box({
+  const itemContainer = blessed.box({
     top: i * module.config.itemHeight,
     height: module.config.itemHeight,
+  });
+
+  blessed.box({ parent: itemContainer, height: 1 });
+  blessed.box({
+    parent: itemContainer,
+    height: 2,
     tags: true,
-    content: `\n${padding}{bold}${name}{/bold}\n${padding}${lastMessage}`,
+    content: `${name}\n${lastMessage}`,
     style: {
+      //bg: selected ? "green" : undefined,
       //fg: "white",
-      fg: opened ? "red" : selected ? "#39CCCC" : undefined,
+      //fg: opened ? "red" : selected ? "#39CCCC" : undefined,
     },
   });
+
+  return itemContainer;
 };

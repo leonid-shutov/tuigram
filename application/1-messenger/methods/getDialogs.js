@@ -28,25 +28,30 @@
     if (page.length > 0) yield page;
   })([
   {
+    name: "Patterns 2025 🌱 All",
+    lastMessage: "https://youtu.be/U8p7Ok1629g",
     chatId: "1",
-    name: "Дмитрий Чугай",
-    lastMessage: "1",
   },
-  { name: "Госпожа Аня Отбивная", lastMessage: "2" },
+  { name: "Leonid", lastMessage: "blabl\na sda sdas d asd asd \nasd asd asd" },
+  { name: "Patterns 2025: S02", lastMessage: "https://youtu.be/BH7ajeIIaLA" },
+  { name: "Госпожа Аня Отбивная", lastMessage: "Не буду" },
+  { name: "Батя", lastMessage: "Липкий снег. Около 0 градусов" },
   {
-    name: "Kek",
-    lastMessage: "3 akdjalkdjadj ad asd adklj adkj asldk jasldk jsaldk jsad ",
+    name: "NodeUA - JavaScript and Node.js in Ukraine",
+    lastMessage: "it's best avoided if possible. \nДуже корисна фіча",
   },
-  { name: "Госпожа Аня Отбивная", lastMessage: "4" },
-  { name: "Госпожа Аня Отбивная", lastMessage: "5" },
-  { name: "azazazaz", lastMessage: "6" },
-  { name: "Госпожа Аня Отбивная", lastMessage: "7" },
-  { name: "Госпожа Аня Отбивная", lastMessage: "8" },
-  { name: "Госпожа Аня Отбивная", lastMessage: "9" },
-  { name: "Kek", lastMessage: "10" },
-  { name: "Госпожа Аня Отбивная", lastMessage: "11" },
-  { name: "Госпожа Аня Отбивная", lastMessage: "12" },
-  { name: "azazazaz", lastMessage: "13" },
-  { name: "Госпожа Аня Отбивная", lastMessage: "14" },
-  { name: "Госпожа Аня Отбивная", lastMessage: "15" },
+  {
+    name: "Топор+",
+    lastMessage: "Волк с Уолл-стрит, наши дни.\n\n👉 Топор +18. Подписаться",
+  },
+  {
+    name: "Космос рофлов",
+    lastMessage:
+      "Если маленький дракула не вернулся из школы – значит ему поставили кол\nкосмос рофлов ✨",
+  },
+  {
+    name: "Catricaps ; Катриоша",
+    lastMessage:
+      "На этом маркете был самый мощный товарный обмен с другими авторами\n\nЗавтра постараюсь все показать\n\nТам и украшения, и керамика, и куча стикеров, просто МОООЩЩЩЩЬЬЬЬ",
+  },
 ]);
