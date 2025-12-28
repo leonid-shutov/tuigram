@@ -1,1 +1,1 @@
-({ itemHeight: 4 });
+({ itemHeight: 3 });

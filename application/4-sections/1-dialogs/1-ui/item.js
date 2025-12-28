@@ -6,17 +6,17 @@ const trim = (text) => {
 (i, { name, lastMessage, selected, opened, isLast }) => {
   name = trim(name);
   lastMessage = trim(lastMessage);
-  const border = isLast ? "" : "⎽".repeat(module.container.width);
+  //const border = isLast ? "" : "⎽".repeat(module.container.width) && "";
   const padding = "  ";
 
   return blessed.box({
     top: i * module.config.itemHeight,
     height: module.config.itemHeight,
     tags: true,
-    content: `\n${padding}{bold}${name}{/bold}\n${padding}${lastMessage}\n${border}`,
+    content: `\n${padding}{bold}${name}{/bold}\n${padding}${lastMessage}`,
     style: {
-      fg: "white",
-      bg: opened ? "red" : selected ? "#39CCCC" : undefined,
+      //fg: "white",
+      fg: opened ? "red" : selected ? "#39CCCC" : undefined,
     },
   });
 };

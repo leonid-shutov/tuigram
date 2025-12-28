@@ -28,6 +28,7 @@
     if (page.length > 0) yield page;
   })([
   {
+    chatId: "1",
     name: "Дмитрий Чугай",
     lastMessage: "1",
   },
