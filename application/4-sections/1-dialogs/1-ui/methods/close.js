@@ -1,1 +1,0 @@
-(index) => module.deselect(index);

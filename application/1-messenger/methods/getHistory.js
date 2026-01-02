@@ -1,6 +1,6 @@
 //(() =>
 //async function* (chatId, pageSize) {
-//const cachedMessages = module.cache.chats.get(chatId) ?? [[]];
+//const cachedMessages = $.cache.chats.get(chatId) ?? [[]];
 //yield cachedMessages;
 
 //let offset = cachedMessages.at(-1)?.next ?? undefined;
@@ -19,8 +19,8 @@
 //})();
 
 (() =>
-  async function* (chatId, pageSize) {
-    const cachedMessages = module.cache.chats.get(chatId) ?? [[]];
+  async function* (chatId) {
+    const cachedMessages = $.cache.chats.get(chatId) ?? [[]];
     yield cachedMessages;
 
     //let offset = cachedMessages.at(-1)?.next ?? undefined;

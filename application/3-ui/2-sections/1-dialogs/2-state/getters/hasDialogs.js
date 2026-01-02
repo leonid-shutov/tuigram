@@ -1,0 +1,1 @@
+() => $.numberOfDialogs !== 0;

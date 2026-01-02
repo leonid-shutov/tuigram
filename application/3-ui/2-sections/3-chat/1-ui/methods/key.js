@@ -1,0 +1,1 @@
+(ch) => $.container.setContent(ch);

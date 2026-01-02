@@ -1,1 +1,0 @@
-() => module.ui.container.height;

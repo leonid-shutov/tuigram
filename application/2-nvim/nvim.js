@@ -6,9 +6,9 @@
   buffers: new Map(),
 
   createBuffer: async (name) => {
-    await self.client.command("enew");
+    await self.client.command('enew');
     const buffer = await self.client.buffer;
-    await self.client.callFunction("nvim_buf_set_name", [buffer.id, name]);
+    await self.client.callFunction('nvim_buf_set_name', [buffer.id, name]);
     return buffer;
   },
   switchBuffer: async (name) => {
