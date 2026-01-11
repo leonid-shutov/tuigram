@@ -1,0 +1,4 @@
+() => {
+  $.opened = $.selected;
+  return $.getDialogs();
+};
