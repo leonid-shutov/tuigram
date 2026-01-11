@@ -1,5 +1,5 @@
 const trim = (text) => {
-  const firstLine = common.text.firstLine(text);
+  const firstLine = Text.firstLine(text);
   return firstLine.slice(0, $.container.width - 5);
 };
 

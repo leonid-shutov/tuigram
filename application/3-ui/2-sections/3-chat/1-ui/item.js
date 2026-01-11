@@ -1,11 +1,8 @@
-const { firstLine } = common.text;
-const { withBorders } = ui.common;
-
 const MARGIN = 2;
 
 (message, { top }) => {
-  const content = withBorders(message.text);
-  const width = firstLine(content).length;
+  const content = Box.from(message.text);
+  const width = Text.firstLine(content).length;
 
   const isFromMyself = message.author.name === 'me';
   const rightLeft = isFromMyself ? { right: MARGIN } : { left: MARGIN };

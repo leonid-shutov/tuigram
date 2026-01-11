@@ -26,6 +26,8 @@ module.exports = [
         ui: true,
         common: true,
         blessed: true,
+        Text: true,
+        Box: true,
       },
     },
   },
