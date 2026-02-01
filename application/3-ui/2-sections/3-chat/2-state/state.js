@@ -1,7 +1,13 @@
 ({
+  SCROLLOFF: 2,
   chatId: undefined,
+  opened: false,
   iterator: null,
+  loading: false,
   messages: [],
-  selected: null,
-  window: { start: 0, end: $.ui.maxLines - 1 },
+  selected: false,
+  selectedMessage: null,
+  stickTo: 'bottom',
+  topMessage: null,
+  bottomMessage: null,
 });

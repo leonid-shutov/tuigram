@@ -1,1 +1,3 @@
-ui.sections.dialogs.on('open', (chatId) => ui.sections.chat.open(chatId));
+ui.sections.dialogs.on('open', (chatId) => {
+  ui.sections.chat.open(chatId);
+});

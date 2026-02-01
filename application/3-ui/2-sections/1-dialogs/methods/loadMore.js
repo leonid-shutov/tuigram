@@ -1,5 +1,5 @@
 ((iterator) => async () => {
-  await node.timers.promises.setTimeout(100);
+  //await node.timers.promises.setTimeout(5000);
   const { value: moreDialogs, done } = await iterator.next();
   return done ? [] : moreDialogs;
-})(messenger.getDialogs(12));
+})(messenger.getDialogs(9));

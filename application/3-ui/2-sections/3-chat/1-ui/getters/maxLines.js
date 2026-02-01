@@ -1,1 +1,1 @@
-() => $.container.height;
+() => $.container.height - 2;
