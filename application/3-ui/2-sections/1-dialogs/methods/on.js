@@ -1,1 +1,1 @@
-(...args) => $.ee.on(...args);
+(event, handler) => {};

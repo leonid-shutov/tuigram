@@ -8,14 +8,18 @@ for (const [index, section] of Object.entries(mapping)) {
   ui.sections[section].setLabel(` ${index} `);
 }
 
-ui.screen.renderer.keyInput.on('keypress', (key) => {
+ui.screen.on('keypress', (ch) => {
   if (!$.selectable) return;
 
-  const section = mapping[key.name];
+  const section = mapping[ch];
   if (section !== undefined) {
-    ui.sections[$.selected].blur?.();
+    if ($.selected !== undefined) {
+      ui.sections[$.selected].deselect();
+    }
     $.selected = section;
     ui.sections[section].focus();
+    ui.sections[section].select();
+    ui.screen.render();
   }
 });
 

@@ -1,0 +1,1 @@
+tui.createCliRenderer({ exitOnCtrlC: true });

@@ -1,5 +1,3 @@
-ui.screen.on('keypress', (ch) => {
-  if (!$.isReserved(ch)) {
-    ui.sections[ui.layout.selected].key?.(ch);
-  }
+ui.screen.renderer.keyInput.on('keypress', ({ name }) => {
+  if (!$.isReserved(name)) ui.sections[$.selected].key?.(name);
 });

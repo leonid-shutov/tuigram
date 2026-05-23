@@ -20,6 +20,7 @@ module.exports = [
         npm: true,
         self: true,
         $: true,
+        tui: true,
         module: true,
         messenger: true,
         nvim: true,

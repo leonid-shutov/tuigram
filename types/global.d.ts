@@ -1,4 +1,5 @@
 import * as _blessed from 'blessed';
+import * as _opentui from '@opentui/core';
 import { NeovimClient } from 'neovim';
 import { TelegramClient } from '@mtcute/node';
 
@@ -6,8 +7,7 @@ import * as _timers from 'node:timers';
 import * as _events from 'node:events';
 
 declare global {
-  const blessed: typeof _blessed;
-  const screen: typeof _blessed.Widgets.Screen;
+  const tui: typeof _opentui;
   const nvim: NeovimClient;
 
   namespace messenger {

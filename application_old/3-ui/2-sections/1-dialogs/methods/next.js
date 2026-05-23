@@ -1,4 +1,4 @@
-async () => {
+() => {
   const shouldLoadMore = !$.state.hasDialogs || $.state.dialogsLeft === 3;
   if (shouldLoadMore) {
     $.state.startLoading();
