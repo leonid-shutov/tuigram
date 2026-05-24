@@ -1,3 +1,4 @@
-ui.screen.renderer.keyInput.on('keypress', ({ name }) => {
-  if (!$.isReserved(name)) ui.sections[$.selected].key?.(name);
+ui.screen.renderer.keyInput.on('keypress', ({ raw }) => {
+  console.log({ raw });
+  if (!$.isReserved(raw)) ui.sections[$.selected].key?.(raw);
 });

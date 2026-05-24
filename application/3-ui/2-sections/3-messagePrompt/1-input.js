@@ -10,9 +10,6 @@ new tui.TextareaRenderable(ui.screen.renderer, {
   cursorColor: '#7aa2f7',
   wrapMode: 'word',
   //keyBindings: [...defaultTextareaKeyBindings, { name: 'return', ctrl: true, action: 'submit' }],
-  onContentChange: (args) => {
-    console.log({ text: self.plainText });
-  },
   //onSubmit: () => {
   //const value = textarea.plainText;
   //if (!value.trim()) return;

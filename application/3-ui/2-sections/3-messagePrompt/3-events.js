@@ -1,6 +1,6 @@
 nvim.on('lines', (lines) => {
+  if (!$.focused) return;
   console.log({ lines });
-  if (!$.input.focused) return;
   $.input.replaceText(lines.join('\n'));
 });
 

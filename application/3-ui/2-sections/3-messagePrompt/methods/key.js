@@ -1,3 +1,3 @@
 (ch) => {
-  //nvim.input(ch);
+  nvim.input(ch);
 };
