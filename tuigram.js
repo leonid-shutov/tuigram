@@ -30,5 +30,5 @@ process.on('uncaughtException', (error) => {
 });
 
 const rootDir = path.resolve(__dirname);
-const context = { console: mockConsole, tui, process, Buffer };
+const context = { console: mockConsole, tui, process, Buffer, setTimeout, clearTimeout };
 uncommonjs.loadApplication(context, { rootDir });

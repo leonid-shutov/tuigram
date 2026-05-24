@@ -1,7 +1,7 @@
 new tui.TextareaRenderable(ui.screen.renderer, {
   width: '100%',
   height: 1,
-  maxHeight: 5,
+  //maxHeight: 5,
   placeholder: 'Type a message...',
   backgroundColor: '#1a1b26',
   focusedBackgroundColor: '#24283b',
@@ -9,6 +9,7 @@ new tui.TextareaRenderable(ui.screen.renderer, {
   focusedTextColor: '#c0caf5',
   cursorColor: '#7aa2f7',
   wrapMode: 'word',
+  cursorStyle: { blinking: true },
   //keyBindings: [...defaultTextareaKeyBindings, { name: 'return', ctrl: true, action: 'submit' }],
   //onSubmit: () => {
   //const value = textarea.plainText;

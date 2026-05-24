@@ -1,4 +1,4 @@
 () => {
-  $.component.focus();
+  $.input.focus();
   $.focused = true;
 };

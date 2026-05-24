@@ -4,7 +4,7 @@
   const path = found.matches[0].path;
   const nvimProc = node.child_process.spawn(path, ['--embed']);
   const client = attach({ proc: nvimProc, logger: console });
-  await client.uiAttach(80, 24, {});
+  await client.uiAttach(5, 5, {});
 
   nvim.client = client;
 })();
