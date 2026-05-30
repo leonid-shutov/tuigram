@@ -11,6 +11,7 @@ module.exports = [
       'max-len': ['error', { code: 120, ignoreUrls: true }],
       'no-nested-ternary': 'off',
       camelcase: 'off',
+      'new-cap': 'off',
     },
     languageOptions: {
       sourceType: 'module',

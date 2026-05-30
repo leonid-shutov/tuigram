@@ -26,7 +26,7 @@
     for (const dialog of source) {
       page.push(dialog);
       if (page.length === chunkSize) {
-        await node.timers.promises.setTimeout(5000);
+        //await node.timers.promises.setTimeout(5000);
         yield page;
         page = [];
       }
