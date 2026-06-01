@@ -1,4 +1,4 @@
-new tui.ScrollBoxRenderable(ui.screen.renderer, {
+const a = new tui.ScrollBoxRenderable(ui.screen.renderer, {
   flexGrow: 1,
   borderStyle: 'rounded',
   scrollY: true,
@@ -6,6 +6,7 @@ new tui.ScrollBoxRenderable(ui.screen.renderer, {
   stickyScroll: true,
   stickyStart: 'bottom',
   focusable: true,
+  focusedBorderColor: '#42AAFF',
   contentOptions: {
     flexDirection: 'column',
     gap: 1,
@@ -13,3 +14,7 @@ new tui.ScrollBoxRenderable(ui.screen.renderer, {
     paddingY: 1,
   },
 });
+
+a.verticalScrollBar.visible = false;
+
+a;

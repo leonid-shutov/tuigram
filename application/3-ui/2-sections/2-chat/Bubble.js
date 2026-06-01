@@ -7,6 +7,7 @@
     paddingX: 1,
     alignSelf: isMe ? 'flex-end' : 'flex-start',
     focusedBorderColor: 'green',
+    focusable: true,
   });
 
   box.add(new tui.TextRenderable(ui.screen.renderer, { content: text, fg: '#c0caf5' }));

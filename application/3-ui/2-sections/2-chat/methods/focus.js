@@ -1,1 +1,3 @@
-() => $.component.focus();
+() => {
+  $.selectBubble($.selected.index);
+};

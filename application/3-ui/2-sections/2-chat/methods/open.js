@@ -1,5 +1,6 @@
 async (chatId) => {
-  $.iterator = messenger.getHistory(chatId, 5);
-  const { value: messages } = await $.iterator.next();
+  $.iterator = messenger.getHistory(chatId, 20);
+  const { value } = await $.iterator.next();
+  const messages = value.map((message, index) => ({ ...message, index }));
   $.setMessages(messages);
 };

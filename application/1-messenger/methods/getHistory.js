@@ -32,7 +32,7 @@
       }
     }
     if (page.length > 0) {
-      await node.timers.promises.setTimeout(5000);
+      //await node.timers.promises.setTimeout(5000);
       yield page;
     }
   })(
@@ -105,5 +105,5 @@
       author: { name: 'Госпожа Аня Отбивная' },
       text: 'Одобрено.\nОтдыхай и не пропадайa',
     },
-  ].toReversed(),
+  ].slice(0, 20),
 );
