@@ -12,11 +12,7 @@ ui.screen.renderer.keyInput.on('keypress', (key) => {
   if (!$.selectable) return;
 
   const section = mapping[key.name];
-  if (section !== undefined) {
-    ui.sections[$.selected].blur?.();
-    $.selected = section;
-    ui.sections[section].focus();
-  }
+  if (section !== undefined) $.select(section);
 });
 
 $.reserved.push(...Object.keys(mapping));

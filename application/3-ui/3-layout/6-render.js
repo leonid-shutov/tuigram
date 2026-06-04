@@ -22,5 +22,3 @@ layout.add(rightSide);
 rightSide.add(ui.sections.chat.component);
 rightSide.add(ui.sections.messagePrompt.component);
 ui.sections.dialogs.component.focus();
-
-ui.sections.chat.open(1);
