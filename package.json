@@ -5,8 +5,9 @@
     "lint": "eslint ."
   },
   "dependencies": {
-    "@leonid-shutov/uncommonjs": "^1.0.0-alpha.14",
-    "@mtcute/node": "^0.26.1",
+    "@leonid-shutov/uncommonjs": "^1.0.0-alpha.15",
+    "@mtcute/bun": "^0.29.7",
+    "@mtcute/dispatcher": "^0.29.7",
     "@opentui/core": "^0.2.12",
     "neovim": "^5.4.0"
   },

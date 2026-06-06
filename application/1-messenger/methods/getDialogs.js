@@ -1,5 +1,7 @@
 //(() =>
 //async function* (chunkSize) {
+//console.log('getDialogs');
+
 //const iterator = messenger.tg.iterDialogs({ chunkSize });
 //let page = [];
 //for await (const dialog of iterator) {
