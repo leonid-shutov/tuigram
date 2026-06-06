@@ -1,1 +1,0 @@
-() => $.numberOfMessages !== 0;

@@ -1,1 +1,0 @@
-new node.events.EventEmitter();

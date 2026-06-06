@@ -1,1 +1,0 @@
-(ch) => $.reserved.includes(ch);
