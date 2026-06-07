@@ -1,11 +1,10 @@
-({ text, author }) => {
-  const isMe = author.name === 'me';
+({ text, sender }) => {
   const box = new tui.BoxRenderable(ui.screen.renderer, {
     flexDirection: 'column',
     borderStyle: 'rounded',
-    borderColor: isMe ? '#283457' : '#1f2335',
+    borderColor: sender.isSelf ? '#283457' : '#1f2335',
     paddingX: 1,
-    alignSelf: isMe ? 'flex-end' : 'flex-start',
+    alignSelf: sender.isSelf ? 'flex-end' : 'flex-start',
     focusedBorderColor: 'green',
     focusable: true,
   });
