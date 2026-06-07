@@ -30,6 +30,7 @@ module.exports = [
         blessed: true,
         Text: true,
         Box: true,
+        LinkedList: true,
       },
     },
   },

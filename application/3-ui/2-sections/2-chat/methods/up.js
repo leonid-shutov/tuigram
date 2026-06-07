@@ -1,5 +1,4 @@
 () => {
-  if ($.selected.index === 0) return;
-  const nextIndex = $.selected.index - 1;
-  $.selectBubble(nextIndex);
+  if ($.selected === $.messages.head) return;
+  $.selectMessage($.selected.prev);
 };
