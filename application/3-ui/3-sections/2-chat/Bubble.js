@@ -1,5 +1,5 @@
 ({ text, sender }) => {
-  const box = new tui.BoxRenderable(ui.screen.renderer, {
+  const box = ui.components.Box({
     flexDirection: 'column',
     borderStyle: 'rounded',
     borderColor: sender.isSelf ? '#283457' : '#1f2335',
@@ -9,7 +9,7 @@
     focusable: true,
   });
 
-  box.add(new tui.TextRenderable(ui.screen.renderer, { content: text, fg: '#c0caf5' }));
+  box.add(ui.components.Text({ content: text, fg: '#c0caf5' }));
 
   return box;
 };

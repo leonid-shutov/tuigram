@@ -1,4 +1,4 @@
-const a = new tui.ScrollBoxRenderable(ui.screen.renderer, {
+ui.components.ScrollBox({
   flexGrow: 1,
   borderStyle: 'rounded',
   scrollY: true,
@@ -14,7 +14,3 @@ const a = new tui.ScrollBoxRenderable(ui.screen.renderer, {
     paddingY: 1,
   },
 });
-
-a.verticalScrollBar.visible = false;
-
-a;

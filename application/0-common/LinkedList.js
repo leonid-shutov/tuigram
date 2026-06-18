@@ -71,20 +71,20 @@ const buildIterator = (list) => () => {
   };
 };
 
-({
-  from: (values = []) => {
-    const list = { head: null, tail: null, size: 0 };
+const from = (values = []) => {
+  const list = { head: null, tail: null, size: 0 };
 
-    const getters = buildGetters(list);
-    const operations = buildOperations(list);
-    const iterator = buildIterator(list);
+  const getters = buildGetters(list);
+  const operations = buildOperations(list);
+  const iterator = buildIterator(list);
 
-    for (const value of values) operations.push(value);
+  for (const value of values) operations.push(value);
 
-    return {
-      ...getters,
-      ...operations,
-      [Symbol.iterator]: iterator,
-    };
-  },
-});
+  return {
+    ...getters,
+    ...operations,
+    [Symbol.iterator]: iterator,
+  };
+};
+
+({ from });

@@ -16,21 +16,25 @@ module.exports = [
     languageOptions: {
       sourceType: 'module',
       globals: {
-        application: true,
+        // uncommonjs
         node: true,
         npm: true,
         self: true,
         $: true,
+        __rootDir: true,
+
+        // common
+        Obj: true,
+        Time: true,
+        LinkedList: true,
+        risk: true,
+        riskAsync: true,
+
+        // application
         tui: true,
-        module: true,
         messenger: true,
         nvim: true,
         ui: true,
-        common: true,
-        blessed: true,
-        Text: true,
-        Box: true,
-        LinkedList: true,
       },
     },
   },

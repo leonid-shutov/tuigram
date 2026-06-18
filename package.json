@@ -1,11 +1,21 @@
 {
+  "name": "tuigram",
+  "version": "1.0.0-alpha.1",
+  "author": "Leonid Shutov <leonid.shutov@hey.com>",
+  "license": "MIT",
+  "homepage": "https://github.com/leonid-shutov/tuigram#readme",
+  "main": "tuigram.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/leonid-shutov/tuigram.git"
+  },
   "scripts": {
-    "start": "dotenv -- node tuigram.js",
+    "dev": "dotenv -- bun run tuigram.js",
     "fmt": "prettier --write .",
     "lint": "eslint ."
   },
   "dependencies": {
-    "@leonid-shutov/uncommonjs": "^1.0.0-alpha.15",
+    "@leonid-shutov/uncommonjs": "^1.0.0-alpha.17",
     "@mtcute/bun": "^0.29.7",
     "@mtcute/dispatcher": "^0.29.7",
     "@opentui/core": "^0.2.12",

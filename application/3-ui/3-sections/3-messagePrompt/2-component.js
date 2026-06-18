@@ -1,4 +1,4 @@
-const wrapper = new tui.BoxRenderable(ui.screen.renderer, {
+const wrapper = ui.components.Box({
   borderStyle: 'rounded',
   flexShrink: 0,
 });

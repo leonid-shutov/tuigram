@@ -1,2 +1,2 @@
 const { Dispatcher } = npm['@mtcute/dispatcher'];
-Dispatcher.for($.tg);
+Dispatcher.for(messenger.tg);

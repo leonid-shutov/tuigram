@@ -1,9 +1,5 @@
-(async () => {
-  const { TelegramClient } = npm['@mtcute/bun'];
-  const tg = new TelegramClient({
-    apiId: process.env.API_ID,
-    apiHash: process.env.API_HASH,
-  });
-  await tg.start();
-  return tg;
-})();
+const { TelegramClient } = npm['@mtcute/bun'];
+const { API_ID, API_HASH } = process.env;
+const tg = new TelegramClient({ apiId: API_ID, apiHash: API_HASH });
+//tg.start().then(() => tg);
+tg;

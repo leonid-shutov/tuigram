@@ -1,7 +1,7 @@
 import * as _blessed from 'blessed';
 import * as _opentui from '@opentui/core';
 import { NeovimClient } from 'neovim';
-import { TelegramClient } from '@mtcute/node';
+import { TelegramClient } from '@mtcute/bun';
 
 import * as _timers from 'node:timers';
 import * as _events from 'node:events';

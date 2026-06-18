@@ -21,7 +21,7 @@ const mockConsole = {
   log: (...args) => writeLog(...args),
 };
 
-process.on('unhandledRejection', (reason, promise) => {
+process.on('unhandledRejection', (reason) => {
   mockConsole.log(reason.message);
 });
 
@@ -30,5 +30,5 @@ process.on('uncaughtException', (error) => {
 });
 
 const rootDir = path.resolve(__dirname);
-const context = { console: mockConsole, tui, process, Buffer, setTimeout, clearTimeout };
+const context = { console: mockConsole, tui, process };
 uncommonjs.loadApplication(context, { rootDir });

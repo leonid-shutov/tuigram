@@ -1,3 +1,0 @@
-(ch) => {
-  nvim.input(ch);
-};

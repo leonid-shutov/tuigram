@@ -2,8 +2,6 @@ const layout = new tui.BoxRenderable(ui.screen.renderer, {
   id: 'wrapper',
   width: '100%',
   height: '100%',
-  //justifyContent: 'center',
-  //alignItems: 'center',
   flexDirection: 'row',
 });
 
@@ -13,7 +11,6 @@ layout.add(ui.sections.dialogs.component);
 
 const rightSide = new tui.BoxRenderable(ui.screen.renderer, {
   id: 'rightSide',
-  flexGrow: 1,
   flexDirection: 'column',
 });
 
