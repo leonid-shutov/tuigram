@@ -1,0 +1,1 @@
+() => $.emit('send', $.input.plainText);

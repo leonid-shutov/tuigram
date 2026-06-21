@@ -25,7 +25,8 @@ module.exports = [
 
         // common
         Obj: true,
-        Time: true,
+        Rate: true,
+        Random: true,
         LinkedList: true,
         risk: true,
         riskAsync: true,

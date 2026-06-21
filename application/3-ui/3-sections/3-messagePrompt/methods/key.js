@@ -1,1 +1,4 @@
-(ch) => nvim.input(ch);
+(ch) => {
+  if (ch === 'x') $.send();
+  nvim.input(ch);
+};

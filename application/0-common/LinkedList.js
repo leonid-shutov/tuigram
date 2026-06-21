@@ -1,17 +1,5 @@
 const createNode = (value, prev = null, next = null) => ({ value, prev, next });
 
-const buildGetters = (list) => ({
-  get head() {
-    return list.head;
-  },
-  get tail() {
-    return list.tail;
-  },
-  get size() {
-    return list.size;
-  },
-});
-
 const buildOperations = (list) => ({
   push: (value) => {
     const node = createNode(value, list.tail);
@@ -74,14 +62,21 @@ const buildIterator = (list) => () => {
 const from = (values = []) => {
   const list = { head: null, tail: null, size: 0 };
 
-  const getters = buildGetters(list);
   const operations = buildOperations(list);
   const iterator = buildIterator(list);
 
   for (const value of values) operations.push(value);
 
   return {
-    ...getters,
+    get head() {
+      return list.head;
+    },
+    get tail() {
+      return list.tail;
+    },
+    get size() {
+      return list.size;
+    },
     ...operations,
     [Symbol.iterator]: iterator,
   };

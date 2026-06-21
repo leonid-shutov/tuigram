@@ -3,7 +3,7 @@ const handlers = {
     const [y, x] = await nvim.client.window.cursor;
     nvim.emit('cursor', { x, y });
   },
-  put: Time.debounce(async () => {
+  put: Rate.debounce(async () => {
     const buffer = await nvim.client.buffer;
     const lines = await buffer.lines;
     const [y, x] = await nvim.client.window.cursor;
