@@ -13,4 +13,5 @@ ui.components.ScrollBox({
     paddingX: 1,
     paddingY: 1,
   },
+  scrollbarOptions: { visible: false },
 });
