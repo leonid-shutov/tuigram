@@ -1,3 +1,3 @@
 () => {
-  $.list.focus();
+  self.list.focus();
 };

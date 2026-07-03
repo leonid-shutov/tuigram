@@ -9,10 +9,10 @@ for (const [index, section] of Object.entries(mapping)) {
 }
 
 ui.screen.renderer.keyInput.on('keypress', (key) => {
-  if (!$.selectable) return;
+  if (!self.selectable) return;
 
   const section = mapping[key.name];
-  if (section !== undefined) $.select(section);
+  if (section !== undefined) self.select(section);
 });
 
-$.reserved.push(...Object.keys(mapping));
+self.reserved.push(...Object.keys(mapping));

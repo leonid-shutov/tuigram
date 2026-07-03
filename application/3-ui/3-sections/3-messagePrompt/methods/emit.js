@@ -1,2 +1,2 @@
-$.ee ??= new node.events.EventEmitter();
-(event, ...args) => $.ee.emit(event, ...args);
+self.ee ??= new node.events.EventEmitter();
+(event, ...args) => self.ee.emit(event, ...args);

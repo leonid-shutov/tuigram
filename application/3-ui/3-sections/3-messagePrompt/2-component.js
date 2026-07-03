@@ -3,6 +3,6 @@ const wrapper = ui.components.Box({
   flexShrink: 0,
 });
 
-wrapper.add($.input);
+wrapper.add(self.input);
 
 wrapper;

@@ -1,1 +1,1 @@
-() => $.selectBubble($.selected.index);
+() => self.selectBubble(self.selected.index);

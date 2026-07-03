@@ -1,10 +1,10 @@
 async (chatId) => {
-  if ($.chatId === chatId) return;
-  $.chatId = chatId;
-  $.clear();
-  $.iterator = messenger.getHistory(chatId, 20);
-  const { value } = await $.iterator.next();
+  if (self.chatId === chatId) return;
+  self.chatId = chatId;
+  self.clear();
+  self.iterator = messenger.getHistory(chatId, 20);
+  const { value } = await self.iterator.next();
   const messages = value.toReversed();
-  for (const message of messages) $.addMessage(message);
-  $.selectMessage($.messages.tail);
+  for (const message of messages) self.addMessage(message);
+  self.selectMessage(self.messages.tail);
 };

@@ -1,6 +1,6 @@
 (message) => {
-  $.selected = message;
+  self.selected = message;
   const bubble = message.value.bubble;
-  $.component.scrollChildIntoView(bubble.id);
+  self.component.scrollChildIntoView(bubble.id);
   bubble.focus();
 };

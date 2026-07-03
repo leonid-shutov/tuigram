@@ -1,3 +1,3 @@
 () => {
-  $.list.blur();
+  self.list.blur();
 };

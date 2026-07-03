@@ -1,1 +1,1 @@
-(ch) => $.reserved.includes(ch);
+(ch) => self.reserved.includes(ch);

@@ -20,7 +20,6 @@ module.exports = [
         node: true,
         npm: true,
         self: true,
-        $: true,
         __rootDir: true,
 
         // common

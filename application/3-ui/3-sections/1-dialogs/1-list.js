@@ -1,4 +1,4 @@
-$.loadMore().then((dialogs) =>
+self.loadMore().then((dialogs) =>
   ui.components.Select({
     id: 'dialogsList',
     height: '100%',

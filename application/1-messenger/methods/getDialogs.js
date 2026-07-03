@@ -2,7 +2,7 @@
   async function* (chunkSize) {
     console.log('get dialogs from cache');
 
-    const cachedDialogs = $.cache.dialogs.read();
+    const cachedDialogs = self.cache.dialogs.read();
     if (cachedDialogs.length > 0) yield cachedDialogs;
 
     console.log('get dialogs from tg');
@@ -15,7 +15,7 @@
         lastMessage: dialog.lastMessage.text,
       });
       if (page.length === chunkSize) {
-        $.cache.dialogs.append(page);
+        self.cache.dialogs.append(page);
         yield page;
         page = [];
       }

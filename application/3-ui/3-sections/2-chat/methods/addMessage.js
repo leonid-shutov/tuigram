@@ -1,6 +1,6 @@
 (message) => {
-  $.messages.push(message);
-  const bubble = $.Bubble(message);
-  $.component.add(bubble);
+  self.messages.push(message);
+  const bubble = self.Bubble(message);
+  self.component.add(bubble);
   message.bubble = bubble;
 };

@@ -1,1 +1,1 @@
-() => $.emit('send', $.input.plainText);
+() => self.emit('send', self.input.plainText);

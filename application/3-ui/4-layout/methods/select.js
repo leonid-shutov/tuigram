@@ -1,5 +1,5 @@
 (section) => {
-  ui.sections[$.selected].blur?.();
-  $.selected = section;
+  ui.sections[self.selected].blur?.();
+  self.selected = section;
   ui.sections[section].focus();
 };

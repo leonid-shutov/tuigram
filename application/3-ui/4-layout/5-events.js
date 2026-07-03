@@ -2,7 +2,7 @@ const { dialogs, chat, messagePrompt } = ui.sections;
 
 dialogs.on('open', (dialog) => {
   chat.open(dialog.chatId);
-  $.select('chat');
+  self.select('chat');
 });
 
 messagePrompt.on('send', async (text) => {

@@ -1,4 +1,4 @@
 () => {
-  if ($.selected === $.messages.tail) return;
-  $.selectMessage($.selected.next);
+  if (self.selected === self.messages.tail) return;
+  self.selectMessage(self.selected.next);
 };

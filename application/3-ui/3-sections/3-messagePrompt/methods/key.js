@@ -1,4 +1,4 @@
 (ch) => {
-  if (ch === 'x') $.send();
+  if (ch === 'x') self.send();
   nvim.input(ch);
 };

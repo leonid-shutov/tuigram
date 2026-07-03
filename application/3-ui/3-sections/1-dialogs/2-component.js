@@ -4,6 +4,6 @@ const wrapper = ui.components.Box({
   borderStyle: 'rounded',
 });
 
-wrapper.add($.list);
+wrapper.add(self.list);
 
 wrapper;

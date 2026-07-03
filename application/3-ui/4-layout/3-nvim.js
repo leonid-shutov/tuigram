@@ -1,8 +1,8 @@
 //nvim.on('mode', (mode) => {
-//if (mode === 'normal') $.selectable = true;
-//else $.selectable = false;
+//if (mode === 'normal') self.selectable = true;
+//else self.selectable = false;
 //});
 
 //ui.screen.on('keypress', (ch) => {
-//if ($.reserved.includes(ch)) return;
+//if (self.reserved.includes(ch)) return;
 //});

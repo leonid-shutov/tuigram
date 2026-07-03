@@ -22,7 +22,7 @@ const mockConsole = {
 };
 
 process.on('unhandledRejection', (reason) => {
-  mockConsole.log(reason.message);
+  mockConsole.log(reason.message, reason.stack);
 });
 
 process.on('uncaughtException', (error) => {

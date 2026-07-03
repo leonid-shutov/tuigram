@@ -1,3 +1,3 @@
 () => {
-  $.focused = false;
+  self.focused = false;
 };

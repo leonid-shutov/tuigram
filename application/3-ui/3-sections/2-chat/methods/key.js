@@ -1,5 +1,5 @@
 (ch) =>
   ({
-    k: $.up,
-    j: $.down,
+    k: self.up,
+    j: self.down,
   })[ch]?.();

@@ -1,4 +1,4 @@
 () => {
-  if ($.selected === $.messages.head) return;
-  $.selectMessage($.selected.prev);
+  if (self.selected === self.messages.head) return;
+  self.selectMessage(self.selected.prev);
 };
