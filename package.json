@@ -18,7 +18,7 @@
     "@leonid-shutov/uncommonjs": "^1.0.0-alpha.21",
     "@mtcute/bun": "^0.29.7",
     "@mtcute/dispatcher": "^0.29.7",
-    "@opentui/core": "^0.2.12",
+    "@opentui/core": "^0.4.3",
     "neovim": "^5.4.0"
   },
   "devDependencies": {

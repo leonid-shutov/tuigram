@@ -1,1 +1,1 @@
-() => {};
+() => self.selectMessage(self.selected);
