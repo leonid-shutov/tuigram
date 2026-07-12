@@ -3,6 +3,6 @@
     const result = fn(...args);
     return [null, result];
   } catch (err) {
-    return err;
+    return [err, null];
   }
 };
