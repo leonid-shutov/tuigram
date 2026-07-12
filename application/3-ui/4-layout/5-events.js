@@ -1,12 +1,5 @@
-const { dialogs, chat, messagePrompt } = ui.sections;
+const { dialogs, messagePrompt } = ui.sections;
 
-dialogs.on('open', (dialog) => {
-  chat.open(dialog.chatId);
-  self.select('chat');
-});
+dialogs.on('open', (dialog) => self.openChat(dialog.chatId));
 
-messagePrompt.on('send', async (text) => {
-  const tempId = chat.addPendingMessage(text);
-  const message = await messenger.sendMessage(chat.chatId, text);
-  chat.confirmMessage(tempId, message);
-});
+messagePrompt.on('send', async (text) => self.sendMessage(text));

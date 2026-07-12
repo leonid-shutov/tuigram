@@ -37,6 +37,11 @@ const buildOperations = (list) => ({
     return value;
   },
 
+  find: (predicate) => {
+    for (let node = list.head; node !== null; node = node.next) if (predicate(node.value)) return node.value;
+    return null;
+  },
+
   removeNode: (node) => {
     if (node.prev !== null) node.prev.next = node.next;
     else list.head = node.next;
