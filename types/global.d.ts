@@ -2,6 +2,7 @@ import * as _blessed from 'blessed';
 import * as _opentui from '@opentui/core';
 import { NeovimClient } from 'neovim';
 import { Message, TelegramClient } from '@mtcute/bun';
+import { Dispatcher } from '@mtcute/dispatcher';
 
 import * as _timers from 'node:timers';
 import * as _events from 'node:events';
@@ -13,6 +14,7 @@ declare global {
 
   namespace messenger {
     const tg: TelegramClient;
+    const dispatcher: Dispatcher;
     const sendMessage: (chatId: string, text: string) => Promise<Message>;
   }
 

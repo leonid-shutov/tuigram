@@ -29,6 +29,7 @@ module.exports = [
         LinkedList: true,
         risk: true,
         riskAsync: true,
+        Message: true,
 
         // application
         tui: true,

@@ -13,7 +13,7 @@
       console.log('get history from tg');
       const history = await messenger.tg.getHistory(chatId, params);
 
-      const messages = history.map(({ id, text, sender }) => ({ id, text, sender: Obj.pick(sender, ['isSelf']) }));
+      const messages = history.map(Message.from);
 
       self.cache.chats.append(chatId, messages);
 
