@@ -1,0 +1,6 @@
+node_modules/
+.env
+client.session*
+*.log
+opentui-examples
+/cache/
