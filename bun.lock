@@ -5,7 +5,7 @@
     "": {
       "name": "tuigram",
       "dependencies": {
-        "@leonid-shutov/uncommonjs": "^1.0.0-alpha.23",
+        "@leonid-shutov/uncommonjs": "^1.0.0-alpha.24",
         "@mtcute/bun": "^0.29.7",
         "@mtcute/dispatcher": "^0.29.7",
         "@opentui/core": "^0.4.3",
@@ -60,7 +60,7 @@
 
     "@humanwhocodes/retry": ["@humanwhocodes/retry@0.4.3", "", {}, "sha512-bV0Tgo9K4hfPCek+aMAn81RppFKv2ySDQeMoSZuvTASywNTnVJCArCZE2FWqpvIatKu7VMRLWlR1EazvVhDyhQ=="],
 
-    "@leonid-shutov/uncommonjs": ["@leonid-shutov/uncommonjs@1.0.0-alpha.23", "", { "dependencies": { "metaschema": "^2.2.2" } }, "sha512-SEH+Q3cLTNyfTXBQva8v9CYEX6Sd/ECllBU+WDc9OLsd/zi5HYZF+2iygs7v3UD/vI+lqLt0JtCLC8irSpdRog=="],
+    "@leonid-shutov/uncommonjs": ["@leonid-shutov/uncommonjs@1.0.0-alpha.24", "", { "dependencies": { "metaschema": "^2.2.2" } }, "sha512-/cSrYuA0ewZlOKgUtqtob+AUqoKiXwrWvfYKfuZtZRF01OWqHPK16gmMwP4eIM421HK1kEYCJvNHois19/ysXQ=="],
 
     "@msgpack/msgpack": ["@msgpack/msgpack@2.8.0", "", {}, "sha512-h9u4u/jiIRKbq25PM+zymTyW6bhTzELvOoUd+AvYriWOAKpLGnIamaET3pnHYoI5iYphAHBI4ayx0MehR+VVPQ=="],
 
