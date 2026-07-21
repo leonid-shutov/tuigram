@@ -30,6 +30,7 @@ module.exports = [
         risk: true,
         riskAsync: true,
         Message: true,
+        AsyncIterator: true,
 
         // application
         tui: true,
