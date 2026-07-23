@@ -1,4 +1,4 @@
 (ch) => {
-  if (ch === 'x') self.send();
-  nvim.input(ch);
+  if (ch === '\r' && self.mode === 'normal') self.send();
+  else nvim.input(ch);
 };

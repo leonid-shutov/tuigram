@@ -9,3 +9,5 @@ nvim.on('cursor', ({ x, y }) => {
   if (!self.focused) return;
   self.input.setCursor(y - 1, x);
 });
+
+nvim.on('mode', (mode) => (self.mode = mode));
