@@ -1,7 +1,6 @@
 ui.screen.renderer.keyInput.on('keypress', (e) => {
-  const raw = e.raw;
   if (self.selected !== 'dialogs') e.stopPropagation();
 
-  const skip = self.selectable && self.reserved.includes(raw);
-  if (!skip) ui.sections[self.selected].key?.(raw);
+  const skip = self.selectable && self.reserved.includes(e.raw);
+  if (!skip) ui.sections[self.selected].key?.(e.raw, e.name);
 });
