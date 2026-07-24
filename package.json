@@ -10,15 +10,15 @@
     "url": "git+https://github.com/leonid-shutov/tuigram.git"
   },
   "scripts": {
-    "dev": "dotenv -- bun run tuigram.js",
+    "dev": "node --experimental-ffi --env-file=.env tuigram.js",
     "fmt": "prettier --write .",
     "lint": "eslint ."
   },
   "dependencies": {
     "@leonid-shutov/uncommonjs": "^1.0.0-alpha.24",
-    "@mtcute/bun": "^0.29.7",
     "@mtcute/dispatcher": "^0.29.7",
-    "@opentui/core": "^0.4.3",
+    "@mtcute/node": "^0.29.7",
+    "@opentui/core": "^0.4.5",
     "neovim": "^5.4.0"
   },
   "devDependencies": {
