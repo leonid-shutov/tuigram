@@ -1,23 +1,23 @@
 const createNode = (value, prev = null, next = null) => ({ value, prev, next });
 
-const buildOperations = (list) => ({
-  push: (value) => {
+const buildOperations = (list) => {
+  const push = (value) => {
     const node = createNode(value, list.tail);
     if (list.tail !== null) list.tail.next = node;
     else list.head = node;
     list.tail = node;
     list.size++;
-  },
+  };
 
-  unshift: (value) => {
+  const unshift = (value) => {
     const node = createNode(value, null, list.head);
     if (list.head) list.head.prev = node;
     else list.tail = node;
     list.head = node;
     list.size++;
-  },
+  };
 
-  pop: () => {
+  const pop = () => {
     if (list.tail === null) return null;
     const value = list.tail.value;
     list.tail = list.tail.prev;
@@ -25,9 +25,9 @@ const buildOperations = (list) => ({
     else list.head = null;
     list.size--;
     return value;
-  },
+  };
 
-  shift: () => {
+  const shift = () => {
     if (list.head === null) return null;
     const value = list.head.value;
     list.head = list.head.next;
@@ -35,22 +35,34 @@ const buildOperations = (list) => ({
     else list.tail = null;
     list.size--;
     return value;
-  },
+  };
 
-  find: (predicate) => {
-    for (let node = list.head; node !== null; node = node.next) if (predicate(node.value)) return node.value;
+  const findNode = (predicate) => {
+    for (let node = list.head; node !== null; node = node.next) if (predicate(node.value)) return node;
     return null;
-  },
+  };
 
-  removeNode: (node) => {
+  const find = (predicate) => findNode(predicate)?.value ?? null;
+
+  const removeNode = (node) => {
     if (node.prev !== null) node.prev.next = node.next;
     else list.head = node.next;
     if (node.next !== null) node.next.prev = node.prev;
     else list.tail = node.prev;
     list.size--;
     return node.value;
-  },
-});
+  };
+
+  const moveToFront = (predicate) => {
+    const node = findNode(predicate);
+    if (node === null) return null;
+    removeNode(node);
+    unshift(node.value);
+    return node.value;
+  };
+
+  return { push, unshift, pop, shift, find, removeNode, moveToFront };
+};
 
 const buildIterator = (list) => () => {
   let current = list.head;

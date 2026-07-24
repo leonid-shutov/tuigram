@@ -1,21 +1,14 @@
 (() =>
   async function* (chatId, pageSize) {
-    console.log('get history from cache');
-    const cachedMessages = self.cache.chats.read(chatId);
-    if (cachedMessages.length > 0) yield cachedMessages;
-
     let offset = undefined;
 
     while (true) {
       const params = { offset, limit: pageSize };
 
       // the first message in the array is the most recent message in the chat
-      console.log('get history from tg');
       const history = await messenger.tg.getHistory(chatId, params);
 
       const messages = history.map(Message.from);
-
-      self.cache.chats.append(chatId, messages);
 
       yield messages;
 

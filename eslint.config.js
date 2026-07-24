@@ -30,6 +30,7 @@ module.exports = [
         risk: true,
         riskAsync: true,
         Message: true,
+        Dialog: true,
         AsyncIterator: true,
 
         // application

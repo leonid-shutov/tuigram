@@ -4,5 +4,6 @@
     text,
     sender: Obj.pick(sender, ['isSelf']),
     chatId: chat.id,
+    chatName: chat.displayName,
   }),
 });
