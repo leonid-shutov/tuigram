@@ -1,1 +1,1 @@
-() => (self.list.options = [...self.pinned, ...self.unpinned].map(Dialog.toOption));
+() => (self.list.options = [...self.dialogs].map(Dialog.toOption));

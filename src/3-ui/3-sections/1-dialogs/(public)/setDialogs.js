@@ -1,5 +1,4 @@
 (dialogs) => {
-  self.pinned = LinkedList.from(dialogs.filter((d) => d.isPinned));
-  self.unpinned = LinkedList.from(dialogs.filter((d) => !d.isPinned));
+  self.dialogs = LinkedDialogs.from(dialogs);
   self.render();
 };

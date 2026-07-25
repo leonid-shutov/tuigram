@@ -27,6 +27,7 @@ module.exports = [
         Rate: true,
         Random: true,
         LinkedList: true,
+        LinkedDialogs: true,
         risk: true,
         riskAsync: true,
         Message: true,

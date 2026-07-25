@@ -53,15 +53,13 @@ const buildOperations = (list) => {
     return node.value;
   };
 
-  const moveToFront = (predicate) => {
-    const node = findNode(predicate);
-    if (node === null) return null;
+  const moveToFront = (node) => {
     removeNode(node);
     unshift(node.value);
     return node.value;
   };
 
-  return { push, unshift, pop, shift, find, removeNode, moveToFront };
+  return { push, unshift, pop, shift, find, findNode, removeNode, moveToFront };
 };
 
 const buildIterator = (list) => () => {

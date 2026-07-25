@@ -1,14 +1,16 @@
 (message) => {
-  const isMatch = (d) => d.chatId === message.chatId;
-
-  const pinned = self.pinned.find(isMatch);
-  if (pinned) {
-    pinned.lastMessage = message.text;
+  let dialog;
+  const node = self.dialogs.findNode(message.chatId);
+  if (node !== null) {
+    dialog = node.value;
+    self.dialogs.bump(node);
   } else {
-    const bumped = self.unpinned.moveToFront(isMatch);
-    if (bumped) bumped.lastMessage = message.text;
-    else self.unpinned.unshift(Dialog.fromMessage(message));
+    dialog = Dialog.fromMessage(message);
+    self.dialogs.unshift(dialog);
   }
+
+  dialog.lastMessage = message.text;
+  if (!message.sender.isSelf) dialog.unreadCount += 1;
 
   self.render();
 };
