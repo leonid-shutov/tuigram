@@ -34,6 +34,9 @@ module.exports = [
         Dialog: true,
         AsyncIterator: true,
 
+        // ui common
+        ScrollBox: true,
+
         // application
         tui: true,
         messenger: true,
