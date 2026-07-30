@@ -15,7 +15,7 @@
     "lint": "eslint ."
   },
   "dependencies": {
-    "@leonid-shutov/uncommonjs": "^1.0.0-alpha.24",
+    "@leonid-shutov/uncommonjs": "^1.0.0-alpha.25",
     "@mtcute/dispatcher": "^0.29.7",
     "@mtcute/node": "^0.29.7",
     "@opentui/core": "^0.4.5",
