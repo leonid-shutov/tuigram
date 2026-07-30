@@ -26,6 +26,7 @@ module.exports = [
         Obj: true,
         Rate: true,
         Random: true,
+        OS: true,
         LinkedList: true,
         LinkedDialogs: true,
         risk: true,
