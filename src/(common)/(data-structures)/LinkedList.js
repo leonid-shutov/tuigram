@@ -59,7 +59,15 @@ const buildOperations = (list) => {
     return node.value;
   };
 
-  return { push, unshift, pop, shift, find, findNode, removeNode, moveToFront };
+  const isNearHead = (node, within) => {
+    for (let i = 0; i < within; i++) {
+      if (node === list.head) return true;
+      node = node.prev;
+    }
+    return false;
+  };
+
+  return { push, unshift, pop, shift, find, findNode, removeNode, moveToFront, isNearHead };
 };
 
 const buildIterator = (list) => () => {
