@@ -10,4 +10,10 @@ nvim.on('cursor', ({ x, y }) => {
   self.input.setCursor(y - 1, x);
 });
 
-nvim.on('mode', (mode) => (self.mode = mode));
+nvim.on('mode', (mode) => {
+  self.mode = mode;
+  self.input.cursorStyle = {
+    style: mode === 'insert' ? 'line' : 'block',
+    blinking: true,
+  };
+});
