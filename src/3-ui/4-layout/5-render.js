@@ -1,5 +1,5 @@
 const layout = new tui.BoxRenderable(ui.screen.renderer, {
-  id: 'wrapper',
+  id: 'layout',
   width: '100%',
   height: '100%',
   flexDirection: 'row',
