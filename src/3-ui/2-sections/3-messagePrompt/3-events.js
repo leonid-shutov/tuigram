@@ -11,7 +11,6 @@ nvim.on('cursor', ({ x, y }) => {
 });
 
 nvim.on('mode', (mode) => {
-  self.mode = mode;
   self.input.cursorStyle = {
     style: mode === 'insert' ? 'line' : 'block',
     blinking: true,

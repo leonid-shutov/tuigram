@@ -1,4 +1,4 @@
-ui.screen.renderer.keyInput.on('keypress', (e) => {
+KeyInput.on('keypress', (e) => {
   if (self.selected !== 'dialogs') e.stopPropagation();
 
   const skip = self.selectable && self.reserved.includes(e.raw);

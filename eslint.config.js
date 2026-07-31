@@ -29,11 +29,13 @@ module.exports = [
         OS: true,
         LinkedList: true,
         LinkedDialogs: true,
-        risk: true,
-        riskAsync: true,
+        Err: true,
         Message: true,
         Dialog: true,
         AsyncIterator: true,
+
+        // config common
+        source: true,
 
         // ui common
         Box: true,
@@ -41,8 +43,11 @@ module.exports = [
         Select: true,
         Textarea: true,
         ScrollBox: true,
+        KeyInput: true,
+        Keys: true,
 
         // application
+        config: true,
         tui: true,
         messenger: true,
         nvim: true,

@@ -9,7 +9,10 @@ const handlers = {
     const [y, x] = await nvim.client.window.cursor;
     nvim.emit('lines', lines, { x, y });
   }),
-  mode_change: ([[mode]]) => nvim.emit('mode', mode),
+  mode_change: ([[mode]]) => {
+    nvim.mode = mode;
+    nvim.emit('mode', mode);
+  },
 };
 
 nvim.client.on('notification', (method, args) => {

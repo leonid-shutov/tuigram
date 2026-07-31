@@ -1,1 +1,3 @@
-(label) => (self.component.title = label);
+(label) => {
+  self.component.title = label;
+};
