@@ -1,4 +1,4 @@
-const wrapper = ui.components.Box({
+const wrapper = Box({
   id: 'dialogsWrapper',
   width: 30,
   borderStyle: 'rounded',

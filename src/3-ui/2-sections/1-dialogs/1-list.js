@@ -1,4 +1,4 @@
-ui.components.Select({
+Select({
   id: 'dialogsList',
   height: '100%',
   options: [],

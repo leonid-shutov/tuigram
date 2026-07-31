@@ -1,4 +1,4 @@
-ui.components.Textarea({
+Textarea({
   width: '100%',
   height: 1,
   placeholder: 'Type a message...',

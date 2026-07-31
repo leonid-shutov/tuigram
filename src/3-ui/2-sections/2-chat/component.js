@@ -1,4 +1,4 @@
-ui.components.ScrollBox({
+ScrollBox({
   flexGrow: 1,
   borderStyle: 'rounded',
   scrollY: true,

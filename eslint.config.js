@@ -36,6 +36,10 @@ module.exports = [
         AsyncIterator: true,
 
         // ui common
+        Box: true,
+        Text: true,
+        Select: true,
+        Textarea: true,
         ScrollBox: true,
 
         // application

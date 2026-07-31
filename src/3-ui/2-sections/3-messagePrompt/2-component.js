@@ -1,4 +1,4 @@
-const wrapper = ui.components.Box({
+const wrapper = Box({
   borderStyle: 'rounded',
   flexShrink: 0,
 });
