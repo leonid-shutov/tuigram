@@ -4,3 +4,4 @@ client.session*
 *.log
 opentui-examples
 /cache/
+playground/

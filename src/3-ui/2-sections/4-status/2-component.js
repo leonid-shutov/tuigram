@@ -3,7 +3,7 @@ const bar = Box({
   height: 1,
   flexShrink: 0,
   paddingX: 1,
-  backgroundColor: '#24283b',
+  backgroundColor: theme.surface,
 });
 
 bar.add(self.text);

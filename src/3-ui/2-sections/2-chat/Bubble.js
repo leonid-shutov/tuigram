@@ -1,15 +1,19 @@
 ({ text, sender }) => {
+  // Outline bubble, no fill (a fill + border produces an ugly halo in opentui). Unselected
+  // self uses theme.selfBorder (same as incoming unless the theme differentiates); the
+  // selected/focused bubble uses theme.selected, distinct from both.
   const box = Box({
     flexDirection: 'column',
-    borderStyle: 'rounded',
-    borderColor: sender.isSelf ? '#283457' : '#1f2335',
+    borderStyle: theme.borderStyle,
+    customBorderChars: theme.borderChars,
+    borderColor: sender.isSelf ? theme.selfBorder : theme.border,
     paddingX: 1,
     alignSelf: sender.isSelf ? 'flex-end' : 'flex-start',
-    focusedBorderColor: 'green',
+    focusedBorderColor: theme.selected,
     focusable: true,
   });
 
-  box.add(Text({ content: text, fg: '#c0caf5' }));
+  box.add(Text({ content: text, fg: theme.fg }));
 
   return box;
 };

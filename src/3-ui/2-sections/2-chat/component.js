@@ -1,12 +1,13 @@
 ScrollBox({
   flexGrow: 1,
-  borderStyle: 'rounded',
+  borderStyle: theme.borderStyle,
+  customBorderChars: theme.borderChars,
   scrollY: true,
   scrollX: false,
   stickyScroll: true,
   stickyStart: 'bottom',
   focusable: true,
-  focusedBorderColor: '#42AAFF',
+  borderColor: theme.border,
   contentOptions: {
     flexDirection: 'column',
     gap: 1,

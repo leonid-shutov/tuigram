@@ -1,7 +1,10 @@
 const wrapper = Box({
   id: 'dialogsWrapper',
-  width: 30,
-  borderStyle: 'rounded',
+  width: theme.panelWidth,
+  borderStyle: theme.borderStyle,
+  customBorderChars: theme.borderChars,
+  borderColor: theme.border,
+  titleColor: theme.muted,
 });
 
 wrapper.add(self.list);

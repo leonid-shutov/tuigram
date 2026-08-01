@@ -11,6 +11,7 @@
   },
   "scripts": {
     "dev": "node --experimental-ffi --env-file=.env tuigram.js",
+    "playground": "node --experimental-ffi playground/playground.js",
     "fmt": "prettier --write .",
     "lint": "eslint ."
   },

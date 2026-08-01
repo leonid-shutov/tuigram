@@ -1,1 +1,1 @@
-Text({ content: '', fg: '#c0caf5' });
+Text({ content: '', fg: theme.fg });

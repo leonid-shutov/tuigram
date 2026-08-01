@@ -38,6 +38,7 @@ module.exports = [
         source: true,
 
         // ui common
+        theme: true,
         Box: true,
         Text: true,
         Select: true,
@@ -53,6 +54,15 @@ module.exports = [
         nvim: true,
         ui: true,
       },
+    },
+  },
+  {
+    files: ['playground/**/*.js'],
+    rules: {
+      'max-len': ['error', { code: 120, ignoreUrls: true }],
+      'no-nested-ternary': 'off',
+      camelcase: 'off',
+      'new-cap': 'off',
     },
   },
 ];
