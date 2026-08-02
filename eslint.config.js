@@ -12,6 +12,7 @@ module.exports = [
       'no-nested-ternary': 'off',
       camelcase: 'off',
       'new-cap': 'off',
+      curly: 'off',
     },
     languageOptions: {
       sourceType: 'module',
@@ -47,11 +48,14 @@ module.exports = [
         KeyInput: true,
         Keys: true,
 
+        // messagePrompt common
+        events: true,
+        input: true,
+
         // application
         config: true,
         tui: true,
         messenger: true,
-        nvim: true,
         ui: true,
       },
     },
