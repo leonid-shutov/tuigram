@@ -1,0 +1,1 @@
+() => (self.dialogs ? [...self.dialogs] : []);

@@ -34,6 +34,7 @@ module.exports = [
         Message: true,
         Dialog: true,
         AsyncIterator: true,
+        Fuzzy: true,
 
         // config common
         source: true,
