@@ -4,4 +4,5 @@
   reserved: ['q'],
   openedChatId: undefined,
   mapping: { 1: 'dialogs', 2: 'chat', 3: 'messagePrompt' },
+  shortcuts: { [Keys.CTRL_P]: 'picker' },
 });

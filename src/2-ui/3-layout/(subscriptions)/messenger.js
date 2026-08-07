@@ -9,3 +9,8 @@ messenger.on('message', (message) => {
     OS.notify(message.chatName, message.text ?? 'New message');
   }
 });
+
+messenger.on('historyRead', ({ chatId, isOutbox, unreadCount }) => {
+  if (isOutbox) return;
+  ui.sections.dialogs.setUnread(chatId, unreadCount);
+});
