@@ -1,1 +1,0 @@
-() => events.emit('capture', true);

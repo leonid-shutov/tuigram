@@ -1,4 +1,1 @@
-() => {
-  events.emit('capture', false);
-  events.emit('exit');
-};
+() => events.emit('exit');

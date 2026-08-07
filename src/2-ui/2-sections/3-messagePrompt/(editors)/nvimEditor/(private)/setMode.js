@@ -13,6 +13,5 @@ const MODE = {
   const mode = MODE[raw?.[0]] ?? raw;
   self.mode = mode;
   input.cursorStyle = { style: mode === 'insert' ? 'line' : 'block', blinking: true };
-  events.emit('capture', mode !== 'normal');
   events.emit('mode', mode);
 };

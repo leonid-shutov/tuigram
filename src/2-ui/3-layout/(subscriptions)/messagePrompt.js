@@ -5,5 +5,4 @@ ui.sections.messagePrompt.on('send', async (text) => {
   ui.sections.chat.confirmMessage(tempId, message);
 });
 
-ui.sections.messagePrompt.on('exit', () => self.select('chat'));
-void ui.sections.messagePrompt.on('capture', (capturing) => (self.selectable = !capturing));
+void ui.sections.messagePrompt.on('exit', () => self.select('chat'));

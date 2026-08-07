@@ -1,5 +1,3 @@
-// Floating overlay centered over the whole layout. Border only (no fill) to
-// avoid the fill+border halo; the inner input/list carry their own backgrounds.
 Box({
   id: 'picker',
   position: 'absolute',
@@ -14,6 +12,5 @@ Box({
   customBorderChars: theme.borderChars,
   borderColor: theme.accent,
   titleColor: theme.accent,
-  title: ' Jump to chat ',
   children: [self.input, self.list],
 });

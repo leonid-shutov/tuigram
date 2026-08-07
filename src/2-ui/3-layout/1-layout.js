@@ -1,8 +1,10 @@
 ({
-  selectable: true,
   selected: 'dialogs',
-  reserved: ['q'],
   openedChatId: undefined,
-  mapping: { 1: 'dialogs', 2: 'chat', 3: 'messagePrompt' },
-  shortcuts: { [Keys.CTRL_P]: 'picker' },
+  shortcuts: {
+    1: { label: ' 1 ', section: 'dialogs' },
+    2: { label: ' 2 ', section: 'chat' },
+    3: { label: ' 3 ', section: 'messagePrompt' },
+    [Keys.CTRL_P]: { label: ' Jump to chat ', section: 'picker' },
+  },
 });

@@ -5,5 +5,4 @@
   self.filter('');
   self.component.visible = true;
   self.input.focus();
-  self.emit('capture', true);
 };
