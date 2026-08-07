@@ -1,4 +1,4 @@
-const bar = Box({
+Box({
   width: '100%',
   height: 1,
   flexShrink: 0,
@@ -6,9 +6,5 @@ const bar = Box({
   gap: 1,
   paddingX: 1,
   backgroundColor: theme.surface,
+  children: [self.mode, self.translit],
 });
-
-bar.add(self.mode);
-bar.add(self.translit);
-
-bar;

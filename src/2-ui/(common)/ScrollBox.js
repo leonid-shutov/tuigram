@@ -1,4 +1,4 @@
-Object.assign((...options) => new tui.ScrollBoxRenderable(ui.screen.renderer, ...options), {
+Object.assign(Component(tui.ScrollBoxRenderable), {
   // Run a mutation that inserts content ABOVE a ScrollBox's current viewport without the
   // content already on screen appearing to move — and without a one-frame flicker.
   //

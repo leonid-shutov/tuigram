@@ -1,1 +1,1 @@
-(...options) => new tui.BoxRenderable(ui.screen.renderer, ...options);
+Component(tui.BoxRenderable);

@@ -1,1 +1,1 @@
-(...options) => new tui.SelectRenderable(ui.screen.renderer, ...options);
+Component(tui.SelectRenderable);

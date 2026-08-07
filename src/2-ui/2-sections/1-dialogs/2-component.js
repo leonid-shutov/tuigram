@@ -1,12 +1,9 @@
-const wrapper = Box({
+Box({
   id: 'dialogsWrapper',
   width: theme.panelWidth,
   borderStyle: theme.borderStyle,
   customBorderChars: theme.borderChars,
   borderColor: theme.border,
   titleColor: theme.muted,
+  children: [self.list],
 });
-
-wrapper.add(self.list);
-
-wrapper;

@@ -1,1 +1,1 @@
-(...options) => new tui.TextareaRenderable(ui.screen.renderer, ...options);
+Component(tui.TextareaRenderable);

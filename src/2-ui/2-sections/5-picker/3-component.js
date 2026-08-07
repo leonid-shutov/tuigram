@@ -1,6 +1,6 @@
 // Floating overlay centered over the whole layout. Border only (no fill) to
 // avoid the fill+border halo; the inner input/list carry their own backgrounds.
-const wrapper = Box({
+Box({
   id: 'picker',
   position: 'absolute',
   top: '15%',
@@ -15,9 +15,5 @@ const wrapper = Box({
   borderColor: theme.accent,
   titleColor: theme.accent,
   title: ' Jump to chat ',
+  children: [self.input, self.list],
 });
-
-wrapper.add(self.input);
-wrapper.add(self.list);
-
-wrapper;

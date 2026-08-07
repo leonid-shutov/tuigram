@@ -41,6 +41,7 @@ module.exports = [
 
         // ui common
         theme: true,
+        Component: true,
         Box: true,
         Text: true,
         Select: true,
