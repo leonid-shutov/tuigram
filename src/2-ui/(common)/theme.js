@@ -12,6 +12,8 @@ const asciiBorderChars = {
   cross: '+',
 };
 
+const defaultSenderColors = ['#e06c75', '#e5c07b', '#98c379', '#56b6c2', '#61afef', '#c678dd', '#d19a66', '#7fdbca'];
+
 const themes = {
   'tokyo-night': {
     palette: {
@@ -74,6 +76,7 @@ const themes = {
     panelWidth: 30,
     selfBorder: '#16a34a', // green — self bubbles (incoming stay blue)
     selected: '#d97706', // orange — distinct on the light background
+    senderColors: ['#b4342a', '#8a6d00', '#2f7d32', '#00707d', '#1d4ed8', '#7c3aed', '#a1560a', '#0f766e'],
   },
   nord: {
     palette: {
@@ -172,6 +175,7 @@ const themes = {
     },
     borderStyle: 'single',
     panelWidth: 26,
+    senderColors: ['#e6e6e6', '#c4c4c4', '#a2a2a2', '#8a8a8a', '#d5d5d5', '#b3b3b3'],
   },
   'high-contrast': {
     palette: {
@@ -186,6 +190,7 @@ const themes = {
     },
     borderStyle: 'heavy',
     panelWidth: 30,
+    senderColors: ['#00ff5f', '#ffff00', '#00d7ff', '#ff5faf', '#ffffff', '#ff875f'],
   },
   'crt-amber': {
     palette: {
@@ -200,6 +205,7 @@ const themes = {
     },
     borderStyle: 'single',
     panelWidth: 28,
+    senderColors: ['#ffb000', '#ffd166', '#ff8c00', '#ffcf99', '#e59400', '#ffe0b3'],
   },
   y2k: {
     palette: {
@@ -229,6 +235,7 @@ const themes = {
     borderStyle: 'single',
     borderChars: asciiBorderChars,
     panelWidth: 30,
+    senderColors: ['#33ff33', '#66ff66', '#00cc44', '#99ff99', '#00ff88', '#7fff00'],
   },
 };
 
@@ -240,4 +247,5 @@ const theme = themes[config.theme];
   panelWidth: theme.panelWidth,
   selfBorder: theme.selfBorder ?? theme.palette.border,
   selected: theme.selected ?? theme.palette.accent,
+  senderColors: theme.senderColors ?? defaultSenderColors,
 });
