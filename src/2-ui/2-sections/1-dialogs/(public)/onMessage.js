@@ -9,7 +9,7 @@
     self.dialogs.unshift(dialog);
   }
 
-  dialog.lastMessage = message.text;
+  dialog.lastMessage = message.text ?? message.placeholder;
   if (!message.sender.isSelf) dialog.unreadCount += 1;
 
   self.render();
