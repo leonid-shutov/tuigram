@@ -1,4 +1,5 @@
 messenger.on('message', (message) => {
+  if (ui.sections.dialogs.isArchived(message.chatId)) return;
   ui.sections.dialogs.onMessage(message);
   if (self.openedChatId === message.chatId) {
     ui.sections.chat.addMessage(message);

@@ -1,6 +1,7 @@
 // mtcute's Dialog.isMuted ignores the muteUntil timestamp until 0.31.0+ ships
 // the fix (mtcute@0571018), so compute it here and drop this on the next bump.
-const isMutedOf = ({ silent, muteUntil }) => {
+const isMutedOf = ({ silent, muteUntil }, peer) => {
+  console.log({ display: peer.displayName, silent, muteUntil });
   if (muteUntil !== undefined) return muteUntil > Date.now() / 1000;
   return silent ?? null;
 };
@@ -13,6 +14,6 @@ const isMutedOf = ({ silent, muteUntil }) => {
     isPinned,
     unreadCount,
     isUnread,
-    isMuted: isMutedOf(raw.notifySettings),
+    isMuted: isMutedOf(raw.notifySettings, peer),
   }),
 });

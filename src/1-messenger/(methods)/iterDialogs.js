@@ -1,1 +1,2 @@
-(chunkSize) => AsyncIterator.map(messenger.tg.iterDialogs({ chunkSize }), Dialog.from);
+({ chunkSize, archived = false } = {}) =>
+  AsyncIterator.map(messenger.tg.iterDialogs({ chunkSize, archived: archived ? 'only' : 'exclude' }), Dialog.from);
