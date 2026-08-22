@@ -1,7 +1,7 @@
 (message) => ({
   id: message.id,
   text: message.text,
-  placeholder: self.placeholder(message),
+  media: Media.from(message),
   sender: Obj.pick(message.sender, ['id', 'isSelf', 'displayName']),
   chatId: message.chat.id,
   chatName: message.chat.displayName,

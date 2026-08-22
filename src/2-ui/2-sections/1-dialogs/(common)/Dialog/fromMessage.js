@@ -1,6 +1,6 @@
 (message, unreadCount = 0) => ({
   chatId: message.chatId,
   name: message.chatName,
-  lastMessage: message.text ?? message.preview,
+  lastMessage: Dialog.preview(message),
   unreadCount,
 });

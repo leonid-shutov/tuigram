@@ -48,6 +48,7 @@ module.exports = [
         Textarea: true,
         ScrollBox: true,
         KeyInput: true,
+        Media: true,
         Keys: true,
 
         // messagePrompt common

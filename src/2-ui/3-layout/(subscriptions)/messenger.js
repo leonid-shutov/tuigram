@@ -7,7 +7,7 @@ messenger.on('message', (message) => {
     void messenger.readHistory(message.chatId);
     // TODO: consider moving dialogs (data) out of dialogs ui section
   } else if (!message.sender.isSelf && !ui.sections.dialogs.isMuted(message.chatId)) {
-    OS.notify(message.chatName, message.text ?? 'New message');
+    OS.notify(message.chatName, message.text || Media.placeholder(message.media) || 'New message');
   }
 });
 
