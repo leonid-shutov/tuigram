@@ -5,12 +5,25 @@
   "license": "MIT",
   "homepage": "https://github.com/leonid-shutov/tuigram#readme",
   "main": "tuigram.js",
+  "bin": {
+    "tuigram": "bin/tuigram.js"
+  },
+  "files": [
+    "bin",
+    "src",
+    "types",
+    "tuigram.js",
+    "README.md"
+  ],
+  "engines": {
+    "node": ">=22"
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/leonid-shutov/tuigram.git"
   },
   "scripts": {
-    "dev": "node --experimental-ffi --env-file=.env tuigram.js",
+    "dev": "node --experimental-ffi --env-file-if-exists=.env tuigram.js",
     "playground": "node --experimental-ffi playground/playground.js",
     "fmt": "prettier --write .",
     "lint": "eslint ."
@@ -19,7 +32,8 @@
     "@leonid-shutov/uncommonjs": "^1.0.0-alpha.25",
     "@mtcute/dispatcher": "^0.29.7",
     "@mtcute/node": "^0.29.7",
-    "@opentui/core": "^0.4.5",
+    "@opentui/core": "^0.5.7",
+    "@opentui/qrcode": "^0.5.7",
     "neovim": "^5.4.0"
   },
   "devDependencies": {

@@ -1,11 +1,17 @@
 'use strict';
 
+const os = require('os');
 const path = require('path');
-const { appendFileSync, writeFileSync } = require('fs');
+const { appendFileSync, mkdirSync, writeFileSync } = require('fs');
 const uncommonjs = require('@leonid-shutov/uncommonjs');
 
-const LOG_FILE = 'app.log';
-writeFileSync(LOG_FILE, ''); // truncate on startup
+// The renderer owns the terminal, so `console` has to go to a file. XDG resolution is
+// duplicated here (see src/0-config/(common)/paths.js) because this runs before the app.
+const stateHome = process.env.XDG_STATE_HOME || path.join(os.homedir(), '.local', 'state');
+const LOG_FILE = process.env.TUIGRAM_LOG || path.join(stateHome, 'tuigram', 'tuigram.log');
+
+mkdirSync(path.dirname(LOG_FILE), { recursive: true, mode: 0o700 });
+writeFileSync(LOG_FILE, '', { mode: 0o600 }); // truncate on startup
 
 function formatArgs(args) {
   return args.map((arg) => (typeof arg === 'object' ? JSON.stringify(arg, null, 2) : String(arg))).join(' ');
@@ -31,6 +37,6 @@ process.on('uncaughtException', (error) => {
 (async () => {
   const tui = await import('@opentui/core');
   const rootDir = path.resolve(__dirname);
-  const context = { console: mockConsole, tui, process };
+  const context = { console: mockConsole, tui, process, AbortController };
   await uncommonjs.loadApplication(context, { rootDir });
 })();

@@ -1,6 +1,6 @@
 // Sibling order on the wrapper is meaningful: layout fills the space, status is the bottom
 // bar, and the picker is absolutely positioned on top of both.
-ui.screen.wrapper.add(
+screen.wrapper.add(
   Box({
     id: 'layout',
     width: '100%',
@@ -17,7 +17,7 @@ ui.screen.wrapper.add(
   }),
 );
 
-ui.screen.wrapper.add(ui.sections.status.component);
-ui.screen.wrapper.add(ui.sections.picker.component);
+screen.wrapper.add(ui.sections.status.component);
+screen.wrapper.add(ui.sections.picker.component);
 
 ui.sections.dialogs.focus();

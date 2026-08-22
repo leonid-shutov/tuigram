@@ -12,9 +12,7 @@ const asciiBorderChars = {
   cross: '+',
 };
 
-const defaultSenderColors = ['#e06c75', '#e5c07b', '#98c379', '#56b6c2', '#61afef', '#c678dd', '#d19a66', '#7fdbca'];
-
-const themes = {
+({
   'tokyo-night': {
     palette: {
       bg: '#1a1b26',
@@ -237,15 +235,4 @@ const themes = {
     panelWidth: 30,
     senderColors: ['#33ff33', '#66ff66', '#00cc44', '#99ff99', '#00ff88', '#7fff00'],
   },
-};
-
-const theme = themes[config.theme];
-({
-  ...theme.palette,
-  borderStyle: theme.borderStyle,
-  borderChars: theme.borderChars,
-  panelWidth: theme.panelWidth,
-  selfBorder: theme.selfBorder ?? theme.palette.border,
-  selected: theme.selected ?? theme.palette.accent,
-  senderColors: theme.senderColors ?? defaultSenderColors,
 });
