@@ -16,6 +16,7 @@ declare global {
     const tg: TelegramClient;
     const dispatcher: Dispatcher;
     const sendMessage: (chatId: string, text: string) => Promise<Message>;
+    const getReadOutboxMaxId: (chatId: string) => Promise<number>;
   }
 
   namespace node {

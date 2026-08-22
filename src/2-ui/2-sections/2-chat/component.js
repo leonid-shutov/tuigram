@@ -8,6 +8,7 @@ ScrollBox({
   stickyStart: 'bottom',
   focusable: true,
   borderColor: theme.border,
+  bottomTitleAlignment: 'right',
   contentOptions: {
     flexDirection: 'column',
     gap: 1,

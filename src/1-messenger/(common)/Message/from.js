@@ -2,6 +2,7 @@
   id: message.id,
   text: message.text,
   media: Media.from(message),
+  pending: false,
   sender: Obj.pick(message.sender, ['id', 'isSelf', 'displayName']),
   chatId: message.chat.id,
   chatName: message.chat.displayName,

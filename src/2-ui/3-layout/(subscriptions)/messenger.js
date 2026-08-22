@@ -11,7 +11,10 @@ messenger.on('message', (message) => {
   }
 });
 
-messenger.on('historyRead', ({ chatId, isOutbox, unreadCount }) => {
-  if (isOutbox) return;
+messenger.on('historyRead', ({ chatId, isOutbox, maxReadId, unreadCount }) => {
+  if (isOutbox) {
+    if (self.openedChatId === chatId) ui.sections.chat.setReadUpTo(maxReadId);
+    return;
+  }
   ui.sections.dialogs.setUnread(chatId, unreadCount);
 });

@@ -1,5 +1,5 @@
 (text) => {
-  const tempId = Random.uuid();
-  self.addMessage({ id: tempId, text, sender: { isSelf: true } });
-  return tempId;
+  const message = Message.pending(text);
+  self.addMessage(message);
+  return message.id;
 };

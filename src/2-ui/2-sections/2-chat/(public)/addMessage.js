@@ -3,4 +3,5 @@
   const bubble = self.Bubble(message);
   self.component.add(bubble);
   message.bubble = bubble;
+  self.renderReceipt();
 };
