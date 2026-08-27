@@ -1,3 +1,4 @@
+/** @type {ChatSelf['open']} */
 async (chatId) => {
   self.clear();
   self.iterator = messenger.getHistory(chatId, 30, 20);

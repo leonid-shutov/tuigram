@@ -1,4 +1,6 @@
+/** @type {NvimEditorSelf['syncText']} */
 async () => {
+  const { input } = ui.sections.messagePrompt;
   const buffer = await self.nvim.buffer;
   const lines = await buffer.lines;
   input.replaceText(lines.join('\n'));

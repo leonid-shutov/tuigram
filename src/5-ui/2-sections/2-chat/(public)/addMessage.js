@@ -1,3 +1,4 @@
+/** @type {ChatSelf['addMessage']} */
 (message) => {
   self.messages.push(message);
   const bubble = self.Bubble(message);

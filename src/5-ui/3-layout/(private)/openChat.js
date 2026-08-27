@@ -1,3 +1,4 @@
+/** @type {LayoutSelf['openChat']} */
 (dialog) => {
   const chatId = dialog.chatId;
   if (self.openedChatId !== chatId) {

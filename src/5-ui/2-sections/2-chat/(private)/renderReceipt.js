@@ -1,3 +1,4 @@
+/** @type {ChatSelf['renderReceipt']} */
 () => {
   const last = self.messages.tail?.value;
   if (last === undefined || !last.sender.isSelf) {

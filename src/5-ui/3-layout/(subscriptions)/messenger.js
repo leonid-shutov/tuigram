@@ -1,4 +1,4 @@
-messenger.on('message', (message) => {
+messenger.onNewMessage((message) => {
   if (ui.sections.dialogs.isArchived(message.chatId)) return;
   ui.sections.dialogs.onMessage(message);
   if (self.openedChatId === message.chatId) {
@@ -11,7 +11,7 @@ messenger.on('message', (message) => {
   }
 });
 
-messenger.on('historyRead', ({ chatId, isOutbox, maxReadId, unreadCount }) => {
+messenger.onHistoryRead(({ chatId, isOutbox, maxReadId, unreadCount }) => {
   if (isOutbox) {
     if (self.openedChatId === chatId) ui.sections.chat.setReadUpTo(maxReadId);
     return;

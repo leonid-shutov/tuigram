@@ -1,8 +1,9 @@
+/** @type {PickerSelf['filter']} */
 (query) => {
-  const matches = self.dialogs
+  const matches = self.dialogList
     .map((dialog) => ({ dialog, score: Fuzzy.score(query, dialog.name) }))
     .filter((match) => match.score !== null)
-    .sort((a, b) => b.score - a.score);
+    .sort((a, b) => (b.score ?? 0) - (a.score ?? 0));
 
   self.list.options = matches.map(({ dialog }) => ({
     name: dialog.name,

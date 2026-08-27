@@ -1,1 +1,4 @@
-() => events.emit('exit');
+/** @type {PlainEditorSelf['exit']} */
+() => {
+  ui.sections.messagePrompt.events.emit('exit');
+};

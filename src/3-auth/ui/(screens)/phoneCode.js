@@ -1,3 +1,4 @@
+/** @type {AuthUiModule['phoneCode']} */
 ({ invalid, sentVia }) =>
   self.ask({
     label: invalid ? 'That code was not accepted. Try again:' : `Confirmation code (sent via ${sentVia}):`,

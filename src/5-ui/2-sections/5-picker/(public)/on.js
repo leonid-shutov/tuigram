@@ -1,2 +1,5 @@
 self.emitter ??= new node.events.EventEmitter();
-(event, handler) => self.emitter.on(event, handler);
+/** @type {PickerOnImpl} */
+(event, handler) => {
+  self.emitter.on(event, handler);
+};

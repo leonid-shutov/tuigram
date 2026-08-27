@@ -1,3 +1,4 @@
+/** @type {PlainEditorSelf['key']} */
 (event) => {
   const { name, shift, option } = event;
   if (name === 'escape') self.exit();

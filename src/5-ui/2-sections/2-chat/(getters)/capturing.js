@@ -1,1 +1,2 @@
+/** @type {() => ChatSelf['capturing']} */
 () => false;

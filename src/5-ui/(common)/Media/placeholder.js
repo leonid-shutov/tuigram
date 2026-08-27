@@ -1,8 +1,15 @@
+/** @param {string} s */
 const clip = (s) => (s.length > 40 ? `${s.slice(0, 39)}…` : s);
+/** @param {number} s */
 const time = (s) => `${Math.floor(s / 60)}:${String(Math.floor(s % 60)).padStart(2, '0')}`;
 // duration is 0 when the sender omitted the attribute
+/**
+ * @param {string} text
+ * @param {number} duration
+ */
 const withTime = (text, duration) => (duration > 0 ? `${text} ${time(duration)}` : text);
 
+/** @type {typeof Media.placeholder} */
 (media) => {
   if (!media) return null;
   switch (media.type) {

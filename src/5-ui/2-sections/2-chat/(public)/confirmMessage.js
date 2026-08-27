@@ -1,6 +1,7 @@
+/** @type {ChatSelf['confirmMessage']} */
 (tempId, confirmedMessage) => {
-  const pendingMessage = self.messages.find(({ id }) => id === tempId);
-  pendingMessage.id = confirmedMessage.id;
-  pendingMessage.pending = false;
+  const node = self.messages.findNode(({ id }) => id === tempId);
+  if (node === null) return;
+  node.value = { ...confirmedMessage, bubble: node.value.bubble };
   self.renderReceipt();
 };

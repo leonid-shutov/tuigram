@@ -1,3 +1,4 @@
+/** @type {AuthUiSelf['ask']} */
 ({ label, hint, placeholder }) =>
   new Promise((resolve) => {
     const input = Input({

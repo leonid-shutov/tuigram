@@ -1,1 +1,4 @@
-(label) => (self.component.title = label);
+/** @type {DialogsSelf['setLabel']} */
+(label) => {
+  self.component.title = label;
+};

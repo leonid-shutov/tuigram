@@ -1,8 +1,12 @@
 const { ErrorCorrectionLevel } = npm['@opentui/qrcode'];
 
+/** @type {AuthUiModule['qrLogin']} */
 (onPhone) => {
+  /** @type {AuthScreenHandle | null} */
   let handle = null;
+  /** @type {import('@opentui/qrcode').QRCodeRenderable | null} */
   let code = null;
+  /** @type {import('@opentui/core').TextRenderable | null} */
   let link = null;
 
   const mount = () => {
@@ -31,8 +35,8 @@ const { ErrorCorrectionLevel } = npm['@opentui/qrcode'];
 
   return (url) => {
     if (handle === null) mount();
-    code.content = url;
-    link.content = url;
-    handle.render();
+    if (code !== null) code.content = url;
+    if (link !== null) link.content = url;
+    handle?.render();
   };
 };

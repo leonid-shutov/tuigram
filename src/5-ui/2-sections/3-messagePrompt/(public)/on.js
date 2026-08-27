@@ -1,1 +1,4 @@
-(event, handler) => events.on(event, handler);
+/** @type {MessagePromptOnImpl} */
+(event, handler) => {
+  ui.sections.messagePrompt.events.on(event, handler);
+};

@@ -1,3 +1,4 @@
+/** @type {ChatSelf['addPendingMessage']} */
 (text) => {
   const message = Message.pending(text);
   self.addMessage(message);

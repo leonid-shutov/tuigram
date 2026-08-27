@@ -1,5 +1,6 @@
 // Normalises mtcute's media into a plain, presentation-free descriptor: a `type` plus the
 // metadata mtcute has already parsed.
+/** @type {typeof Media.from} */
 (message) => {
   // .media rebuilds its object on every access, so read it once.
   const media = message.media;

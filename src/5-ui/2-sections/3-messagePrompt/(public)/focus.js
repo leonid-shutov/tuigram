@@ -1,6 +1,7 @@
+/** @type {MessagePromptSelf['focus']} */
 () => {
   self.component.borderColor = config.theme.accent;
   self.component.titleColor = config.theme.accent;
-  input.focus();
+  ui.sections.messagePrompt.input.focus();
   self.editor.focus?.();
 };

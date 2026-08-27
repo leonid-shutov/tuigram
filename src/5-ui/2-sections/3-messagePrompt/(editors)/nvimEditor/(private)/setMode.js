@@ -1,3 +1,4 @@
+/** @type {Record<string, string | undefined>} */
 const MODE = {
   n: 'normal',
   i: 'insert',
@@ -9,7 +10,9 @@ const MODE = {
   s: 'select',
 };
 
+/** @type {NvimEditorSelf['setMode']} */
 (raw) => {
+  const { events, input } = ui.sections.messagePrompt;
   const mode = MODE[raw?.[0]] ?? raw;
   self.mode = mode;
   input.cursorStyle = { style: mode === 'insert' ? 'line' : 'block', blinking: true };

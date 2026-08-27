@@ -1,11 +1,13 @@
 {
   "compilerOptions": {
     "target": "ESNext",
+    "lib": ["ESNext"],
     "moduleResolution": "node",
     "strict": true,
     "baseUrl": ".",
     "preserveWatchOutput": true,
     "allowJs": true,
+    "checkJs": true,
     "noEmit": true,
     "skipLibCheck": true
   },

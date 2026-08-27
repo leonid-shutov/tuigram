@@ -33,6 +33,7 @@ module.exports = [
         Err: true,
         Message: true,
         Dialog: true,
+        UiDialog: true,
         AsyncIterator: true,
         Fuzzy: true,
 

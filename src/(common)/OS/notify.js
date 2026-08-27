@@ -1,3 +1,4 @@
+/** @type {Record<string, (title: string, text: string) => [string, string[]]>} */
 const platforms = {
   linux: (title, text) => ['notify-send', ['--app-name=tuigram', title, text]],
   darwin: (title, text) => [
@@ -10,6 +11,7 @@ const platforms = {
   ],
 };
 
+/** @type {typeof OS.notify} */
 (title, body = '') => {
   const text = String(body).replace(/\s+/g, ' ').trim();
   const [cmd, args] = (platforms[process.platform] ?? platforms.linux)(title, text);

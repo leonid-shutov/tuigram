@@ -1,3 +1,4 @@
+/** @type {ChatSelf['loadMore']} */
 async () => {
   if (self.loadingMore || self.iterator === undefined) return;
   self.loadingMore = true;

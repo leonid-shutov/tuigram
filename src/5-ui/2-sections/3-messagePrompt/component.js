@@ -4,5 +4,5 @@ Box({
   borderColor: config.theme.border,
   titleColor: config.theme.muted,
   flexShrink: 0,
-  children: [input],
+  children: [ui.sections.messagePrompt.input],
 });

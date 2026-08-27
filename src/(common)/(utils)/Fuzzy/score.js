@@ -1,6 +1,7 @@
 // Fuzzy subsequence score of `query` against `text`. Returns a number (higher
 // is a better match) or null when `query` is not a subsequence of `text`.
 // Rewards matches at word starts and contiguous runs; penalizes gaps.
+/** @type {typeof Fuzzy.score} */
 (query, text) => {
   if (!query) return 0;
   const q = query.toLowerCase();

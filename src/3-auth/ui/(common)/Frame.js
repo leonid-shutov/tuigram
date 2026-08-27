@@ -1,3 +1,4 @@
+/** @type {typeof Frame} */
 ({ title, children }) =>
   Box({
     flexDirection: 'column',

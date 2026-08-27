@@ -1,3 +1,4 @@
+/** @type {typeof KeyInput} */
 ({
   onKey: (handler) =>
     screen.renderer.keyInput.on('keypress', (event) => {

@@ -3,17 +3,24 @@
 // `node:readline` prompts and `console.log`, both of which would fight the renderer.
 (async () => {
   const controller = new AbortController();
+  /** @type {string | null} */
   let invalid = null;
+  /** @type {string | null} */
   let sentVia = null;
 
   const qrCodeHandler = self.ui.qrLogin(() => controller.abort('phone'));
 
+  /** @type {Parameters<typeof self.client.start>[0]} */
   const params = {
     phone: () => self.ui.phoneNumber(),
     code: () => self.ui.phoneCode({ invalid: invalid === 'code', sentVia }),
     password: () => self.ui.passwordPrompt(invalid === 'password'),
-    codeSentCallback: (sentCode) => (sentVia = sentCode.type),
-    invalidCodeCallback: (type) => (invalid = type),
+    codeSentCallback: (sentCode) => {
+      sentVia = sentCode.type;
+    },
+    invalidCodeCallback: (type) => {
+      invalid = type;
+    },
   };
 
   try {
