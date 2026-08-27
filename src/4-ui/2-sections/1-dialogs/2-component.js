@@ -1,9 +1,9 @@
 Box({
   id: 'dialogsWrapper',
-  width: theme.panelWidth,
-  borderStyle: theme.borderStyle,
-  customBorderChars: theme.borderChars,
-  borderColor: theme.border,
-  titleColor: theme.muted,
+  width: config.theme.panelWidth,
+  borderStyle: config.theme.borderStyle,
+  customBorderChars: config.theme.borderChars,
+  borderColor: config.theme.border,
+  titleColor: config.theme.muted,
   children: [self.list],
 });

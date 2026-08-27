@@ -1,5 +1,5 @@
 () => {
-  self.component.borderColor = theme.border;
-  self.component.titleColor = theme.muted;
+  self.component.borderColor = config.theme.border;
+  self.component.titleColor = config.theme.muted;
   input.blur();
 };

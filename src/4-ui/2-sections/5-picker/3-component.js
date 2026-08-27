@@ -8,9 +8,9 @@ Box({
   zIndex: 1000,
   visible: false,
   flexDirection: 'column',
-  borderStyle: theme.borderStyle,
-  customBorderChars: theme.borderChars,
-  borderColor: theme.accent,
-  titleColor: theme.accent,
+  borderStyle: config.theme.borderStyle,
+  customBorderChars: config.theme.borderChars,
+  borderColor: config.theme.accent,
+  titleColor: config.theme.accent,
   children: [self.input, self.list],
 });

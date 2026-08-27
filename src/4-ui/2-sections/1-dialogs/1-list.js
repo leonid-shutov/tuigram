@@ -2,9 +2,9 @@ Select({
   id: 'dialogsList',
   height: '100%',
   options: [],
-  textColor: theme.fg,
-  descriptionColor: theme.muted,
-  selectedBackgroundColor: theme.selection,
-  selectedTextColor: theme.fg,
+  textColor: config.theme.fg,
+  descriptionColor: config.theme.muted,
+  selectedBackgroundColor: config.theme.selection,
+  selectedTextColor: config.theme.fg,
   showSelectionIndicator: false,
 });

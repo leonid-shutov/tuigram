@@ -1,1 +1,1 @@
-Text({ content: '', fg: theme.fg });
+Text({ content: '', fg: config.theme.fg });

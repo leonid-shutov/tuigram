@@ -4,16 +4,16 @@
 
   return Box({
     flexDirection: 'column',
-    borderStyle: theme.borderStyle,
-    customBorderChars: theme.borderChars,
-    borderColor: sender.isSelf ? theme.selfBorder : theme.border,
+    borderStyle: config.theme.borderStyle,
+    customBorderChars: config.theme.borderChars,
+    borderColor: sender.isSelf ? config.theme.selfBorder : config.theme.border,
     paddingX: 1,
     alignSelf: sender.isSelf ? 'flex-end' : 'flex-start',
-    focusedBorderColor: theme.selected,
+    focusedBorderColor: config.theme.selected,
     focusable: true,
     children: [
-      label && Text({ content: label, fg: theme.muted, attributes: tui.TextAttributes.ITALIC }),
-      text && Text({ content: text, fg: theme.fg }),
+      label && Text({ content: label, fg: config.theme.muted, attributes: tui.TextAttributes.ITALIC }),
+      text && Text({ content: text, fg: config.theme.fg }),
     ],
 
     ...(name && {

@@ -1,7 +1,3 @@
-// The QR sign-in screen. Mounted lazily on the first token: `tg.start()` returns without
-// calling `qrCodeHandler` at all when the stored session is still valid, and a warm start
-// must not flash a panel. The token rotates before it expires, so `update` is called
-// repeatedly and re-renders in place.
 const { ErrorCorrectionLevel } = npm['@opentui/qrcode'];
 
 (onPhone) => {
@@ -10,8 +6,6 @@ const { ErrorCorrectionLevel } = npm['@opentui/qrcode'];
   let link = null;
 
   const mount = () => {
-    // QRCodeRenderable defaults to black-on-white already, which is what scanning needs
-    // regardless of terminal theme.
     code = QRCode({
       content: '',
       errorCorrectionLevel: ErrorCorrectionLevel.L,

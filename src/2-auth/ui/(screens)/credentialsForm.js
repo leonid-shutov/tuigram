@@ -1,5 +1,3 @@
-// First-run wizard: tuigram ships no api_id/api_hash of its own, so every user registers
-// their own pair. Resolves with the validated credentials; `0-credentials.js` saves them.
 const INSTRUCTIONS = [
   'tuigram needs your own Telegram API credentials.',
   '',

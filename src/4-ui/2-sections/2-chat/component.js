@@ -1,13 +1,13 @@
 ScrollBox({
   flexGrow: 1,
-  borderStyle: theme.borderStyle,
-  customBorderChars: theme.borderChars,
+  borderStyle: config.theme.borderStyle,
+  customBorderChars: config.theme.borderChars,
   scrollY: true,
   scrollX: false,
   stickyScroll: true,
   stickyStart: 'bottom',
   focusable: true,
-  borderColor: theme.border,
+  borderColor: config.theme.border,
   bottomTitleAlignment: 'right',
   contentOptions: {
     flexDirection: 'column',

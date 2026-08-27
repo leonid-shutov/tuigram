@@ -5,6 +5,6 @@ Box({
   flexDirection: 'row',
   gap: 1,
   paddingX: 1,
-  backgroundColor: theme.surface,
+  backgroundColor: config.theme.surface,
   children: [self.mode, self.translit],
 });

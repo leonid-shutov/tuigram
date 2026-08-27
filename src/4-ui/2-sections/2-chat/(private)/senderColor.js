@@ -6,5 +6,5 @@
     hash ^= key.charCodeAt(i);
     hash = Math.imul(hash, 16777619);
   }
-  return theme.senderColors[Math.abs(hash) % theme.senderColors.length];
+  return config.theme.senderColors[Math.abs(hash) % config.theme.senderColors.length];
 };
