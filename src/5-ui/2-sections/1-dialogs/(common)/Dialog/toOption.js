@@ -1,3 +1,8 @@
+// @ts-check
+/**
+ * @param {import('../../../../../../types/domain').UiDialog} dialog
+ * @returns {import('../../../../../../types/domain').DialogOption}
+ */
 ({ chatId, name, lastMessage, unreadCount = 0, isUnread = false, isMuted = false }) => {
   const shouldShowDot = (unreadCount > 0 || isUnread) && !isMuted;
   // Inner text width of the dialogs list: wrapper box is config.theme.panelWidth in

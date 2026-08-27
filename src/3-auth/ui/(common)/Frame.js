@@ -1,3 +1,8 @@
+// @ts-check
+/**
+ * @param {{ title: string, children: OpenTUIChildren }} props
+ * @returns {import('@opentui/core').BoxRenderable}
+ */
 ({ title, children }) =>
   Box({
     flexDirection: 'column',

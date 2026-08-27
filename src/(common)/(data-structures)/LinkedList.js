@@ -1,6 +1,29 @@
+// @ts-check
+/**
+ * @template T
+ * @typedef {{ value: T, prev: Node<T> | null, next: Node<T> | null }} Node
+ */
+
+/**
+ * @template T
+ * @typedef {{ head: Node<T> | null, tail: Node<T> | null, size: number }} MutableList
+ */
+
+/**
+ * @template T
+ * @param {T} value
+ * @param {Node<T> | null} [prev]
+ * @param {Node<T> | null} [next]
+ * @returns {Node<T>}
+ */
 const createNode = (value, prev = null, next = null) => ({ value, prev, next });
 
+/**
+ * @template T
+ * @param {MutableList<T>} list
+ */
 const buildOperations = (list) => {
+  /** @param {T} value */
   const push = (value) => {
     const node = createNode(value, list.tail);
     if (list.tail !== null) list.tail.next = node;
@@ -9,6 +32,7 @@ const buildOperations = (list) => {
     list.size++;
   };
 
+  /** @param {T} value */
   const unshift = (value) => {
     const node = createNode(value, null, list.head);
     if (list.head) list.head.prev = node;
@@ -37,13 +61,16 @@ const buildOperations = (list) => {
     return value;
   };
 
+  /** @param {(value: T) => boolean} predicate */
   const findNode = (predicate) => {
     for (let node = list.head; node !== null; node = node.next) if (predicate(node.value)) return node;
     return null;
   };
 
+  /** @param {(value: T) => boolean} predicate */
   const find = (predicate) => findNode(predicate)?.value ?? null;
 
+  /** @param {Node<T>} node */
   const removeNode = (node) => {
     if (node.prev !== null) node.prev.next = node.next;
     else list.head = node.next;
@@ -53,16 +80,24 @@ const buildOperations = (list) => {
     return node.value;
   };
 
+  /** @param {Node<T>} node */
   const moveToFront = (node) => {
     removeNode(node);
     unshift(node.value);
     return node.value;
   };
 
+  /**
+   * @param {Node<T>} node
+   * @param {number} within
+   */
   const isNearHead = (node, within) => {
+    /** @type {Node<T> | null} */
+    let current = node;
     for (let i = 0; i < within; i++) {
-      if (node === list.head) return true;
-      node = node.prev;
+      if (current === list.head) return true;
+      if (current === null) return false;
+      current = current.prev;
     }
     return false;
   };
@@ -70,9 +105,14 @@ const buildOperations = (list) => {
   return { push, unshift, pop, shift, find, findNode, removeNode, moveToFront, isNearHead };
 };
 
+/**
+ * @template T
+ * @param {MutableList<T>} list
+ */
 const buildIterator = (list) => () => {
   let current = list.head;
   return {
+    /** @returns {IteratorResult<T>} */
     next: () => {
       if (current === null) return { value: null, done: true };
       const value = current.value;
@@ -82,7 +122,13 @@ const buildIterator = (list) => () => {
   };
 };
 
+/**
+ * @template T
+ * @param {Iterable<T>} [values]
+ * @returns {import('../../../types/collections').LinkedList<T>}
+ */
 const from = (values = []) => {
+  /** @type {MutableList<T>} */
   const list = { head: null, tail: null, size: 0 };
 
   const operations = buildOperations(list);

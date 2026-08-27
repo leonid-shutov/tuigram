@@ -1,6 +1,16 @@
+// @ts-check
+/**
+ * @template {object} TOptions
+ * @template {import('@opentui/core').BaseRenderable} TInstance
+ * @param {new (ctx: import('@opentui/core').RenderContext, options: TOptions) => TInstance} Renderable
+ * @returns {(props?: { children?: OpenTUIChildren } & TOptions) => TInstance}
+ */
 (Renderable) =>
-  ({ children, ...options } = {}) => {
+  (/** @type {any} */ props) => {
+    const { children, ...options } = props ?? {};
     const component = new Renderable(screen.renderer, options);
-    for (const child of [children ?? []].flat(Infinity)) if (child) component.add(child);
+    /** @type {any[]} */
+    const flattened = [children ?? []].flat(Infinity);
+    for (const child of flattened) if (child) component.add(child);
     return component;
   };

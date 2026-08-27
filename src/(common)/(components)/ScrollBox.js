@@ -1,3 +1,4 @@
+// @ts-check
 Object.assign(Component(tui.ScrollBoxRenderable), {
   // Run a mutation that inserts content ABOVE a ScrollBox's current viewport without the
   // content already on screen appearing to move — and without a one-frame flicker.
@@ -30,6 +31,10 @@ Object.assign(Component(tui.ScrollBoxRenderable), {
   //      Refreshing scrollSize (1) keeps the target off the bottom, so the box stays in its
   //      manually-scrolled state and never snaps. We also set scrollTop absolutely rather
   //      than via a relative scrollBy, so the result can't accumulate that clamp.
+  /**
+   * @param {import('@opentui/core').ScrollBoxRenderable} component
+   * @param {() => void} mutate
+   */
   preserveScroll: (component, mutate) => {
     const content = component.content.getLayoutNode();
     const heightBefore = content.getComputedLayout().height;
@@ -37,9 +42,11 @@ Object.assign(Component(tui.ScrollBoxRenderable), {
 
     mutate();
 
+    /** @type {import('@opentui/core').Renderable} */
     let root = component;
     while (root.parent) root = root.parent;
-    root.calculateLayout();
+    // eslint-disable-next-line no-extra-parens -- JSDoc type-assertion cast, not redundant
+    /** @type {import('@opentui/core').RootRenderable} */ (root).calculateLayout();
 
     const heightAfter = content.getComputedLayout().height;
     component.verticalScrollBar.scrollSize = heightAfter;

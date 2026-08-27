@@ -1,3 +1,4 @@
+// @ts-check
 const asciiBorderChars = {
   topLeft: '+',
   topRight: '+',
@@ -12,6 +13,7 @@ const asciiBorderChars = {
   cross: '+',
 };
 
+/** @type {Record<string, import('../../../types/config').ThemeDefinition>} */
 ({
   'tokyo-night': {
     palette: {

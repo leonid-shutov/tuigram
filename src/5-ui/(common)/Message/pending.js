@@ -1,3 +1,8 @@
+// @ts-check
+/**
+ * @param {string} text
+ * @returns {import('../../../../types/domain').AppMessage}
+ */
 (text) => ({
   id: Random.uuid(),
   text,
