@@ -11,7 +11,7 @@ npm install -g tuigram
 tuigram
 ```
 
-Node.js 22 or newer is required.
+Node.js 26 or newer is required.
 
 ## First run
 
