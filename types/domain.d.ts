@@ -22,17 +22,17 @@ export type AppMessage = {
   isGroup: boolean;
 };
 
-export type MessengerDialog = {
+export type Dialog = {
   chatId: number;
   name: string;
-  lastMessage: AppMessage;
+  lastMessage: AppMessage | null;
   isPinned: boolean;
   unreadCount: number;
   isUnread: boolean;
   isMuted: boolean | null;
 };
 
-export type UiDialog = Omit<MessengerDialog, 'lastMessage'> & { lastMessage: string };
+export type UiDialog = Omit<Dialog, 'lastMessage'> & { lastMessage: string };
 
 export type DialogOption = { chatId: number; name: string; description: string };
 

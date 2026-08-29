@@ -7,14 +7,11 @@ const isMutedOf = ({ silent, muteUntil }) => {
   return silent ?? null;
 };
 
-/**
- * @param {import('@mtcute/node').Dialog} dialog
- * @returns {import('../../../../types/domain').MessengerDialog}
- */
+/** @type {typeof Dialog.from} */
 ({ peer, lastMessage, isPinned, unreadCount, isUnread, raw }) => ({
-  chatId: lastMessage.chat.id,
+  chatId: peer.id,
   name: peer.displayName,
-  lastMessage: Message.from(lastMessage),
+  lastMessage: lastMessage && Message.from(lastMessage),
   isPinned,
   unreadCount,
   isUnread,

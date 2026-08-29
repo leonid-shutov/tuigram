@@ -1,9 +1,9 @@
 import * as _blessed from 'blessed';
 import * as _opentui from '@opentui/core';
 import { NeovimClient } from 'neovim';
-import { Message as _Message, Dialog as _Dialog, TelegramClient } from '@mtcute/node';
+import { Message as MtCuteMessage, Dialog as MtCuteDialog, TelegramClient } from '@mtcute/node';
 import { Dispatcher } from '@mtcute/dispatcher';
-import { AppMessage, MessengerDialog, UiDialog, MediaDescriptor, DialogOption, LinkedDialogsHandle } from './domain';
+import { AppMessage, Dialog, UiDialog, MediaDescriptor, DialogOption, LinkedDialogsHandle } from './domain';
 import { LinkedList as _LinkedList } from './collections';
 import { Paths, Source, ThemeDefinition, ResolvedTheme } from './config';
 
@@ -41,28 +41,31 @@ declare global {
   namespace messenger {
     const tg: TelegramClient;
     const dispatcher: Dispatcher;
-    const sendMessage: (chatId: string, text: string) => Promise<_Message>;
+    const sendMessage: (chatId: string, text: string) => Promise<MtCuteMessage>;
     const getReadOutboxMaxId: (chatId: string) => Promise<number>;
   }
 
   namespace Message {
-    const from: (message: _Message) => AppMessage;
+    const from: (message: MtCuteMessage) => AppMessage;
     const pending: (text: string) => AppMessage;
   }
 
-  // 4-messenger/(common)/Dialog/from.js and 5-ui/2-sections/1-dialogs/(common)/Dialog/* are two
-  // distinct (common) scopes that happen to share the bare name `Dialog` — merged here as
-  // overloads since ambient declarations can't be scoped per-directory the way the loader is.
   namespace Dialog {
-    function from(dialog: _Dialog): MessengerDialog;
-    function from(dialog: MessengerDialog): UiDialog;
+    function from(dialog: MtCuteDialog): Dialog;
+  }
+
+  // 5-ui/2-sections/1-dialogs/(common)/UiDialog/* — named apart from the `Dialog` namespace
+  // above so the two (common) scopes don't merge into overloads (they're unrelated at runtime;
+  // ambient declarations can't be scoped per-directory the way the loader is).
+  namespace UiDialog {
+    function from(dialog: Dialog): UiDialog;
     function preview(message: Pick<AppMessage, 'text' | 'media'>): string;
     function fromMessage(message: AppMessage, unreadCount?: number): UiDialog;
     function toOption(dialog: UiDialog): DialogOption;
   }
 
   namespace Media {
-    const from: (message: _Message) => MediaDescriptor | null;
+    const from: (message: MtCuteMessage) => MediaDescriptor | null;
     const placeholder: (media: MediaDescriptor | null) => string | null;
   }
 

@@ -3,10 +3,10 @@
   const node = self.dialogs.findNode(message.chatId);
   if (node !== null) {
     dialog = node.value;
-    dialog.lastMessage = Dialog.preview(message);
+    dialog.lastMessage = UiDialog.preview(message);
     self.dialogs.bump(node);
   } else {
-    dialog = Dialog.fromMessage(message);
+    dialog = UiDialog.fromMessage(message);
     self.dialogs.unshift(dialog);
   }
 
