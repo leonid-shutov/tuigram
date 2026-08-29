@@ -1,8 +1,6 @@
 // @ts-check
-/**
- * @param {import('@mtcute/node').Message} message
- * @returns {import('../../../../types/domain').AppMessage}
- */
+
+/** @type {typeof Message.from} */
 (message) => ({
   id: message.id,
   text: message.text,

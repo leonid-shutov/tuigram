@@ -1,6 +1,3 @@
 // @ts-check
-/**
- * @param {Pick<import('../../../../../../types/domain').AppMessage, 'text' | 'media'>} message
- * @returns {string}
- */
+/** @type {typeof UiDialog.preview} */
 ({ text, media }) => text || Media.placeholder(media) || '';

@@ -11,28 +11,30 @@ export type MediaDescriptor =
   | { type: 'todo'; title: string }
   | { type: 'photo' | 'location' | 'live_location' | 'story' | 'paid' | 'webpage' | 'unknown' };
 
-export type AppMessage = {
-  id: number | string;
+export type Message = {
+  id: number;
   text: string;
   media: MediaDescriptor | null;
   pending: boolean;
   sender: { id: number | null; isSelf: boolean; displayName: string | null };
-  chatId: number | null;
-  chatName: string | null;
+  chatId: number;
+  chatName: string;
   isGroup: boolean;
 };
+
+export type PendingMessage = Omit<Message, 'chatId' | 'chatName'> & { chatId: undefined; chatName: undefined };
 
 export type Dialog = {
   chatId: number;
   name: string;
-  lastMessage: AppMessage | null;
+  lastMessage: Message | null;
   isPinned: boolean;
   unreadCount: number;
   isUnread: boolean;
   isMuted: boolean | null;
 };
 
-export type UiDialog = Omit<Dialog, 'lastMessage'> & { lastMessage: string };
+export type UiDialog = Omit<Dialog, 'lastMessage'> & { lastMessage: string | undefined };
 
 export type DialogOption = { chatId: number; name: string; description: string };
 

@@ -1,9 +1,16 @@
-import * as _blessed from 'blessed';
 import * as _opentui from '@opentui/core';
 import { NeovimClient } from 'neovim';
 import { Message as MtCuteMessage, Dialog as MtCuteDialog, TelegramClient } from '@mtcute/node';
 import { Dispatcher } from '@mtcute/dispatcher';
-import { AppMessage, Dialog, UiDialog, MediaDescriptor, DialogOption, LinkedDialogsHandle } from './domain';
+import {
+  Message,
+  Dialog,
+  UiDialog,
+  MediaDescriptor,
+  DialogOption,
+  LinkedDialogsHandle,
+  PendingMessage,
+} from './domain';
 import { LinkedList as _LinkedList } from './collections';
 import { Paths, Source, ThemeDefinition, ResolvedTheme } from './config';
 
@@ -46,8 +53,8 @@ declare global {
   }
 
   namespace Message {
-    const from: (message: MtCuteMessage) => AppMessage;
-    const pending: (text: string) => AppMessage;
+    const from: (message: MtCuteMessage) => Message;
+    const pending: (text: string) => PendingMessage;
   }
 
   namespace Dialog {
@@ -59,8 +66,8 @@ declare global {
   // ambient declarations can't be scoped per-directory the way the loader is).
   namespace UiDialog {
     function from(dialog: Dialog): UiDialog;
-    function preview(message: Pick<AppMessage, 'text' | 'media'>): string;
-    function fromMessage(message: AppMessage, unreadCount?: number): UiDialog;
+    function preview(message: Pick<Message, 'text' | 'media'>): string;
+    function fromMessage(message: Message, unreadCount?: number): UiDialog;
     function toOption(dialog: UiDialog): DialogOption;
   }
 
@@ -107,7 +114,7 @@ declare global {
   }
 
   namespace Random {
-    const uuid: () => string;
+    const id: () => number;
   }
 
   const paths: Paths;

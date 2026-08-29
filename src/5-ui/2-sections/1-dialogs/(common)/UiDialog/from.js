@@ -1,3 +1,6 @@
 // @ts-check
 /** @type {typeof UiDialog.from} */
-(dialog) => ({ ...dialog, lastMessage: UiDialog.preview(dialog.lastMessage) });
+(dialog) => ({
+  ...dialog,
+  lastMessage: dialog.lastMessage === null ? undefined : UiDialog.preview(dialog.lastMessage),
+});

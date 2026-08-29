@@ -26,7 +26,8 @@
     "dev": "node --experimental-ffi --env-file-if-exists=.env tuigram.js",
     "playground": "node --experimental-ffi playground/playground.js",
     "fmt": "prettier --write .",
-    "lint": "eslint ."
+    "lint": "eslint .",
+    "types": "tsc -p tsconfig.json"
   },
   "dependencies": {
     "@leonid-shutov/uncommonjs": "^1.0.0-alpha.25",
