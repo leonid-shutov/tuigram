@@ -2,11 +2,8 @@
 /** @typedef {import('../../../../../types/domain').UiDialog} UiDialog */
 /** @typedef {import('../../../../../types/collections').LinkedListNode<UiDialog>} UiDialogNode */
 
+/** @type {typeof LinkedDialogs} */
 ({
-  /**
-   * @param {UiDialog[]} dialogs
-   * @returns {import('../../../../../types/domain').LinkedDialogsHandle}
-   */
   from: (dialogs) => {
     const pinned = LinkedList.from(dialogs.filter((d) => d.isPinned));
     const unpinned = LinkedList.from(dialogs.filter((d) => !d.isPinned));

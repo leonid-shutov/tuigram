@@ -1,10 +1,7 @@
 // @ts-check
 // Normalises mtcute's media into a plain, presentation-free descriptor: a `type` plus the
 // metadata mtcute has already parsed.
-/**
- * @param {import('@mtcute/node').Message} message
- * @returns {import('../../../../types/domain').MediaDescriptor | null}
- */
+/** @type {typeof Media.from} */
 (message) => {
   // .media rebuilds its object on every access, so read it once.
   const media = message.media;

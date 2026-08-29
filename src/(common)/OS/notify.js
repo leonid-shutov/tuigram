@@ -12,10 +12,7 @@ const platforms = {
   ],
 };
 
-/**
- * @param {string} title
- * @param {string} [body]
- */
+/** @type {typeof OS.notify} */
 (title, body = '') => {
   const text = String(body).replace(/\s+/g, ' ').trim();
   const [cmd, args] = (platforms[process.platform] ?? platforms.linux)(title, text);

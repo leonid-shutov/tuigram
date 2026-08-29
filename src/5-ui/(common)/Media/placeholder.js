@@ -10,7 +10,7 @@ const time = (s) => `${Math.floor(s / 60)}:${String(Math.floor(s % 60)).padStart
  */
 const withTime = (text, duration) => (duration > 0 ? `${text} ${time(duration)}` : text);
 
-/** @param {import('../../../../types/domain').MediaDescriptor | null} media */
+/** @type {typeof Media.placeholder} */
 (media) => {
   if (!media) return null;
   switch (media.type) {

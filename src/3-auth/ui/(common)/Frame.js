@@ -1,8 +1,5 @@
 // @ts-check
-/**
- * @param {{ title: string, children: OpenTUIChildren }} props
- * @returns {import('@opentui/core').BoxRenderable}
- */
+/** @type {typeof Frame} */
 ({ title, children }) =>
   Box({
     flexDirection: 'column',

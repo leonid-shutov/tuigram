@@ -16,7 +16,7 @@ const stateDir = xdg('XDG_STATE_HOME', '.local', 'state');
 // 0700: an api_hash and a live session live here.
 for (const dir of [configDir, dataDir]) node.fs.mkdirSync(dir, { recursive: true, mode: 0o700 });
 
-/** @type {import('../../../types/config').Paths} */
+/** @type {typeof paths} */
 ({
   config: configDir,
   data: dataDir,
