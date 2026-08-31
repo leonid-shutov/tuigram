@@ -1,3 +1,4 @@
+/** @type {NvimEditorSelf['clear']} */
 async () => {
   const buffer = await self.nvim.buffer;
   await buffer.setLines([''], { start: 0, end: -1, strictIndexing: false });

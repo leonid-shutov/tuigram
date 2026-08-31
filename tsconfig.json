@@ -7,6 +7,7 @@
     "baseUrl": ".",
     "preserveWatchOutput": true,
     "allowJs": true,
+    "checkJs": true,
     "noEmit": true,
     "skipLibCheck": true
   },

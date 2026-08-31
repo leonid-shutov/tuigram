@@ -1,1 +1,4 @@
-() => events.emit('exit');
+/** @type {PlainEditorSelf['exit']} */
+() => {
+  events.emit('exit');
+};

@@ -1,6 +1,8 @@
+/** @param {import('@opentui/core').KeyEvent} event */
 const isPrintable = (event) =>
   !event.ctrl && !event.meta && event.sequence?.length === 1 && event.sequence >= ' ' && event.sequence !== '\x7f';
 
+/** @type {AuthUiSelf['askPassword']} */
 ({ label, hint }) =>
   new Promise((resolve) => {
     let buffer = '';

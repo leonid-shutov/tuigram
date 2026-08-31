@@ -1,4 +1,4 @@
-export type MediaDescriptor =
+export type Media =
   | { type: 'video'; duration: number; isAnimation: boolean; isRound: boolean }
   | { type: 'voice'; duration: number }
   | { type: 'audio'; duration: number; title: string | null; performer: string | null }
@@ -14,7 +14,7 @@ export type MediaDescriptor =
 export type Message = {
   id: number;
   text: string;
-  media: MediaDescriptor | null;
+  media: Media | null;
   pending: boolean;
   sender: { id: number | null; isSelf: boolean; displayName: string | null };
   chatId: number;

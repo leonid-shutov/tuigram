@@ -1,1 +1,4 @@
-() => (self.list.options = [...self.dialogs].map(UiDialog.toOption));
+/** @type {DialogsSelf['render']} */
+() => {
+  self.list.options = [...self.dialogs].map(UiDialog.toOption);
+};

@@ -1,3 +1,4 @@
+/** @type {AuthSelf['exit']} */
 (message, code) => {
   self.ui.dispose();
   screen.renderer.destroy();

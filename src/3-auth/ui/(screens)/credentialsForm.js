@@ -8,6 +8,7 @@ const INSTRUCTIONS = [
   'The pair identifies you personally — do not share it.',
 ];
 
+/** @param {string} placeholder */
 const Field = (placeholder) =>
   Input({
     width: 46,
@@ -21,13 +22,16 @@ const Field = (placeholder) =>
     cursorColor: config.theme.accent,
   });
 
+/** @param {string} content */
 const Label = (content) => Text({ content, fg: config.theme.accent });
 
+/** @type {AuthUiModule['credentialsForm']} */
 () =>
   new Promise((resolve) => {
     const fields = [Field('api_id, e.g. 1234567'), Field('api_hash, 32 hex characters')];
 
     let index = 0;
+    /** @param {number} next */
     const focus = (next) => {
       index = (next + fields.length) % fields.length;
       for (const [i, input] of fields.entries()) {

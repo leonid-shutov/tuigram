@@ -1,6 +1,8 @@
 // A raw mtcute stack behind a half-torn-down renderer is unreadable. Give the terminal back
 // first, then say what to do about it.
+/** @param {any} error */
 const explain = (error) => {
+  /** @type {Record<string, string | undefined>} */
   const messages = {
     API_ID_INVALID: `Telegram rejected the api_id / api_hash pair. Check them at https://my.telegram.org,
 then edit or delete ${config.paths.credentials} and start tuigram again.`,
@@ -11,4 +13,5 @@ then edit or delete ${config.paths.credentials} and start tuigram again.`,
   return messages[error?.text] ?? error?.message ?? String(error);
 };
 
+/** @type {AuthSelf['fail']} */
 (error) => self.exit(explain(error), 1);

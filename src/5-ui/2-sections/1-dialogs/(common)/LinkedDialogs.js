@@ -1,14 +1,10 @@
-// @ts-check
-/** @typedef {import('../../../../../types/domain').UiDialog} UiDialog */
-/** @typedef {import('../../../../../types/collections').LinkedListNode<UiDialog>} UiDialogNode */
-
 /** @type {typeof LinkedDialogs} */
 ({
   from: (dialogs) => {
     const pinned = LinkedList.from(dialogs.filter((d) => d.isPinned));
     const unpinned = LinkedList.from(dialogs.filter((d) => !d.isPinned));
     /** @param {number} chatId */
-    const isMatch = (chatId) => (/** @type {UiDialog} */ d) => d.chatId === chatId;
+    const isMatch = (chatId) => (/** @type {UiDialogValue} */ d) => d.chatId === chatId;
 
     /** @param {number} chatId */
     const findNode = (chatId) => pinned.findNode(isMatch(chatId)) ?? unpinned.findNode(isMatch(chatId));
@@ -21,7 +17,7 @@
       if (!node.value.isPinned) unpinned.moveToFront(node);
     };
 
-    /** @param {UiDialog} dialog */
+    /** @param {UiDialogValue} dialog */
     const unshift = (dialog) => unpinned.unshift(dialog);
 
     return {

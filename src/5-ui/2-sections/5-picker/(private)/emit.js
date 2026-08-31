@@ -1,2 +1,5 @@
 self.emitter ??= new node.events.EventEmitter();
-(event, ...args) => self.emitter.emit(event, ...args);
+/** @type {PickerSelf['emit']} */
+(event, ...args) => {
+  self.emitter.emit(event, ...args);
+};

@@ -1,4 +1,3 @@
-// @ts-check
 /** @type {typeof Frame} */
 ({ title, children }) =>
   Box({

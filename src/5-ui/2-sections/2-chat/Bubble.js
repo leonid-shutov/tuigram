@@ -1,5 +1,6 @@
+/** @type {ChatSelf['Bubble']} */
 ({ text, media, sender, isGroup }) => {
-  const name = isGroup && !sender.isSelf ? sender.displayName.slice(0, 24) : undefined;
+  const name = isGroup && !sender.isSelf ? sender.displayName?.slice(0, 24) : undefined;
   const label = Media.placeholder(media);
 
   return Box({

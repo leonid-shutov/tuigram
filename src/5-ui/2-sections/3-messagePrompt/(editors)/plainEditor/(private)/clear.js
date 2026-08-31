@@ -1,3 +1,4 @@
+/** @type {PlainEditorSelf['clear']} */
 () => {
   input.replaceText('');
   input.setCursor(0, 0);

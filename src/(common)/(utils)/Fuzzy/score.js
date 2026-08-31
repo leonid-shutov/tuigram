@@ -1,4 +1,3 @@
-// @ts-check
 // Fuzzy subsequence score of `query` against `text`. Returns a number (higher
 // is a better match) or null when `query` is not a subsequence of `text`.
 // Rewards matches at word starts and contiguous runs; penalizes gaps.

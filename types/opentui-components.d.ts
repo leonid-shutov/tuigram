@@ -1,7 +1,7 @@
 import * as _opentui from '@opentui/core';
 import type { QRCodeOptions, QRCodeRenderable } from '@opentui/qrcode';
 
-type ChildNode = _opentui.BaseRenderable | null | undefined | false;
+type ChildNode = _opentui.BaseRenderable | null | undefined | false | '';
 type Children = ChildNode | Children[];
 
 type ComponentFactory<TOptions extends object, TInstance extends _opentui.BaseRenderable> = (

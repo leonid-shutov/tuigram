@@ -1,4 +1,3 @@
-// @ts-check
 /**
  * @template {object} TOptions
  * @template {import('@opentui/core').BaseRenderable} TInstance

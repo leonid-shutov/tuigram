@@ -1,4 +1,3 @@
-// @ts-check
 /** @type {typeof KeyInput} */
 ({
   onKey: (handler) =>

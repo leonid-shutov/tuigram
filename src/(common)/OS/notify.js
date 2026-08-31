@@ -1,4 +1,3 @@
-// @ts-check
 /** @type {Record<string, (title: string, text: string) => [string, string[]]>} */
 const platforms = {
   linux: (title, text) => ['notify-send', ['--app-name=tuigram', title, text]],

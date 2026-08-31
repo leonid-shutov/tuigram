@@ -1,1 +1,2 @@
+/** @type {() => DialogsSelf['capturing']} */
 () => false;

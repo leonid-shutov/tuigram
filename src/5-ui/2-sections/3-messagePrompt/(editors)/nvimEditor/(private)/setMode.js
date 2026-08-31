@@ -1,3 +1,4 @@
+/** @type {Record<string, string | undefined>} */
 const MODE = {
   n: 'normal',
   i: 'insert',
@@ -9,6 +10,7 @@ const MODE = {
   s: 'select',
 };
 
+/** @type {NvimEditorSelf['setMode']} */
 (raw) => {
   const mode = MODE[raw?.[0]] ?? raw;
   self.mode = mode;

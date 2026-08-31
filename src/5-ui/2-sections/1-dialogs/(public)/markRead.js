@@ -1,3 +1,4 @@
+/** @type {DialogsSelf['markRead']} */
 (chatId) => {
   const dialog = self.dialogs.find(chatId);
   if (dialog === null) return;

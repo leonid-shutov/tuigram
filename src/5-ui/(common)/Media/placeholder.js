@@ -1,4 +1,3 @@
-// @ts-check
 /** @param {string} s */
 const clip = (s) => (s.length > 40 ? `${s.slice(0, 39)}…` : s);
 /** @param {number} s */

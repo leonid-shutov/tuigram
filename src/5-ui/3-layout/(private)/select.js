@@ -1,3 +1,4 @@
+/** @type {LayoutSelf['select']} */
 (section) => {
   if (self.selected === section) return;
   ui.sections[self.selected].blur?.();

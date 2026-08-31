@@ -1,4 +1,3 @@
-// @ts-check
 (() =>
   /** @type {typeof AsyncIterator.map} */
   async function* (source, fn) {

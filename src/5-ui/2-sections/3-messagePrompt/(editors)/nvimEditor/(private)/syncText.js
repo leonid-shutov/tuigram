@@ -1,3 +1,4 @@
+/** @type {NvimEditorSelf['syncText']} */
 async () => {
   const buffer = await self.nvim.buffer;
   const lines = await buffer.lines;

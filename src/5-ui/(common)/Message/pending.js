@@ -1,5 +1,3 @@
-// @ts-check
-
 /** @type {typeof Message.pending} */
 (text) => ({
   id: Random.id(),

@@ -1,4 +1,3 @@
-// @ts-check
 (() =>
   /** @type {typeof AsyncIterator.take} */
   async function* (source, n) {

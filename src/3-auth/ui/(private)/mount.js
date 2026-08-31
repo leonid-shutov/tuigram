@@ -1,9 +1,12 @@
+/** @type {AuthUiSelf['mount']} */
 ({ title, children }) => {
   if (self.current !== null) self.current.dispose();
 
   const box = Frame({ title, children });
+  /** @type {((event: import('@opentui/core').KeyEvent) => void)[]} */
   const listeners = [];
 
+  /** @type {AuthScreenHandle} */
   const handle = {
     onKey: (handler) => {
       screen.renderer.keyInput.on('keypress', handler);

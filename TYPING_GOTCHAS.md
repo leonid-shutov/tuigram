@@ -1,6 +1,6 @@
 # Typing gotcha: shared global script scope
 
-This project adds types to `src/**/*.js` via JSDoc + `// @ts-check`, without converting any
+This project adds types to `src/**/*.js` via JSDoc, without converting any
 file to an ES module. That last part is not optional: every file under `src/` is executed by
 the `@leonid-shutov/uncommonjs` loader as a plain `node:vm` script, not a module. Adding a
 top-level `import`/`export` statement to one of these files would throw a syntax error the
@@ -47,10 +47,34 @@ another file's local or a real ambient global from `types/*.d.ts`. It won't alwa
 itself as cleanly as the `config` case did — two colliding declarations with *compatible-looking*
 shapes can merge quietly with no error at all, producing a wrong-but-unflagged type.
 
-**When extending typing further:** before trusting a clean `tsc --noEmit` run, grep for
-duplicate top-level `const`/`let`/`function`/`@typedef` names across every `@ts-check`'d file,
-and check new names against what's declared in `types/global.d.ts`. A clean compile is not
-sufficient proof that nothing is colliding.
+**How far this is mitigated now:** `checkJs: true` means every file under `src/` is checked,
+so two top-level `const`/`let` declarations of the same name are a hard `TS2451 Cannot
+redeclare` error rather than a silent merge. Turning it on surfaced two real collisions:
+`SUFFIXES`, declared in both `3-auth/4-logout.js` and `3-auth/(private)/secureSession.js`, and
+`nvim` in `nvimEditor/1-nvim.js` against an ambient global of the same name. Both were
+renamed. What is still *not* caught is `@typedef` and `var`/`function` declarations, which
+merge rather than conflict — so when adding one, still check the name against
+`types/global.d.ts` and `types/sections.d.ts`.
+
+## `// @ts-check` changes how the loader classifies a file
+
+`lib/util.js` decides whether a file is an object module or a function module with
+`isObjectLiteral = (src) => src.startsWith('({')`, and that choice controls whether the file
+gets its own `self` scope. A leading `// @ts-check` comment means the source no longer starts
+with `({`, so **adding the comment silently reclassifies an object module as a function
+module**. That is why this project uses `checkJs: true` in `tsconfig.json` instead: no per-file
+marker, so the four genuine object modules (`(common)/(keyboard)/Keys.js`,
+`3-auth/ui/ui.js`, `nvimEditor/(private)/keycodes.js`, `5-ui/3-layout/1-layout.js`) keep
+starting with `({`.
+
+The same heuristic misfires in the other direction on its own: an arrow function with a
+destructured first parameter — `({ title, children }) => {…}` — also starts with `({` and was
+being loaded as an object module. Six files were in that state. The consequence is real for
+any such file that *writes* to `self`: the write lands on a per-file shadow `self` that no
+sibling can read. `3-auth/ui/(private)/mount.js` was the one affected — its
+`self.current = handle` was invisible to `(public)/dispose.js`, making `auth.ui.dispose()` a
+silent no-op. Prefixing those six with a JSDoc annotation restores the correct classification
+and fixes that.
 
 ## Related gotchas hit typing this codebase
 
@@ -58,9 +82,12 @@ sufficient proof that nothing is colliding.
   including `dom`, whose `Screen`/`Node`/`Text` globals collided with this app's own `screen`
   namespace, a `Node` linked-list typedef, and the `Text` component wrapper. Fixed by adding
   `"lib": ["ESNext"]` to `tsconfig.json` (correct anyway — this is a pure Node/TUI app).
+- **`npm.*` is `Record<string, any>`**, so anything built from a dependency was unchecked.
+  `types/global.d.ts` now names the four packages this app uses, which is what surfaced that
+  `apiId` was being handed to mtcute as a string where it wants a number.
 - **`skipLibCheck: true` means `.d.ts` files are never checked**, not even for unresolved
-  imports — only `.js` files with `@ts-check` get checked, and they just *use* whatever the
-  `.d.ts` files say, right or wrong. To sanity-check a new `.d.ts` file, temporarily run
+  imports — only the `.js` files get checked, and they just *use* whatever the `.d.ts` files
+  say, right or wrong. To sanity-check a new `.d.ts` file, temporarily run
   `npx tsc --noEmit --skipLibCheck false` as a one-off (never commit that flag).
 - **`@types/node` was missing.** Every `node:*` import (`node.fs`, `node.path`, `node.crypto`,
   `node.child_process`, `node.events`) silently resolved to `any` with zero errors, which

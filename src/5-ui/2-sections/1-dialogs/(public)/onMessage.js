@@ -1,3 +1,4 @@
+/** @type {DialogsSelf['onMessage']} */
 (message) => {
   let dialog;
   const node = self.dialogs.findNode(message.chatId);

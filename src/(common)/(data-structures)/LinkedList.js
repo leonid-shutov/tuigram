@@ -1,4 +1,3 @@
-// @ts-check
 /**
  * @template T
  * @typedef {{ value: T, prev: Node<T> | null, next: Node<T> | null }} Node

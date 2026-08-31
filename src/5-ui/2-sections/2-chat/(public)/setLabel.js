@@ -1,1 +1,4 @@
-(label) => (self.component.title = label);
+/** @type {ChatSelf['setLabel']} */
+(label) => {
+  self.component.title = label;
+};

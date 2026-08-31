@@ -1,5 +1,3 @@
-// @ts-check
-
 /** @type {typeof Message.from} */
 (message) => ({
   id: message.id,

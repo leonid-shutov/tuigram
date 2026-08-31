@@ -1,4 +1,3 @@
-// @ts-check
 /** @type {typeof UiDialog.toOption} */
 ({ chatId, name, lastMessage, unreadCount = 0, isUnread = false, isMuted = false }) => {
   const shouldShowDot = (unreadCount > 0 || isUnread) && !isMuted;

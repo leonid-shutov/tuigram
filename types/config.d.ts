@@ -52,4 +52,9 @@ export type Paths = {
   log: string;
 };
 
-export type Source = Record<string, unknown>;
+/** Parsed settings file. Unknown keys are tolerated; these are the ones 1-config reads. */
+export type Source = {
+  theme?: string;
+  translit?: boolean;
+  vim?: boolean;
+} & Record<string, unknown>;

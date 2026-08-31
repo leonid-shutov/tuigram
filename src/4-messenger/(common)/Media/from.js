@@ -1,4 +1,3 @@
-// @ts-check
 // Normalises mtcute's media into a plain, presentation-free descriptor: a `type` plus the
 // metadata mtcute has already parsed.
 /** @type {typeof Media.from} */

@@ -1,3 +1,4 @@
+/** @type {AuthUiModule['phoneNumber']} */
 () =>
   self.ask({
     label: 'Phone number, with the country code:',

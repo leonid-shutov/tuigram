@@ -1,16 +1,6 @@
 import * as _opentui from '@opentui/core';
-import { NeovimClient } from 'neovim';
-import { Message as MtCuteMessage, Dialog as MtCuteDialog, TelegramClient } from '@mtcute/node';
-import { Dispatcher } from '@mtcute/dispatcher';
-import {
-  Message,
-  Dialog,
-  UiDialog,
-  MediaDescriptor,
-  DialogOption,
-  LinkedDialogsHandle,
-  PendingMessage,
-} from './domain';
+import { Message as MtCuteMessage, Dialog as MtCuteDialog } from '@mtcute/node';
+import { Message, Dialog, UiDialog, Media, DialogOption, LinkedDialogsHandle, PendingMessage } from './domain';
 import { LinkedList as _LinkedList } from './collections';
 import { Paths, Source, ThemeDefinition, ResolvedTheme } from './config';
 
@@ -22,35 +12,31 @@ import * as _os from 'node:os';
 import * as _path from 'node:path';
 import * as _child_process from 'node:child_process';
 
-type MessagePromptEventMap = {
-  send: [text: string];
-  mode: [mode: string];
-  translit: [enabled: boolean];
-  exit: [];
-};
-
 declare global {
+  type MessagePromptEventMap = {
+    send: [text: string];
+    mode: [mode: string];
+    translit: [enabled: boolean];
+    exit: [];
+  };
+
   const tui: typeof _opentui;
-  const nvim: NeovimClient;
-  const npm: Record<string, any> & { '@opentui/qrcode': typeof import('@opentui/qrcode') };
-  const config: { theme: ResolvedTheme; paths: Paths; translit: boolean; vim: boolean };
-
-  namespace screen {
-    const renderer: _opentui.CliRenderer;
-    const wrapper: _opentui.BoxRenderable;
-  }
-
-  namespace auth {
-    const tg: TelegramClient;
-    const credentials: { apiId: number; apiHash: string };
-  }
-
-  namespace messenger {
-    const tg: TelegramClient;
-    const dispatcher: Dispatcher;
-    const sendMessage: (chatId: string, text: string) => Promise<MtCuteMessage>;
-    const getReadOutboxMaxId: (chatId: string) => Promise<number>;
-  }
+  /** Every dependency in package.json, keyed by package name. Named ones are typed. */
+  const npm: Record<string, any> & {
+    '@opentui/qrcode': typeof import('@opentui/qrcode');
+    '@mtcute/node': typeof import('@mtcute/node');
+    '@mtcute/dispatcher': typeof import('@mtcute/dispatcher');
+    neovim: typeof import('neovim');
+  };
+  const config: {
+    theme: ResolvedTheme;
+    /** Credentials are strings everywhere they are read from (env, JSON file, the form). */
+    credentials: { apiId: string | undefined; apiHash: string | undefined };
+    cli: { command: string | null; args: string[] };
+    paths: Paths;
+    translit: boolean;
+    vim: boolean;
+  };
 
   namespace Message {
     const from: (message: MtCuteMessage) => Message;
@@ -61,19 +47,16 @@ declare global {
     function from(dialog: MtCuteDialog): Dialog;
   }
 
-  // 5-ui/2-sections/1-dialogs/(common)/UiDialog/* — named apart from the `Dialog` namespace
-  // above so the two (common) scopes don't merge into overloads (they're unrelated at runtime;
-  // ambient declarations can't be scoped per-directory the way the loader is).
   namespace UiDialog {
     function from(dialog: Dialog): UiDialog;
-    function preview(message: Pick<Message, 'text' | 'media'>): string;
-    function fromMessage(message: Message, unreadCount?: number): UiDialog;
+    function preview(message: Pick<Message, 'text'> & { media?: Message['media'] }): string;
+    function fromMessage(message: DialogUpdate, unreadCount?: number): UiDialog;
     function toOption(dialog: UiDialog): DialogOption;
   }
 
   namespace Media {
-    const from: (message: MtCuteMessage) => MediaDescriptor | null;
-    const placeholder: (media: MediaDescriptor | null) => string | null;
+    const from: (message: MtCuteMessage) => Media | null;
+    const placeholder: (media: Media | null | undefined) => string | null;
   }
 
   const LinkedDialogs: { from: (dialogs: UiDialog[]) => LinkedDialogsHandle };
@@ -86,7 +69,7 @@ declare global {
     function risk<F extends (...args: any[]) => any>(
       fn: F,
       ...args: Parameters<F>
-    ): [null, ReturnType<F>] | [unknown, null];
+    ): [error: null, result: ReturnType<F>] | [error: Error, result: null];
   }
 
   namespace AsyncIterator {
@@ -123,9 +106,6 @@ declare global {
 
   const Frame: (props: { title: string; children: OpenTUIChildren }) => _opentui.BoxRenderable;
 
-  // 5-ui/2-sections/3-messagePrompt/(common)/ — scoped to that subtree at runtime, declared
-  // globally here per this project's existing ambient-typing convention (same simplification as
-  // `auth`/`messenger` above).
   const events: import('node:events').EventEmitter<MessagePromptEventMap>;
   const input: _opentui.TextareaRenderable;
 

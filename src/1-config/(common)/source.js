@@ -1,4 +1,3 @@
-// @ts-check
 /** @type {(path: string, encoding: BufferEncoding) => string} */
 const readFileSync = node.fs.readFileSync;
 const [error, file] = Err.risk(readFileSync, paths.settings, 'utf8');
