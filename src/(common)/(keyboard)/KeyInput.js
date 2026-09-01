@@ -5,5 +5,4 @@
       event.preventDefault();
       handler(event);
     }),
-  on: (...args) => screen.renderer.keyInput.on(...args),
 });

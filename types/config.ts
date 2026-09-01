@@ -55,6 +55,4 @@ export type Paths = {
 /** Parsed settings file. Unknown keys are tolerated; these are the ones 1-config reads. */
 export type Source = {
   theme?: string;
-  translit?: boolean;
-  vim?: boolean;
 } & Record<string, unknown>;

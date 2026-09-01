@@ -28,7 +28,7 @@ const config = xdg('XDG_CONFIG_HOME', '.config');
 This `config` was meant to be a purely local variable — a directory path string, used only to
 build `settings`/`credentials`/`session` paths within that one file. Because the file is
 script-scoped, that declaration became a **global** type binding. Meanwhile the real app-wide
-`config` (injected by the loader everywhere else, shaped like `{ theme, paths, translit, vim }`)
+`config` (injected by the loader everywhere else, shaped like `{ theme, credentials, cli, paths }`)
 is also declared as a global (in `types/global.ts`). TypeScript merged the two, and the
 practical effect surfaced in a totally unrelated file: `Frame.js` does `config.theme.borderStyle`,
 and `tsc` reported `Property 'theme' does not exist on type 'string'` — it had latched onto
@@ -49,11 +49,10 @@ shapes can merge quietly with no error at all, producing a wrong-but-unflagged t
 
 **How far this is mitigated now:** `checkJs: true` means every file under `src/` is checked,
 so two top-level `const`/`let` declarations of the same name are a hard `TS2451 Cannot
-redeclare` error rather than a silent merge. Turning it on surfaced two real collisions:
-`SUFFIXES`, declared in both `3-auth/4-logout.js` and `3-auth/(private)/secureSession.js`, and
-`nvim` in `nvimEditor/1-nvim.js` against an ambient global of the same name. Both were
-renamed. What is still *not* caught is `@typedef` and `var`/`function` declarations, which
-merge rather than conflict — so when adding one, still check the name against
+redeclare` error rather than a silent merge. Turning it on surfaced a real collision:
+`SUFFIXES`, declared in both `3-auth/4-logout.js` and `3-auth/(private)/secureSession.js`,
+which was renamed. What is still *not* caught is `@typedef` and `var`/`function` declarations,
+which merge rather than conflict — so when adding one, still check the name against
 `types/global.ts` and `types/sections.ts`.
 
 ## `// @ts-check` changes how the loader classifies a file
@@ -63,9 +62,8 @@ merge rather than conflict — so when adding one, still check the name against
 gets its own `self` scope. A leading `// @ts-check` comment means the source no longer starts
 with `({`, so **adding the comment silently reclassifies an object module as a function
 module**. That is why this project uses `checkJs: true` in `tsconfig.json` instead: no per-file
-marker, so the four genuine object modules (`(common)/(keyboard)/Keys.js`,
-`3-auth/ui/ui.js`, `nvimEditor/(private)/keycodes.js`, `5-ui/3-layout/1-layout.js`) keep
-starting with `({`.
+marker, so the three genuine object modules (`(common)/(keyboard)/Keys.js`,
+`3-auth/ui/ui.js`, `5-ui/3-layout/1-layout.js`) keep starting with `({`.
 
 The same heuristic misfires in the other direction on its own: an arrow function with a
 destructured first parameter — `({ title, children }) => {…}` — also starts with `({` and was
@@ -83,7 +81,7 @@ and fixes that.
   namespace, a `Node` linked-list typedef, and the `Text` component wrapper. Fixed by adding
   `"lib": ["ESNext"]` to `tsconfig.json` (correct anyway — this is a pure Node/TUI app).
 - **`npm.*` is `Record<string, any>`**, so anything built from a dependency was unchecked.
-  `types/global.ts` now names the four packages this app uses, which is what surfaced that
+  `types/global.ts` now names the three packages this app uses, which is what surfaced that
   `apiId` was being handed to mtcute as a string where it wants a number.
 - **`skipLibCheck: true` means `.d.ts` files are never checked**, not even for unresolved
   imports — only the `.js` files get checked, and they just *use* whatever the `.d.ts` files

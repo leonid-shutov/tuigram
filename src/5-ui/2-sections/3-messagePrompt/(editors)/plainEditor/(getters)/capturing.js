@@ -1,2 +1,0 @@
-/** @type {() => PlainEditorSelf['capturing']} */
-() => true;

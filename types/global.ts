@@ -15,8 +15,6 @@ import * as _child_process from 'node:child_process';
 declare global {
   type MessagePromptEventMap = {
     send: [text: string];
-    mode: [mode: string];
-    translit: [enabled: boolean];
     exit: [];
   };
 
@@ -26,7 +24,6 @@ declare global {
     '@opentui/qrcode': typeof import('@opentui/qrcode');
     '@mtcute/node': typeof import('@mtcute/node');
     '@mtcute/dispatcher': typeof import('@mtcute/dispatcher');
-    neovim: typeof import('neovim');
   };
   const config: {
     theme: ResolvedTheme;
@@ -34,8 +31,6 @@ declare global {
     credentials: { apiId: string | undefined; apiHash: string | undefined };
     cli: { command: string | null; args: string[] };
     paths: Paths;
-    translit: boolean;
-    vim: boolean;
   };
 
   namespace Message {
@@ -83,10 +78,9 @@ declare global {
 
   namespace KeyInput {
     const onKey: (handler: (event: _opentui.KeyEvent) => void) => void;
-    const on: (...args: Parameters<_opentui.KeyHandler['on']>) => void;
   }
 
-  const Keys: { CTRL_L: string; CTRL_P: string };
+  const Keys: { CTRL_P: string };
 
   namespace OS {
     const notify: (title: string, body?: string) => void;

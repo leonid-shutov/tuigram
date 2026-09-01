@@ -34,8 +34,7 @@
     "@mtcute/dispatcher": "^0.29.7",
     "@mtcute/node": "^0.29.7",
     "@opentui/core": "^0.5.7",
-    "@opentui/qrcode": "^0.5.7",
-    "neovim": "^5.4.0"
+    "@opentui/qrcode": "^0.5.7"
   },
   "devDependencies": {
     "@types/node": "^26.4.0",
