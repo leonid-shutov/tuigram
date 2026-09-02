@@ -120,6 +120,7 @@ declare global {
     selectMessage(message: LinkedListNode<ChatMessage> | null): void;
     senderColor(key: string): string;
     up(): Promise<void>;
+    scrollToBottom(): void;
   };
 
   // ── 5-ui/2-sections/3-messagePrompt ───────────────────────────────────────────────────

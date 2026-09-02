@@ -7,4 +7,5 @@ async (chatId) => {
   const messages = value.toReversed();
   for (const message of messages) self.addMessage(message);
   self.selectMessage(self.messages.tail);
+  self.scrollToBottom();
 };
