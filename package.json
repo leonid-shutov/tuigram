@@ -1,10 +1,26 @@
 {
   "name": "tuigram",
-  "version": "1.0.0-alpha.1",
+  "version": "1.0.0-alpha.2",
+  "description": "Termial UI Client for Telegram",
+  "keywords": [
+    "telegram",
+    "tui",
+    "terminal",
+    "cli",
+    "vim",
+    "mtcute",
+    "opentui"
+  ],
   "author": "Leonid Shutov <leonid.shutov@hey.com>",
   "license": "MIT",
   "homepage": "https://github.com/leonid-shutov/tuigram#readme",
-  "main": "tuigram.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/leonid-shutov/tuigram.git"
+  },
+  "bugs": {
+    "url": "https://github.com/leonid-shutov/tuigram/issues"
+  },
   "bin": {
     "tuigram": "bin/tuigram.js"
   },
@@ -16,18 +32,14 @@
     "README.md"
   ],
   "engines": {
-    "node": ">=26"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/leonid-shutov/tuigram.git"
+    "node": ">=26.4.0"
   },
   "scripts": {
     "dev": "node --experimental-ffi --env-file-if-exists=.env tuigram.js",
-    "playground": "node --experimental-ffi playground/playground.js",
     "fmt": "prettier --write .",
     "lint": "eslint .",
-    "types": "tsc -p tsconfig.json"
+    "types": "tsc -p tsconfig.json",
+    "prepublishOnly": "npm run lint && npm run types"
   },
   "dependencies": {
     "@leonid-shutov/uncommonjs": "^1.0.0-alpha.25",

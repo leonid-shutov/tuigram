@@ -17,6 +17,7 @@
       text && Text({ content: text, fg: config.theme.fg }),
     ],
 
+    // eslint-disable-next-line no-extra-parens -- prettier insists on these parens
     ...(name && {
       title: ` ${name} `,
       titleAlignment: 'left',

@@ -11,7 +11,7 @@ npm install -g tuigram
 tuigram
 ```
 
-Node.js 26 or newer is required.
+Node.js 26.4 or newer is required.
 
 ## First run
 
@@ -45,9 +45,7 @@ Nothing is ever written to the working directory.
 | Session         | `$XDG_DATA_HOME/tuigram/session.db` (default `~/.local/share`) — mode `0600`                  |
 | Log             | `$XDG_STATE_HOME/tuigram/tuigram.log` (default `~/.local/state`), override with `TUIGRAM_LOG` |
 
-The session database is an unencrypted account credential — treat it like a password. A
-`client.session` left in the working directory by an older version is moved to the new
-location automatically on the next start.
+The session database is an unencrypted account credential — treat it like a password.
 
 ## Commands
 
@@ -63,7 +61,7 @@ tuigram --version
 ```sh
 npm install
 npm run dev        # reads .env if present (API_ID / API_HASH)
-npm run playground # standalone style gallery, no Telegram account needed
 npm run lint
+npm run types
 npm run fmt
 ```

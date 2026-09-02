@@ -1,8 +1,11 @@
+/** @type {(value: unknown) => value is string} */
+const filled = (value) => typeof value === 'string' && value.trim() !== '';
+
 const fromEnv = () => {
   const apiId = process.env.TUIGRAM_API_ID;
   const apiHash = process.env.TUIGRAM_API_HASH;
-  if (apiId === undefined || apiHash === undefined) return null;
-  return { apiId, apiHash };
+  if (!filled(apiId) || !filled(apiHash)) return null;
+  return { apiId: apiId.trim(), apiHash: apiHash.trim() };
 };
 
 /** @type {(path: string, encoding: BufferEncoding) => string} */
@@ -11,11 +14,10 @@ const readCredentialsFile = node.fs.readFileSync;
 const fromFile = () => {
   const [readError, file] = Err.risk(readCredentialsFile, paths.credentials, 'utf8');
   if (readError !== null) return null;
-  // Destructuring before the guard would throw on a corrupt file: risk() returns null there.
   const [parseError, parsed] = Err.risk(JSON.parse, file);
   if (parseError !== null) return null;
   const { apiId, apiHash } = parsed;
-  if (typeof apiId === 'string' && typeof apiHash === 'string') return { apiId, apiHash };
+  if (filled(apiId) && filled(apiHash)) return { apiId: apiId.trim(), apiHash: apiHash.trim() };
   else return null;
 };
 

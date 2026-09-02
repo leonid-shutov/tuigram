@@ -31,6 +31,7 @@ const Label = (content) => Text({ content, fg: config.theme.accent });
     const fields = [Field('api_id, e.g. 1234567'), Field('api_hash, 32 hex characters')];
 
     let index = 0;
+
     /** @param {number} next */
     const focus = (next) => {
       index = (next + fields.length) % fields.length;
@@ -54,8 +55,10 @@ const Label = (content) => Text({ content, fg: config.theme.accent });
     });
 
     handle.onKey((event) => {
-      if (event.name === 'return') resolve({ apiId: fields[0].value, apiHash: fields[1].value });
-      else if (event.name === 'tab') focus(index + (event.shift ? -1 : 1));
+      if (event.name === 'return') {
+        const [apiId, apiHash] = fields.map((field) => field.value.trim());
+        if (apiId !== '' && apiHash !== '') resolve({ apiId, apiHash });
+      } else if (event.name === 'tab') focus(index + (event.shift ? -1 : 1));
       else if (event.name === 'down') focus(index + 1);
       else if (event.name === 'up') focus(index - 1);
     });
