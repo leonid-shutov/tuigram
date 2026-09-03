@@ -179,9 +179,12 @@ declare global {
     /** The chat currently shown in the chat pane; undefined until one is opened. */
     openedChatId: number | undefined;
     shortcuts: Record<string, { label: string; section: SectionName }>;
+    /** Sections Tab cycles through, in order. The picker is a modal and is not among them. */
+    cycle: SectionName[];
   };
 
   type LayoutSelf = LayoutModule & {
+    cycleSection(step: 1 | -1): void;
     openChat(dialog: Pick<UiDialog, 'chatId'>): void;
     notifyMessage(message: Message): void;
     select(section: SectionName): void;
