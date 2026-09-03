@@ -55,4 +55,6 @@ export type Paths = {
 /** Parsed settings file. Unknown keys are tolerated; these are the ones 1-config reads. */
 export type Source = {
   theme?: string;
+  /** Set to false on terminals whose font has no emoji coverage. Defaults to true. */
+  dialogEmoji?: boolean;
 } & Record<string, unknown>;

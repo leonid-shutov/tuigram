@@ -36,6 +36,7 @@ module.exports = [
         UiDialog: true,
         AsyncIterator: true,
         Fuzzy: true,
+        Hash: true,
 
         // config common
         source: true,
@@ -53,6 +54,7 @@ module.exports = [
         ScrollBox: true,
         KeyInput: true,
         Media: true,
+        Emoji: true,
         Keys: true,
         Input: true,
 

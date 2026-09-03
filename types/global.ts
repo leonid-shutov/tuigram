@@ -31,6 +31,8 @@ declare global {
     credentials: { apiId: string | undefined; apiHash: string | undefined };
     cli: { command: string | null; args: string[] };
     paths: Paths;
+    /** Whether the dialogs list prefixes each peer with an emoji. */
+    dialogEmoji: boolean;
   };
 
   namespace Message {
@@ -47,6 +49,12 @@ declare global {
     function preview(message: Pick<Message, 'text'> & { media?: Message['media'] }): string;
     function fromMessage(message: Message, unreadCount?: number): UiDialog;
     function toOption(dialog: UiDialog): DialogOption;
+  }
+
+  namespace Emoji {
+    /** Gutter glyphs. Single-codepoint, 2 cells wide — see the file header before editing. */
+    const pool: string[];
+    function fromHash(chatId: number): string;
   }
 
   namespace Media {
@@ -68,7 +76,6 @@ declare global {
   }
 
   namespace AsyncIterator {
-    function map<T, U>(source: AsyncIterable<T> | Iterable<T>, fn: (item: T) => U | Promise<U>): AsyncGenerator<U>;
     function take<T>(source: AsyncIterable<T> | Iterable<T>, n: number): AsyncGenerator<T>;
   }
 
@@ -88,6 +95,10 @@ declare global {
 
   namespace Fuzzy {
     const score: (query: string, text: string) => number | null;
+  }
+
+  namespace Hash {
+    const fnv1a: (key: string) => number;
   }
 
   namespace Random {
