@@ -11,7 +11,6 @@ const withTime = (text, duration) => (duration > 0 ? `${text} ${time(duration)}`
 
 /** @type {typeof Media.placeholder} */
 (media) => {
-  if (!media) return null;
   switch (media.type) {
     case 'photo':
       return '📷 Photo';
@@ -53,7 +52,7 @@ const withTime = (text, duration) => (duration > 0 ? `${text} ${time(duration)}`
       return `✅ ${clip(media.title)}`;
     // a link preview always carries its URL in the message text
     case 'webpage':
-      return null;
+      return '';
     default:
       return '📎 Attachment';
   }

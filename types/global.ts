@@ -2,7 +2,7 @@ import * as _opentui from '@opentui/core';
 import { Message as MtCuteMessage, Dialog as MtCuteDialog } from '@mtcute/node';
 import { Message, Dialog, UiDialog, Media, DialogOption, LinkedDialogsHandle, PendingMessage } from './domain';
 import { LinkedList as _LinkedList } from './collections';
-import { Paths, Source, ThemeDefinition, ResolvedTheme } from './config';
+import { Paths, Source, ThemeDefinition, ResolvedTheme, ImageProtocol as _ImageProtocol } from './config';
 
 import * as _timers from 'node:timers';
 import * as _events from 'node:events';
@@ -13,6 +13,7 @@ import * as _path from 'node:path';
 import * as _child_process from 'node:child_process';
 
 declare global {
+  type ImageProtocol = _ImageProtocol;
   type MessagePromptEventMap = {
     send: [text: string];
     exit: [];
@@ -33,6 +34,8 @@ declare global {
     paths: Paths;
     /** Whether the dialogs list prefixes each peer with an emoji. */
     dialogEmoji: boolean;
+    /** How chat bubbles draw thumbnails; 'off' keeps the text placeholders. */
+    imageProtocol: ImageProtocol;
   };
 
   namespace Message {
@@ -59,7 +62,9 @@ declare global {
 
   namespace Media {
     const from: (message: MtCuteMessage) => Media | null;
-    const placeholder: (media: Media | null | undefined) => string | null;
+    const placeholder: (media: Media) => string;
+    /** Bubble size in cells, or null when the medium has no drawable image. */
+    const size: (media: Media | null) => { cols: number; rows: number } | null;
   }
 
   const LinkedDialogs: { from: (dialogs: UiDialog[]) => LinkedDialogsHandle };

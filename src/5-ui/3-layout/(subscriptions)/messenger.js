@@ -6,9 +6,7 @@ messenger.onNewMessage((message) => {
     ui.sections.dialogs.markRead(message.chatId);
     void messenger.readHistory(message.chatId);
     // TODO: consider moving dialogs (data) out of dialogs ui section
-  } else if (!message.sender.isSelf && !ui.sections.dialogs.isMuted(message.chatId)) {
-    OS.notify(message.chatName, message.text || Media.placeholder(message.media) || 'New message');
-  }
+  } else if (!message.sender.isSelf && !ui.sections.dialogs.isMuted(message.chatId)) self.notifyMessage(message);
 });
 
 messenger.onHistoryRead(({ chatId, isOutbox, maxReadId, unreadCount }) => {

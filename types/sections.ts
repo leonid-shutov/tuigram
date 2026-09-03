@@ -1,7 +1,7 @@
 import * as _opentui from '@opentui/core';
 import { Message as MtCuteMessage, TelegramClient } from '@mtcute/node';
 import { Dispatcher } from '@mtcute/dispatcher';
-import { Message, Dialog, UiDialog, PendingMessage, LinkedDialogsHandle } from './domain';
+import { Message, Dialog, UiDialog, PendingMessage, LinkedDialogsHandle, Media } from './domain';
 import { LinkedList, LinkedListNode } from './collections';
 
 declare global {
@@ -50,6 +50,8 @@ declare global {
     tg: TelegramClient;
     dispatcher: Dispatcher;
     getHistory(chatId: number, firstPageSize: number, pageSize?: number): AsyncGenerator<Message[]>;
+    /** The 320px thumbnail behind a file id, or null if it could not be fetched. Cached. */
+    downloadThumb(fileId: string): Promise<Uint8Array | null>;
     getReadOutboxMaxId(chatId: number): Promise<number>;
     iterDialogs(options?: { chunkSize?: number; archived?: boolean }): AsyncGenerator<Dialog>;
     onHistoryRead(handler: (event: HistoryReadEvent) => void): void;
@@ -94,6 +96,7 @@ declare global {
   type ChatSection = {
     component: _opentui.ScrollBoxRenderable;
     Bubble(message: ChatMessage): _opentui.BoxRenderable;
+    Picture(media: Media | null): _opentui.ImageRenderable | null;
     messages: LinkedList<ChatMessage>;
     selectedMessage: LinkedListNode<ChatMessage> | null;
     readUpTo: number;
@@ -180,6 +183,7 @@ declare global {
 
   type LayoutSelf = LayoutModule & {
     openChat(dialog: Pick<UiDialog, 'chatId'>): void;
+    notifyMessage(message: Message): void;
     select(section: SectionName): void;
   };
 

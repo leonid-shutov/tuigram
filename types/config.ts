@@ -1,3 +1,6 @@
+/** Rendering protocol for chat thumbnails. 'off' is ours, not OpenTUI's: draw no images at all. */
+export type ImageProtocol = 'auto' | 'kitty' | 'sixel' | 'blocks' | 'off';
+
 export type ThemePalette = {
   bg: string;
   surface: string;
@@ -57,4 +60,6 @@ export type Source = {
   theme?: string;
   /** Set to false on terminals whose font has no emoji coverage. Defaults to true. */
   dialogEmoji?: boolean;
+  /** How chat bubbles draw thumbnails. Defaults to 'auto'. */
+  imageProtocol?: ImageProtocol;
 } & Record<string, unknown>;

@@ -16,6 +16,7 @@ declare global {
   ): ComponentFactory<TOptions, TInstance>;
 
   const Box: ComponentFactory<_opentui.BoxOptions, _opentui.BoxRenderable>;
+  const Image: ComponentFactory<_opentui.ImageRenderableOptions, _opentui.ImageRenderable>;
   const Input: ComponentFactory<_opentui.InputRenderableOptions, _opentui.InputRenderable>;
   const Select: ComponentFactory<_opentui.SelectRenderableOptions, _opentui.SelectRenderable>;
   const Text: ComponentFactory<_opentui.TextOptions, _opentui.TextRenderable>;
