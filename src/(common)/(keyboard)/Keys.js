@@ -1,1 +1,1 @@
-({ CTRL_P: '\x10' });
+({ CTRL_P: 'ctrl+p' });

@@ -90,6 +90,7 @@ declare global {
 
   namespace KeyInput {
     const onKey: (handler: (event: _opentui.KeyEvent) => void) => void;
+    const chord: (event: _opentui.KeyEvent) => string;
   }
 
   const Keys: { CTRL_P: string };

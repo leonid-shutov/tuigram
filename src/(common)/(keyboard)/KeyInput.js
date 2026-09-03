@@ -5,4 +5,6 @@
       event.preventDefault();
       handler(event);
     }),
+
+  chord: (event) => (event.ctrl ? `ctrl+${event.name}` : event.name),
 });
