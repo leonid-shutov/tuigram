@@ -93,7 +93,7 @@ declare global {
     const chord: (event: _opentui.KeyEvent) => string;
   }
 
-  const Keys: { CTRL_P: string };
+  const Keys: { CTRL_P: string; SLASH: string };
 
   namespace OS {
     const notify: (title: string, body?: string) => void;

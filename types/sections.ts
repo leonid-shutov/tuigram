@@ -1,5 +1,5 @@
 import * as _opentui from '@opentui/core';
-import { Message as MtCuteMessage, TelegramClient } from '@mtcute/node';
+import { TelegramClient } from '@mtcute/node';
 import { Dispatcher } from '@mtcute/dispatcher';
 import { Message, Dialog, UiDialog, PendingMessage, LinkedDialogsHandle, Media } from './domain';
 import { LinkedList, LinkedListNode } from './collections';
@@ -176,10 +176,9 @@ declare global {
 
   type LayoutModule = {
     selected: SectionName;
-    /** The chat currently shown in the chat pane; undefined until one is opened. */
     openedChatId: number | undefined;
     shortcuts: Record<string, { label: string; section: SectionName }>;
-    /** Sections Tab cycles through, in order. The picker is a modal and is not among them. */
+    sectionShortcuts: Partial<Record<SectionName, Record<string, SectionName>>>;
     cycle: SectionName[];
   };
 

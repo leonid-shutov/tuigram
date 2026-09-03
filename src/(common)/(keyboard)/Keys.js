@@ -1,1 +1,1 @@
-({ CTRL_P: 'ctrl+p' });
+({ CTRL_P: 'ctrl+p', SLASH: '/' });
