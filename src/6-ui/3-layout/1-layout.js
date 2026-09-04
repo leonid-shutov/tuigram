@@ -1,6 +1,5 @@
 ({
   selected: 'dialogs',
-  openedChatId: undefined,
   cycle: ['dialogs', 'chat', 'messagePrompt'],
   shortcuts: {
     1: { label: ' 1 ', section: 'dialogs' },

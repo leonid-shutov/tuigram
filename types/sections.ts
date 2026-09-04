@@ -155,7 +155,6 @@ declare global {
 
   type LayoutModule = {
     selected: SectionName;
-    openedChatId: number | undefined;
     shortcuts: Record<string, { label: string; section: SectionName }>;
     sectionShortcuts: Partial<Record<SectionName, Record<string, SectionName>>>;
     cycle: SectionName[];

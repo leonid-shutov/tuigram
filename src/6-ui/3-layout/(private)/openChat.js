@@ -1,10 +1,8 @@
+// store.chat.open carries its own "already open" guard, so the layout no longer tracks which
+// chat is open — it only moves focus and the list cursor.
 /** @type {LayoutSelf['openChat']} */
 (dialog) => {
-  const chatId = dialog.chatId;
-  if (self.openedChatId !== chatId) {
-    self.openedChatId = chatId;
-    void store.chat.open(chatId);
-  }
-  ui.sections.dialogs.select(chatId);
+  void store.chat.open(dialog.chatId);
+  ui.sections.dialogs.select(dialog.chatId);
   self.select('chat');
 };
