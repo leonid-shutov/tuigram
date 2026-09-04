@@ -1,6 +1,6 @@
 import * as _opentui from '@opentui/core';
 import { Message as MtCuteMessage, Dialog as MtCuteDialog } from '@mtcute/node';
-import { Message, Dialog, UiDialog, Media, DialogOption, LinkedDialogsHandle, PendingMessage } from './domain';
+import { Message, Dialog, Media, DialogOption, LinkedDialogsHandle, PendingMessage } from './domain';
 import { LinkedList as _LinkedList } from './collections';
 import { Paths, Source, ThemeDefinition, ResolvedTheme, ImageProtocol as _ImageProtocol } from './config';
 
@@ -45,13 +45,17 @@ declare global {
 
   namespace Dialog {
     function from(dialog: MtCuteDialog): Dialog;
+    function fromMessage(message: Message, unreadCount?: number): Dialog;
   }
 
-  namespace UiDialog {
-    function from(dialog: Dialog): UiDialog;
-    function preview(message: Pick<Message, 'text'> & { media?: Message['media'] }): string;
-    function fromMessage(message: Message, unreadCount?: number): UiDialog;
-    function toOption(dialog: UiDialog): DialogOption;
+  /** 6-ui/(common): one-line summary of a message, shared by the dialogs list and the picker. */
+  namespace Preview {
+    function from(message: Message | null | undefined): string;
+  }
+
+  /** 6-ui/2-sections/1-dialogs/(common): a dialog as one row of the list. */
+  namespace Option {
+    function from(dialog: Dialog): DialogOption;
   }
 
   namespace Emoji {
@@ -67,7 +71,7 @@ declare global {
     const size: (media: Media | null) => { cols: number; rows: number } | null;
   }
 
-  const LinkedDialogs: { from: (dialogs: UiDialog[]) => LinkedDialogsHandle };
+  const LinkedDialogs: { from: (dialogs: Dialog[]) => LinkedDialogsHandle };
 
   namespace LinkedList {
     function from<T>(values?: Iterable<T>): _LinkedList<T>;

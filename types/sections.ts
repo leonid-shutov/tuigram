@@ -1,7 +1,7 @@
 import * as _opentui from '@opentui/core';
 import { TelegramClient } from '@mtcute/node';
 import { Dispatcher } from '@mtcute/dispatcher';
-import { Message, Dialog, UiDialog, PendingMessage, LinkedDialogsHandle, Media } from './domain';
+import { Message, Dialog, DialogOption, PendingMessage, Media } from './domain';
 import { LinkedList, LinkedListNode } from './collections';
 
 declare global {
@@ -63,33 +63,23 @@ declare global {
   type PickerOnImpl = (event: 'pick' | 'close', handler: (...args: any[]) => void) => void;
   type MessagePromptOnImpl = (event: keyof MessagePromptEventMap, handler: (...args: any[]) => void) => void;
 
-  // ── 5-ui/2-sections/1-dialogs ─────────────────────────────────────────────────────────
+  // ── 6-ui/2-sections/1-dialogs ─────────────────────────────────────────────────────────
+  /** A projection of `store.dialogs`: renderables, focus, keys. It owns no dialog data. */
   type DialogsSection = {
     list: _opentui.SelectRenderable;
     component: _opentui.BoxRenderable;
-    dialogs: LinkedDialogsHandle;
-    /** Chat ids in the archive folder; set once the archived dialogs finish loading. */
-    archived?: Set<number>;
     readonly capturing: boolean;
     blur(): void;
     focus(): void;
-    getAll(): UiDialog[];
-    isArchived(chatId: number): boolean;
-    isMuted(chatId: number): boolean;
     key(event: _opentui.KeyEvent): void;
-    markRead(chatId: number): void;
-    on(event: 'open', handler: (dialog: UiDialog) => void): void;
-    onMessage(message: Message): void;
+    on(event: 'open', handler: (option: DialogOption) => void): void;
     select(chatId: number): void;
-    setArchived(dialogs: Dialog[]): void;
-    setDialogs(dialogs: Dialog[]): void;
     setLabel(label: string): void;
-    setUnread(chatId: number, unreadCount: number): void;
   };
 
   type DialogsSelf = DialogsSection & { render(): void };
 
-  // ── 5-ui/2-sections/2-chat ────────────────────────────────────────────────────────────
+  // ── 6-ui/2-sections/2-chat ────────────────────────────────────────────────────────────
   /** A message in the open chat, once the section has attached its rendered bubble. */
   type ChatMessage = (Message | PendingMessage) & { bubble?: _opentui.BoxRenderable };
 
@@ -126,7 +116,7 @@ declare global {
     scrollToBottom(): void;
   };
 
-  // ── 5-ui/2-sections/3-messagePrompt ───────────────────────────────────────────────────
+  // ── 6-ui/2-sections/3-messagePrompt ───────────────────────────────────────────────────
   type MessagePromptSection = {
     component: _opentui.BoxRenderable;
     input: _opentui.TextareaRenderable;
@@ -140,7 +130,7 @@ declare global {
   };
   type MessagePromptSelf = MessagePromptSection;
 
-  // ── 5-ui/2-sections/5-picker ──────────────────────────────────────────────────────────
+  // ── 6-ui/2-sections/5-picker ──────────────────────────────────────────────────────────
   type PickerSection = {
     input: _opentui.TextareaRenderable;
     list: _opentui.SelectRenderable;
@@ -149,20 +139,20 @@ declare global {
     blur(): void;
     focus(): void;
     key(event: _opentui.KeyEvent): void;
-    on(event: 'pick', handler: (dialog: UiDialog) => void): void;
+    on(event: 'pick', handler: (dialog: Dialog) => void): void;
     on(event: 'close', handler: () => void): void;
     setLabel(label: string): void;
   };
 
   type PickerSelf = PickerSection & {
-    /** Snapshot of the dialogs list taken when the picker opens. */
-    dialogList: UiDialog[];
+    /** Snapshot of `store.dialogs.all()` taken when the picker opens. */
+    dialogList: Dialog[];
     emitter: import('node:events').EventEmitter;
     emit(event: string, ...args: unknown[]): void;
     filter(query: string): void;
   };
 
-  // ── 5-ui/3-layout ─────────────────────────────────────────────────────────────────────
+  // ── 6-ui/3-layout ─────────────────────────────────────────────────────────────────────
   type SectionName = 'dialogs' | 'chat' | 'messagePrompt' | 'picker';
 
   /** Every section the layout can hand focus and keys to. */
@@ -184,7 +174,7 @@ declare global {
 
   type LayoutSelf = LayoutModule & {
     cycleSection(step: 1 | -1): void;
-    openChat(dialog: Pick<UiDialog, 'chatId'>): void;
+    openChat(dialog: Pick<Dialog, 'chatId'>): void;
     notifyMessage(message: Message): void;
     select(section: SectionName): void;
   };
@@ -219,7 +209,8 @@ declare global {
       ChatSelf &
       MessagePromptSelf &
       PickerSelf &
-      LayoutSelf,
+      LayoutSelf &
+      DialogsStoreSelf,
     SelfConflicts
   > &
     Record<SelfConflicts, any>;
