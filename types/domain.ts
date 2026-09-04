@@ -37,8 +37,6 @@ export type Message = {
   isGroup: boolean;
 };
 
-export type PendingMessage = Omit<Message, 'chatId' | 'chatName'> & { chatId: undefined; chatName: undefined };
-
 export type Dialog = {
   chatId: number;
   name: string;

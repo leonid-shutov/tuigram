@@ -24,7 +24,7 @@
 
   if (media.thumbId !== null) {
     messenger.downloadThumb(media.thumbId).then((bytes) => {
-      // The chat may have been switched out from under us; clear() destroys every bubble.
+      // The chat may have been switched out from under us; 'opened' destroys every bubble.
       if (bytes !== null && !image.isDestroyed) image.source = bytes;
     });
   }

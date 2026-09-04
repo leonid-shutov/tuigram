@@ -1,4 +1,5 @@
 import { Message, Dialog, LinkedDialogsHandle } from './domain';
+import { LinkedList } from './collections';
 
 declare global {
   type DialogsEventMap = {
@@ -23,8 +24,9 @@ declare global {
     load(): Promise<void>;
     markRead(chatId: number): void;
     on<K extends keyof DialogsEventMap>(event: K, handler: (...args: DialogsEventMap[K]) => void): void;
-    /** A message from the dispatcher: archive filter, then `applyMessage`, then `message`. */
-    receive(message: Message): void;
+    /** A message from the dispatcher: archive filter, then `applyMessage`, then `message`.
+     * Returns false when the chat is archived and the message was dropped. */
+    receive(message: Message): boolean;
     set(dialogs: Dialog[]): void;
     setArchived(dialogs: Dialog[]): void;
     setUnread(chatId: number, unreadCount: number): void;
@@ -47,8 +49,64 @@ declare global {
     emit<K extends keyof DialogsEventMap>(event: K, ...args: DialogsEventMap[K]): void;
   };
 
+  type ChatEventMap = {
+    /** A different chat was loaded; `messages` is the whole first window, oldest first. */
+    opened: [{ chatId: number; messages: Message[] }];
+    appended: [message: Message];
+    /** An older page, newest-first — the order the section must insert it in. */
+    prepended: [messages: Message[]];
+    /** The server's message replaced a pending one, under a different id. */
+    confirmed: [{ tempId: number; message: Message }];
+    /** The read watermark moved. */
+    receipt: [];
+  };
+
+  /**
+   * The open conversation, as data: which chat, its loaded window, its history pager and the
+   * read watermark. Navigation is by message id — the chat section must never hold a
+   * `LinkedListNode` into this list.
+   */
+  type ChatStore = {
+    all(): Message[];
+    append(message: Message): void;
+    confirm(tempId: number, message: Message): void;
+    isNearOldest(id: number | null, within: number): boolean;
+    isNewest(id: number | null): boolean;
+    isOldest(id: number | null): boolean;
+    /** Page in the next older window; emits `prepended`. No-op while one is already in flight. */
+    loadOlder(): Promise<void>;
+    newest(): Message | null;
+    next(id: number | null): number | null;
+    on<K extends keyof ChatEventMap>(event: K, handler: (...args: ChatEventMap[K]) => void): void;
+    /** No-op when `chatId` is already open. Marks the dialog read and sends the receipt. */
+    open(chatId: number): Promise<void>;
+    /** Which chat is open, or undefined before the first one. */
+    opened(): number | undefined;
+    prev(id: number | null): number | null;
+    /** Highest outgoing message id the peer has read. */
+    readUpTo(): number;
+    /** Pending message → sendMessage → confirm → fold into the dialog list. */
+    send(text: string): Promise<void>;
+    setReadUpTo(maxReadId: number): void;
+  };
+
+  /** Same shadowing caveat as DialogsStoreSelf: read through the functions, not the module. */
+  type ChatStoreSelf = ChatStore & {
+    /** undefined until the first chat is opened. */
+    chatId?: number;
+    messages: LinkedList<Message>;
+    readMaxId: number;
+    /** The open chat's history pager; undefined until a chat is opened. */
+    iterator?: AsyncGenerator<Message[]>;
+    loadingMore: boolean;
+    chatEvents: import('node:events').EventEmitter;
+    clear(): void;
+    emit<K extends keyof ChatEventMap>(event: K, ...args: ChatEventMap[K]): void;
+  };
+
   namespace store {
     const dialogs: DialogsStore;
+    const chat: ChatStore;
   }
 }
 

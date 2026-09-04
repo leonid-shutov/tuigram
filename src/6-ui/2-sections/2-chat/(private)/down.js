@@ -1,5 +1,5 @@
 /** @type {ChatSelf['down']} */
 () => {
-  if (self.selectedMessage === self.messages.tail) return;
-  self.selectMessage(self.selectedMessage?.next ?? null);
+  if (store.chat.isNewest(self.selectedId)) return;
+  self.selectMessage(store.chat.next(self.selectedId));
 };

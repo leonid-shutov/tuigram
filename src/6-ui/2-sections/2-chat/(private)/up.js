@@ -1,9 +1,9 @@
 /** @type {ChatSelf['up']} */
 async () => {
-  if (self.selectedMessage === self.messages.head) await self.loadMore();
-  if (self.selectedMessage === self.messages.head) return;
-  self.selectMessage(self.selectedMessage?.prev ?? null);
+  if (store.chat.isOldest(self.selectedId)) await store.chat.loadOlder();
+  if (store.chat.isOldest(self.selectedId)) return;
+  self.selectMessage(store.chat.prev(self.selectedId));
 
   // prefetch the next older page once the selection nears the top of the window
-  if (self.selectedMessage !== null && self.messages.isNearHead(self.selectedMessage, 10)) self.loadMore();
+  if (self.selectedId !== null && store.chat.isNearOldest(self.selectedId, 10)) store.chat.loadOlder();
 };

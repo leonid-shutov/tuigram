@@ -2,7 +2,7 @@
 //
 // Sized from the full medium's own width and height, which ride along with the message — never
 // from the decoded thumbnail. That keeps a bubble's height final from the moment it is built, so
-// the 320px thumbnail landing later never reflows the chat. `loadMore` depends on this:
+// the 320px thumbnail landing later never reflows the chat. `loadOlder` depends on this:
 // `ScrollBox.preserveScroll` anchors the viewport on measured content height, and an image that
 // resized itself afterwards would fight it.
 //

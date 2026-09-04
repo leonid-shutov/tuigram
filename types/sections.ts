@@ -1,8 +1,7 @@
 import * as _opentui from '@opentui/core';
 import { TelegramClient } from '@mtcute/node';
 import { Dispatcher } from '@mtcute/dispatcher';
-import { Message, Dialog, DialogOption, PendingMessage, Media } from './domain';
-import { LinkedList, LinkedListNode } from './collections';
+import { Message, Dialog, DialogOption, Media } from './domain';
 
 declare global {
   type ScreenModule = {
@@ -80,37 +79,27 @@ declare global {
   type DialogsSelf = DialogsSection & { render(): void };
 
   // ── 6-ui/2-sections/2-chat ────────────────────────────────────────────────────────────
-  /** A message in the open chat, once the section has attached its rendered bubble. */
-  type ChatMessage = (Message | PendingMessage) & { bubble?: _opentui.BoxRenderable };
-
+  /** A projection of `store.chat`: bubbles, the cursor, and scrolling. It owns no messages. */
   type ChatSection = {
     component: _opentui.ScrollBoxRenderable;
-    Bubble(message: ChatMessage): _opentui.BoxRenderable;
+    Bubble(message: Message): _opentui.BoxRenderable;
     Picture(media: Media | null): _opentui.ImageRenderable | null;
-    messages: LinkedList<ChatMessage>;
-    selectedMessage: LinkedListNode<ChatMessage> | null;
-    readUpTo: number;
-    /** The open chat's history pager; undefined until a chat is opened. */
-    iterator?: AsyncGenerator<ChatMessage[]>;
-    loadingMore?: boolean;
+    /** Message id → its bubble. The only handle the section keeps on the store's list. */
+    bubbles: Map<number, _opentui.BoxRenderable>;
+    /** Id of the message the cursor sits on, never a node into the store's list. */
+    selectedId: number | null;
     readonly capturing: boolean;
-    addMessage(message: ChatMessage): void;
-    addPendingMessage(text: string): number;
     blur(): void;
-    confirmMessage(tempId: number, confirmedMessage: Message): void;
     focus(): void;
     key(event: _opentui.KeyEvent): void;
-    open(chatId: number): Promise<void>;
     setLabel(label: string): void;
-    setReadUpTo(maxReadId: number): void;
   };
 
   type ChatSelf = ChatSection & {
-    clear(): void;
     down(): void;
-    loadMore(): Promise<void>;
+    mount(message: Message): _opentui.BoxRenderable;
     renderReceipt(): void;
-    selectMessage(message: LinkedListNode<ChatMessage> | null): void;
+    selectMessage(id: number | null): void;
     senderColor(key: string): string;
     up(): Promise<void>;
     scrollToBottom(): void;
@@ -210,7 +199,8 @@ declare global {
       MessagePromptSelf &
       PickerSelf &
       LayoutSelf &
-      DialogsStoreSelf,
+      DialogsStoreSelf &
+      ChatStoreSelf,
     SelfConflicts
   > &
     Record<SelfConflicts, any>;

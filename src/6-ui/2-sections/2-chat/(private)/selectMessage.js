@@ -1,8 +1,8 @@
 /** @type {ChatSelf['selectMessage']} */
-(message) => {
-  self.selectedMessage = message;
+(id) => {
+  self.selectedId = id;
   // Nothing to scroll to on an empty chat, or before the bubble has been rendered.
-  const bubble = message?.value.bubble;
+  const bubble = id === null ? undefined : self.bubbles.get(id);
   if (bubble === undefined) return;
   self.component.scrollChildIntoView(bubble.id);
   bubble.focus();

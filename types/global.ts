@@ -1,6 +1,6 @@
 import * as _opentui from '@opentui/core';
 import { Message as MtCuteMessage, Dialog as MtCuteDialog } from '@mtcute/node';
-import { Message, Dialog, Media, DialogOption, LinkedDialogsHandle, PendingMessage } from './domain';
+import { Message, Dialog, Media, DialogOption, LinkedDialogsHandle } from './domain';
 import { LinkedList as _LinkedList } from './collections';
 import { Paths, Source, ThemeDefinition, ResolvedTheme, ImageProtocol as _ImageProtocol } from './config';
 
@@ -40,7 +40,7 @@ declare global {
 
   namespace Message {
     const from: (message: MtCuteMessage) => Message;
-    const pending: (text: string) => PendingMessage;
+    const pending: (text: string, chatId: number, chatName: string) => Message;
   }
 
   namespace Dialog {
