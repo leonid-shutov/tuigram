@@ -1,6 +1,7 @@
 /** @type {ChatStore['open']} */
-(chatId) => {
+(chatId, pager) => {
   self.chatId = chatId;
   self.messages = [];
   self.readUpTo = 0;
+  self.pager = pager;
 };

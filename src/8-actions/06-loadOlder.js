@@ -4,11 +4,12 @@ let loadingMore = false;
 
 /** @type {Actions['loadOlder']} */
 async () => {
-  if (loadingMore || self.pager === undefined) return;
+  const pager = store.chat.pager;
+  if (loadingMore || pager === null) return;
   loadingMore = true;
   const chatId = store.chat.chatId;
   try {
-    const { value, done } = await self.pager.next();
+    const { value, done } = await pager.next();
     if (done || value === undefined || value.length === 0) return;
     // The chat may have been switched out from under the page request.
     if (store.chat.chatId !== chatId) return;

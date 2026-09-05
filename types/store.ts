@@ -28,9 +28,11 @@ declare global {
     /** The loaded window, oldest first. */
     messages: ChatMessage[];
     readUpTo: number;
+    /** The open chat's history pager; the store holds it but never advances it. */
+    pager: AsyncGenerator<Message[]> | null;
     append(message: ChatMessage): void;
     confirm(tempId: number, message: Message): boolean;
-    open(chatId: number): void;
+    open(chatId: number, pager: AsyncGenerator<Message[]>): void;
     prepend(older: ChatMessage[]): void;
     receipt(): Receipt | null;
     setReadUpTo(maxReadId: number): boolean;

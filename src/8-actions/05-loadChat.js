@@ -1,10 +1,11 @@
 /** @type {Actions['loadChat']} */
 async (chatId) => {
-  store.chat.open(chatId);
+  // The generator is inert until the first next(), so it is safe to build before opening.
+  const pager = messenger.getHistory(chatId, 30, 20);
+  store.chat.open(chatId, pager);
   ui.sections.chat.clear();
 
-  self.pager = messenger.getHistory(chatId, 30, 20);
-  const [{ value }, readUpTo] = await Promise.all([self.pager.next(), messenger.getReadOutboxMaxId(chatId)]);
+  const [{ value }, readUpTo] = await Promise.all([pager.next(), messenger.getReadOutboxMaxId(chatId)]);
 
   // The user may have opened another chat while this one was loading.
   if (store.chat.chatId !== chatId) return;
