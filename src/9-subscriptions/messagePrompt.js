@@ -1,2 +1,2 @@
-ui.sections.messagePrompt.on('send', actions.send);
-ui.sections.messagePrompt.on('exit', () => navigation.select('chat'));
+ui.messagePrompt.on('send', actions.send);
+ui.messagePrompt.on('exit', () => navigation.select('chat'));

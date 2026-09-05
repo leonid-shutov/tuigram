@@ -1,1 +1,1 @@
-ui.sections.dialogs.on('open', actions.openChat);
+ui.dialogs.on('open', actions.openChat);

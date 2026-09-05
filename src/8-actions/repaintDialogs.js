@@ -3,6 +3,6 @@
 /** @type {Actions['repaintDialogs']} */
 () => {
   const dialogs = store.dialogs.all();
-  ui.sections.dialogs.render(dialogs);
-  ui.sections.picker.setItems(dialogs);
+  ui.dialogs.render(dialogs);
+  ui.picker.setItems(dialogs);
 };

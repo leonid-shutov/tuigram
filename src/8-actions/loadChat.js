@@ -3,7 +3,7 @@ async (chatId) => {
   // The generator is inert until the first next(), so it is safe to build before opening.
   const pager = messenger.getHistory(chatId, 30, 20);
   store.chat.open(chatId, pager);
-  ui.sections.chat.clear();
+  ui.chat.clear();
 
   const [{ value }, readUpTo] = await Promise.all([pager.next(), messenger.getReadOutboxMaxId(chatId)]);
 
@@ -13,10 +13,10 @@ async (chatId) => {
   store.chat.setReadUpTo(readUpTo);
   for (const message of value.toReversed()) {
     store.chat.append(message);
-    ui.sections.chat.append(message);
+    ui.chat.append(message);
   }
-  ui.sections.chat.setReceipt(store.chat.receipt());
-  ui.sections.chat.selectLast();
+  ui.chat.setReceipt(store.chat.receipt());
+  ui.chat.selectLast();
 
   store.dialogs.markRead(chatId);
   self.repaintDialogs();

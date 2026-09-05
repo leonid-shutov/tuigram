@@ -3,7 +3,7 @@
   if (isOutbox) {
     // Someone read what we sent — only the open chat draws a receipt for it.
     if (store.chat.chatId === chatId && store.chat.setReadUpTo(maxReadId)) {
-      ui.sections.chat.setReceipt(store.chat.receipt());
+      ui.chat.setReceipt(store.chat.receipt());
     }
     return;
   }

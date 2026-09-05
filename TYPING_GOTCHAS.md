@@ -53,7 +53,7 @@ redeclare` error rather than a silent merge. Turning it on surfaced a real colli
 `SUFFIXES`, declared in both `3-auth/4-logout.js` and `3-auth/(private)/secureSession.js`,
 which was renamed. What is still *not* caught is `@typedef` and `var`/`function` declarations,
 which merge rather than conflict — so when adding one, still check the name against
-`types/global.ts` and `types/sections.ts`.
+`types/global.ts` and `types/ui.ts`.
 
 ## `// @ts-check` changes how the loader classifies a file
 

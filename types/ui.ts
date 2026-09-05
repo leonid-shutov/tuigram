@@ -23,7 +23,7 @@ declare global {
     function from(dialog: Dialog): _DialogOption;
   }
 
-  // ── 6-ui/1-sections/1-dialogs ─────────────────────────────────────────────────────────
+  // ── 6-ui/1-dialogs ────────────────────────────────────────────────────────────────────
   type DialogsSection = Section & {
     list: _opentui.SelectRenderable;
     component: _opentui.BoxRenderable;
@@ -35,7 +35,7 @@ declare global {
     select(chatId: number): void;
   };
 
-  // ── 6-ui/1-sections/2-chat ────────────────────────────────────────────────────────────
+  // ── 6-ui/2-chat ───────────────────────────────────────────────────────────────────────
   /** The async capabilities the chat view is handed at startup; see (public)/connect.js. */
   type ChatDeps = {
     loadOlder: () => Promise<void>;
@@ -67,7 +67,7 @@ declare global {
     up(): Promise<void>;
   };
 
-  // ── 6-ui/1-sections/3-messagePrompt ───────────────────────────────────────────────────
+  // ── 6-ui/3-messagePrompt ──────────────────────────────────────────────────────────────
   type MessagePromptSection = Section & {
     component: _opentui.BoxRenderable;
     input: _opentui.TextareaRenderable;
@@ -75,7 +75,7 @@ declare global {
     on<K extends keyof MessagePromptEventMap>(event: K, handler: (...args: MessagePromptEventMap[K]) => void): void;
   };
 
-  // ── 6-ui/1-sections/4-picker ──────────────────────────────────────────────────────────
+  // ── 6-ui/4-picker ─────────────────────────────────────────────────────────────────────
   type PickerSection = Section & {
     input: _opentui.TextareaRenderable;
     list: _opentui.SelectRenderable;
@@ -99,12 +99,10 @@ declare global {
   type MessagePromptOnImpl = (event: keyof MessagePromptEventMap, handler: (...args: any[]) => void) => void;
 
   namespace ui {
-    namespace sections {
-      const dialogs: DialogsSection;
-      const chat: ChatSection;
-      const messagePrompt: MessagePromptSection;
-      const picker: PickerSection;
-    }
+    const dialogs: DialogsSection;
+    const chat: ChatSection;
+    const messagePrompt: MessagePromptSection;
+    const picker: PickerSection;
   }
 }
 

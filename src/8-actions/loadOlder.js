@@ -17,7 +17,7 @@ async () => {
     // the pager yields newest-first; both halves take the batch oldest-first
     const older = value.toReversed();
     store.chat.prepend(older);
-    ui.sections.chat.prepend(older);
+    ui.chat.prepend(older);
   } finally {
     loadingMore = false;
   }

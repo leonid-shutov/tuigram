@@ -1,8 +1,8 @@
 // Runs last: unprefixed, because the src root loads in plain alphabetical order and letters
 // sort after digits. Every layer above is loaded, so this is where the app is kicked into motion.
 
-// The two async capabilities the chat view needs; see 6-ui/1-sections/2-chat/(public)/connect.js.
-ui.sections.chat.connect({
+// The two async capabilities the chat view needs; see 6-ui/2-chat/(public)/connect.js.
+ui.chat.connect({
   loadOlder: actions.loadOlder,
   loadThumb: messenger.downloadThumb,
 });

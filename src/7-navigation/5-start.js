@@ -1,7 +1,7 @@
 void KeyInput.onKey((event) => {
   if (event.name === 'tab') self.cycleSection(event.shift ? -1 : 1);
   else {
-    const section = ui.sections[self.selected];
+    const section = ui[self.selected];
     const chord = KeyInput.chord(event);
     const target = self.shortcuts[chord]?.section ?? self.sectionShortcuts[self.selected]?.[chord];
     if (target !== undefined && !section.capturing) self.select(target);
@@ -9,4 +9,4 @@ void KeyInput.onKey((event) => {
   }
 });
 
-ui.sections[self.selected].focus();
+ui[self.selected].focus();
