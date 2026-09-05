@@ -17,7 +17,6 @@ declare global {
   type Actions = {
     /** The open chat's history pager; undefined until a chat is opened. */
     pager: AsyncGenerator<Message[]> | undefined;
-    loadingMore: boolean;
     historyRead(event: HistoryReadEvent): void;
     loadChat(chatId: number): Promise<void>;
     loadOlder(): Promise<void>;

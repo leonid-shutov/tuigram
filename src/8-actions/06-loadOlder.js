@@ -1,7 +1,11 @@
+// The reentrancy latch lives in this file's lexical scope, not on `self`: loadOlder is its
+// only reader, and both `up` and the prefetch in 6-ui can fire it while a page is in flight.
+let loadingMore = false;
+
 /** @type {Actions['loadOlder']} */
 async () => {
-  if (self.loadingMore || self.pager === undefined) return;
-  self.loadingMore = true;
+  if (loadingMore || self.pager === undefined) return;
+  loadingMore = true;
   const chatId = store.chat.chatId;
   try {
     const { value, done } = await self.pager.next();
@@ -14,6 +18,6 @@ async () => {
     store.chat.prepend(older);
     ui.sections.chat.prepend(older);
   } finally {
-    self.loadingMore = false;
+    loadingMore = false;
   }
 };
