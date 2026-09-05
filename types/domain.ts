@@ -49,14 +49,12 @@ export type Dialog = {
   isMuted: boolean | null;
 };
 
-export type UiDialog = Omit<Dialog, 'lastMessage'> & { lastMessage: string | undefined };
-
 export type DialogOption = { chatId: number; name: string; description: string };
 
 export type LinkedDialogsHandle = {
-  find(chatId: number): UiDialog | null;
-  findNode(chatId: number): import('./collections').LinkedListNode<UiDialog> | null;
-  bump(node: import('./collections').LinkedListNode<UiDialog>): void;
-  unshift(dialog: UiDialog): void;
-  [Symbol.iterator](): Iterator<UiDialog>;
+  find(chatId: number): Dialog | null;
+  findNode(chatId: number): import('./collections').LinkedListNode<Dialog> | null;
+  bump(node: import('./collections').LinkedListNode<Dialog>): void;
+  unshift(dialog: Dialog): void;
+  [Symbol.iterator](): Iterator<Dialog>;
 };

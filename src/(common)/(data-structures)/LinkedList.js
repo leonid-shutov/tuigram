@@ -86,22 +86,7 @@ const buildOperations = (list) => {
     return node.value;
   };
 
-  /**
-   * @param {Node<T>} node
-   * @param {number} within
-   */
-  const isNearHead = (node, within) => {
-    /** @type {Node<T> | null} */
-    let current = node;
-    for (let i = 0; i < within; i++) {
-      if (current === list.head) return true;
-      if (current === null) return false;
-      current = current.prev;
-    }
-    return false;
-  };
-
-  return { push, unshift, pop, shift, find, findNode, removeNode, moveToFront, isNearHead };
+  return { push, unshift, pop, shift, find, findNode, removeNode, moveToFront };
 };
 
 /**

@@ -30,10 +30,11 @@ module.exports = [
         OS: true,
         LinkedList: true,
         LinkedDialogs: true,
+        Emitter: true,
+        Preview: true,
         Err: true,
         Message: true,
         Dialog: true,
-        UiDialog: true,
         AsyncIterator: true,
         Fuzzy: true,
         Hash: true,
@@ -55,12 +56,9 @@ module.exports = [
         KeyInput: true,
         Media: true,
         Emoji: true,
+        Option: true,
         Keys: true,
         Input: true,
-
-        // messagePrompt common
-        events: true,
-        input: true,
 
         // auth common
         Frame: true,
@@ -72,7 +70,10 @@ module.exports = [
         screen: true,
         auth: true,
         messenger: true,
+        store: true,
         ui: true,
+        navigation: true,
+        actions: true,
       },
     },
   },
