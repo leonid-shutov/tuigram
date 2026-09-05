@@ -4,7 +4,7 @@ description: >-
   Author and structure Node.js apps built on @leonid-shutov/uncommonjs (this repo, and
   consumers like tuigram). Use when creating or editing files under an app's src/ tree,
   wiring modules, writing service entries, using the injected node.*/npm.* globals or self,
-  the (common)/(getters)/(private) directories, domain errors, or the REST layer. Covers the
+  the (common)/(getters) directories, domain errors, or the REST layer. Covers the
   file-as-expression authoring convention and the directory-loading rules.
 ---
 
@@ -30,12 +30,12 @@ The file is executed in a VM and its last expression becomes the module's value.
 ({
   title: 'Book',
   create: (name) => db.insert(name),
-})
+});
 ```
 
 ```js
 // a function module
-async (code) => (await db.query('SELECT * FROM book WHERE code = $1', [code])).rows[0] ?? null
+async (code) => (await db.query('SELECT * FROM book WHERE code = $1', [code])).rows[0] ?? null;
 ```
 
 The loader distinguishes the two by checking whether the source starts with `({` (see
@@ -68,14 +68,14 @@ For a REST app use `loadRestApplication` instead (see §6).
 
 `loadApplication` builds the VM context from your `sandbox` plus:
 
-| Global        | What it is |
-|---------------|------------|
-| `node.*`      | Every Node builtin, e.g. `node.fs`, `node.path`, `node.crypto`, `node.timers`, `node.events` |
-| `npm.*`       | Every dependency in your app's `package.json`, keyed by package name: `npm['@mtcute/bun']`, `npm.neovim` |
+| Global        | What it is                                                                                                                                                                     |
+| ------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `node.*`      | Every Node builtin, e.g. `node.fs`, `node.path`, `node.crypto`, `node.timers`, `node.events`                                                                                   |
+| `npm.*`       | Every dependency in your app's `package.json`, keyed by package name: `npm['@mtcute/bun']`, `npm.neovim`                                                                       |
 | error classes | `DomainError`, `NotFoundError`, `AlreadyExistsError`, `ConstraintViolationError`, `AuthorizationError`, `UnexpectedError`, `createDomainError`, and the `PASS` symbol (see §5) |
-| `__rootDir`   | The resolved application root |
-| your sandbox  | Anything you passed as the first arg to `loadApplication` (e.g. `console`, `tui`) |
-| `self`        | The current module's own members (see §4) |
+| `__rootDir`   | The resolved application root                                                                                                                                                  |
+| your sandbox  | Anything you passed as the first arg to `loadApplication` (e.g. `console`, `tui`)                                                                                              |
+| `self`        | The current module's own members (see §4)                                                                                                                                      |
 
 So instead of `const path = require('node:path')` you just use `node.path.join(...)`, and
 instead of `require('@mtcute/bun')` you use `npm['@mtcute/bun']`.
@@ -89,18 +89,16 @@ The tree shape defines the module graph. Rules (from `lib/loader.js`):
   `app.messenger`. Use this for layered apps and to force something to load before its peers.
 - **`foo/foo.js`** — a file named after its own directory **merges into the module itself**,
   rather than becoming `app.foo.foo`. Use it for the module's "main" members.
-- **`(common)/`** *(reserved)* — loaded **first**, into the **parent** context, so its
+- **`(common)/`** _(reserved)_ — loaded **first**, into the **parent** context, so its
   members are shared with every sibling module. Put shared helpers/deps here. Each `(common)`
   spawns its own context branch — siblings don't see each other's non-common members.
-- **`(getters)/`** *(reserved)* — each file is `() => value` and becomes a **lazy getter**
+- **`(getters)/`** _(reserved)_ — each file is `() => value` and becomes a **lazy getter**
   property on the module; the function runs on first access, not at load time.
-- **`(private)/`** *(reserved)* — files load into the module's `self` **only**. Visible
-  internally via `self.x`, but **not** on the module from the outside.
-- **`(anythingElse)/`** — any *other* parenthesized directory name is **grouping only** and
+- **`(anythingElse)/`** — any _other_ parenthesized directory name is **grouping only** and
   fully transparent: its files **and subdirectories** load into the module as if they were
   flat, as though the group folder weren't there. `(methods)`, `(public)`, `(handlers)` etc.
-  are **not** special — they only organize files visually. Only `(common)`, `(getters)`,
-  `(private)` are reserved.
+  are **not** special — they only organize files visually. Only `(common)` and `(getters)`
+  are reserved.
 - **plain-named dir** — becomes a nested submodule (`user/profile/` → `app.user.profile`).
 
 ### `self`
@@ -110,16 +108,17 @@ The tree shape defines the module graph. Rules (from `lib/loader.js`):
 ```js
 // methodsDir/(methods)/method.js  — a function module
 (x) => {
-  console.log(self.foo);              // from methodsDir/methodsDir.js (merged into module)
+  console.log(self.foo); // from methodsDir/methodsDir.js (merged into module)
   console.log(self.anotherModule.bar); // from methodsDir/anotherModule.js (sibling)
   console.log(x);
-}
+};
 ```
 
 Scoping nuance: **function** modules see the whole module through `self`. **Object** modules
 get their own `self` scope, so an object module's internal keys are not hoisted onto the
-module's `self` for sibling functions. `(private)/` members are reachable via `self` but
-absent from the external module object.
+module's `self` for sibling functions.
+
+Writes through `self` land on the module: `self.prop = 2` sets `prop` on the module itself.
 
 ## 5. Service entries (auto-wrapped methods)
 
@@ -152,7 +151,7 @@ into a callable (see `lib/service.js`). The wrapper:
     },
     expectedErrors: { BOOK_NOT_FOUND: PASS },
   },
-})
+});
 ```
 
 A common pattern is a lower repository layer that maps driver error codes to domain errors:
@@ -165,7 +164,7 @@ A common pattern is a lower repository layer that maps driver error codes to dom
       23505: AlreadyExistsError.from('book'), // Postgres unique-violation → domain error
     },
   },
-})
+});
 ```
 
 ## 6. Errors (`lib/errors.js`)
@@ -202,12 +201,12 @@ found under `sandbox.api`. Each API file maps route strings to per-method defini
   },
   '/books': {
     post: {
-      body: { code: 'string', name: 'string' },   // metaschema
+      body: { code: 'string', name: 'string' }, // metaschema
       handler: async ({ body }) => app.book.create(body),
       expectedErrors: { BOOK_ALREADY_EXISTS: PASS },
     },
   },
-})
+});
 ```
 
 Definition fields: `handler({ path, query, body, ... })`, `query`/`body` (metaschema schemas
@@ -215,14 +214,14 @@ validated before the handler), `response` (value or `(result) => body`), `status
 `(result) => number`, default 200). Helpers exported: `validateRequest`, `createHandler`,
 `createRouter`, `getStatus`. Domain errors map to HTTP status via `getStatus`:
 
-| Error | Status |
-|-------|--------|
-| `ValidationError` | 400 |
-| `AuthorizationError` | 401 |
-| `NotFoundError` | 404 |
-| `AlreadyExistsError` | 409 |
-| `ConstraintViolationError` | 422 |
-| anything else | 500 |
+| Error                      | Status |
+| -------------------------- | ------ |
+| `ValidationError`          | 400    |
+| `AuthorizationError`       | 401    |
+| `NotFoundError`            | 404    |
+| `AlreadyExistsError`       | 409    |
+| `ConstraintViolationError` | 422    |
+| anything else              | 500    |
 
 ## 8. Worked example
 
@@ -233,8 +232,8 @@ src/
   book/
     book.js              # merges into the `book` module itself
     create.js            # app.book.create  (service entry)
-    (private)/
-      validate.js        # reachable via self.validate; NOT on app.book
+    (common)/
+      validate.js        # bare name inside book; NOT on app.book
     (getters)/
       count.js           # lazy: app.book.count computed on access
 ```
@@ -250,13 +249,13 @@ src/
 ({
   description: (b) => `Creating ${b.name}`,
   method: (b) => {
-    if (!self.validate(b)) throw new Error('invalid');   // (private) helper via self
-    logger.info('inserting');                             // (common) helper, no import
+    if (!validate(b)) throw new Error('invalid');        // book/(common) helper
+    logger.info('inserting');                             // src/(common) helper, no import
     return node.crypto.randomUUID();                      // node builtin, no import
   },
 })
 
-// src/book/(private)/validate.js
+// src/book/(common)/validate.js
 (b) => typeof b?.name === 'string'
 
 // src/book/(getters)/count.js
@@ -264,8 +263,8 @@ src/
 ```
 
 Resulting sandbox: `app.book.table`, `app.book.create(...)`, `app.book.count` (getter),
-`app.logger.info(...)`. `app.book.validate` is **undefined** (private). `logger`, `node`,
-`npm` are available inside every file.
+`app.logger.info(...)`. `app.book.validate` is **undefined**. `logger`, `node`, `npm` are
+available inside every file.
 
 ## 9. Gotchas
 
@@ -276,9 +275,11 @@ Resulting sandbox: `app.book.table`, `app.book.create(...)`, `app.book.count` (g
 - Numbered prefixes only affect load order and are stripped from keys — don't reference them
   by the prefixed name.
 - `(methods)`, `(public)`, `(handlers)`… are just grouping folders; they are transparent to
-  both files and subdirectories. Only `(common)`, `(getters)`, `(private)` change loading
-  behavior.
+  both files and subdirectories. Only `(common)` and `(getters)` change loading behavior.
 - Utilities you see in a consumer app's `src/(common)/` (e.g. tuigram's `risk`, `LinkedList`,
-  `Obj`) belong to *that app*, not to uncommon-js. The library ships only the loader, error
+  `Obj`) belong to _that app_, not to uncommon-js. The library ships only the loader, error
   classes, and REST helpers.
+
+```
+
 ```
