@@ -1,6 +1,7 @@
 import * as _opentui from '@opentui/core';
-import { Message as MtCuteMessage, Dialog as MtCuteDialog } from '@mtcute/node';
-import { Message, Dialog, UiDialog, Media, DialogOption, LinkedDialogsHandle, PendingMessage } from './domain';
+import { TelegramClient, Message as MtCuteMessage, Dialog as MtCuteDialog } from '@mtcute/node';
+import { Dispatcher } from '@mtcute/dispatcher';
+import { Message, Dialog, ImageMedia, Media, PendingMessage } from './domain';
 import { LinkedList as _LinkedList } from './collections';
 import { Paths, Source, ThemeDefinition, ResolvedTheme, ImageProtocol as _ImageProtocol } from './config';
 
@@ -38,6 +39,12 @@ declare global {
     imageProtocol: ImageProtocol;
   };
 
+  namespace Preview {
+    /** One-line summary of a message: its text, else a label for its media. */
+    const of: (message: Message | PendingMessage | null | undefined) => string;
+    const ofMedia: (media: Media) => string;
+  }
+
   namespace Message {
     const from: (message: MtCuteMessage) => Message;
     const pending: (text: string) => PendingMessage;
@@ -45,13 +52,7 @@ declare global {
 
   namespace Dialog {
     function from(dialog: MtCuteDialog): Dialog;
-  }
-
-  namespace UiDialog {
-    function from(dialog: Dialog): UiDialog;
-    function preview(message: Pick<Message, 'text'> & { media?: Message['media'] }): string;
-    function fromMessage(message: Message, unreadCount?: number): UiDialog;
-    function toOption(dialog: UiDialog): DialogOption;
+    function fromMessage(message: Message, unreadCount?: number): Dialog;
   }
 
   namespace Emoji {
@@ -62,12 +63,13 @@ declare global {
 
   namespace Media {
     const from: (message: MtCuteMessage) => Media | null;
-    const placeholder: (media: Media) => string;
+    /** Narrows to the variants carrying an image; the union's only tag test for it. */
+    function isImage(media: Media | null): media is ImageMedia;
     /** Bubble size in cells, or null when the medium has no drawable image. */
-    const size: (media: Media | null) => { cols: number; rows: number } | null;
+    const size: (media: ImageMedia) => { cols: number; rows: number } | null;
   }
 
-  const LinkedDialogs: { from: (dialogs: UiDialog[]) => LinkedDialogsHandle };
+  const LinkedDialogs: { from: (dialogs: Dialog[]) => import('./domain').LinkedDialogsHandle };
 
   namespace LinkedList {
     function from<T>(values?: Iterable<T>): _LinkedList<T>;
@@ -116,6 +118,88 @@ declare global {
   const themes: Record<string, ThemeDefinition>;
 
   const Frame: (props: { title: string; children: OpenTUIChildren }) => _opentui.BoxRenderable;
+
+  // ── 3-auth ────────────────────────────────────────────────────────────────────────────
+  type AuthScreenHandle = {
+    onKey(handler: (event: _opentui.KeyEvent) => void): void;
+    render(): void;
+    dispose(): void;
+  };
+
+  type AuthUiModule = {
+    current: AuthScreenHandle | null;
+    dispose(): void;
+    credentialsForm(): Promise<{ apiId: string; apiHash: string }>;
+    passwordPrompt(invalid: boolean): Promise<string>;
+    phoneCode(options: { invalid: boolean; sentVia: string | null }): Promise<string>;
+    phoneNumber(): Promise<string>;
+    qrLogin(onPhone: () => void): (url: string) => void;
+  };
+
+  type AuthUiSelf = AuthUiModule & {
+    mount(props: { title: string; children: OpenTUIChildren }): AuthScreenHandle;
+    ask(props: { label: string; hint: string; placeholder: string }): Promise<string>;
+    askPassword(props: { label: string; hint: string }): Promise<string>;
+  };
+
+  type AuthModule = {
+    client: TelegramClient;
+    ui: AuthUiModule;
+  };
+
+  type AuthSelf = Omit<AuthModule, 'ui'> & {
+    ui: AuthUiSelf;
+    exit(message: string, code: number): never | void;
+    fail(error: unknown): void;
+    secureSession(): void;
+  };
+
+  // ── 4-messenger ───────────────────────────────────────────────────────────────────────
+  type HistoryReadEvent = { chatId: number; isOutbox: boolean; maxReadId: number; unreadCount: number };
+
+  type MessengerModule = {
+    tg: TelegramClient;
+    dispatcher: Dispatcher;
+    getHistory(chatId: number, firstPageSize: number, pageSize?: number): AsyncGenerator<Message[]>;
+    /** The 320px thumbnail behind a file id, or null if it could not be fetched. Cached. */
+    downloadThumb(fileId: string): Promise<Uint8Array | null>;
+    getReadOutboxMaxId(chatId: number): Promise<number>;
+    iterDialogs(options?: { chunkSize?: number; archived?: boolean }): AsyncGenerator<Dialog>;
+    onHistoryRead(handler: (event: HistoryReadEvent) => void): void;
+    onNewMessage(handler: (message: Message) => void): void;
+    readHistory(chatId: number): Promise<unknown>;
+    sendMessage(chatId: number, text: string): Promise<Message>;
+  };
+
+  // ── the sandbox ───────────────────────────────────────────────────────────────────────
+  const screen: ScreenModule;
+  const auth: AuthModule;
+  const messenger: MessengerModule;
+
+  /**
+   * Members whose type differs between modules, so the intersection below would be unusable
+   * (an intersection of two unrelated types cannot be assigned either one).
+   */
+  type SelfConflicts = 'component' | 'focus' | 'key' | 'capturing' | 'on' | 'list' | 'select' | 'confirm';
+
+  type AppSelf = Omit<
+    ScreenModule &
+      AuthSelf &
+      AuthUiSelf &
+      MessengerModule &
+      DialogsStore &
+      ChatStore &
+      DialogsSelf &
+      ChatSelf &
+      MessagePromptSelf &
+      PickerSelf &
+      Navigation &
+      Actions,
+    SelfConflicts
+  > &
+    Record<SelfConflicts, any>;
+
+  const self: AppSelf;
 
   namespace node {
     const timers: typeof _timers;

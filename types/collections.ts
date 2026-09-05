@@ -16,6 +16,5 @@ export type LinkedList<T> = {
   findNode(predicate: (value: T) => boolean): LinkedListNode<T> | null;
   removeNode(node: LinkedListNode<T>): T;
   moveToFront(node: LinkedListNode<T>): T;
-  isNearHead(node: LinkedListNode<T>, within: number): boolean;
   [Symbol.iterator](): Iterator<T>;
 };

@@ -15,12 +15,8 @@
     phone: () => self.ui.phoneNumber(),
     code: () => self.ui.phoneCode({ invalid: invalid === 'code', sentVia }),
     password: () => self.ui.passwordPrompt(invalid === 'password'),
-    codeSentCallback: (sentCode) => {
-      sentVia = sentCode.type;
-    },
-    invalidCodeCallback: (type) => {
-      invalid = type;
-    },
+    codeSentCallback: (sentCode) => void (sentVia = sentCode.type),
+    invalidCodeCallback: (type) => void (invalid = type),
   };
 
   try {

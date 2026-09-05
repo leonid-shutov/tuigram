@@ -1,7 +1,6 @@
 (() =>
   /** @type {MessengerModule['getHistory']} */
-  // eslint-disable-next-line no-extra-parens -- JSDoc type-assertion cast, not redundant
-  (async function* (chatId, firstPageSize, pageSize = firstPageSize) {
+  async function* (chatId, firstPageSize, pageSize = firstPageSize) {
     let offset = undefined;
     let limit = firstPageSize;
 
@@ -19,4 +18,4 @@
       offset = history.next;
       limit = pageSize;
     }
-  }))();
+  })();
