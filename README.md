@@ -34,6 +34,26 @@ export TUIGRAM_API_ID=1234567
 export TUIGRAM_API_HASH=0123456789abcdef0123456789abcdef
 ```
 
+## Colors
+
+tuigram has no themes of its own. Every color it draws is one of three things: an ANSI palette
+slot, your terminal's default foreground or background, or a blend of those two — so it takes
+on whatever theme your terminal is already wearing, light or dark, and follows along when you
+switch. Panels borrow slot 8 for their frames and the blue slot when focused; a slot that would
+disappear into your background is detected and replaced.
+
+## Settings
+
+`$XDG_CONFIG_HOME/tuigram/config.json`, all keys optional:
+
+| Key             | Default     | What it does                                                                               |
+| --------------- | ----------- | ------------------------------------------------------------------------------------------ |
+| `dialogEmoji`   | `true`      | Peer glyphs in the dialogs list and chat header. Turn off on fonts with no emoji coverage. |
+| `imageProtocol` | `'auto'`    | How bubbles draw thumbnails: `auto`, `kitty`, `sixel`, `blocks`, or `off`.                 |
+| `borderStyle`   | `'rounded'` | Frame style: `rounded`, `heavy`, `single`, or `double`.                                    |
+| `asciiBorders`  | `false`     | Draw frames with `+ -                                                                      | ` instead of box-drawing glyphs. |
+| `panelWidth`    | `30`        | Width of the dialogs panel, in cells.                                                      |
+
 ## Files
 
 Nothing is ever written to the working directory.

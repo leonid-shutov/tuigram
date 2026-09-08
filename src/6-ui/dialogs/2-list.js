@@ -4,10 +4,17 @@ Select({
   id: 'dialogsList',
   height: '100%',
   options: [],
+  // Every color prop has to be set: the ones left out fall back to OpenTUI's own defaults,
+  // which are hardcoded for a dark terminal (#1a1a1a focused fill, white text, yellow
+  // selection). Focus is signalled by the panel border, so the fill does not change.
+  backgroundColor: config.theme.bg,
+  focusedBackgroundColor: config.theme.bg,
   textColor: config.theme.fg,
+  focusedTextColor: config.theme.fg,
   descriptionColor: config.theme.muted,
   selectedBackgroundColor: config.theme.selection,
-  selectedTextColor: config.theme.fg,
+  selectedTextColor: config.theme.selectedText,
+  selectedDescriptionColor: config.theme.selectedMuted,
   showSelectionIndicator: false,
   // j/k and the arrows still work.
   keyBindings: [

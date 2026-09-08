@@ -7,8 +7,8 @@
 
   return Box({
     flexDirection: 'column',
-    borderStyle: config.theme.borderStyle,
-    customBorderChars: config.theme.borderChars,
+    borderStyle: config.borders.style,
+    customBorderChars: config.borders.chars,
     borderColor: sender.isSelf ? config.theme.selfBorder : config.theme.border,
     paddingX: 1,
     alignSelf: sender.isSelf ? 'flex-end' : 'flex-start',

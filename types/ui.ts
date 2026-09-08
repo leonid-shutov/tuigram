@@ -8,7 +8,11 @@ declare global {
   type ScreenModule = {
     renderer: _opentui.CliRenderer;
     wrapper: _opentui.BoxRenderable;
+    /** Re-asks the terminal for its colors and rewrites config.theme in place. */
+    refreshTheme(): Promise<void>;
   };
+
+  type ScreenSelf = ScreenModule;
 
   /** Everything the navigation module needs from a section, and all it is allowed to use. */
   type Section = {
@@ -85,7 +89,7 @@ declare global {
       /** Build a message's bubble, place it, and file both maps. Omit `index` to append. */
       insert(message: ChatMessage, index?: number): void;
       selectMessage(index: number): void;
-      senderColor(key: string): string;
+      senderColor(key: string): _opentui.RGBA;
       up(): void;
     };
 

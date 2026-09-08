@@ -3,7 +3,7 @@ import { TelegramClient, Message as MtCuteMessage, Dialog as MtCuteDialog } from
 import { Dispatcher } from '@mtcute/dispatcher';
 import { Message, Dialog, ImageMedia, Media, PendingMessage } from './domain';
 import { LinkedList as _LinkedList } from './collections';
-import { Paths, Source, ThemeDefinition, ResolvedTheme, ImageProtocol as _ImageProtocol } from './config';
+import { Paths, Source, Borders, ResolvedTheme, ImageProtocol as _ImageProtocol } from './config';
 
 import * as _timers from 'node:timers';
 import * as _events from 'node:events';
@@ -28,7 +28,13 @@ declare global {
     '@mtcute/dispatcher': typeof import('@mtcute/dispatcher');
   };
   const config: {
+    /** Colors, all of them borrowed from the terminal. Refined in place by 2-screen once the
+     * renderer can ask the terminal what its palette is. */
     theme: ResolvedTheme;
+    /** Frame style and glyphs for every panel and bubble. */
+    borders: Borders;
+    /** Width of the dialogs panel, in cells. */
+    panelWidth: number;
     /** Credentials are strings everywhere they are read from (env, JSON file, the form). */
     credentials: { apiId: string | undefined; apiHash: string | undefined };
     cli: { command: string | null; args: string[] };
@@ -115,7 +121,20 @@ declare global {
 
   const paths: Paths;
   const source: Source;
-  const themes: Record<string, ThemeDefinition>;
+
+  namespace Theme {
+    /** Every role, derived from the terminal's own colors. `terminal` is null when the terminal
+     * answered no OSC query, which selects the fallbacks that cannot go wrong on any theme. */
+    const derive: (mode: _opentui.ThemeMode, terminal: _opentui.NormalizedTerminalPalette | null) => ResolvedTheme;
+    /** Which ANSI slot each stand-out role borrows, per side of the palette. */
+    const slots: (
+      mode: _opentui.ThemeMode,
+    ) => Pick<ResolvedTheme, 'accent' | 'selfBorder' | 'selected' | 'senderColors'>;
+    /** Linear blend, `t` of the way from `a` to `b`. The result is a literal RGB color. */
+    const mix: (a: _opentui.RGBA, b: _opentui.RGBA, t: number) => _opentui.RGBA;
+    /** WCAG contrast ratio, 1 (identical) to 21 (black on white). */
+    const contrast: (a: _opentui.RGBA, b: _opentui.RGBA) => number;
+  }
 
   const Frame: (props: { title: string; children: OpenTUIChildren }) => _opentui.BoxRenderable;
 

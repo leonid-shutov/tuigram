@@ -37,14 +37,13 @@ module.exports = [
         AsyncIterator: true,
         Fuzzy: true,
         Hash: true,
+        Theme: true,
 
         // config common
         source: true,
         paths: true,
-        themes: true,
 
         // ui common
-        theme: true,
         Component: true,
         Box: true,
         Text: true,

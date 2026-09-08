@@ -1,16 +1,7 @@
-// The resolved theme object — the palette flattened with the derived defaults. Every UI
-// layer's own `(common)/theme.js` is just `config.theme;`, so this is the single place a
-// theme name turns into colors.
-const defaultSenderColors = ['#e06c75', '#e5c07b', '#98c379', '#56b6c2', '#61afef', '#c678dd', '#d19a66', '#7fdbca'];
-
-const theme = themes[source.theme ?? ''] ?? themes['aqua-lime'];
-
-({
-  ...theme.palette,
-  borderStyle: theme.borderStyle,
-  borderChars: theme.borderChars,
-  panelWidth: theme.panelWidth,
-  selfBorder: theme.selfBorder ?? theme.palette.border,
-  selected: theme.selected ?? theme.palette.accent,
-  senderColors: theme.senderColors ?? defaultSenderColors,
-});
+// Colors are the terminal's, not ours: every role below resolves to an ANSI palette slot or to
+// the terminal's own default fg/bg, so tuigram inherits whatever theme the user runs.
+//
+// This is the first of two phases. Asking the terminal what its colors are needs the renderer
+// to own stdin, which does not exist yet at layer 1 — so assume dark here and let
+// 2-screen/3-refreshTheme.js refine it in place before any UI is built.
+Theme.derive('dark', null);
