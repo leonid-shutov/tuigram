@@ -9,6 +9,11 @@ Select({
   selectedBackgroundColor: config.theme.selection,
   selectedTextColor: config.theme.fg,
   showSelectionIndicator: false,
+  // j/k and the arrows still work.
+  keyBindings: [
+    { name: 'о', action: 'move-down' },
+    { name: 'л', action: 'move-up' },
+  ],
 }).on(tui.SelectRenderableEvents.ITEM_SELECTED, (/** @type {number} */ _index, /** @type {DialogOption} */ option) =>
   self.emit('open', option.chatId),
 );
