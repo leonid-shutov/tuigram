@@ -1,9 +1,12 @@
 /** @type {Actions['receiveMessage']} */
 (message) => {
   if (store.dialogs.isArchived(message.chatId)) return;
+  const isOpen = store.chat.chatId === message.chatId;
+  // The stream re-delivers messages we already hold: our own, racing `send`, or a gap replay.
+  if (isOpen && store.chat.hasConfirmed(message.id)) return;
   store.dialogs.receive(message);
 
-  if (store.chat.chatId === message.chatId) {
+  if (isOpen) {
     store.chat.append(message);
     ui.chat.append(message);
     self.loadThumb(message);

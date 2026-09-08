@@ -54,7 +54,7 @@ declare global {
 
   type ChatSection = Section & {
     component: _opentui.ScrollBoxRenderable;
-    /** Message id to the bubble drawing it — all `confirm` needs. */
+    /** Message id to the bubble drawing it — all `confirm` and `drop` need. */
     bubbles: Map<number, _opentui.BoxRenderable>;
     /** Message id to the image its bubble draws — all `setThumb` needs. */
     pictures: Map<number, _opentui.ImageRenderable>;
@@ -64,6 +64,8 @@ declare global {
     append(message: ChatMessage): void;
     clear(): void;
     confirm(tempId: number, messageId: number): void;
+    /** Remove a message's bubble and unfile it, cursor included. */
+    drop(messageId: number): void;
     prepend(older: ChatMessage[]): void;
     selectLast(): void;
     setReceipt(receipt: Receipt | null): void;

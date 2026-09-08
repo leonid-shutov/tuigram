@@ -7,6 +7,10 @@ declare global {
   /** Whether the chat advertises a receipt on our own last message, and which one. */
   type Receipt = 'read' | 'unread';
 
+  /** What `confirm` did: swapped the pending message for the server's copy, dropped it as a
+   * duplicate of one already held, or found the chat switched. */
+  type Confirmation = 'confirmed' | 'dropped' | 'gone';
+
   type DialogsStore = {
     list: LinkedDialogsHandle;
     /** Chat ids in the archive folder; filled once the archived dialogs finish loading. */
@@ -31,7 +35,9 @@ declare global {
     /** The open chat's history pager; the store holds it but never advances it. */
     pager: AsyncGenerator<Message[]> | null;
     append(message: ChatMessage): void;
-    confirm(tempId: number, message: Message): boolean;
+    confirm(tempId: number, message: Message): Confirmation;
+    /** Whether the window holds the server's copy of a message — pending entries never match. */
+    hasConfirmed(messageId: number): boolean;
     open(chatId: number, pager: AsyncGenerator<Message[]>): void;
     prepend(older: ChatMessage[]): void;
     receipt(): Receipt | null;

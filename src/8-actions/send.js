@@ -10,10 +10,11 @@ async (text) => {
   ui.chat.setReceipt(store.chat.receipt());
 
   const message = await messenger.sendMessage(chatId, text);
-  if (store.chat.confirm(pending.id, message)) {
-    ui.chat.confirm(pending.id, message.id);
-    ui.chat.setReceipt(store.chat.receipt());
-  }
+  const outcome = store.chat.confirm(pending.id, message);
+  // 'dropped': the update stream drew the server's copy first, so ours is the spare.
+  if (outcome === 'confirmed') ui.chat.confirm(pending.id, message.id);
+  else if (outcome === 'dropped') ui.chat.drop(pending.id);
+  if (outcome !== 'gone') ui.chat.setReceipt(store.chat.receipt());
 
   store.dialogs.receive(message);
   self.repaintDialogs();
