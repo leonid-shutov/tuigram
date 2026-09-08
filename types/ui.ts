@@ -53,7 +53,12 @@ declare global {
   const Picture: (media: ImageMedia, protocol: _opentui.ImageRenderProtocol) => _opentui.ImageRenderable | null;
 
   type ChatSection = Section & {
-    component: _opentui.ScrollBoxRenderable;
+    /** The bordered pane: the header, then the messages. Carries both border titles. */
+    component: _opentui.BoxRenderable;
+    /** The open chat's name, pinned under the top border and outside the scrolling content. */
+    header: _opentui.TextRenderable;
+    /** The messages alone — everything the cursor and the scroll position are about. */
+    scroll: _opentui.ScrollBoxRenderable;
     /** Message id to the bubble drawing it — all `confirm` and `drop` need. */
     bubbles: Map<number, _opentui.BoxRenderable>;
     /** Message id to the image its bubble draws — all `setThumb` needs. */
@@ -68,6 +73,8 @@ declare global {
     drop(messageId: number): void;
     prepend(older: ChatMessage[]): void;
     selectLast(): void;
+    /** Fill the header line with the open chat's glyph and name. */
+    setHeader(chatId: number, name: string): void;
     setReceipt(receipt: Receipt | null): void;
     setThumb(messageId: number, bytes: Uint8Array): void;
   };

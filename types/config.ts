@@ -58,7 +58,8 @@ export type Paths = {
 /** Parsed settings file. Unknown keys are tolerated; these are the ones 1-config reads. */
 export type Source = {
   theme?: string;
-  /** Set to false on terminals whose font has no emoji coverage. Defaults to true. */
+  /** Peer glyphs in the dialogs list and the chat pane header. Defaults to true; set to false
+   * on terminals whose font has no emoji coverage. */
   dialogEmoji?: boolean;
   /** How chat bubbles draw thumbnails. Defaults to 'auto'. */
   imageProtocol?: ImageProtocol;

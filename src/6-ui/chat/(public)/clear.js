@@ -1,6 +1,6 @@
 /** @type {ChatSection['clear']} */
 () => {
-  for (const child of self.component.getChildren()) child.destroy();
+  for (const child of self.scroll.getChildren()) child.destroy();
   self.bubbles.clear();
   self.pictures.clear();
   self.selectedIndex = -1;

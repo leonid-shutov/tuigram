@@ -3,6 +3,6 @@
 // older ones are inserted above them, and the cursor shifts down by the batch size with them.
 /** @type {ChatSection['prepend']} */
 (older) => {
-  ScrollBox.preserveScroll(self.component, () => older.forEach((message, index) => self.insert(message, index)));
+  ScrollBox.preserveScroll(self.scroll, () => older.forEach((message, index) => self.insert(message, index)));
   if (self.selectedIndex !== -1) self.selectedIndex += older.length;
 };

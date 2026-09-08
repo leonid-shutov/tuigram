@@ -33,7 +33,7 @@ declare global {
     credentials: { apiId: string | undefined; apiHash: string | undefined };
     cli: { command: string | null; args: string[] };
     paths: Paths;
-    /** Whether the dialogs list prefixes each peer with an emoji. */
+    /** Whether the dialogs list and the chat pane header prefix each peer with an emoji. */
     dialogEmoji: boolean;
     /** How chat bubbles draw thumbnails; 'off' keeps the text placeholders. */
     imageProtocol: ImageProtocol;
@@ -56,7 +56,7 @@ declare global {
   }
 
   namespace Emoji {
-    /** Gutter glyphs. Single-codepoint, 2 cells wide — see the file header before editing. */
+    /** Peer glyphs. Single-codepoint, 2 cells wide — see the file header before editing. */
     const pool: string[];
     function fromHash(chatId: number): string;
   }
