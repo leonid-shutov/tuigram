@@ -134,6 +134,8 @@ declare global {
     const mix: (a: _opentui.RGBA, b: _opentui.RGBA, t: number) => _opentui.RGBA;
     /** WCAG contrast ratio, 1 (identical) to 21 (black on white). */
     const contrast: (a: _opentui.RGBA, b: _opentui.RGBA) => number;
+    /** CIE L*, 0-100. Perceptually uniform, for judging how far apart two fills look. */
+    const lightness: (color: _opentui.RGBA) => number;
   }
 
   const Frame: (props: { title: string; children: OpenTUIChildren }) => _opentui.BoxRenderable;

@@ -26,9 +26,21 @@ const MIN_CONTRAST = 2.2;
   }
 
   const { defaultBackground: paper, defaultForeground: ink, palette } = terminal;
-  // No palette slot means "one step off the background", so these two have to be mixed.
-  const surface = Theme.mix(paper, ink, 0.07);
-  const selection = Theme.mix(paper, ink, 0.16);
+
+  // No palette slot means "one step off the background", so these two have to be mixed. They
+  // are mixed to a perceived distance rather than a fixed fraction, because a fraction of a
+  // narrow range is a narrow step: solarized-light spans 4.1:1 from background to text, so the
+  // same 16% that gives dracula a clear 14.7 ΔL* gave it only 7.2, and the cursor went faint
+  // on exactly the light themes where it was already hardest to see.
+  const shade = (/** @type {number} */ delta) => {
+    const base = Theme.lightness(paper);
+    let color = paper;
+    for (let t = 0.02; t <= 1 && Math.abs(Theme.lightness(color) - base) < delta; t += 0.02)
+      color = Theme.mix(paper, ink, t);
+    return color;
+  };
+  const surface = shade(4);
+  const selection = shade(10);
 
   // Blends `fill` toward the foreground just far enough to clear the floor, rather than by a
   // fixed amount. A fixed ratio is not enough on a low-contrast theme: solarized-dark spans

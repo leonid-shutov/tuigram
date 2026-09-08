@@ -4,5 +4,6 @@
   self.bubbles.clear();
   self.pictures.clear();
   self.selectedIndex = -1;
+  self.selectedBubble = null;
   self.component.bottomTitle = undefined;
 };

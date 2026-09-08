@@ -69,6 +69,9 @@ declare global {
     pictures: Map<number, _opentui.ImageRenderable>;
     /** Cursor position among the ScrollBox's children; -1 when the chat is empty. */
     selectedIndex: number;
+    /** The bubble under the cursor, wearing the thickened border. Held by reference because
+     * `prepend` renumbers every child. Null when the chat is empty. */
+    selectedBubble: _opentui.BoxRenderable | null;
     on(event: 'reachTop', handler: () => void): void;
     append(message: ChatMessage): void;
     clear(): void;

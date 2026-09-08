@@ -8,6 +8,7 @@
   return Box({
     flexDirection: 'column',
     borderStyle: config.borders.style,
+    // Swapped for config.borders.cursorChars while the cursor is on this bubble.
     customBorderChars: config.borders.chars,
     borderColor: sender.isSelf ? config.theme.selfBorder : config.theme.border,
     paddingX: 1,

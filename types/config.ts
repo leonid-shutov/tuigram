@@ -20,6 +20,8 @@ export type BorderChars = {
 export type Borders = {
   style: 'rounded' | 'heavy' | 'single' | 'double';
   chars?: BorderChars;
+  /** Swapped onto the bubble under the cursor — a thicker set than `chars`/`style`. */
+  cursorChars: BorderChars;
 };
 
 /**
