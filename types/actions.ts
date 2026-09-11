@@ -31,6 +31,10 @@ declare global {
     /** Redraw the open chat's read receipt. Follows every change to its tail or watermark. */
     repaintReceipt(): void;
     send(text: string): Promise<void>;
+    /** The window lost focus; what lands in the open chat from now on stays unread. */
+    windowBlur(): void;
+    /** The window came back: read whatever landed in the open chat while it was away. */
+    windowFocus(): void;
   };
 
   const navigation: Navigation;

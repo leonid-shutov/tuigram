@@ -45,9 +45,13 @@ declare global {
     setReadUpTo(maxReadId: number): void;
   };
 
+  /** Terminal window focus, as reported by the terminal — see src/5-store/window.js. */
+  type WindowStore = { focused: boolean };
+
   namespace store {
     const dialogs: DialogsStore;
     const chat: ChatStore;
+    const window: WindowStore;
   }
 }
 
