@@ -5,5 +5,6 @@ Box({
   customBorderChars: config.theme.borderChars,
   borderColor: config.theme.border,
   titleColor: config.theme.muted,
+  bottomTitleAlignment: 'right',
   children: [self.list],
 });

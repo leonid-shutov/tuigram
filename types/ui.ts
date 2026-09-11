@@ -42,9 +42,17 @@ declare global {
     on(event: 'open', handler: (chatId: number) => void): void;
     render(dialogs: Dialog[]): void;
     select(chatId: number): void;
+    /** The list stopped loading: stop the spinner, and say why when it failed. */
+    settle(error?: unknown): void;
   };
 
-  type DialogsSelf = DialogsSection & Emitting;
+  type DialogsSelf = DialogsSection &
+    Emitting & {
+      /** True until the dialog list settles, either loaded or failed. */
+      loading: boolean;
+      /** The interval driving the bottom-border spinner, cleared by `settle`. */
+      spinner: NodeJS.Timeout;
+    };
 
   // ── 6-ui/chat ─────────────────────────────────────────────────────────────────────────
   /** A message drawn as a bordered box, with its picture — when it has one — above the text. */
