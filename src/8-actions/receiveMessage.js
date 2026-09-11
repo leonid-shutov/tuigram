@@ -10,7 +10,7 @@
     store.chat.append(message);
     ui.chat.append(message);
     self.loadThumb(message);
-    ui.chat.setReceipt(store.chat.receipt());
+    actions.repaintReceipt();
     store.dialogs.markRead(message.chatId);
     void messenger.readHistory(message.chatId);
   } else if (!message.sender.isSelf && !store.dialogs.isMuted(message.chatId)) {

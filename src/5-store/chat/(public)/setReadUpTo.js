@@ -1,7 +1,3 @@
-// Returns whether the watermark actually moved, so the caller knows to repaint the receipt.
+// A watermark: a read receipt only ever moves forward.
 /** @type {ChatStore['setReadUpTo']} */
-(maxReadId) => {
-  if (maxReadId <= self.readUpTo) return false;
-  self.readUpTo = maxReadId;
-  return true;
-};
+(maxReadId) => void (self.readUpTo = Math.max(self.readUpTo, maxReadId));

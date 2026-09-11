@@ -40,8 +40,9 @@ declare global {
     hasConfirmed(messageId: number): boolean;
     open(chatId: number, pager: AsyncGenerator<Message[]>): void;
     prepend(older: ChatMessage[]): void;
-    receipt(): Receipt | null;
-    setReadUpTo(maxReadId: number): boolean;
+    /** Derived, recomputed on every read: `null` when the last message isn't ours. */
+    readonly receipt: Receipt | null;
+    setReadUpTo(maxReadId: number): void;
   };
 
   namespace store {

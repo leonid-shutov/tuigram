@@ -17,7 +17,7 @@ async (chatId) => {
     ui.chat.append(message);
     self.loadThumb(message);
   }
-  ui.chat.setReceipt(store.chat.receipt());
+  actions.repaintReceipt();
   ui.chat.selectLast();
 
   store.dialogs.markRead(chatId);

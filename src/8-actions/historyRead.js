@@ -2,9 +2,9 @@
 ({ chatId, isOutbox, maxReadId, unreadCount }) => {
   if (isOutbox) {
     // Someone read what we sent — only the open chat draws a receipt for it.
-    if (store.chat.chatId === chatId && store.chat.setReadUpTo(maxReadId)) {
-      ui.chat.setReceipt(store.chat.receipt());
-    }
+    if (store.chat.chatId !== chatId) return;
+    store.chat.setReadUpTo(maxReadId);
+    actions.repaintReceipt();
     return;
   }
   store.dialogs.setUnread(chatId, unreadCount);
