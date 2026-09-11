@@ -6,5 +6,7 @@
       handler(event);
     }),
 
-  chord: (event) => (event.ctrl ? `ctrl+${event.name}` : event.name),
+  chord: (event) => `${event.ctrl ? 'ctrl+' : ''}${event.meta ? 'alt+' : ''}${event.name}`,
+
+  modified: (event) => event.ctrl || event.meta,
 });

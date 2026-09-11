@@ -5,7 +5,7 @@
     const section = ui[self.selected];
     const chord = KeyInput.chord(event);
     const target = self.shortcuts[chord]?.section ?? self.sectionShortcuts[self.selected]?.[chord];
-    if (target !== undefined && !section.capturing) self.select(target);
+    if (target !== undefined && (!section.capturing || KeyInput.modified(event))) self.select(target);
     else section.key(event);
   }
 };

@@ -1,1 +1,3 @@
-for (const { label, section } of Object.values(self.shortcuts)) ui[section].setLabel(label);
+for (const { label, section } of Object.values(self.shortcuts)) {
+  if (label !== undefined) ui[section].setLabel(label);
+}

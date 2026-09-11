@@ -8,7 +8,8 @@ declare global {
   type Navigation = {
     selected: SectionName;
     cycle: SectionName[];
-    shortcuts: Record<string, { label: string; section: SectionName }>;
+    /** Chord to section. An entry without a label is an alternate binding; only labelled ones paint a pane title. */
+    shortcuts: Record<string, { label?: string; section: SectionName }>;
     sectionShortcuts: Partial<Record<SectionName, Record<string, SectionName>>>;
     cycleSection(step: 1 | -1): void;
     select(section: SectionName): void;

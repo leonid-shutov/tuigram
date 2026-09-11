@@ -92,10 +92,13 @@ declare global {
 
   namespace KeyInput {
     const onKey: (handler: (event: _opentui.KeyEvent) => void) => void;
+    /** The event as one canonical string: modifiers in a fixed order, then the key name. */
     const chord: (event: _opentui.KeyEvent) => string;
+    /** Whether the event carries a modifier — what makes a chord global rather than the section's. */
+    const modified: (event: _opentui.KeyEvent) => boolean;
   }
 
-  const Keys: { CTRL_P: string; SLASH: string };
+  const Keys: { CTRL_P: string; SLASH: string; ALT_1: string; ALT_2: string; ALT_3: string };
 
   namespace OS {
     const notify: (title: string, body?: string) => void;
