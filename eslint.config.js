@@ -81,8 +81,8 @@ module.exports = [
     },
   },
   {
-    // Entry points are plain CommonJS; prettier formats the repo at 120.
-    files: ['tuigram.js', 'bin/**/*.js'],
+    // The entry point is plain CommonJS; prettier formats the repo at 120.
+    files: ['bin/**/*.js'],
     rules: {
       'max-len': ['error', { code: 120, ignoreUrls: true }],
     },
