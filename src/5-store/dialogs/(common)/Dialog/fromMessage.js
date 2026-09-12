@@ -1,5 +1,4 @@
-// A message from a chat that was not in the list yet — Telegram sends these for chats
-// beyond the loaded window.
+// Telegram sends messages for chats beyond the loaded window; this synthesizes their dialog.
 /** @type {typeof Dialog.fromMessage} */
 (message, unreadCount = 0) => ({
   chatId: message.chatId,

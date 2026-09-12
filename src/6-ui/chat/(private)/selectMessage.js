@@ -1,4 +1,3 @@
-// Move the cursor to a row of the ScrollBox, clamped to what is actually rendered.
 /** @type {ChatSelf['selectMessage']} */
 (index) => {
   const children = self.scroll.getChildren();

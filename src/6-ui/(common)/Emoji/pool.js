@@ -1,19 +1,9 @@
-// Glyphs for the dialogs-list gutter. Every entry is a SINGLE codepoint in U+1F300–1F5FF or
-// U+1F680–1F6C5 with Emoji_Presentation=Yes — which makes each exactly 2 cells wide under all
-// of opentui's width methods AND exactly 2 UTF-16 units, so Option.from's `.slice()`
-// and `.padEnd()` arithmetic stays correct without a display-width helper.
-//
-// That rule excludes, by construction, the three families that break terminal columns:
-// ZWJ sequences (👨‍👩‍👧 — 8 units for 2 cells), skin-tone modifiers (👍🏽 — 4 units), and
-// VS16-dependent glyphs (❤️, ✂️) that render 1 cell wide in some terminals and 2 in others.
-// Both ranges are Unicode 6.0, so font coverage is near-universal.
-//
-// Curated for distinct silhouette and dominant color; the U+1F600–1F64F faces are left out
-// because 😀😃😄😁 are indistinguishable at this size. Keep additions inside the rule — see
-// the validator in the plan, and add entries rather than reordering: the hash indexes into
-// this array, so reordering reshuffles everyone's glyph.
+// Glyphs for the dialogs-list gutter. Every entry must be a SINGLE codepoint in U+1F300–1F5FF
+// or U+1F680–1F6C5 with Emoji_Presentation=Yes — that makes each exactly 2 cells wide AND 2
+// UTF-16 units, which is what Option.from's `.slice()` / `.padEnd()` arithmetic assumes. ZWJ
+// sequences, skin-tone modifiers and VS16 glyphs all break it. Append, never reorder:
+// Hash.fnv1a indexes into this array, so reordering reshuffles everyone's glyph.
 [
-  // animals
   '🐌',
   '🐍',
   '🐎',
@@ -46,7 +36,6 @@
   '🐺',
   '🐻',
   '🐼',
-  // plants & fruit
   '🌰',
   '🌱',
   '🌲',
@@ -76,7 +65,6 @@
   '🍑',
   '🍒',
   '🍓',
-  // food & drink
   '🍔',
   '🍕',
   '🍖',
@@ -103,7 +91,6 @@
   '🍷',
   '🍸',
   '🍺',
-  // objects
   '🎀',
   '🎁',
   '🎃',
@@ -179,7 +166,6 @@
   '🔭',
   '🔮',
   '🔱',
-  // transport
   '🚀',
   '🚁',
   '🚂',

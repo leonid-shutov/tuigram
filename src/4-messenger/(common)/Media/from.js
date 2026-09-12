@@ -2,14 +2,9 @@
 // metadata mtcute has already parsed.
 const { Thumbnail } = npm['@mtcute/node'];
 
-// What the chat needs to draw a thumbnail, all of it free of a download.
-//
-// The stripped thumbnail ('i') is a ~40px JPEG carried inside the message itself. mtcute's
-// Thumbnail constructor already splices the standard JPEG tables back onto it and parks the
-// finished file in `.location`, so the bytes here are decodable as-is.
-//
-// The 320px thumbnail ('m') does cost a request, so we keep only its file id — a plain string
-// that `downloadAsBuffer` accepts — and leave fetching to the UI.
+// The stripped thumbnail ('i') is a ~40px JPEG carried inside the message; mtcute's Thumbnail
+// splices the standard JPEG tables back on, so these bytes are decodable with no download.
+// The 320px one ('m') costs a request, so keep only its file id and leave fetching to the UI.
 /** @param {import('@mtcute/node').Photo | import('@mtcute/node').Video} media */
 const image = (media) => {
   const stripped = media.getThumbnail(Thumbnail.THUMB_STRIP)?.location;

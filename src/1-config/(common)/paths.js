@@ -1,5 +1,4 @@
-// Everything tuigram writes lives under XDG directories, never the cwd: credentials and
-// settings in config/, the session database in data/, the log in state/.
+// Everything tuigram writes lives under XDG directories, never the cwd.
 const home = node.os.homedir();
 /**
  * @param {string} variable

@@ -17,9 +17,8 @@ const scroll = ScrollBox({
   },
 });
 
-// `visible: false` in the options is silently ignored: Renderable's constructor assigns the field
-// directly, so ScrollBarRenderable never latches `_manualVisibility` and recalculates the bar back
-// into view. Going through the setter is what actually keeps it hidden.
+// `visible: false` in the options is silently reverted once content overflows (see
+// OPENTUI_BUGS.md); assigning through the setter is what actually sticks.
 scroll.verticalScrollBar.visible = false;
 
 scroll;

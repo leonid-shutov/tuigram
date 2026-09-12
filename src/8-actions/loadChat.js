@@ -8,7 +8,6 @@ async (chatId) => {
 
   const [{ value }, readUpTo] = await Promise.all([pager.next(), messenger.getReadOutboxMaxId(chatId)]);
 
-  // The user may have opened another chat while this one was loading.
   if (store.chat.chatId !== chatId) return;
 
   store.chat.setReadUpTo(readUpTo);

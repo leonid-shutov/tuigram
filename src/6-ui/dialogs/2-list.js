@@ -1,5 +1,5 @@
-// SelectRenderable's own Enter binding is the only way a dialog gets opened; re-emit it as
-// the section's own intent so nothing above has to know about opentui's event names.
+// Re-emit SelectRenderable's Enter as the section's own intent, so nothing above has to
+// know about opentui's event names.
 Select({
   id: 'dialogsList',
   height: '100%',

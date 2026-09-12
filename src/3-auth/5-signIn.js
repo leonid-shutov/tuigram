@@ -1,6 +1,6 @@
 // QR sign-in is primary; `p` on the QR screen aborts it and falls back to phone + code.
-// Every callback here exists to keep mtcute off stdin and off `console`: its defaults are
-// `node:readline` prompts and `console.log`, both of which would fight the renderer.
+// Every callback here exists to keep mtcute off stdin and off `console` — its defaults
+// (`node:readline`, `console.log`) would fight the renderer.
 (async () => {
   const controller = new AbortController();
   /** @type {string | null} */

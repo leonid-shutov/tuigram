@@ -1,5 +1,3 @@
-// Swap a pending message for the server's copy — or drop it, when the update stream delivered
-// that copy first and `receiveMessage` appended it already. 'gone': the chat was switched.
 /** @type {ChatStore['confirm']} */
 (tempId, message) => {
   const index = self.messages.findIndex(({ id }) => id === tempId);

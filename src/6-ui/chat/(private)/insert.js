@@ -1,6 +1,3 @@
-// The one place `bubbles` and `pictures` are written. append and prepend differ only in where the
-// bubble lands — and `add` treats an undefined index as "at the end" — so the bookkeeping lives
-// here rather than being spelled out in both.
 /** @type {ChatSelf['insert']} */
 (message, index) => {
   const { media } = message;

@@ -1,5 +1,3 @@
-// Absorb a message into the list: bump its chat to the top (pinned chats stay put) or
-// insert one if the chat is not in the loaded window yet.
 /** @type {DialogsStore['receive']} */
 (message) => {
   let dialog;
