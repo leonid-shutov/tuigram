@@ -1,8 +1,6 @@
 # 📟 tuigram — Telegram Terminal UI Client
 
-A lightweight, terminal-based Telegram client written in **Node.js** with a primary focus on **Vim motions**.
-
-<img width="3840" height="2160" alt="obraz" src="https://github.com/user-attachments/assets/335b2934-ea6e-4c8b-9ae4-c8f3f89c78d0" />
+A lightweight, terminal-based Telegram client written in **Node.js** with Vim-flavored navigation.
 
 ## Install
 
@@ -34,9 +32,60 @@ export TUIGRAM_API_ID=1234567
 export TUIGRAM_API_HASH=0123456789abcdef0123456789abcdef
 ```
 
-## Files
+## Keys
 
-Nothing is ever written to the working directory.
+| Key                     | Does                                                     |
+| ----------------------- | -------------------------------------------------------- |
+| `Tab` / `Shift+Tab`     | cycle chat list → messages → message box                 |
+| `1` `2` `3`             | jump straight to a pane (not while typing)               |
+| `alt+1` `alt+2` `alt+3` | the same, and works while typing                         |
+| `ctrl+p`                | fuzzy chat search — from anywhere, including mid-message |
+| `/`                     | fuzzy chat search — from the chat list                   |
+| `j` / `k` / `↑` / `↓`   | move through chats and messages                          |
+| `Enter`                 | open the selected chat, or send the message              |
+| `Esc`                   | leave the message box; close the search                  |
+| `ctrl+c`                | quit                                                     |
+
+`о` and `л` are bound alongside `j` and `k`, so navigation keeps working without switching away
+from a Cyrillic layout.
+
+## What is covered
+
+- QR sign-in in the terminal, with phone + code and a 2FA password as fallbacks
+- Live incoming messages, sending plain text, and read-state sync in both directions
+- A read/unread receipt for your own last message, in the chat pane footer
+- Inline photo and video thumbnails — the stripped thumbnail travels inside the message and draws
+  instantly, then the 320px version downloads in the background
+- Rich previews for ~18 media types, in the chat list and in the message pane
+- Fuzzy chat search
+- Desktop notifications; muted chats stay quiet
+- Per-sender name colors in groups, and a stable per-chat emoji glyph
+- Endless upward history paging
+- 15 themes that paint their own background, so they look the same on any terminal
+
+## Configuration
+
+Optional, and read from `$XDG_CONFIG_HOME/tuigram/config.json`:
+
+```json
+{
+  "theme": "aqua-lime",
+  "imageProtocol": "auto",
+  "dialogEmoji": true
+}
+```
+
+| Key             | Default     | Values                                                                                                                                                                                         |
+| --------------- | ----------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `theme`         | `aqua-lime` | `tokyo-night`, `blue-green`, `aqua-lime`, `daylight`, `nord`, `gruvbox`, `catppuccin`, `dracula`, `rose-pine`, `solarized-dark`, `mono`, `high-contrast`, `crt-amber`, `y2k`, `ascii-terminal` |
+| `imageProtocol` | `auto`      | `auto`, `kitty`, `sixel`, `blocks`, `off`                                                                                                                                                      |
+| `dialogEmoji`   | `true`      | `true`, `false` — turn off on fonts with no emoji coverage                                                                                                                                     |
+
+`daylight` is the light theme. `ascii-terminal` draws its borders out of `+`, `-` and `|` for fonts
+without box-drawing glyphs. Unknown keys are ignored, and a file that fails to parse falls back to
+the defaults.
+
+## Files
 
 | What            | Where                                                                                         |
 | --------------- | --------------------------------------------------------------------------------------------- |
@@ -44,8 +93,6 @@ Nothing is ever written to the working directory.
 | API credentials | `$XDG_CONFIG_HOME/tuigram/credentials.json` — mode `0600`                                     |
 | Session         | `$XDG_DATA_HOME/tuigram/session.db` (default `~/.local/share`) — mode `0600`                  |
 | Log             | `$XDG_STATE_HOME/tuigram/tuigram.log` (default `~/.local/state`), override with `TUIGRAM_LOG` |
-
-The session database is an unencrypted account credential — treat it like a password.
 
 ## Commands
 
@@ -60,7 +107,7 @@ tuigram --version
 
 ```sh
 npm install
-npm run dev        # reads .env if present (API_ID / API_HASH)
+npm run dev
 npm run lint
 npm run types
 npm run fmt
