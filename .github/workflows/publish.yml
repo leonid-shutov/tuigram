@@ -26,3 +26,30 @@ jobs:
           pkg="$(node -p "require('./package.json').version")"
           [ "$tag" = "$pkg" ] || { echo "tag $tag != package.json $pkg"; exit 1; }
       - run: npm publish
+
+  bump-formula:
+    needs: publish
+    runs-on: ubuntu-latest
+    if: ${{ !contains(github.ref_name, '-') }} # prereleases stay off Homebrew
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          repository: leonid-shutov/homebrew-tap
+          token: ${{ secrets.HOMEBREW_TAP_TOKEN }}
+      - name: Bump Formula/tuigram.rb
+        run: |
+          version="${GITHUB_REF_NAME#v}"
+          url="https://registry.npmjs.org/tuigram/-/tuigram-$version.tgz"
+          # the registry CDN can lag a few seconds behind `npm publish`
+          for _ in $(seq 30); do
+            curl -fsSL "$url" -o "$RUNNER_TEMP/pkg.tgz" && break
+            sleep 10
+          done
+          sha="$(sha256sum "$RUNNER_TEMP/pkg.tgz" | cut -d' ' -f1)"
+          sed -i -E "s|^  url \".*\"|  url \"$url\"|; s|^  sha256 \".*\"|  sha256 \"$sha\"|" \
+            Formula/tuigram.rb
+          git diff --quiet && { echo "formula already at $version"; exit 0; }
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git commit -am "tuigram $version"
+          git push

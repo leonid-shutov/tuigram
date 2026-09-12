@@ -5,11 +5,16 @@ A lightweight, terminal-based Telegram client written in **Node.js** with Vim-fl
 ## Install
 
 ```sh
-npm install -g tuigram
-tuigram
+brew install leonid-shutov/tap/tuigram
 ```
 
-Node.js 26.4 or newer is required.
+or from npm, which needs a Node.js 26.4 or newer of your own:
+
+```sh
+npm install -g tuigram
+```
+
+Then run `tuigram`.
 
 ## First run
 
