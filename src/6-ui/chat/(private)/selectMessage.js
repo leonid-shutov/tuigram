@@ -9,5 +9,5 @@
   self.selectedIndex = clamped;
   const bubble = children[clamped];
   self.scroll.scrollChildIntoView(bubble.id);
-  bubble.focus();
+  if (self.focused) bubble.focus();
 };

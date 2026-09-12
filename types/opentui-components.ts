@@ -23,6 +23,7 @@ declare global {
   const Textarea: ComponentFactory<_opentui.TextareaOptions, _opentui.TextareaRenderable>;
   const ScrollBox: ComponentFactory<_opentui.ScrollBoxOptions, _opentui.ScrollBoxRenderable> & {
     preserveScroll(component: _opentui.ScrollBoxRenderable, mutate: () => void): void;
+    scrollToBottom(component: _opentui.ScrollBoxRenderable): void;
   };
   const QRCode: ComponentFactory<QRCodeOptions, QRCodeRenderable>;
 }

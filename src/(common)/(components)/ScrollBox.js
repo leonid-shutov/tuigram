@@ -26,4 +26,23 @@ Object.assign(Component(tui.ScrollBoxRenderable), {
     component.verticalScrollBar.scrollSize = heightAfter;
     component.scrollTop = scrollTopBefore + heightAfter - heightBefore;
   },
+
+  // Pin the view to the very bottom of the content, even right after an append. Same two
+  // load-bearing steps as `preserveScroll`: layout is forced so the just-added child has a
+  // height, and the cached `scrollSize` is refreshed before the write, or the scrollbar would
+  // clamp the target to the pre-insert bottom and leave the new content off-screen.
+  // The write also lands the view exactly at opentui's sticky position, which re-engages
+  // `stickyScroll` after a manual scroll has latched it off.
+  /** @param {import('@opentui/core').ScrollBoxRenderable} component */
+  scrollToBottom: (component) => {
+    /** @type {import('@opentui/core').Renderable} */
+    let root = component;
+    while (root.parent) root = root.parent;
+    // eslint-disable-next-line no-extra-parens -- JSDoc type-assertion cast, not redundant
+    /** @type {import('@opentui/core').RootRenderable} */ (root).calculateLayout();
+
+    component.verticalScrollBar.scrollSize = component.content.getLayoutNode().getComputedLayout().height;
+    // `scrollTop` clamps to `scrollSize - viewportSize`, so the overshoot is the bottom.
+    component.scrollTop = component.scrollHeight;
+  },
 });

@@ -6,6 +6,7 @@ async (text) => {
   const pending = Message.pending(text);
   store.chat.append(pending);
   ui.chat.append(pending);
+  ui.chat.selectLast();
   actions.repaintReceipt();
 
   const message = await messenger.sendMessage(chatId, text);

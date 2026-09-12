@@ -90,6 +90,8 @@ declare global {
   type ChatSelf = ChatSection &
     Emitting & {
       down(): void;
+      /** True only while the chat is the selected section — gates whether the cursor takes opentui focus. */
+      focused: boolean;
       /** Build a message's bubble, place it, and file both maps. Omit `index` to append. */
       insert(message: ChatMessage, index?: number): void;
       selectMessage(index: number): void;
