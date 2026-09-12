@@ -88,6 +88,15 @@ module.exports = [
     },
   },
   {
+    // Plain CommonJS; the fake client mirrors mtcute's own API names.
+    files: ['demo/**/*.js'],
+    rules: {
+      'max-len': ['error', { code: 120, ignoreUrls: true }],
+      camelcase: 'off',
+      'class-methods-use-this': 'off',
+    },
+  },
+  {
     files: ['playground/**/*.js'],
     rules: {
       'max-len': ['error', { code: 120, ignoreUrls: true }],
