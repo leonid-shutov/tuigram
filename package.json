@@ -1,6 +1,6 @@
 {
   "name": "tuigram",
-  "version": "1.0.0-alpha.4",
+  "version": "1.0.0",
   "description": "Termial UI Client for Telegram",
   "keywords": [
     "telegram",
