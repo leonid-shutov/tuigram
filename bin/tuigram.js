@@ -92,5 +92,5 @@ process.on('uncaughtException', (error) => {
   const tui = await import('@opentui/core');
   const rootDir = path.resolve(__dirname, '..');
   const context = { console: mockConsole, tui, process, AbortController };
-  await uncommonjs.loadApplication(context, { rootDir });
+  await uncommonjs.loadTree(context, { rootDir });
 })();
