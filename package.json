@@ -1,7 +1,7 @@
 {
   "name": "tuigram",
   "version": "1.0.0",
-  "description": "Termial UI Client for Telegram",
+  "description": "Terminal UI client for Telegram",
   "keywords": [
     "telegram",
     "tui",
@@ -28,6 +28,7 @@
     "bin",
     "src",
     "types",
+    "CHANGELOG.md",
     "README.md"
   ],
   "engines": {
