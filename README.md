@@ -2,6 +2,8 @@
 
 A lightweight, terminal-based Telegram client written in **Node.js** with Vim-flavored navigation.
 
+<img width="2880" height="1845" alt="image" src="https://github.com/user-attachments/assets/bbd6cd2e-89b5-403c-b340-dd113d081301" />
+
 ## Install
 
 ```sh
