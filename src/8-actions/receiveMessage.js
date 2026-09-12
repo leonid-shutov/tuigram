@@ -11,15 +11,15 @@
   if (isOpen) {
     store.chat.append(message);
     ui.chat.append(message);
-    self.loadThumb(message);
+    actions.loadThumb(message);
     actions.repaintReceipt();
   }
   if (isSeen) {
     store.dialogs.markRead(message.chatId);
     void messenger.readHistory(message.chatId);
   } else if (!message.sender.isSelf && !store.dialogs.isMuted(message.chatId)) {
-    self.notify(message);
+    actions.notify(message);
   }
 
-  self.repaintDialogs();
+  actions.repaintDialogs();
 };

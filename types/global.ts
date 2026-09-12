@@ -148,14 +148,12 @@ declare global {
   type AuthModule = {
     client: TelegramClient;
     ui: AuthUiModule;
-  };
-
-  type AuthSelf = Omit<AuthModule, 'ui'> & {
-    ui: AuthUiSelf;
     exit(message: string, code: number): never | void;
     fail(error: unknown): void;
     secureSession(): void;
   };
+
+  type AuthSelf = Omit<AuthModule, 'ui'> & { ui: AuthUiSelf };
 
   // ── 4-messenger ───────────────────────────────────────────────────────────────────────
   type HistoryReadEvent = { chatId: number; isOutbox: boolean; maxReadId: number; unreadCount: number };

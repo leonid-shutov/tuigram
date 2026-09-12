@@ -6,6 +6,6 @@
   const dialog = store.dialogs.find(chatId);
   if (dialog === null || (!dialog.isUnread && dialog.unreadCount === 0)) return;
   store.dialogs.markRead(chatId);
-  self.repaintDialogs();
+  actions.repaintDialogs();
   void messenger.readHistory(chatId);
 };

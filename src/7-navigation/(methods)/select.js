@@ -1,7 +1,7 @@
 /** @type {Navigation['select']} */
 (section) => {
-  if (self.selected === section) return;
-  ui[self.selected].blur?.();
-  self.selected = section;
+  if (navigation.selected === section) return;
+  ui[navigation.selected].blur?.();
+  navigation.selected = section;
   ui[section].focus();
 };

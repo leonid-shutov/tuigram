@@ -1,4 +1,4 @@
-// The reentrancy latch lives in this file's lexical scope, not on `self`: loadOlder is its
+// The reentrancy latch lives in this file's lexical scope, not on the module: loadOlder is its
 // only reader, and both `up` and the prefetch in 6-ui can fire it while a page is in flight.
 let loadingMore = false;
 
@@ -17,7 +17,7 @@ async () => {
     const older = value.toReversed();
     store.chat.prepend(older);
     ui.chat.prepend(older);
-    for (const message of older) self.loadThumb(message);
+    for (const message of older) actions.loadThumb(message);
   } finally {
     loadingMore = false;
   }

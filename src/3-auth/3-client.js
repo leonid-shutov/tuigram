@@ -1,6 +1,6 @@
 const { TelegramClient } = npm['@mtcute/node'];
 
-self.secureSession();
+auth.secureSession();
 
 // 1-credentials.js runs first and blocks on the form until both are set, so they exist here.
 // eslint-disable-next-line no-extra-parens -- JSDoc type-assertion cast, not redundant

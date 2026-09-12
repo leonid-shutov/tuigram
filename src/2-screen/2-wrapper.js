@@ -1,4 +1,4 @@
-const wrapper = new tui.BoxRenderable(self.renderer, {
+const wrapper = new tui.BoxRenderable(screen.renderer, {
   id: 'wrapper',
   width: '100%',
   height: '100%',
@@ -6,6 +6,6 @@ const wrapper = new tui.BoxRenderable(self.renderer, {
   alignItems: 'center',
 });
 
-self.renderer.root.add(wrapper);
+screen.renderer.root.add(wrapper);
 
 wrapper;

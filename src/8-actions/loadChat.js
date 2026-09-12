@@ -14,12 +14,12 @@ async (chatId) => {
   for (const message of value.toReversed()) {
     store.chat.append(message);
     ui.chat.append(message);
-    self.loadThumb(message);
+    actions.loadThumb(message);
   }
   actions.repaintReceipt();
   ui.chat.selectLast();
 
   store.dialogs.markRead(chatId);
-  self.repaintDialogs();
+  actions.repaintDialogs();
   void messenger.readHistory(chatId);
 };

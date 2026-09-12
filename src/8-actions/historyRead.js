@@ -7,5 +7,5 @@
     return;
   }
   store.dialogs.setUnread(chatId, unreadCount);
-  self.repaintDialogs();
+  actions.repaintDialogs();
 };

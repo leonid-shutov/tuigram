@@ -10,7 +10,7 @@
 
   const qrCodeHandler = self.ui.qrLogin(() => controller.abort('phone'));
 
-  /** @type {Parameters<typeof self.client.start>[0]} */
+  /** @type {Parameters<typeof auth.client.start>[0]} */
   const params = {
     phone: () => self.ui.phoneNumber(),
     code: () => self.ui.phoneCode({ invalid: invalid === 'code', sentVia }),
@@ -20,12 +20,12 @@
   };
 
   try {
-    await self.client.start({ ...params, qrCodeHandler, abortSignal: controller.signal });
+    await auth.client.start({ ...params, qrCodeHandler, abortSignal: controller.signal });
   } catch (error) {
-    if (controller.signal.reason !== 'phone') self.fail(error);
+    if (controller.signal.reason !== 'phone') auth.fail(error);
     else {
-      await self.client.start(params);
-      self.secureSession();
+      await auth.client.start(params);
+      auth.secureSession();
     }
   } finally {
     self.ui.dispose();

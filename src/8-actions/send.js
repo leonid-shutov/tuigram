@@ -16,5 +16,5 @@ async (text) => {
   if (outcome !== 'gone') actions.repaintReceipt();
 
   store.dialogs.receive(message);
-  self.repaintDialogs();
+  actions.repaintDialogs();
 };

@@ -1,11 +1,11 @@
 /** @type {Navigation['handleKey']} */
 (event) => {
-  if (event.name === 'tab') self.cycleSection(event.shift ? -1 : 1);
+  if (event.name === 'tab') navigation.cycleSection(event.shift ? -1 : 1);
   else {
-    const section = ui[self.selected];
+    const section = ui[navigation.selected];
     const chord = KeyInput.chord(event);
-    const target = self.shortcuts[chord]?.section ?? self.sectionShortcuts[self.selected]?.[chord];
-    if (target !== undefined && (!section.capturing || KeyInput.modified(event))) self.select(target);
+    const target = navigation.shortcuts[chord]?.section ?? navigation.sectionShortcuts[navigation.selected]?.[chord];
+    if (target !== undefined && (!section.capturing || KeyInput.modified(event))) navigation.select(target);
     else section.key(event);
   }
 };
