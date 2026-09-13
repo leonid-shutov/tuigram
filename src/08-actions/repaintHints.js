@@ -1,2 +1,4 @@
 /** @type {Actions['repaintHints']} */
-() => ui.hints.render(keymap.hints(navigation.selected));
+() => {
+  if (config.hints) ui.hints.render(keymap.hints(navigation.selected));
+};

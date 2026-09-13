@@ -43,6 +43,8 @@ declare global {
     dialogEmoji: boolean;
     /** How chat bubbles draw thumbnails; 'off' keeps the text placeholders. */
     imageProtocol: ImageProtocol;
+    /** Whether the key hint bar occupies the bottom row. */
+    hints: boolean;
   };
 
   namespace Preview {

@@ -3,6 +3,6 @@ Box({
   width: '100%',
   height: 1,
   flexShrink: 0,
-  backgroundColor: config.theme.surface,
+  backgroundColor: config.theme.bg,
   children: [self.text],
 });

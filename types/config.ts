@@ -63,4 +63,6 @@ export type Source = {
   dialogEmoji?: boolean;
   /** How chat bubbles draw thumbnails. Defaults to 'auto'. */
   imageProtocol?: ImageProtocol;
+  /** The key hint bar along the bottom edge. Defaults to true; set to false to reclaim the row. */
+  hints?: boolean;
 } & Record<string, unknown>;

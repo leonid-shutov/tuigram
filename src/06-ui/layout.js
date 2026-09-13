@@ -15,6 +15,6 @@ screen.wrapper.add(
   }),
 );
 
-screen.wrapper.add(ui.hints.component);
+if (config.hints) screen.wrapper.add(ui.hints.component);
 
 screen.wrapper.add(ui.picker.component);

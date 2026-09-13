@@ -80,7 +80,8 @@ Optional, and read from `$XDG_CONFIG_HOME/tuigram/config.json`:
 {
   "theme": "aqua-lime",
   "imageProtocol": "auto",
-  "dialogEmoji": true
+  "dialogEmoji": true,
+  "hints": true
 }
 ```
 
@@ -89,6 +90,7 @@ Optional, and read from `$XDG_CONFIG_HOME/tuigram/config.json`:
 | `theme`         | `aqua-lime` | `tokyo-night`, `blue-green`, `aqua-lime`, `daylight`, `nord`, `gruvbox`, `catppuccin`, `dracula`, `rose-pine`, `solarized-dark`, `mono`, `high-contrast`, `crt-amber`, `y2k`, `ascii-terminal` |
 | `imageProtocol` | `auto`      | `auto`, `kitty`, `sixel`, `blocks`, `off`                                                                                                                                                      |
 | `dialogEmoji`   | `true`      | `true`, `false` — turn off on fonts with no emoji coverage                                                                                                                                     |
+| `hints`         | `true`      | `true`, `false` — set to false to hide the key hint bar and reclaim its row                                                                                                                    |
 
 `daylight` is the light theme. `ascii-terminal` draws its borders out of `+`, `-` and `|` for fonts
 without box-drawing glyphs. Unknown keys are ignored, and a file that fails to parse falls back to
