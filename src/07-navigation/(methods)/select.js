@@ -4,4 +4,5 @@
   ui[navigation.selected].blur?.();
   navigation.selected = section;
   ui[section].focus?.();
+  actions.repaintHints();
 };

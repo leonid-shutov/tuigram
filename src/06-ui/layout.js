@@ -1,5 +1,3 @@
-// Sibling order on the wrapper is meaningful: layout fills the space and the picker is
-// absolutely positioned on top of it.
 screen.wrapper.add(
   Box({
     id: 'layout',
@@ -16,5 +14,7 @@ screen.wrapper.add(
     ],
   }),
 );
+
+screen.wrapper.add(ui.hints.component);
 
 screen.wrapper.add(ui.picker.component);

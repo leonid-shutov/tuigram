@@ -24,6 +24,8 @@ declare global {
     receiveMessage(message: Message): void;
     /** Push the dialog list to both of its views. Follows every store.dialogs mutation. */
     repaintDialogs(): void;
+    /** Redraw the hint bar for whichever section is focused. Follows every `navigation.select`. */
+    repaintHints(): void;
     /** Redraw the open chat's read receipt. Follows every change to its tail or watermark. */
     repaintReceipt(): void;
     send(text: string): Promise<void>;

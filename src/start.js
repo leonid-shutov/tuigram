@@ -1,4 +1,5 @@
 ui[navigation.selected].focus();
+actions.repaintHints();
 
 const chunkSize = 10;
 Array.fromAsync(AsyncIterator.take(messenger.iterDialogs({ chunkSize }), chunkSize))

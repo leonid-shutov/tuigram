@@ -10,13 +10,8 @@ const byCommand = keymap.engine.getCommandBindings({
   commands: PANES.map(([, command]) => command),
 });
 
-/** @param {readonly KeymapActiveBinding[]} bindings */
-const plainest = (bindings) =>
-  bindings.find(({ sequence }) => sequence.every(({ stroke }) => !stroke.ctrl && !stroke.meta && !stroke.shift)) ??
-  bindings[0];
-
 for (const [section, command] of PANES) {
-  const binding = plainest(byCommand.get(command) ?? []);
+  const binding = Binding.plainest(byCommand.get(command) ?? []);
   if (binding === undefined) continue;
   ui[section].setLabel(` ${Keymap.extras.formatKeySequence(binding.sequence)} `);
 }

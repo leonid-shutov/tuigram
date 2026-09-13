@@ -178,8 +178,18 @@ declare global {
   /** One named app action. `title` is what the pane labels and, later, a help screen read. */
   type Command = {
     title: string;
+    /** A bar-sized label for the hint bar, which falls back to `title` when a command omits it. */
+    hint?: string;
     run(): void;
   };
+
+  /** One entry of the hint bar: the keys to press, and what pressing them does. */
+  type Hint = { keys: string; label: string };
+
+  namespace Binding {
+    /** The binding to put in front of a reader: the unmodified one, else whatever came first. */
+    const plainest: (bindings: readonly KeymapActiveBinding[]) => KeymapActiveBinding | undefined;
+  }
 
   /** Commands as they are written: keyed by the name the bindings point at. */
   type Commands = Record<string, Command>;
@@ -189,6 +199,8 @@ declare global {
     commands: Record<'app' | 'dialogs' | 'chat' | 'prompt' | 'picker', Commands>;
     /** Bindings by the layer that installs them; the seam a `keys` block in config.json would feed. */
     bindings: Record<'global' | 'panes' | 'dialogs' | 'chat' | 'prompt' | 'picker', readonly KeymapBinding[]>;
+    /** What the hint bar should advertise with `section` focused, in the order to read them. */
+    hints(section: SectionName): Hint[];
   };
 
   // ── the sandbox ───────────────────────────────────────────────────────────────────────
@@ -214,7 +226,8 @@ declare global {
     | 'up'
     | 'down'
     | 'moveUp'
-    | 'moveDown';
+    | 'moveDown'
+    | 'render';
 
   type AppSelf = Omit<
     ScreenModule &
@@ -227,6 +240,7 @@ declare global {
       ChatSelf &
       MessagePromptSelf &
       PickerSelf &
+      HintsSelf &
       Navigation &
       Actions,
     SelfConflicts

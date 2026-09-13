@@ -64,6 +64,9 @@ module.exports = [
         Bubble: true,
         Picture: true,
 
+        // keymap common
+        Binding: true,
+
         // application
         config: true,
         tui: true,

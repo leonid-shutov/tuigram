@@ -5,5 +5,5 @@
   'app.focusDialogs': { title: 'Chat list', run: () => navigation.select('dialogs') },
   'app.focusChat': { title: 'Messages', run: () => navigation.select('chat') },
   'app.focusPrompt': { title: 'Message box', run: () => navigation.select('messagePrompt') },
-  'app.search': { title: 'Jump to chat', run: () => navigation.select('picker') },
+  'app.search': { title: 'Jump to chat', hint: 'Search', run: () => navigation.select('picker') },
 });

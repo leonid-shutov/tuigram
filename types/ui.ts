@@ -149,11 +149,25 @@ declare global {
   type PickerOnImpl = (event: 'pick' | 'close', handler: (...args: any[]) => void) => void;
   type MessagePromptOnImpl = (event: keyof MessagePromptEventMap, handler: (...args: any[]) => void) => void;
 
+  // ── 6-ui/hints ────────────────────────────────────────────────────────────────────────
+  /**
+   * The bar under everything. Not a `Section` and not a `SectionName`: nothing focuses it, it
+   * only reports what the focused section can do.
+   */
+  type HintsSection = {
+    component: _opentui.BoxRenderable;
+    /** Draw the hints that fit, left to right, and mark it when some had to be dropped. */
+    render(hints: Hint[]): void;
+  };
+
+  type HintsSelf = HintsSection & { text: _opentui.TextRenderable };
+
   namespace ui {
     const dialogs: DialogsSection;
     const chat: ChatSection;
     const messagePrompt: MessagePromptSection;
     const picker: PickerSection;
+    const hints: HintsSection;
   }
 }
 
