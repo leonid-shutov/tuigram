@@ -8,13 +8,8 @@ declare global {
   type Navigation = {
     selected: SectionName;
     cycle: SectionName[];
-    /** Chord to section. An entry without a label is an alternate binding; only labelled ones paint a pane title. */
-    shortcuts: Record<string, { label?: string; section: SectionName }>;
-    sectionShortcuts: Partial<Record<SectionName, Record<string, SectionName>>>;
     cycleSection(step: 1 | -1): void;
     select(section: SectionName): void;
-    /** The app's single key handler: Tab cycles, shortcuts jump, everything else goes to the focused section. */
-    handleKey(event: _opentui.KeyEvent): void;
   };
 
   // ── 8-actions ─────────────────────────────────────────────────────────────────────────

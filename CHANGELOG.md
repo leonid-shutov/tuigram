@@ -6,6 +6,14 @@
 
 - Install from the Homebrew tap: `brew install leonid-shutov/tap/tuigram`. Every release bumps the formula
   right after it lands on npm; prereleases stay off Homebrew.
+- `gg` and `G` jump to the ends: the first or last chat in the list, the oldest loaded or newest message
+  in a chat. A long list no longer has to be walked with `j` and `k`.
+- `Shift+Enter` starts a new line in the message box, and the box grows with it.
+- Typing a search query into the chat picker now filters as you paste, not only as you type.
+- Keys are handled by `@opentui/keymap`: bindings are declared once, per pane, and a pane's keys are
+  live only while that pane has focus. Every binding is matched on the Latin key it sits on, so the
+  whole keymap — not just `j` and `k` — works on a Cyrillic layout. `/` now reaches the chat search
+  from the messages as well as the chat list.
 
 ### Fixed
 

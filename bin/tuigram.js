@@ -90,7 +90,13 @@ process.on('uncaughtException', (error) => {
 (async () => {
   const uncommonjs = require('@leonid-shutov/uncommonjs');
   const tui = await import('@opentui/core');
+  // uncommonjs's `npm` global only carries top-level package names, so the keymap's subpath
+  // exports have to come in through the sandbox the way `tui` does.
+  const Keymap = {
+    host: await import('@opentui/keymap/opentui'),
+    extras: await import('@opentui/keymap/extras'),
+  };
   const rootDir = path.resolve(__dirname, '..');
-  const context = { console: mockConsole, tui, process, AbortController };
+  const context = { console: mockConsole, tui, Keymap, process, AbortController };
   await uncommonjs.loadTree(context, { rootDir });
 })();

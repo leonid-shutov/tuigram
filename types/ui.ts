@@ -10,12 +10,13 @@ declare global {
     wrapper: _opentui.BoxRenderable;
   };
 
-  /** Everything the navigation module needs from a section, and all it is allowed to use. */
+  /**
+   * Everything outside a section may use: navigation moves focus between them, and the keymap's
+   * commands call the named intents each section adds on top.
+   */
   type Section = {
-    readonly capturing: boolean;
     focus(): void;
     blur?(): void;
-    key(event: _opentui.KeyEvent): void;
     setLabel(label: string): void;
   };
 
@@ -40,6 +41,13 @@ declare global {
     /** Chat ids of the rows currently drawn, in row order — `select` maps a chat id to a row. */
     chatIds: number[];
     on(event: 'open', handler: (chatId: number) => void): void;
+    /** Move the cursor, in rows. */
+    moveDown(count?: number): void;
+    moveUp(count?: number): void;
+    first(): void;
+    last(): void;
+    /** Report the highlighted chat as the section's `open` intent. */
+    open(): void;
     render(dialogs: Dialog[]): void;
     select(chatId: number): void;
     /** The list stopped loading: stop the spinner, and say why when it failed. */
@@ -74,6 +82,11 @@ declare global {
     /** Cursor position among the ScrollBox's children; -1 when the chat is empty. */
     selectedIndex: number;
     on(event: 'reachTop', handler: () => void): void;
+    /** Move the cursor, in messages. */
+    down(count?: number): void;
+    up(count?: number): void;
+    /** The oldest message loaded so far, which also asks for more history. */
+    first(): void;
     append(message: ChatMessage): void;
     clear(): void;
     confirm(tempId: number, messageId: number): void;
@@ -89,14 +102,12 @@ declare global {
 
   type ChatSelf = ChatSection &
     Emitting & {
-      down(): void;
       /** True only while the chat is the selected section — gates whether the cursor takes opentui focus. */
       focused: boolean;
       /** Build a message's bubble, place it, and file both maps. Omit `index` to append. */
       insert(message: ChatMessage, index?: number): void;
       selectMessage(index: number): void;
       senderColor(key: string): string;
-      up(): void;
     };
 
   // ── 6-ui/messagePrompt ────────────────────────────────────────────────────────────────
@@ -104,6 +115,9 @@ declare global {
     component: _opentui.BoxRenderable;
     input: _opentui.TextareaRenderable;
     on<K extends keyof MessagePromptEventMap>(event: K, handler: (...args: MessagePromptEventMap[K]) => void): void;
+    /** Report the typed text as the `send` intent and empty the box. */
+    send(): void;
+    exit(): void;
   };
 
   type MessagePromptSelf = MessagePromptSection & Emitting;
@@ -117,6 +131,11 @@ declare global {
     items: Dialog[];
     on(event: 'pick', handler: (chatId: number) => void): void;
     on(event: 'close', handler: () => void): void;
+    moveDown(): void;
+    moveUp(): void;
+    /** Report the highlighted result as the `pick` intent. */
+    pick(): void;
+    close(): void;
     setItems(dialogs: Dialog[]): void;
   };
 

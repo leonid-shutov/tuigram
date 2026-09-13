@@ -21,11 +21,17 @@ declare global {
   };
 
   const tui: typeof _opentui;
+  /** `@opentui/keymap`, by entry point — the subpaths `npm` cannot reach. Injected like `tui`. */
+  const Keymap: {
+    host: typeof import('@opentui/keymap/opentui');
+    extras: typeof import('@opentui/keymap/extras');
+  };
   /** Every dependency in package.json, keyed by package name. Named ones are typed. */
   const npm: Record<string, any> & {
     '@opentui/qrcode': typeof import('@opentui/qrcode');
     '@mtcute/node': typeof import('@mtcute/node');
     '@mtcute/dispatcher': typeof import('@mtcute/dispatcher');
+    '@opentui/keymap': typeof import('@opentui/keymap');
   };
   const config: {
     theme: ResolvedTheme;
@@ -89,16 +95,6 @@ declare global {
   namespace Obj {
     function pick<T extends object, K extends keyof T>(obj: T, keys: K[]): Pick<T, K>;
   }
-
-  namespace KeyInput {
-    const onKey: (handler: (event: _opentui.KeyEvent) => void) => void;
-    /** The event as one canonical string: modifiers in a fixed order, then the key name. */
-    const chord: (event: _opentui.KeyEvent) => string;
-    /** Whether the event carries a modifier — what makes a chord global rather than the section's. */
-    const modified: (event: _opentui.KeyEvent) => boolean;
-  }
-
-  const Keys: { CTRL_P: string; SLASH: string; ALT_1: string; ALT_2: string; ALT_3: string };
 
   namespace OS {
     const notify: (title: string, body?: string) => void;
@@ -172,8 +168,32 @@ declare global {
     sendMessage(chatId: number, text: string): Promise<Message>;
   };
 
+  // ── 9-keymap ──────────────────────────────────────────────────────────────────────────
+  type KeymapEngine = InstanceType<typeof import('@opentui/keymap').Keymap<_opentui.Renderable, _opentui.KeyEvent>>;
+  type KeymapBinding = import('@opentui/keymap').Binding<_opentui.Renderable, _opentui.KeyEvent>;
+  /** What a `group()` in `2-bindings.js` is written as: command name to key, key list, or 'none'. */
+  type KeymapBindingConfig = import('@opentui/keymap/extras').BindingConfig<_opentui.Renderable, _opentui.KeyEvent>;
+  type KeymapActiveBinding = import('@opentui/keymap').ActiveBinding<_opentui.Renderable, _opentui.KeyEvent>;
+
+  /** One named app action. `title` is what the pane labels and, later, a help screen read. */
+  type Command = {
+    title: string;
+    run(): void;
+  };
+
+  /** Commands as they are written: keyed by the name the bindings point at. */
+  type Commands = Record<string, Command>;
+
+  type KeymapModule = {
+    engine: KeymapEngine;
+    commands: Record<'app' | 'dialogs' | 'chat' | 'prompt' | 'picker', Commands>;
+    /** Bindings by the layer that installs them; the seam a `keys` block in config.json would feed. */
+    bindings: Record<'global' | 'panes' | 'dialogs' | 'chat' | 'prompt' | 'picker', readonly KeymapBinding[]>;
+  };
+
   // ── the sandbox ───────────────────────────────────────────────────────────────────────
   const screen: ScreenModule;
+  const keymap: KeymapModule;
   const auth: AuthModule;
   const messenger: MessengerModule;
 
@@ -181,7 +201,20 @@ declare global {
    * Members whose type differs between modules, so the intersection below would be unusable
    * (an intersection of two unrelated types cannot be assigned either one).
    */
-  type SelfConflicts = 'component' | 'focus' | 'key' | 'capturing' | 'on' | 'list' | 'select' | 'confirm';
+  type SelfConflicts =
+    | 'component'
+    | 'focus'
+    | 'blur'
+    | 'on'
+    | 'list'
+    | 'select'
+    | 'confirm'
+    | 'first'
+    | 'last'
+    | 'up'
+    | 'down'
+    | 'moveUp'
+    | 'moveDown';
 
   type AppSelf = Omit<
     ScreenModule &

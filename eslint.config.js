@@ -52,11 +52,9 @@ module.exports = [
         Select: true,
         Textarea: true,
         ScrollBox: true,
-        KeyInput: true,
         Media: true,
         Emoji: true,
         Option: true,
-        Keys: true,
         Input: true,
 
         // auth common
@@ -69,6 +67,7 @@ module.exports = [
         // application
         config: true,
         tui: true,
+        Keymap: true,
         AbortController: true,
         screen: true,
         auth: true,
@@ -77,6 +76,7 @@ module.exports = [
         ui: true,
         navigation: true,
         actions: true,
+        keymap: true,
       },
     },
   },

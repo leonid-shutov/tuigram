@@ -41,20 +41,22 @@ export TUIGRAM_API_HASH=0123456789abcdef0123456789abcdef
 
 ## Keys
 
-| Key                     | Does                                                     |
-| ----------------------- | -------------------------------------------------------- |
-| `Tab` / `Shift+Tab`     | cycle chat list → messages → message box                 |
-| `1` `2` `3`             | jump straight to a pane (not while typing)               |
-| `alt+1` `alt+2` `alt+3` | the same, and works while typing                         |
-| `ctrl+p`                | fuzzy chat search — from anywhere, including mid-message |
-| `/`                     | fuzzy chat search — from the chat list                   |
-| `j` / `k` / `↑` / `↓`   | move through chats and messages                          |
-| `Enter`                 | open the selected chat, or send the message              |
-| `Esc`                   | leave the message box; close the search                  |
-| `ctrl+c`                | quit                                                     |
+| Key                     | Does                                                      |
+| ----------------------- | --------------------------------------------------------- |
+| `Tab` / `Shift+Tab`     | cycle chat list → messages → message box                  |
+| `1` `2` `3`             | jump straight to a pane (not while typing)                |
+| `alt+1` `alt+2` `alt+3` | the same, and works while typing                          |
+| `ctrl+p`                | fuzzy chat search — from anywhere, including mid-message  |
+| `/`                     | fuzzy chat search — from the chat list or the messages    |
+| `j` / `k` / `↑` / `↓`   | move through chats and messages                           |
+| `gg` / `G`              | jump to the first / last chat, or oldest / newest message |
+| `Enter`                 | open the selected chat, or send the message               |
+| `Shift+Enter`           | start a new line in the message box                       |
+| `Esc`                   | leave the message box; close the search                   |
+| `ctrl+c`                | quit                                                      |
 
-`о` and `л` are bound alongside `j` and `k`, so navigation keeps working without switching away
-from a Cyrillic layout.
+Every binding is matched on the Latin key it sits on, so the whole keymap keeps working on a
+Cyrillic layout without switching back — `о` moves down, `пп` is `gg`, and so on.
 
 ## What is covered
 
