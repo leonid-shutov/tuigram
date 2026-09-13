@@ -44,6 +44,13 @@ const withTime = (text, duration) => (duration > 0 ? `${text} ${time(duration)}`
       return `🧾 ${clip(media.title)}`;
     case 'venue':
       return `🏢 ${clip(media.title)}`;
+    case 'call': {
+      if (media.reason === 'missed') return media.isVideo ? '📵 Missed video call' : '📵 Missed call';
+      const kind = media.isVideo ? 'Video call' : 'Call';
+      if (media.reason === 'busy') return `📞 ${kind} (busy)`;
+      if (media.reason === 'disconnect') return `📞 ${kind} (dropped)`;
+      return withTime(`📞 ${kind}`, media.duration);
+    }
     case 'story':
       return '📖 Story';
     case 'paid':

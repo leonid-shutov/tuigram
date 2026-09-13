@@ -23,7 +23,18 @@ const image = (media) => {
 
   if (media === null) {
     // mtcute returns null both for "no media" and for a type it doesn't model; only latter is media.
-    const { raw } = message;
+    const { raw, action } = message;
+    if (action?.type === 'call') {
+      const reason =
+        action.reason?._ === 'phoneCallDiscardReasonMissed'
+          ? 'missed'
+          : action.reason?._ === 'phoneCallDiscardReasonBusy'
+            ? 'busy'
+            : action.reason?._ === 'phoneCallDiscardReasonDisconnect'
+              ? 'disconnect'
+              : null;
+      return { type: 'call', isVideo: action.isVideo, duration: action.duration, reason };
+    }
     const attached = raw._ !== 'messageService' && raw.media && raw.media._ !== 'messageMediaEmpty';
     return attached ? { type: 'unknown' } : null;
   }

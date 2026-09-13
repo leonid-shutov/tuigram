@@ -28,6 +28,7 @@ export type Media =
   | { type: 'dice'; emoji: string; value: number }
   | { type: 'game' | 'invoice' | 'venue'; title: string }
   | { type: 'todo'; title: string }
+  | { type: 'call'; isVideo: boolean; duration: number; reason: 'missed' | 'busy' | 'disconnect' | null }
   | { type: 'location' | 'live_location' | 'story' | 'paid' | 'webpage' | 'unknown' };
 
 export type Message = {
