@@ -12,17 +12,27 @@ export type MediaImage = {
   height: number;
 };
 
+/** A medium that can be downloaded and opened in an external viewer. */
+export type MediaFile = {
+  /** File id the client can download the full medium with. */
+  fileId: string;
+  /** Original file name provided by the sender, when available. */
+  fileName: string | null;
+  /** MIME type of the full medium. */
+  mimeType: string;
+};
+
 /** The two variants that carry a drawable image, and so the only ones with `preview`/`thumbId`. */
 export type ImageMedia =
-  | ({ type: 'video'; duration: number; isAnimation: boolean; isRound: boolean } & MediaImage)
-  | ({ type: 'photo' } & MediaImage);
+  | ({ type: 'video'; duration: number; isAnimation: boolean; isRound: boolean } & MediaImage & MediaFile)
+  | ({ type: 'photo' } & MediaImage & MediaFile);
 
 export type Media =
   | ImageMedia
-  | { type: 'voice'; duration: number }
-  | { type: 'audio'; duration: number; title: string | null; performer: string | null }
-  | { type: 'sticker'; emoji: string }
-  | { type: 'document'; fileName: string | null; mimeType: string }
+  | ({ type: 'voice'; duration: number } & MediaFile)
+  | ({ type: 'audio'; duration: number; title: string | null; performer: string | null } & MediaFile)
+  | ({ type: 'sticker'; emoji: string } & MediaFile)
+  | ({ type: 'document' } & MediaFile)
   | { type: 'contact'; firstName: string; lastName: string | null }
   | { type: 'poll'; question: string }
   | { type: 'dice'; emoji: string; value: number }
@@ -30,6 +40,9 @@ export type Media =
   | { type: 'todo'; title: string }
   | { type: 'call'; isVideo: boolean; duration: number; reason: 'missed' | 'busy' | 'disconnect' | null }
   | { type: 'location' | 'live_location' | 'story' | 'paid' | 'webpage' | 'unknown' };
+
+/** Every variant of `Media` that carries something downloadable — what `openMedia` can act on. */
+export type FileMedia = Extract<Media, MediaFile>;
 
 export type Message = {
   id: number;

@@ -75,12 +75,10 @@ declare global {
     header: _opentui.TextRenderable;
     /** The messages alone — everything the cursor and the scroll position are about. */
     scroll: _opentui.ScrollBoxRenderable;
-    /** Message id to the bubble drawing it — all `confirm` and `drop` need. */
-    bubbles: Map<number, _opentui.BoxRenderable>;
-    /** Message id to the image its bubble draws — all `setThumb` needs. */
-    pictures: Map<number, _opentui.ImageRenderable>;
     /** Cursor position among the ScrollBox's children; -1 when the chat is empty. */
     selectedIndex: number;
+    /** Derived, recomputed on every read: the message at the cursor, `null` when the chat is empty. */
+    readonly selectedMessage: ChatMessage | null;
     on(event: 'reachTop', handler: () => void): void;
     /** Move the cursor, in messages. */
     down(count?: number): void;
@@ -89,6 +87,7 @@ declare global {
     first(): void;
     append(message: ChatMessage): void;
     clear(): void;
+    /** A pending message got its real id: re-key its bubble from the temp id. */
     confirm(tempId: number, messageId: number): void;
     /** Remove a message's bubble and unfile it, cursor included. */
     drop(messageId: number): void;
@@ -97,6 +96,8 @@ declare global {
     /** Fill the header line with the open chat's glyph and name. */
     setHeader(chatId: number, name: string): void;
     setReceipt(receipt: Receipt | null): void;
+    /** Transient word in the receipt's corner. `actions.repaintReceipt()` puts the receipt back. */
+    setStatus(status: string | null): void;
     setThumb(messageId: number, bytes: Uint8Array): void;
   };
 
@@ -104,7 +105,9 @@ declare global {
     Emitting & {
       /** True only while the chat is the selected section — gates whether the cursor takes opentui focus. */
       focused: boolean;
-      /** Build a message's bubble, place it, and file both maps. Omit `index` to append. */
+      /** Message id to the bubble drawing it and the image inside — the section's only id-keyed view state. */
+      bubbles: Map<number, { bubble: _opentui.BoxRenderable; picture: _opentui.ImageRenderable | null }>;
+      /** Build a message's bubble, place it, and file it under its id. Omit `index` to append. */
       insert(message: ChatMessage, index?: number): void;
       selectMessage(index: number): void;
       senderColor(key: string): string;

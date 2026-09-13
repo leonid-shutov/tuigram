@@ -7,6 +7,5 @@
   const picture = drawable ? Picture(media, protocol) : null;
   const bubble = Bubble(message, picture);
   self.scroll.add(bubble, index);
-  self.bubbles.set(message.id, bubble);
-  if (picture !== null) self.pictures.set(message.id, picture);
+  self.bubbles.set(message.id, { bubble, picture });
 };

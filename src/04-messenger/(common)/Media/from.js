@@ -16,6 +16,19 @@ const image = (media) => {
   };
 };
 
+// Everything the full medium can be downloaded and opened with: the file id mtcute generates
+// for the largest available size, plus what the sender told us it is called and typed as.
+/** @param {import('@mtcute/node').RawDocument} media */
+const fileInfo = (media) => ({
+  fileId: media.fileId,
+  fileName: media.fileName ?? null,
+  mimeType: media.mimeType,
+});
+
+// A photo is the one medium that names itself: never a file name, always a JPEG.
+/** @param {import('@mtcute/node').Photo} media */
+const photoInfo = (media) => ({ fileId: media.fileId, fileName: null, mimeType: 'image/jpeg' });
+
 /** @type {typeof Media.from} */
 (message) => {
   // .media rebuilds its object on every access, so read it once.
@@ -42,7 +55,7 @@ const image = (media) => {
   const { type } = media;
   switch (type) {
     case 'photo':
-      return { type, ...image(media) };
+      return { type, ...image(media), ...photoInfo(media) };
     case 'video':
       return {
         type,
@@ -50,15 +63,16 @@ const image = (media) => {
         isAnimation: media.isAnimation,
         isRound: media.isRound,
         ...image(media),
+        ...fileInfo(media),
       };
     case 'voice':
-      return { type, duration: media.duration };
+      return { type, duration: media.duration, ...fileInfo(media) };
     case 'audio':
-      return { type, duration: media.duration, title: media.title, performer: media.performer };
+      return { type, duration: media.duration, title: media.title, performer: media.performer, ...fileInfo(media) };
     case 'sticker':
-      return { type, emoji: media.emoji };
+      return { type, emoji: media.emoji, ...fileInfo(media) };
     case 'document':
-      return { type, fileName: media.fileName, mimeType: media.mimeType };
+      return { type, ...fileInfo(media) };
     case 'contact':
       return { type, firstName: media.firstName, lastName: media.lastName };
     case 'poll':

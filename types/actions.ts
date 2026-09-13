@@ -20,6 +20,8 @@ declare global {
     /** Fetch a message's 320px thumbnail, if it has one, and push it into its bubble. */
     loadThumb(message: ChatMessage): void;
     notify(message: Message): void;
+    /** Download the focused message's full medium and open it in the system's viewer. */
+    openMedia(): Promise<void>;
     openChat(chatId: number): void;
     receiveMessage(message: Message): void;
     /** Push the dialog list to both of its views. Follows every store.dialogs mutation. */

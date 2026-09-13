@@ -15,7 +15,5 @@ const platforms = {
 (title, body = '') => {
   const text = String(body).replace(/\s+/g, ' ').trim();
   const [cmd, args] = (platforms[process.platform] ?? platforms.linux)(title, text);
-  const child = node.child_process.spawn(cmd, args, { stdio: 'ignore', detached: true });
-  child.on('error', (err) => console.log('[notify] failed:', err.message));
-  child.unref();
+  spawnDetached('notify', cmd, args);
 };

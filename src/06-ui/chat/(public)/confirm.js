@@ -1,7 +1,7 @@
 /** @type {ChatSection['confirm']} */
 (tempId, messageId) => {
-  const bubble = self.bubbles.get(tempId);
-  if (bubble === undefined) return;
+  const entry = self.bubbles.get(tempId);
+  if (entry === undefined) return;
   self.bubbles.delete(tempId);
-  self.bubbles.set(messageId, bubble);
+  self.bubbles.set(messageId, entry);
 };

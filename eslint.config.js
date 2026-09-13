@@ -57,6 +57,9 @@ module.exports = [
         Option: true,
         Input: true,
 
+        // OS common
+        spawnDetached: true,
+
         // auth common
         Frame: true,
 

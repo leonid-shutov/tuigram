@@ -1,7 +1,7 @@
 import * as _opentui from '@opentui/core';
 import { TelegramClient, Message as MtCuteMessage, Dialog as MtCuteDialog } from '@mtcute/node';
 import { Dispatcher } from '@mtcute/dispatcher';
-import { Message, Dialog, ImageMedia, Media, PendingMessage } from './domain';
+import { Message, Dialog, FileMedia as _FileMedia, ImageMedia, Media, PendingMessage } from './domain';
 import { LinkedList as _LinkedList } from './collections';
 import { Paths, Source, ThemeDefinition, ResolvedTheme, ImageProtocol as _ImageProtocol } from './config';
 
@@ -15,6 +15,8 @@ import * as _child_process from 'node:child_process';
 
 declare global {
   type ImageProtocol = _ImageProtocol;
+  /** Global because `Media.isFile` narrows to it and `8-actions` passes it around. */
+  type FileMedia = _FileMedia;
   type MessagePromptEventMap = {
     send: [text: string];
     exit: [];
@@ -75,6 +77,10 @@ declare global {
     function isImage(media: Media | null): media is ImageMedia;
     /** Bubble size in cells, or null when the medium has no drawable image. */
     const size: (media: ImageMedia) => { cols: number; rows: number } | null;
+    /** Whether the medium carries something downloadable. Contacts, polls and dice do not. */
+    function isFile(media: Media): media is FileMedia;
+    /** File extension to give a downloaded medium the sender left unnamed. */
+    const extension: (mimeType: string) => string;
   }
 
   const LinkedDialogs: { from: (dialogs: Dialog[]) => import('./domain').LinkedDialogsHandle };
@@ -100,7 +106,12 @@ declare global {
 
   namespace OS {
     const notify: (title: string, body?: string) => void;
+    /** Hand a file to the OS's default handler, in its own process. */
+    const open: (path: string) => void;
   }
+
+  /** Shared by `OS/notify.js` and `OS/open.js`: fire a child off and stop caring about it. */
+  const spawnDetached: (tag: string, cmd: string, args: string[]) => void;
 
   namespace Fuzzy {
     const score: (query: string, text: string) => number | null;
@@ -162,6 +173,8 @@ declare global {
     getHistory(chatId: number, firstPageSize: number, pageSize?: number): AsyncGenerator<Message[]>;
     /** The 320px thumbnail behind a file id, or null if it could not be fetched. Cached. */
     downloadThumb(fileId: string): Promise<Uint8Array | null>;
+    /** The bytes of the full medium behind a file id. Not cached — see the method's note. */
+    downloadMedia(fileId: string): Promise<Uint8Array>;
     getReadOutboxMaxId(chatId: number): Promise<number>;
     iterDialogs(options?: { chunkSize?: number; archived?: boolean }): AsyncGenerator<Dialog>;
     onHistoryRead(handler: (event: HistoryReadEvent) => void): void;
