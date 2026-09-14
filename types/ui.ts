@@ -38,8 +38,6 @@ declare global {
   type DialogsSection = Section & {
     list: _opentui.SelectRenderable;
     component: _opentui.BoxRenderable;
-    /** Chat ids of the rows currently drawn, in row order — `select` maps a chat id to a row. */
-    chatIds: number[];
     on(event: 'open', handler: (chatId: number) => void): void;
     /** Move the cursor, in rows. */
     moveDown(count?: number): void;

@@ -1,1 +1,1 @@
-({ chatIds: [], loading: true });
+({ loading: true });
