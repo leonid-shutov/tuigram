@@ -12,6 +12,7 @@ import * as _fs from 'node:fs';
 import * as _os from 'node:os';
 import * as _path from 'node:path';
 import * as _child_process from 'node:child_process';
+import * as _url from 'node:url';
 
 declare global {
   type ImageProtocol = _ImageProtocol;
@@ -119,6 +120,11 @@ declare global {
 
   namespace Hash {
     const fnv1a: (key: string) => number;
+  }
+
+  namespace Link {
+    /** The URL when the text is nothing but one http(s) link, else null. */
+    const only: (text: string) => string | null;
   }
 
   namespace Random {
@@ -272,5 +278,6 @@ declare global {
     const os: typeof _os;
     const path: typeof _path;
     const child_process: typeof _child_process;
+    const url: typeof _url;
   }
 }

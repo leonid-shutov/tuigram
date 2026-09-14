@@ -9,10 +9,7 @@ const fileNameFor = (media) => {
 };
 
 /** @type {Actions['openMedia']} */
-async () => {
-  const media = ui.chat.selectedMessage?.media ?? null;
-  if (media === null || !Media.isFile(media) || media.type === 'sticker') return;
-
+async (media) => {
   const file = node.path.join(CACHE, fileNameFor(media));
   try {
     if (!node.fs.existsSync(file)) {

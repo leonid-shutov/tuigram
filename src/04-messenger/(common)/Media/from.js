@@ -49,7 +49,8 @@ const photoInfo = (media) => ({ fileId: media.fileId, fileName: null, mimeType: 
       return { type: 'call', isVideo: action.isVideo, duration: action.duration, reason };
     }
     const attached = raw._ !== 'messageService' && raw.media && raw.media._ !== 'messageMediaEmpty';
-    return attached ? { type: 'unknown' } : null;
+    if (!attached) return null;
+    return { type: raw.media?._ === 'messageMediaWebPage' ? 'webpage' : 'unknown' };
   }
 
   const { type } = media;

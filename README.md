@@ -50,7 +50,7 @@ export TUIGRAM_API_HASH=0123456789abcdef0123456789abcdef
 | `/`                     | fuzzy chat search — from the chat list or the messages    |
 | `j` / `k` / `↑` / `↓`   | move through chats and messages                           |
 | `gg` / `G`              | jump to the first / last chat, or oldest / newest message |
-| `Enter`                 | open the selected chat, or send the message               |
+| `Enter`                 | open the selected chat, open the selected message's media or link, or send the message |
 | `Shift+Enter`           | start a new line in the message box                       |
 | `Esc`                   | leave the message box; close the search                   |
 | `ctrl+c`                | quit                                                      |

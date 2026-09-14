@@ -37,6 +37,7 @@ module.exports = [
         AsyncIterator: true,
         Fuzzy: true,
         Hash: true,
+        Link: true,
 
         // config common
         source: true,
@@ -75,6 +76,7 @@ module.exports = [
         tui: true,
         Keymap: true,
         AbortController: true,
+        URL: true,
         screen: true,
         auth: true,
         messenger: true,

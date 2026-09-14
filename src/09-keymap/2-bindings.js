@@ -34,7 +34,7 @@ const group = (config) => Keymap.extras.createBindingLookup(config).bindings;
     'chat.up': ['k', 'up'],
     'chat.first': 'gg',
     'chat.last': 'shift+g',
-    'chat.openMedia': 'return',
+    'chat.open': 'return',
   }),
 
   prompt: group({
