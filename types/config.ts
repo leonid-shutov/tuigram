@@ -29,7 +29,6 @@ export type BorderChars = {
 export type ThemeDefinition = {
   palette: ThemePalette;
   borderStyle: 'rounded' | 'heavy' | 'single' | 'double';
-  panelWidth: number;
   borderChars?: BorderChars;
   selfBorder?: string;
   selected?: string;
@@ -39,7 +38,6 @@ export type ThemeDefinition = {
 export type ResolvedTheme = ThemePalette & {
   borderStyle: ThemeDefinition['borderStyle'];
   borderChars?: BorderChars;
-  panelWidth: number;
   selfBorder: string;
   selected: string;
   senderColors: string[];

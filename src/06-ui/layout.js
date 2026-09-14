@@ -1,20 +1,28 @@
 screen.wrapper.add(
   Box({
-    id: 'layout',
-    width: '100%',
-    flexGrow: 1,
-    flexDirection: 'row',
+    id: 'app',
+    width: screen.size.width,
+    height: screen.size.height,
+    maxWidth: '100%',
+    maxHeight: '100%',
+    flexDirection: 'column',
     children: [
-      ui.dialogs.component,
       Box({
-        id: 'rightSide',
-        flexDirection: 'column',
-        children: [ui.chat.component, ui.messagePrompt.component],
+        id: 'layout',
+        width: '100%',
+        flexGrow: 1,
+        flexDirection: 'row',
+        children: [
+          ui.dialogs.component,
+          Box({
+            id: 'rightSide',
+            flexDirection: 'column',
+            children: [ui.chat.component, ui.messagePrompt.component],
+          }),
+        ],
       }),
+      config.hints && ui.hints.component,
+      ui.picker.component,
     ],
   }),
 );
-
-if (config.hints) screen.wrapper.add(ui.hints.component);
-
-screen.wrapper.add(ui.picker.component);

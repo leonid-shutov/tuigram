@@ -8,7 +8,6 @@ const theme = themes[source.theme ?? ''] ?? themes['aqua-lime'];
   ...theme.palette,
   borderStyle: theme.borderStyle,
   borderChars: theme.borderChars,
-  panelWidth: theme.panelWidth,
   selfBorder: theme.selfBorder ?? theme.palette.border,
   selected: theme.selected ?? theme.palette.accent,
   senderColors: theme.senderColors ?? defaultSenderColors,

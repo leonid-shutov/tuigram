@@ -26,7 +26,6 @@ const asciiBorderChars = {
       accentAlt: '#9ece6a',
     },
     borderStyle: 'rounded',
-    panelWidth: 30,
   },
   'blue-green': {
     palette: {
@@ -40,7 +39,6 @@ const asciiBorderChars = {
       accentAlt: '#6cb6ff',
     },
     borderStyle: 'rounded',
-    panelWidth: 30,
     selfBorder: '#57d977', // green — self bubbles (incoming stay blue)
     selected: '#ffb347', // amber — distinct from both
   },
@@ -56,7 +54,6 @@ const asciiBorderChars = {
       accentAlt: '#22d3ee',
     },
     borderStyle: 'rounded',
-    panelWidth: 30,
     selfBorder: '#a3e635', // lime — self bubbles (incoming stay aqua)
     selected: '#ff6ec7', // pink — distinct from both
   },
@@ -72,7 +69,6 @@ const asciiBorderChars = {
       accentAlt: '#2563eb',
     },
     borderStyle: 'rounded',
-    panelWidth: 30,
     selfBorder: '#16a34a', // green — self bubbles (incoming stay blue)
     selected: '#d97706', // orange — distinct on the light background
     senderColors: ['#b4342a', '#8a6d00', '#2f7d32', '#00707d', '#1d4ed8', '#7c3aed', '#a1560a', '#0f766e'],
@@ -89,7 +85,6 @@ const asciiBorderChars = {
       accentAlt: '#a3be8c',
     },
     borderStyle: 'rounded',
-    panelWidth: 30,
   },
   gruvbox: {
     palette: {
@@ -103,7 +98,6 @@ const asciiBorderChars = {
       accentAlt: '#fabd2f',
     },
     borderStyle: 'heavy',
-    panelWidth: 30,
   },
   catppuccin: {
     palette: {
@@ -117,7 +111,6 @@ const asciiBorderChars = {
       accentAlt: '#f5c2e7',
     },
     borderStyle: 'rounded',
-    panelWidth: 32,
   },
   dracula: {
     palette: {
@@ -131,7 +124,6 @@ const asciiBorderChars = {
       accentAlt: '#ff79c6',
     },
     borderStyle: 'rounded',
-    panelWidth: 30,
   },
   'rose-pine': {
     palette: {
@@ -145,7 +137,6 @@ const asciiBorderChars = {
       accentAlt: '#c4a7e7',
     },
     borderStyle: 'rounded',
-    panelWidth: 30,
   },
   'solarized-dark': {
     palette: {
@@ -159,7 +150,6 @@ const asciiBorderChars = {
       accentAlt: '#b58900',
     },
     borderStyle: 'single',
-    panelWidth: 30,
   },
   mono: {
     palette: {
@@ -173,7 +163,6 @@ const asciiBorderChars = {
       accentAlt: '#bfbfbf',
     },
     borderStyle: 'single',
-    panelWidth: 26,
     senderColors: ['#e6e6e6', '#c4c4c4', '#a2a2a2', '#8a8a8a', '#d5d5d5', '#b3b3b3'],
   },
   'high-contrast': {
@@ -188,7 +177,6 @@ const asciiBorderChars = {
       accentAlt: '#ffff00',
     },
     borderStyle: 'heavy',
-    panelWidth: 30,
     senderColors: ['#00ff5f', '#ffff00', '#00d7ff', '#ff5faf', '#ffffff', '#ff875f'],
   },
   'crt-amber': {
@@ -203,7 +191,6 @@ const asciiBorderChars = {
       accentAlt: '#ff8c00',
     },
     borderStyle: 'single',
-    panelWidth: 28,
     senderColors: ['#ffb000', '#ffd166', '#ff8c00', '#ffcf99', '#e59400', '#ffe0b3'],
   },
   y2k: {
@@ -218,7 +205,6 @@ const asciiBorderChars = {
       accentAlt: '#ff2fd0',
     },
     borderStyle: 'double',
-    panelWidth: 32,
   },
   'ascii-terminal': {
     palette: {
@@ -233,7 +219,6 @@ const asciiBorderChars = {
     },
     borderStyle: 'single',
     borderChars: asciiBorderChars,
-    panelWidth: 30,
     senderColors: ['#33ff33', '#66ff66', '#00cc44', '#99ff99', '#00ff88', '#7fff00'],
   },
 });

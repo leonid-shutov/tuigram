@@ -3,7 +3,7 @@ const MORE = '…';
 
 /** @type {HintsSection['render']} */
 (entries) => {
-  const budget = screen.renderer.width - 2;
+  const budget = screen.size.width - 2;
   /** @type {any[]} */
   const chunks = [];
   let used = 0;

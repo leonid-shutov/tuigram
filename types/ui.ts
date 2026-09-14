@@ -8,6 +8,7 @@ declare global {
   type ScreenModule = {
     renderer: _opentui.CliRenderer;
     wrapper: _opentui.BoxRenderable;
+    size: { width: number; height: number; dialogsWidth: number };
   };
 
   /**

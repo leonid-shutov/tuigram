@@ -1,7 +1,8 @@
 Box({
   id: 'dialogsWrapper',
   focusable: true,
-  width: config.theme.panelWidth,
+  width: screen.size.dialogsWidth,
+  flexShrink: 0,
   borderStyle: config.theme.borderStyle,
   customBorderChars: config.theme.borderChars,
   borderColor: config.theme.border,
