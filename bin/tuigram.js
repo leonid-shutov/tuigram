@@ -84,7 +84,7 @@ process.on('unhandledRejection', (reason) => {
 });
 
 process.on('uncaughtException', (error) => {
-  mockConsole.log(error.message);
+  mockConsole.log(error.message, error.stack);
 });
 
 (async () => {

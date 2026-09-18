@@ -1,4 +1,4 @@
-tui.createCliRenderer({ exitOnCtrlC: true }).then((renderer) => {
+tui.createCliRenderer({ exitOnCtrlC: true, openConsoleOnError: false }).then((renderer) => {
   renderer.setBackgroundColor(config.theme.bg);
   return renderer;
 });
