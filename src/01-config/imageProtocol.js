@@ -1,4 +1,3 @@
-const protocols = ['auto', 'kitty', 'sixel', 'blocks', 'off'];
 const configured = source.imageProtocol;
 
-protocols.some((protocol) => protocol === configured) ? configured : 'auto';
+defaults.imageProtocols.some((protocol) => protocol === configured) ? configured : 'auto';

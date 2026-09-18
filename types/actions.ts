@@ -26,6 +26,8 @@ declare global {
     /** Seed the message box with the focused message's text, when it is ours and editable. */
     editSelected(): void;
     notify(message: Message): void;
+    /** Suspend the TUI and open config.json in $VISUAL/$EDITOR/vi; resume on exit. */
+    openConfig(): Promise<void>;
     /** Download a medium and open it in the system's viewer. */
     openMedia(media: FileMedia): Promise<void>;
     /** Enter on the focused message: its medium, else its text when that is nothing but an http(s) link. */

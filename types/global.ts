@@ -37,18 +37,28 @@ declare global {
     '@mtcute/dispatcher': typeof import('@mtcute/dispatcher');
     '@opentui/keymap': typeof import('@opentui/keymap');
   };
-  const config: {
+  /** The subset of `config` that reload.js recomputes in place; see [[config.reload]] below. */
+  type ConfigSelf = {
     theme: ResolvedTheme;
-    /** Credentials are strings everywhere they are read from (env, JSON file, the form). */
-    credentials: { apiId: string | undefined; apiHash: string | undefined };
-    cli: { command: string | null; args: string[] };
-    paths: Paths;
     /** Whether the dialogs list and the chat pane header prefix each peer with an emoji. */
     dialogEmoji: boolean;
     /** How chat bubbles draw thumbnails; 'off' keeps the text placeholders. */
     imageProtocol: ImageProtocol;
     /** Whether the key hint bar occupies the bottom row. */
     hints: boolean;
+  };
+
+  const config: ConfigSelf & {
+    /** Credentials are strings everywhere they are read from (env, JSON file, the form). */
+    credentials: { apiId: string | undefined; apiHash: string | undefined };
+    cli: { command: string | null; args: string[] };
+    paths: Paths;
+    /**
+     * Re-read config.json and recompute theme/hints/dialogEmoji/imageProtocol in place. Layout
+     * decisions already baked in at boot (the hints bar's presence, the terminal background) need
+     * a restart regardless; this only refreshes what later reads `config.*` live.
+     */
+    reload(): void;
   };
 
   namespace Preview {
@@ -135,6 +145,7 @@ declare global {
   const paths: Paths;
   const source: Source;
   const themes: Record<string, ThemeDefinition>;
+  const defaults: { senderColors: string[]; imageProtocols: ImageProtocol[] };
 
   const Frame: (props: { title: string; children: OpenTUIChildren }) => _opentui.BoxRenderable;
 
@@ -255,6 +266,7 @@ declare global {
 
   type AppSelf = Omit<
     ScreenModule &
+      ConfigSelf &
       AuthSelf &
       AuthUiSelf &
       MessengerModule &

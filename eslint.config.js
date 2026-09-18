@@ -43,6 +43,7 @@ module.exports = [
         source: true,
         paths: true,
         themes: true,
+        defaults: true,
 
         // ui common
         theme: true,

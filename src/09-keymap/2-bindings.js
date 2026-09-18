@@ -10,6 +10,7 @@ const group = (config) => Keymap.extras.createBindingLookup(config).bindings;
     'app.focusChat': 'alt+2',
     'app.focusPrompt': 'alt+3',
     'app.search': 'ctrl+p',
+    'app.openConfig': 'ctrl+e',
   }),
 
   // The unmodified pane jumps. Installed only in the panes that are not a text field, which is
