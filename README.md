@@ -82,7 +82,8 @@ Optional, and read from `$XDG_CONFIG_HOME/tuigram/config.json`:
   "theme": "aqua-lime",
   "imageProtocol": "auto",
   "dialogEmoji": true,
-  "hints": true
+  "hints": true,
+  "proxy": "socks5://user:pass@host:port"
 }
 ```
 
@@ -92,6 +93,7 @@ Optional, and read from `$XDG_CONFIG_HOME/tuigram/config.json`:
 | `imageProtocol` | `auto`      | `auto`, `kitty`, `sixel`, `blocks`, `off`                                                                                                                                                      |
 | `dialogEmoji`   | `true`      | `true`, `false` — turn off on fonts with no emoji coverage                                                                                                                                     |
 | `hints`         | `true`      | `true`, `false` — set to false to hide the key hint bar and reclaim its row                                                                                                                    |
+| `proxy`         | _(none)_    | a proxy URL — `socks5://`, `socks4://`, `http://`/`https://`, or a `t.me/proxy?...` MTProxy link; connects directly if unset                                                                  |
 
 `daylight` is the light theme. `ascii-terminal` draws its borders out of `+`, `-` and `|` for fonts
 without box-drawing glyphs. Unknown keys are ignored, and a file that fails to parse falls back to

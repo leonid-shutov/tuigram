@@ -53,6 +53,8 @@ declare global {
     credentials: { apiId: string | undefined; apiHash: string | undefined };
     cli: { command: string | null; args: string[] };
     paths: Paths;
+    /** Proxy URL to connect through, read once at boot; unset connects directly. */
+    proxy: string | undefined;
     /**
      * Re-read config.json and recompute theme/hints/dialogEmoji/imageProtocol in place. Layout
      * decisions already baked in at boot (the hints bar's presence, the terminal background) need

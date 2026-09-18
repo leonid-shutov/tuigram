@@ -1,4 +1,4 @@
-const { TelegramClient } = npm['@mtcute/node'];
+const { TelegramClient, proxyTransportFromUrl } = npm['@mtcute/node'];
 
 auth.secureSession();
 
@@ -6,11 +6,21 @@ auth.secureSession();
 // eslint-disable-next-line no-extra-parens -- JSDoc type-assertion cast, not redundant
 const { apiId, apiHash } = /** @type {{ apiId: string, apiHash: string }} */ (config.credentials);
 
-new TelegramClient({
-  // Every source of an api_id is textual (env var, JSON file, the form); mtcute wants a number.
+/** @type {import('@mtcute/node').TelegramClientOptions} */
+const options = {
   apiId: Number(apiId),
   apiHash,
   storage: config.paths.session,
-  // mtcute defaults to WARN, written straight to `console` — which is the rendered screen.
   logLevel: 0,
-});
+};
+
+if (config.proxy !== undefined) {
+  try {
+    const transport = proxyTransportFromUrl(config.proxy);
+    options.transport = transport;
+  } catch (error) {
+    throw new Error('Invalid proxy', { cause: error });
+  }
+}
+
+new TelegramClient(options);

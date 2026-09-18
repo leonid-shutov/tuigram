@@ -63,4 +63,7 @@ export type Source = {
   imageProtocol?: ImageProtocol;
   /** The key hint bar along the bottom edge. Defaults to true; set to false to reclaim the row. */
   hints?: boolean;
+  /** Proxy URL to connect through, e.g. `socks5://user:pass@host:port`,
+   * `http://host:port`, or a `t.me/proxy?...` MTProxy link. Unset connects directly. */
+  proxy?: string;
 } & Record<string, unknown>;
