@@ -19,6 +19,8 @@ declare global {
     loadOlder(): Promise<void>;
     /** Fetch a message's 320px thumbnail, if it has one, and push it into its bubble. */
     loadThumb(message: ChatMessage): void;
+    /** Copy the focused message's text to the system clipboard via OSC 52. */
+    copySelected(): void;
     notify(message: Message): void;
     /** Download a medium and open it in the system's viewer. */
     openMedia(media: FileMedia): Promise<void>;

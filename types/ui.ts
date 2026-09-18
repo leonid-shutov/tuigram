@@ -95,8 +95,10 @@ declare global {
     /** Fill the header line with the open chat's glyph and name. */
     setHeader(chatId: number, name: string): void;
     setReceipt(receipt: Receipt | null): void;
-    /** Transient word in the receipt's corner. `actions.repaintReceipt()` puts the receipt back. */
-    setStatus(status: string | null): void;
+    /** Replace the bottom title; stays until the next explicit change. */
+    setStatus(status: string): void;
+    /** Show a transient word in the receipt's corner, then restore the receipt after `ms`. */
+    flashStatus(status: string, ms?: number): void;
     setThumb(messageId: number, bytes: Uint8Array): void;
   };
 
