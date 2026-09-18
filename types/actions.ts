@@ -21,6 +21,10 @@ declare global {
     loadThumb(message: ChatMessage): void;
     /** Copy the focused message's text to the system clipboard via OSC 52. */
     copySelected(): void;
+    /** Push a new text to the server for an already-sent message. */
+    sendEdit(messageId: number, text: string): Promise<void>;
+    /** Seed the message box with the focused message's text, when it is ours and editable. */
+    editSelected(): void;
     notify(message: Message): void;
     /** Download a medium and open it in the system's viewer. */
     openMedia(media: FileMedia): Promise<void>;

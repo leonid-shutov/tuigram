@@ -40,6 +40,8 @@ declare global {
     hasConfirmed(messageId: number): boolean;
     open(chatId: number, pager: AsyncGenerator<Message[]>): void;
     prepend(older: ChatMessage[]): void;
+    /** Swap a held message for the server's copy of the same id; throws when it isn't held. */
+    replace(message: Message): void;
     /** Derived, recomputed on every read: `null` when the last message isn't ours. */
     readonly receipt: Receipt | null;
     setReadUpTo(maxReadId: number): void;

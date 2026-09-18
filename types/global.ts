@@ -20,6 +20,7 @@ declare global {
   type FileMedia = _FileMedia;
   type MessagePromptEventMap = {
     send: [text: string];
+    edit: [messageId: number, text: string];
     exit: [];
   };
 
@@ -181,6 +182,7 @@ declare global {
     downloadThumb(fileId: string): Promise<Uint8Array | null>;
     /** The bytes of the full medium behind a file id. Not cached — see the method's note. */
     downloadMedia(fileId: string): Promise<Uint8Array>;
+    editMessage(chatId: number, messageId: number, text: string): Promise<Message>;
     getReadOutboxMaxId(chatId: number): Promise<number>;
     iterDialogs(options?: { chunkSize?: number; archived?: boolean }): AsyncGenerator<Dialog>;
     onHistoryRead(handler: (event: HistoryReadEvent) => void): void;
@@ -248,7 +250,8 @@ declare global {
     | 'down'
     | 'moveUp'
     | 'moveDown'
-    | 'render';
+    | 'render'
+    | 'replace';
 
   type AppSelf = Omit<
     ScreenModule &

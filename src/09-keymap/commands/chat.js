@@ -6,4 +6,5 @@
   'chat.last': { title: 'Newest message', hint: 'Newest', run: () => ui.chat.selectLast() },
   'chat.open': { title: 'Open media or link', hint: 'Open', run: () => actions.openSelected() },
   'chat.copy': { title: 'Copy message text', hint: 'Copy', run: () => actions.copySelected() },
+  'chat.edit': { title: 'Edit message', hint: 'Edit', run: () => actions.editSelected() },
 });

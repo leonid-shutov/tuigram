@@ -63,7 +63,11 @@ declare global {
 
   // ── 6-ui/chat ─────────────────────────────────────────────────────────────────────────
   /** A message drawn as a bordered box, with its picture — when it has one — above the text. */
-  const Bubble: (message: ChatMessage, picture: _opentui.ImageRenderable | null) => _opentui.BoxRenderable;
+  const Bubble: (
+    message: ChatMessage,
+    picture: _opentui.ImageRenderable | null,
+    text: _opentui.TextRenderable | null,
+  ) => _opentui.BoxRenderable;
   /** A medium's thumbnail, or null when the sender omitted the dimensions to size it from. */
   const Picture: (media: ImageMedia, protocol: _opentui.ImageRenderProtocol) => _opentui.ImageRenderable | null;
 
@@ -91,6 +95,8 @@ declare global {
     /** Remove a message's bubble and unfile it, cursor included. */
     drop(messageId: number): void;
     prepend(older: ChatMessage[]): void;
+    /** Swap a held message's bubble text for its edited copy, in place. */
+    replace(message: ChatMessage): void;
     selectLast(): void;
     /** Fill the header line with the open chat's glyph and name. */
     setHeader(chatId: number, name: string): void;
@@ -106,8 +112,15 @@ declare global {
     Emitting & {
       /** True only while the chat is the selected section — gates whether the cursor takes opentui focus. */
       focused: boolean;
-      /** Message id to the bubble drawing it and the image inside — the section's only id-keyed view state. */
-      bubbles: Map<number, { bubble: _opentui.BoxRenderable; picture: _opentui.ImageRenderable | null }>;
+      /** Message id to the bubble drawing it and the image/text inside — the section's only id-keyed view state. */
+      bubbles: Map<
+        number,
+        {
+          bubble: _opentui.BoxRenderable;
+          picture: _opentui.ImageRenderable | null;
+          text: _opentui.TextRenderable | null;
+        }
+      >;
       /** Build a message's bubble, place it, and file it under its id. Omit `index` to append. */
       insert(message: ChatMessage, index?: number): void;
       selectMessage(index: number): void;
@@ -119,12 +132,22 @@ declare global {
     component: _opentui.BoxRenderable;
     input: _opentui.TextareaRenderable;
     on<K extends keyof MessagePromptEventMap>(event: K, handler: (...args: MessagePromptEventMap[K]) => void): void;
-    /** Report the typed text as the `send` intent and empty the box. */
+    /** Report the typed text as the `send` (or, while editing, `edit`) intent and empty the box. */
     send(): void;
+    /** Stash the current draft, seed the box with a message's text, and enter edit mode. */
+    edit(messageId: number, text: string): void;
     exit(): void;
   };
 
-  type MessagePromptSelf = MessagePromptSection & Emitting;
+  type MessagePromptSelf = MessagePromptSection &
+    Emitting & {
+      /** The message id being edited, or `null` outside edit mode. */
+      editing: number | null;
+      /** The draft that was in the box before `edit` was called, restored when the edit is cancelled. */
+      draft: string;
+      /** Leave edit mode and restore the draft, without reporting any intent. */
+      clearEdit(): void;
+    };
 
   // ── 6-ui/picker ───────────────────────────────────────────────────────────────────────
   type PickerSection = Section & {

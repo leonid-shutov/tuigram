@@ -51,8 +51,9 @@ export TUIGRAM_API_HASH=0123456789abcdef0123456789abcdef
 | `j` / `k` / `↑` / `↓`   | move through chats and messages                           |
 | `gg` / `G`              | jump to the first / last chat, or oldest / newest message |
 | `Enter`                 | open the selected chat, open the selected message's media or link, or send the message |
+| `e`                     | edit the selected message, if it's yours                  |
 | `Shift+Enter`           | start a new line in the message box                       |
-| `Esc`                   | leave the message box; close the search                   |
+| `Esc`                   | leave the message box; cancel an edit; close the search   |
 | `ctrl+c`                | quit                                                      |
 
 Every binding is matched on the Latin key it sits on, so the whole keymap keeps working on a

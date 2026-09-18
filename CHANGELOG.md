@@ -10,6 +10,8 @@
   in a chat. A long list no longer has to be walked with `j` and `k`.
 - `Enter` on a message opens its media in the system viewer, and opens the message in the default browser
   when its text is nothing but an `http(s)` link.
+- `e` on one of your own text messages reopens it in the message box for editing; `Enter` pushes the new
+  text to Telegram, `Esc` cancels and restores whatever you were typing before.
 - `Shift+Enter` starts a new line in the message box, and the box grows with it.
 - Typing a search query into the chat picker now filters as you paste, not only as you type.
 - Keys are handled by `@opentui/keymap`: bindings are declared once, per pane, and a pane's keys are
