@@ -48,6 +48,7 @@ export type Paths = {
   data: string;
   state: string;
   settings: string;
+  settingsBackup: string;
   credentials: string;
   session: string;
   log: string;
@@ -67,3 +68,19 @@ export type Source = {
    * `http://host:port`, or a `t.me/proxy?...` MTProxy link. Unset connects directly. */
   proxy?: string;
 } & Record<string, unknown>;
+
+/** One entry of the `(common)/schema.js` table: a `Source` field's default, whether
+ * `config.reload()` may recompute it live, and how to tell a valid value from a bad one. */
+export type ConfigSchemaField<T> = {
+  default: T;
+  hotReload: boolean;
+  validate: (value: unknown) => boolean;
+};
+
+export type ConfigSchema = {
+  theme: ConfigSchemaField<string>;
+  dialogEmoji: ConfigSchemaField<boolean>;
+  hints: ConfigSchemaField<boolean>;
+  imageProtocol: ConfigSchemaField<ImageProtocol>;
+  proxy: ConfigSchemaField<string | undefined>;
+};

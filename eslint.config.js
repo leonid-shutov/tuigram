@@ -44,6 +44,10 @@ module.exports = [
         paths: true,
         themes: true,
         defaults: true,
+        schema: true,
+        migrate: true,
+        resolveConfig: true,
+        resolveTheme: true,
 
         // ui common
         theme: true,

@@ -96,8 +96,9 @@ Optional, and read from `$XDG_CONFIG_HOME/tuigram/config.json`:
 | `proxy`         | _(none)_    | a proxy URL — `socks5://`, `socks4://`, `http://`/`https://`, or a `t.me/proxy?...` MTProxy link; connects directly if unset                                                                  |
 
 `daylight` is the light theme. `ascii-terminal` draws its borders out of `+`, `-` and `|` for fonts
-without box-drawing glyphs. Unknown keys are ignored, and a file that fails to parse falls back to
-the defaults.
+without box-drawing glyphs. Unknown keys and invalid values are ignored — each falls back to its
+default — and a file that fails to parse falls back to the defaults entirely; either way, a line
+is logged to `tuigram.log` (see Files below) so a typo doesn't go unnoticed.
 
 ## Files
 

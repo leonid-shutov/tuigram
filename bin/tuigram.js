@@ -60,7 +60,7 @@ if (!hasFfi && process.env[RELAUNCH] !== '1') {
 // pre-relaunch parent: it truncates the log and loads opentui.
 
 // The renderer owns the terminal, so `console` has to go to a file. XDG resolution is
-// duplicated here (see src/1-config/(common)/paths.js) because this runs before the app.
+// duplicated here (see src/01-config/mechanics/computePaths.js) because this runs before the app.
 const stateHome = process.env.XDG_STATE_HOME || path.join(os.homedir(), '.local', 'state');
 const LOG_FILE = process.env.TUIGRAM_LOG || path.join(stateHome, 'tuigram', 'tuigram.log');
 

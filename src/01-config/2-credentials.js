@@ -12,7 +12,7 @@ const fromEnv = () => {
 const readCredentialsFile = node.fs.readFileSync;
 
 const fromFile = () => {
-  const [readError, file] = Err.risk(readCredentialsFile, paths.credentials, 'utf8');
+  const [readError, file] = Err.risk(readCredentialsFile, config.paths.credentials, 'utf8');
   if (readError !== null) return null;
   const [parseError, parsed] = Err.risk(JSON.parse, file);
   if (parseError !== null) return null;

@@ -14,12 +14,12 @@ const stateDir = xdg('XDG_STATE_HOME', '.local', 'state');
 // 0700: an api_hash and a live session live here.
 for (const dir of [configDir, dataDir]) node.fs.mkdirSync(dir, { recursive: true, mode: 0o700 });
 
-/** @type {typeof paths} */
 ({
   config: configDir,
   data: dataDir,
   state: stateDir,
   settings: node.path.join(configDir, 'config.json'),
+  settingsBackup: node.path.join(configDir, 'config.json.bak'),
   credentials: node.path.join(configDir, 'credentials.json'),
   // better-sqlite3 also creates `-wal` / `-shm` siblings next to this file.
   session: node.path.join(dataDir, 'session.db'),

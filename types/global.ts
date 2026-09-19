@@ -3,7 +3,14 @@ import { TelegramClient, Message as MtCuteMessage, Dialog as MtCuteDialog } from
 import { Dispatcher } from '@mtcute/dispatcher';
 import { Message, Dialog, FileMedia as _FileMedia, ImageMedia, Media, PendingMessage } from './domain';
 import { LinkedList as _LinkedList } from './collections';
-import { Paths, Source, ThemeDefinition, ResolvedTheme, ImageProtocol as _ImageProtocol } from './config';
+import {
+  Paths,
+  Source,
+  ThemeDefinition,
+  ResolvedTheme,
+  ImageProtocol as _ImageProtocol,
+  ConfigSchema,
+} from './config';
 
 import * as _timers from 'node:timers';
 import * as _events from 'node:events';
@@ -53,6 +60,31 @@ declare global {
     credentials: { apiId: string | undefined; apiHash: string | undefined };
     cli: { command: string | null; args: string[] };
     paths: Paths;
+    /** The parsed, migrated, validated `config.json` snapshot theme/dialogEmoji/hints/imageProtocol/
+     * proxy are derived from at boot; refreshed by `config.reload()`. */
+    source: Source;
+    /** Fixing up an old `config.json` shape — nothing else. See docs/decisions/0001-*. */
+    migrations: {
+      /** Runs every entry in `migrations/migrate.js`'s list; each checks its own old-shape marker
+       * and no-ops (same reference) when it isn't there. */
+      migrate: (source: Record<string, unknown>) => { source: Source; changed: boolean };
+    };
+    /** What config.json's keys mean, their defaults, and how config.json gets loaded/validated. */
+    schema: {
+      defaults: { senderColors: string[]; imageProtocols: ImageProtocol[] };
+      fields: ConfigSchema;
+      /** Narrows an arbitrary config.json key to one `fields` actually has an entry for. */
+      isSchemaKey(key: string): key is keyof ConfigSchema;
+      /** Reads config.json, runs it through `config.migrations.migrate`, validates it against
+       * `fields`, and (if a migration actually changed something) rewrites `config.json`, all
+       * against `config.paths`; used at boot and again by `config.reload()`. */
+      resolveConfig: () => Source;
+    };
+    /** The theme catalog and how a theme name becomes a full palette. */
+    themes: {
+      definitions: Record<string, ThemeDefinition>;
+      resolve: (source: Source) => ResolvedTheme;
+    };
     /** Proxy URL to connect through, read once at boot; unset connects directly. */
     proxy: string | undefined;
     /**
@@ -143,11 +175,6 @@ declare global {
   namespace Random {
     const id: () => number;
   }
-
-  const paths: Paths;
-  const source: Source;
-  const themes: Record<string, ThemeDefinition>;
-  const defaults: { senderColors: string[]; imageProtocols: ImageProtocol[] };
 
   const Frame: (props: { title: string; children: OpenTUIChildren }) => _opentui.BoxRenderable;
 
