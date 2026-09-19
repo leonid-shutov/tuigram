@@ -16,7 +16,7 @@
   }
   if (isSeen) {
     store.dialogs.markRead(message.chatId);
-    void messenger.readHistory(message.chatId);
+    void messenger.readHistory(message.chatId).catch((error) => Crash.soft(error));
   } else if (!message.sender.isSelf && !store.dialogs.isMuted(message.chatId)) {
     actions.notify(message);
   }

@@ -8,19 +8,16 @@ async (messageId, text) => {
 
   ui.chat.setStatus('editing…');
 
-  let message;
-  try {
-    message = await messenger.editMessage(chatId, messageId, text);
-  } catch {
-    return void OS.notify('tuigram', 'Could not edit the message');
-  }
+  const edited = await Result.fromPromise(messenger.editMessage(chatId, messageId, text));
+  if (!edited.ok) return void actions.reportError(edited.error, 'Could not edit the message.');
+  const message = edited.unwrap();
 
   if (store.chat.chatId !== chatId) return;
   store.chat.replace(message);
   ui.chat.replace(message);
 
   const dialog = store.dialogs.find(chatId);
-  if (dialog === null) throw new Error();
+  if (dialog === null) Crash.hard(new Error(`dialog ${chatId} is not held`));
   if (dialog.lastMessage?.id === messageId) dialog.lastMessage = message;
   actions.repaintDialogs();
 

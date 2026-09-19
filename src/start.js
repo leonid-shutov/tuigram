@@ -1,3 +1,8 @@
+process.removeAllListeners('uncaughtException');
+process.removeAllListeners('unhandledRejection');
+process.on('uncaughtException', (error) => Crash.hard(error, 'uncaught exception'));
+process.on('unhandledRejection', (reason) => Crash.hard(reason, 'unhandled rejection'));
+
 ui[navigation.selected].focus();
 actions.repaintHints();
 
@@ -16,4 +21,6 @@ Array.fromAsync(messenger.iterDialogs())
   })
   .finally(ui.dialogs.settle);
 
-Array.fromAsync(messenger.iterDialogs({ archived: true })).then(store.dialogs.setArchived);
+Array.fromAsync(messenger.iterDialogs({ archived: true }))
+  .then(store.dialogs.setArchived)
+  .catch((error) => Crash.soft(error));

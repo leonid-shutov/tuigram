@@ -8,15 +8,12 @@ const fromEnv = () => {
   return { apiId: apiId.trim(), apiHash: apiHash.trim() };
 };
 
-/** @type {(path: string, encoding: BufferEncoding) => string} */
-const readCredentialsFile = node.fs.readFileSync;
-
 const fromFile = () => {
-  const [readError, file] = Err.risk(readCredentialsFile, config.paths.credentials, 'utf8');
-  if (readError !== null) return null;
-  const [parseError, parsed] = Err.risk(JSON.parse, file);
-  if (parseError !== null) return null;
-  const { apiId, apiHash } = parsed;
+  const read = Result.from(() => node.fs.readFileSync(config.paths.credentials, 'utf8'));
+  if (!read.ok) return null;
+  const parsed = Result.from(() => JSON.parse(read.unwrap()));
+  if (!parsed.ok) return null;
+  const { apiId, apiHash } = parsed.unwrap();
   if (filled(apiId) && filled(apiHash)) return { apiId: apiId.trim(), apiHash: apiHash.trim() };
   else return null;
 };

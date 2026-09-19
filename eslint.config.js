@@ -31,10 +31,12 @@ module.exports = [
         LinkedList: true,
         LinkedDialogs: true,
         Preview: true,
-        Err: true,
+        Result: true,
+        Crash: true,
         Message: true,
         Dialog: true,
         AsyncIterator: true,
+        isThenable: true,
         Fuzzy: true,
         Hash: true,
         Link: true,
@@ -65,6 +67,9 @@ module.exports = [
 
         // OS common
         spawnDetached: true,
+
+        // crash common
+        errorDetail: true,
 
         // auth common
         Frame: true,

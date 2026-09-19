@@ -36,6 +36,8 @@ declare global {
     pager: AsyncGenerator<Message[]> | null;
     append(message: ChatMessage): void;
     confirm(tempId: number, message: Message): Confirmation;
+    /** Take a message back out of the window — the store half of undoing a failed send. */
+    drop(tempId: number): void;
     /** Whether the window holds the server's copy of a message — pending entries never match. */
     hasConfirmed(messageId: number): boolean;
     open(chatId: number, pager: AsyncGenerator<Message[]>): void;

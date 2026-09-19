@@ -8,17 +8,18 @@ async () => {
   if (loadingMore || pager === null) return;
   loadingMore = true;
   const chatId = store.chat.chatId;
-  try {
-    const { value, done } = await pager.next();
-    if (done || value === undefined || value.length === 0) return;
-    if (store.chat.chatId !== chatId) return;
 
-    // the pager yields newest-first; both halves take the batch oldest-first
-    const older = value.toReversed();
-    store.chat.prepend(older);
-    ui.chat.prepend(older);
-    for (const message of older) actions.loadThumb(message);
-  } finally {
-    loadingMore = false;
-  }
+  const paged = await Result.fromPromise(pager.next());
+  loadingMore = false;
+  if (!paged.ok) return void actions.reportError(paged.error, 'Could not load older messages.');
+
+  const { value, done } = paged.unwrap();
+  if (done || value === undefined || value.length === 0) return;
+  if (store.chat.chatId !== chatId) return;
+
+  // the pager yields newest-first; both halves take the batch oldest-first
+  const older = value.toReversed();
+  store.chat.prepend(older);
+  ui.chat.prepend(older);
+  for (const message of older) actions.loadThumb(message);
 };

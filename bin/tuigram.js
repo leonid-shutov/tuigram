@@ -77,15 +77,17 @@ const writeLog = (...args) => {
 
 const mockConsole = {
   log: (...args) => writeLog(...args),
+  error: (...args) => writeLog(...args),
 };
 
-process.on('unhandledRejection', (reason) => {
-  mockConsole.log(reason.message, reason.stack);
-});
+const bootCrash = (label, error) => {
+  mockConsole.log(label, error?.stack ?? error);
+  process.stderr.write(`tuigram: ${label}: ${error?.stack ?? String(error)}\n`);
+  process.exit(1);
+};
 
-process.on('uncaughtException', (error) => {
-  mockConsole.log(error.message, error.stack);
-});
+process.on('unhandledRejection', (reason) => bootCrash('unhandled', reason));
+process.on('uncaughtException', (error) => bootCrash('uncaught', error));
 
 (async () => {
   const uncommonjs = require('@leonid-shutov/uncommonjs');
