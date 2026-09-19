@@ -40,5 +40,5 @@ async () => {
   actions.repaintDialogs();
   actions.repaintHints();
   screen.renderer.resume();
-  if (!ran.ok) actions.reportError(ran.error, 'Could not open the editor.');
+  if (!ran.ok) ui.errors.report('Could not open the editor.', ran.error);
 };

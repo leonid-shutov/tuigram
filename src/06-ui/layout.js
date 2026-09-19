@@ -23,6 +23,7 @@ screen.wrapper.add(
       }),
       config.hints && ui.hints.component,
       ui.picker.component,
+      ui.errors.component,
     ],
   }),
 );

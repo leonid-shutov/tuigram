@@ -40,8 +40,6 @@ declare global {
     repaintHints(): void;
     /** Redraw the open chat's read receipt. Follows every change to its tail or watermark. */
     repaintReceipt(): void;
-    /** Log a failure the user should know about, and say so in the chat's status line. */
-    reportError(error: unknown, notice: string): void;
     send(text: string): Promise<void>;
     /** The window lost focus; what lands in the open chat from now on stays unread. */
     windowBlur(): void;

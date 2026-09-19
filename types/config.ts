@@ -10,6 +10,7 @@ export type ThemePalette = {
   border: string;
   accent: string;
   accentAlt: string;
+  danger: string;
 };
 
 export type BorderChars = {

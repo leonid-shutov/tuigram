@@ -1,0 +1,4 @@
+({
+  expanded: false,
+  timer: undefined,
+});

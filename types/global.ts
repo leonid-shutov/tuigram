@@ -147,9 +147,21 @@ declare global {
     function hard(error: unknown, notice?: string): never;
     /**
      * Log the stack and keep going. Failures the user should see about go through
-     * `actions.reportError`; this is for the ones they neither caused nor can act on.
+     * `ui.errors.report`; this is for the ones they neither caused nor can act on.
      */
     function soft(error: unknown): void;
+  }
+
+  namespace Explain {
+    /** The one-line technical summary for an expanded toast — `error.text`/`.message`, trimmed
+     * to its first line. Not the full stack; see `Explain.stack` for that. */
+    function line(error: unknown): string;
+    /**
+     * An error's stack when it has one, else its string form. Duck-typed because errors cross
+     * into this VM from the Node realm, where `Error` is a different constructor — see
+     * `(js)/isThenable.js` for the same problem.
+     */
+    function stack(error: unknown): string;
   }
 
   namespace AsyncIterator {
@@ -173,11 +185,10 @@ declare global {
   const spawnDetached: (tag: string, cmd: string, args: string[]) => void;
 
   /**
-   * Shared by `Crash/hard.js` and `Crash/soft.js`: an error's stack when it has one, else its
-   * string form. Duck-typed because errors cross into this VM from the Node realm, where
-   * `Error` is a different constructor — see `(js)/isThenable.js` for the same problem.
+   * Injected by `bin/tuigram.js`: prints the boxed crash report (stderr box + log line) that a
+   * boot-time crash already uses, so `Crash.hard` matches it exactly. Also logs to the log file.
    */
-  const errorDetail: (error: unknown) => string;
+  const crashReport: (label: string, detail: string) => void;
 
   namespace Fuzzy {
     const score: (query: string, text: string) => number | null;
@@ -326,6 +337,7 @@ declare global {
       MessagePromptSelf &
       PickerSelf &
       HintsSelf &
+      ErrorsSelf &
       Navigation &
       Actions,
     SelfConflicts

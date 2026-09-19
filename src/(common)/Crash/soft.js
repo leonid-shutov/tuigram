@@ -1,4 +1,4 @@
 /** @type {typeof Crash.soft} */
 (error) => {
-  console.log(errorDetail(error));
+  console.log(Explain.stack(error));
 };

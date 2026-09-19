@@ -80,9 +80,31 @@ const mockConsole = {
   error: (...args) => writeLog(...args),
 };
 
+const ISSUES_URL = require('../package.json').bugs.url;
+
+// Injected into the VM context below so src/(common)/Crash/hard.js can print the identical
+// report for a runtime crash — this runs before that VM exists, so it can't import from there.
+const crashReport = (label, detail) => {
+  mockConsole.log(label, detail);
+  process.stderr.write(
+    [
+      '',
+      `tuigram: ${label}`,
+      '',
+      detail
+        .split('\n')
+        .map((line) => `  ${line}`)
+        .join('\n'),
+      '',
+      `  log:    ${LOG_FILE}`,
+      `  report: ${ISSUES_URL}`,
+      '',
+    ].join('\n'),
+  );
+};
+
 const bootCrash = (label, error) => {
-  mockConsole.log(label, error?.stack ?? error);
-  process.stderr.write(`tuigram: ${label}: ${error?.stack ?? String(error)}\n`);
+  crashReport(label, error?.stack ?? String(error));
   process.exit(1);
 };
 
@@ -99,6 +121,6 @@ process.on('uncaughtException', (error) => bootCrash('uncaught', error));
     extras: await import('@opentui/keymap/extras'),
   };
   const rootDir = path.resolve(__dirname, '..');
-  const context = { console: mockConsole, tui, Keymap, process, AbortController };
+  const context = { console: mockConsole, tui, Keymap, process, AbortController, crashReport };
   await uncommonjs.loadTree(context, { rootDir });
 })();

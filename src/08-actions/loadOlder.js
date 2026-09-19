@@ -11,7 +11,7 @@ async () => {
 
   const paged = await Result.fromPromise(pager.next());
   loadingMore = false;
-  if (!paged.ok) return void actions.reportError(paged.error, 'Could not load older messages.');
+  if (!paged.ok) return void ui.errors.report('Could not load older messages.', paged.error);
 
   const { value, done } = paged.unwrap();
   if (done || value === undefined || value.length === 0) return;

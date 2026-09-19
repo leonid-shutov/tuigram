@@ -33,5 +33,5 @@ async (media) => {
   // Repaint first: it writes the same bottom title the notice does, so reporting last is what
   // keeps the notice on screen.
   actions.repaintReceipt();
-  if (!opened.ok) actions.reportError(opened.error, 'Could not open the media.');
+  if (!opened.ok) ui.errors.report('Could not open the media.', opened.error);
 };

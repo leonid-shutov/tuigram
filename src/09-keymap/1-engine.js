@@ -25,6 +25,6 @@ keys.appendEventMatchResolver((event, ctx) => {
 });
 
 keys.on('warning', (event) => console.log(`keymap warning: ${event.code} ${event.message}`));
-keys.on('error', (event) => actions.reportError(event.error, 'Something went wrong.'));
+keys.on('error', (event) => ui.errors.report('Something went wrong.', event.error));
 
 keys;

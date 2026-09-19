@@ -33,6 +33,7 @@ module.exports = [
         Preview: true,
         Result: true,
         Crash: true,
+        Explain: true,
         Message: true,
         Dialog: true,
         AsyncIterator: true,
@@ -68,9 +69,6 @@ module.exports = [
         // OS common
         spawnDetached: true,
 
-        // crash common
-        errorDetail: true,
-
         // auth common
         Frame: true,
 
@@ -86,6 +84,7 @@ module.exports = [
         tui: true,
         Keymap: true,
         AbortController: true,
+        crashReport: true,
         URL: true,
         screen: true,
         auth: true,

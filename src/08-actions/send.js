@@ -14,7 +14,7 @@ async (text) => {
     store.chat.drop(pending.id);
     ui.chat.drop(pending.id);
     actions.repaintReceipt();
-    actions.reportError(sent.error, 'Could not send the message.');
+    ui.errors.report('Could not send the message.', sent.error);
   } else {
     const message = sent.unwrap();
     const outcome = store.chat.confirm(pending.id, message);

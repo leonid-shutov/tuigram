@@ -9,7 +9,7 @@ async (messageId, text) => {
   ui.chat.setStatus('editing…');
 
   const edited = await Result.fromPromise(messenger.editMessage(chatId, messageId, text));
-  if (!edited.ok) return void actions.reportError(edited.error, 'Could not edit the message.');
+  if (!edited.ok) return void ui.errors.report('Could not edit the message.', edited.error);
   const message = edited.unwrap();
 
   if (store.chat.chatId !== chatId) return;

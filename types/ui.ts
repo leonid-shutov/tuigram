@@ -189,12 +189,40 @@ declare global {
 
   type HintsSelf = HintsSection & { text: _opentui.TextRenderable };
 
+  // ── 6-ui/errors ───────────────────────────────────────────────────────────────────────
+  /**
+   * The one error toast, bottom-right. Not a `Section` and not a `SectionName`: nothing focuses
+   * it, it only reacts to `ui.errors.report` and the `app.errors` command.
+   */
+  type ErrorsSection = {
+    component: _opentui.BoxRenderable;
+    /** Log `error` and show `notice` in a toast, replacing whatever toast is already showing. */
+    report(notice: string, error: unknown): void;
+    /** `app.errors`'s handler: reveal the toast's detail line, then dismiss on the next press. */
+    advance(): void;
+  };
+
+  type ErrorsSelf = ErrorsSection & {
+    notice: _opentui.TextRenderable;
+    /** The one-line technical summary, shown once the toast is expanded. */
+    detail: _opentui.TextRenderable;
+    /** Whether the detail line is showing — while true, the toast does not auto-dismiss. */
+    expanded: boolean;
+    /** Auto-dismiss timer; cleared while expanded so nothing vanishes mid-read. */
+    timer: NodeJS.Timeout | undefined;
+    /** Sync the detail line's visibility and the bottom-title hint to `expanded`. */
+    paint(): void;
+    /** Clear the timer, collapse, and hide the toast. */
+    dismiss(): void;
+  };
+
   namespace ui {
     const dialogs: DialogsSection;
     const chat: ChatSection;
     const messagePrompt: MessagePromptSection;
     const picker: PickerSection;
     const hints: HintsSection;
+    const errors: ErrorsSection;
   }
 }
 

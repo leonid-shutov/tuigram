@@ -7,4 +7,5 @@
   'app.focusPrompt': { title: 'Message box', run: () => navigation.select('messagePrompt') },
   'app.search': { title: 'Jump to chat', hint: 'Search', run: () => navigation.select('picker') },
   'app.openConfig': { title: 'Edit config', run: () => actions.openConfig() },
+  'app.errors': { title: 'Errors', run: () => ui.errors.advance() },
 });
