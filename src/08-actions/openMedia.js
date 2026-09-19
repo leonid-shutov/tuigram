@@ -8,30 +8,28 @@ const fileNameFor = (media) => {
   return `${hash}-${name}`;
 };
 
+/** @param {string} file @param {FileMedia} media */
+const fetchMedia = async (file, media) => {
+  ui.chat.setStatus('downloading…');
+  const bytes = await messenger.downloadMedia(media.fileId);
+  await node.fs.promises.mkdir(CACHE, { recursive: true });
+  const part = `${file}.part`;
+  try {
+    await node.fs.promises.writeFile(part, bytes);
+    await node.fs.promises.rename(part, file);
+  } catch (error) {
+    await node.fs.promises.rm(part, { force: true });
+    throw error;
+  }
+};
+
 /** @type {Actions['openMedia']} */
 async (media) => {
   const file = node.path.join(CACHE, fileNameFor(media));
-  try {
-    if (!node.fs.existsSync(file)) {
-      ui.chat.setStatus('downloading…');
-      const bytes = await messenger.downloadMedia(media.fileId);
-      await node.fs.promises.mkdir(CACHE, { recursive: true });
-      const part = `${file}.part`;
-      try {
-        await node.fs.promises.writeFile(part, bytes);
-        await node.fs.promises.rename(part, file);
-      } catch (error) {
-        await node.fs.promises.rm(part, { force: true });
-        throw error;
-      }
-    }
+  const opened = await Result.fromAsync(async () => {
+    if (!node.fs.existsSync(file)) await fetchMedia(file, media);
     OS.open(file);
-  } catch (error) {
-    // eslint-disable-next-line no-extra-parens -- JSDoc type-assertion cast, not redundant
-    const reason = /** @type {Error} */ (error).message ?? String(error);
-    console.log('[openMedia] failed:', reason);
-    OS.notify('tuigram', `Could not open the media: ${reason}`);
-  } finally {
-    actions.repaintReceipt();
-  }
+  });
+  if (!opened.ok) Crash.soft(opened.error, 'Could not open the media.');
+  actions.repaintReceipt();
 };

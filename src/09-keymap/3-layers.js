@@ -1,7 +1,12 @@
 const { commands, bindings } = keymap;
 
 /** @param {Commands} group */
-const named = (group) => Object.entries(group).map(([name, command]) => ({ name, ...command }));
+const named = (group) =>
+  Object.entries(group).map(([name, command]) => ({
+    ...command,
+    name,
+    run: () => void Guard.soft(command.run, `${command.title} failed.`)(),
+  }));
 
 void keymap.engine.registerLayer({ commands: named(commands.app), bindings: bindings.global });
 

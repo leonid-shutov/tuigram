@@ -3,14 +3,7 @@ import { TelegramClient, Message as MtCuteMessage, Dialog as MtCuteDialog } from
 import { Dispatcher } from '@mtcute/dispatcher';
 import { Message, Dialog, FileMedia as _FileMedia, ImageMedia, Media, PendingMessage } from './domain';
 import { LinkedList as _LinkedList } from './collections';
-import {
-  Paths,
-  Source,
-  ThemeDefinition,
-  ResolvedTheme,
-  ImageProtocol as _ImageProtocol,
-  ConfigSchema,
-} from './config';
+import { Paths, Source, ThemeDefinition, ResolvedTheme, ImageProtocol as _ImageProtocol, ConfigSchema } from './config';
 
 import * as _timers from 'node:timers';
 import * as _events from 'node:events';
@@ -21,6 +14,7 @@ import * as _path from 'node:path';
 import * as _child_process from 'node:child_process';
 import * as _url from 'node:url';
 import * as _assert from 'node:assert';
+import { Result as _Result } from 'metautil';
 
 declare global {
   type ImageProtocol = _ImageProtocol;
@@ -44,6 +38,7 @@ declare global {
     '@mtcute/node': typeof import('@mtcute/node');
     '@mtcute/dispatcher': typeof import('@mtcute/dispatcher');
     '@opentui/keymap': typeof import('@opentui/keymap');
+    metautil: typeof import('metautil');
   };
   /** The subset of `config` that reload.js recomputes in place; see [[config.reload]] below. */
   type ConfigSelf = {
@@ -140,11 +135,26 @@ declare global {
     function from<T>(values?: Iterable<T>): _LinkedList<T>;
   }
 
-  namespace Err {
-    function risk<F extends (...args: any[]) => any>(
+  type Result<T = unknown> = _Result<T>;
+  const Result: typeof _Result & {
+    /** Wrap an already-created promise as a Result, without a thunk — for a single call already
+     * in hand. Use `Result.fromAsync` instead when the body is more than one expression. */
+    fromPromise<T>(promise: Promise<T>): Promise<_Result<T>>;
+  };
+
+  namespace Crash {
+    /** Restore the terminal, print to stderr, exit 1. Never returns. */
+    function hard(error: unknown, notice?: string): never;
+    /** Log the stack; with a notice, also raise a desktop notification. The app keeps running. */
+    function soft(error: unknown, notice?: string): void;
+  }
+
+  namespace Guard {
+    /** Wrap a handler so a throw (or rejection) inside it notifies instead of crashing. */
+    function soft<F extends (...args: any[]) => any>(
       fn: F,
-      ...args: Parameters<F>
-    ): [error: null, result: ReturnType<F>] | [error: Error, result: null];
+      notice: string,
+    ): (...args: Parameters<F>) => ReturnType<F> | null;
   }
 
   namespace AsyncIterator {
@@ -154,6 +164,9 @@ declare global {
   namespace Obj {
     function pick<T extends object, K extends keyof T>(obj: T, keys: K[]): Pick<T, K>;
   }
+
+  /** Duck-typed promise check — see `(js)/isThenable.js` for why `instanceof Promise` won't do. */
+  function isThenable(value: unknown): value is Promise<unknown>;
 
   namespace OS {
     const notify: (title: string, body?: string) => void;

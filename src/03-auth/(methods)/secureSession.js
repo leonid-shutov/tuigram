@@ -5,7 +5,9 @@ const SESSION_SUFFIXES = ['', '-wal', '-shm'];
 
 /** @type {AuthSelf['secureSession']} */
 () => {
-  const [error, fd] = Err.risk(node.fs.openSync, config.paths.session, 'a', 0o600);
-  if (error === null) node.fs.closeSync(fd);
-  for (const suffix of SESSION_SUFFIXES) Err.risk(node.fs.chmodSync, config.paths.session + suffix, 0o600);
+  const opened = Result.from(() => node.fs.openSync(config.paths.session, 'a', 0o600));
+  if (opened.ok) node.fs.closeSync(opened.unwrap());
+  for (const suffix of SESSION_SUFFIXES) {
+    Result.from(() => node.fs.chmodSync(config.paths.session + suffix, 0o600));
+  }
 };

@@ -1,2 +1,5 @@
-ui.picker.on('pick', actions.openChat);
-ui.picker.on('close', () => navigation.select('chat'));
+ui.picker.on('pick', Guard.soft(actions.openChat, 'Could not open the chat.'));
+ui.picker.on(
+  'close',
+  Guard.soft(() => navigation.select('chat'), 'Something went wrong.'),
+);

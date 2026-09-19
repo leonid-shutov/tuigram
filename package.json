@@ -36,7 +36,7 @@
   },
   "scripts": {
     "dev": "node bin/tuigram.js",
-    "fmt": "prettier --write .",
+    "fmt": "prettier --write src/",
     "lint": "eslint .",
     "types": "tsc -p tsconfig.json",
     "prepublishOnly": "npm run lint && npm run types"
@@ -47,7 +47,8 @@
     "@mtcute/node": "^0.29.7",
     "@opentui/core": "^0.5.7",
     "@opentui/keymap": "^0.5.11",
-    "@opentui/qrcode": "^0.5.7"
+    "@opentui/qrcode": "^0.5.7",
+    "metautil": "6.0.0-alpha.0"
   },
   "devDependencies": {
     "@types/node": "^26.4.0",

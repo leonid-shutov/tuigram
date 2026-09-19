@@ -21,5 +21,5 @@ async (chatId) => {
 
   store.dialogs.markRead(chatId);
   actions.repaintDialogs();
-  void messenger.readHistory(chatId);
+  void messenger.readHistory(chatId).catch((error) => Crash.soft(error));
 };
