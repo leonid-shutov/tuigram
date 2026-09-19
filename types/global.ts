@@ -20,6 +20,7 @@ import * as _os from 'node:os';
 import * as _path from 'node:path';
 import * as _child_process from 'node:child_process';
 import * as _url from 'node:url';
+import * as _assert from 'node:assert';
 
 declare global {
   type ImageProtocol = _ImageProtocol;
@@ -79,6 +80,10 @@ declare global {
        * `fields`, and (if a migration actually changed something) rewrites `config.json`, all
        * against `config.paths`; used at boot and again by `config.reload()`. */
       resolveConfig: () => Source;
+      /** `config.source[key] ?? field.default` for every field, collected into one plain
+       * object — the values a fresh config.json would resolve to if it existed right now.
+       * Used to seed the editor buffer on first `ctrl+e`. */
+      resolveDefaults: () => Source;
     };
     /** The theme catalog and how a theme name becomes a full palette. */
     themes: {
@@ -323,5 +328,6 @@ declare global {
     const path: typeof _path;
     const child_process: typeof _child_process;
     const url: typeof _url;
+    const assert: typeof _assert;
   }
 }

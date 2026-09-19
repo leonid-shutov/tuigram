@@ -20,6 +20,7 @@ for (const dir of [configDir, dataDir]) node.fs.mkdirSync(dir, { recursive: true
   state: stateDir,
   settings: node.path.join(configDir, 'config.json'),
   settingsBackup: node.path.join(configDir, 'config.json.bak'),
+  settingsSeed: node.path.join(configDir, 'config.json.seed'),
   credentials: node.path.join(configDir, 'credentials.json'),
   // better-sqlite3 also creates `-wal` / `-shm` siblings next to this file.
   session: node.path.join(dataDir, 'session.db'),

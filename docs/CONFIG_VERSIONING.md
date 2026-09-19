@@ -15,8 +15,28 @@ credentials.json
 ```
 
 Nothing is read, nothing is written. `config.theme`, `config.hints`, `config.dialogEmoji`,
-`config.imageProtocol` all resolve to their schema defaults. `config.json` is created for the
-first time only when the user opens it via `ctrl+e` and their editor saves it.
+`config.imageProtocol` all resolve to their schema defaults.
+
+Pressing `ctrl+e` with no `config.json` on disk seeds a sibling `config.json.seed` with those
+same resolved defaults (`config.schema.resolveDefaults()`) and opens the editor on it, so the
+user sees what's editable immediately instead of an empty buffer:
+
+```json
+// config.json.seed, as written before the editor opens
+{
+  "theme": "aqua-lime",
+  "dialogEmoji": true,
+  "hints": true,
+  "imageProtocol": "auto"
+}
+```
+
+Quitting without changing anything (or saving with no changes) leaves that content exactly as
+written, so it's discarded — `config.json.seed` is deleted and `config.json` is still never
+created. Only an actual edit that's saved gets promoted (renamed) to `config.json`. This is what
+keeps `ctrl+e` from silently materializing that boot's defaults into every fresh install (see
+`docs/decisions/0001-config-schema-versioning.md`, "Related: don't materialize defaults on first
+boot") while still creating the file the first time the user genuinely wants one.
 
 ## Scenario 2: hand-written file, nothing to migrate (the common case)
 

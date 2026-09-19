@@ -127,8 +127,13 @@ mistake that caused the corruption in `docs/CONFIG_VERSIONING.md`'s Scenario 4.
 A cheaper way to get the discoverability this idea was after, without the downside: have
 `openConfig.js` seed the editor buffer with the *current resolved* values when no file exists yet,
 so the user sees what's editable immediately — but only persist that if they actually save, and
-only that one time, never re-written on every boot. Not implemented; noted here for whoever picks
-it up.
+only that one time, never re-written on every boot.
+
+**Implemented.** `openConfig.js` writes the resolved values (`config.schema.resolveDefaults()`)
+to a sibling `config.json.seed` file and opens the editor on that instead of `config.json` when
+the latter doesn't exist yet. On exit, the seed is promoted to `config.json` (a rename) only if
+its content actually changed from what was written — quitting without saving, or saving with no
+changes, discards it instead. See `docs/CONFIG_VERSIONING.md` Scenario 1.
 
 ## Consequences
 

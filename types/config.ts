@@ -49,6 +49,7 @@ export type Paths = {
   state: string;
   settings: string;
   settingsBackup: string;
+  settingsSeed: string;
   credentials: string;
   session: string;
   log: string;
