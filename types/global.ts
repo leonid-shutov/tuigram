@@ -35,6 +35,7 @@ declare global {
   /** Every dependency in package.json, keyed by package name. Named ones are typed. */
   const npm: Record<string, any> & {
     '@opentui/qrcode': typeof import('@opentui/qrcode');
+    '@leonid-shutov/opentui-file-picker': typeof import('@leonid-shutov/opentui-file-picker');
     '@mtcute/node': typeof import('@mtcute/node');
     '@mtcute/dispatcher': typeof import('@mtcute/dispatcher');
     '@opentui/keymap': typeof import('@opentui/keymap');
@@ -103,7 +104,7 @@ declare global {
 
   namespace Message {
     const from: (message: MtCuteMessage) => Message;
-    const pending: (text: string) => PendingMessage;
+    const pending: (text: string, media?: Media | null) => PendingMessage;
   }
 
   namespace Dialog {
@@ -260,6 +261,7 @@ declare global {
     onNewMessage(handler: (message: Message) => void): void;
     readHistory(chatId: number): Promise<unknown>;
     sendMessage(chatId: number, text: string): Promise<Message>;
+    sendFile(chatId: number, filePath: string, params?: { caption?: string }): Promise<Message>;
   };
 
   // ── 9-keymap ──────────────────────────────────────────────────────────────────────────
@@ -290,9 +292,12 @@ declare global {
 
   type KeymapModule = {
     engine: KeymapEngine;
-    commands: Record<'app' | 'dialogs' | 'chat' | 'prompt' | 'picker', Commands>;
+    commands: Record<'app' | 'dialogs' | 'chat' | 'prompt' | 'picker' | 'filePicker', Commands>;
     /** Bindings by the layer that installs them; the seam a `keys` block in config.json would feed. */
-    bindings: Record<'global' | 'panes' | 'dialogs' | 'chat' | 'prompt' | 'picker', readonly KeymapBinding[]>;
+    bindings: Record<
+      'global' | 'panes' | 'dialogs' | 'chat' | 'prompt' | 'picker' | 'filePickerBrowse' | 'filePickerFilter',
+      readonly KeymapBinding[]
+    >;
     /** What the hint bar should advertise with `section` focused, in the order to read them. */
     hints(section: SectionName): Hint[];
   };
@@ -336,6 +341,7 @@ declare global {
       ChatSelf &
       MessagePromptSelf &
       PickerSelf &
+      FilePickerSelf &
       HintsSelf &
       ErrorsSelf &
       Navigation &

@@ -42,6 +42,7 @@
     "prepublishOnly": "npm run lint && npm run types"
   },
   "dependencies": {
+    "@leonid-shutov/opentui-file-picker": "file:packages/opentui-file-picker",
     "@leonid-shutov/uncommonjs": "^1.0.0",
     "@mtcute/dispatcher": "^0.29.7",
     "@mtcute/node": "^0.29.7",

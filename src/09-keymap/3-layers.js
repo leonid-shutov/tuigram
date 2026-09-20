@@ -37,3 +37,19 @@ void keymap.engine.registerLayer({
   commands: named(commands.picker),
   bindings: bindings.picker,
 });
+
+void keymap.engine.registerLayer({
+  target: ui.filePicker.component,
+  targetMode: 'focus-within',
+  enabled: () => !ui.filePicker.filtering,
+  commands: named(commands.filePicker),
+  bindings: bindings.filePickerBrowse,
+});
+
+void keymap.engine.registerLayer({
+  target: ui.filePicker.component,
+  targetMode: 'focus-within',
+  enabled: () => ui.filePicker.filtering,
+  commands: named(commands.filePicker),
+  bindings: bindings.filePickerFilter,
+});

@@ -1,0 +1,17 @@
+Box({
+  id: 'filePicker',
+  position: 'absolute',
+  top: '15%',
+  left: '20%',
+  width: '60%',
+  height: '55%',
+  zIndex: 1000,
+  visible: false,
+  flexDirection: 'column',
+  backgroundColor: config.theme.bg,
+  borderStyle: config.theme.borderStyle,
+  customBorderChars: config.theme.borderChars,
+  borderColor: config.theme.accent,
+  titleColor: config.theme.accent,
+  children: [self.list],
+});

@@ -58,6 +58,7 @@ module.exports = [
         Box: true,
         Text: true,
         QRCode: true,
+        FilePicker: true,
         Select: true,
         Textarea: true,
         ScrollBox: true,
@@ -102,6 +103,20 @@ module.exports = [
     files: ['bin/**/*.js'],
     rules: {
       'max-len': ['error', { code: 120, ignoreUrls: true }],
+    },
+  },
+  {
+    // A standalone package: real ESM imports, no injected globals.
+    files: ['packages/**/*.js'],
+    rules: {
+      'max-len': ['error', { code: 120, ignoreUrls: true }],
+      'no-nested-ternary': 'off',
+      camelcase: 'off',
+      'new-cap': 'off',
+      curly: 'off',
+    },
+    languageOptions: {
+      sourceType: 'module',
     },
   },
   {

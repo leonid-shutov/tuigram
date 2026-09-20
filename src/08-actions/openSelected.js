@@ -3,7 +3,7 @@
   const message = ui.chat.selectedMessage;
   if (message === null) return;
   const { media } = message;
-  if (media !== null && Media.isFile(media) && media.type !== 'sticker') {
+  if (media !== null && !message.pending && Media.isFile(media) && media.type !== 'sticker') {
     actions.openMedia(media);
   } else {
     const url = Link.only(message.text);

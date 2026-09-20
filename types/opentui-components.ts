@@ -1,5 +1,6 @@
 import * as _opentui from '@opentui/core';
 import type { QRCodeOptions, QRCodeRenderable } from '@opentui/qrcode';
+import type { FilePickerRenderableOptions, FilePickerRenderable } from '@leonid-shutov/opentui-file-picker';
 
 type ChildNode = _opentui.BaseRenderable | null | undefined | false | '';
 type Children = ChildNode | Children[];
@@ -26,6 +27,7 @@ declare global {
     scrollToBottom(component: _opentui.ScrollBoxRenderable): void;
   };
   const QRCode: ComponentFactory<QRCodeOptions, QRCodeRenderable>;
+  const FilePicker: ComponentFactory<FilePickerRenderableOptions, FilePickerRenderable>;
 }
 
 export {};

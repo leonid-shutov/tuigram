@@ -44,6 +44,7 @@ const group = (config) => Keymap.extras.createBindingLookup(config).bindings;
   prompt: group({
     'prompt.send': 'return',
     'prompt.exit': 'escape',
+    'prompt.attach': 'ctrl+o',
   }),
 
   picker: group({
@@ -51,5 +52,27 @@ const group = (config) => Keymap.extras.createBindingLookup(config).bindings;
     'picker.up': 'up',
     'picker.pick': 'return',
     'picker.close': 'escape',
+  }),
+
+  // The picker is modal, netrw-style: these navigate, and `/` opens the filter. The filter layer
+  // below deliberately claims almost nothing, so every printable key falls through to the
+  // renderable and lands in the filter.
+  filePickerBrowse: group({
+    'filePicker.down': ['j', 'down'],
+    'filePicker.up': ['k', 'up'],
+    'filePicker.first': 'gg',
+    'filePicker.last': 'shift+g',
+    'filePicker.open': ['return', 'l', 'right'],
+    'filePicker.goUp': ['h', 'left', '-'],
+    'filePicker.filter': '/',
+    'filePicker.cancel': 'escape',
+  }),
+
+  filePickerFilter: group({
+    'filePicker.down': 'down',
+    'filePicker.up': 'up',
+    'filePicker.acceptFilter': 'return',
+    'filePicker.backspace': 'backspace',
+    'filePicker.cancel': 'escape',
   }),
 });

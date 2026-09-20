@@ -1,0 +1,33 @@
+{
+  "name": "@leonid-shutov/opentui-file-picker",
+  "version": "0.1.0",
+  "description": "A filesystem file picker Renderable for OpenTUI",
+  "keywords": [
+    "opentui",
+    "tui",
+    "terminal",
+    "file-picker"
+  ],
+  "license": "MIT",
+  "type": "module",
+  "main": "index.js",
+  "types": "index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./index.d.ts",
+      "import": "./index.js"
+    }
+  },
+  "files": [
+    "index.js",
+    "index.d.ts",
+    "FilePickerRenderable.js",
+    "FilePickerRenderableEvents.js",
+    "FilePicker.js",
+    "internal",
+    "README.md"
+  ],
+  "peerDependencies": {
+    "@opentui/core": "^0.5.7"
+  }
+}

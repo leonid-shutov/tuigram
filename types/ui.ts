@@ -168,12 +168,44 @@ declare global {
 
   type PickerSelf = PickerSection & Emitting & { filter(query: string): void };
 
+  // ── 6-ui/filePicker ───────────────────────────────────────────────────────────────────
+  type FilePickerSection = Section & {
+    list: import('@leonid-shutov/opentui-file-picker').FilePickerRenderable;
+    component: _opentui.BoxRenderable;
+    on(event: 'select', handler: (filePath: string) => void): void;
+    on(event: 'cancel', handler: () => void): void;
+    on(event: 'mode', handler: () => void): void;
+    on(event: 'error', handler: (error: unknown) => void): void;
+    /** Whether the live filter is being edited right now, as opposed to merely applied. */
+    readonly filtering: boolean;
+    moveUp(): void;
+    moveDown(): void;
+    first(): void;
+    last(): void;
+    /** Open the highlighted folder, or report the highlighted file as the `select` intent. */
+    open(): void;
+    goUp(): void;
+    /** Clear an applied filter, or — with none applied — go up a folder. */
+    backspace(): void;
+    /** Enter filter mode, keeping any already-applied filter text so it can be refined. */
+    startFilter(): void;
+    /** Leave filter mode, keeping the filter text applied so the narrowing stays. */
+    acceptFilter(): void;
+    cancel(): void;
+  };
+
+  type FilePickerSelf = FilePickerSection & Emitting;
+
   /**
    * `on` is declared as overloads on the sections so callers get per-event handler types;
    * an overloaded member cannot be indexed with `['on']`, so the implementations type
    * themselves against these instead.
    */
   type PickerOnImpl = (event: 'pick' | 'close', handler: (...args: any[]) => void) => void;
+  type FilePickerOnImpl = (
+    event: 'select' | 'cancel' | 'mode' | 'error',
+    handler: (...args: any[]) => void,
+  ) => void;
   type MessagePromptOnImpl = (event: keyof MessagePromptEventMap, handler: (...args: any[]) => void) => void;
 
   // ── 6-ui/hints ────────────────────────────────────────────────────────────────────────
@@ -221,6 +253,7 @@ declare global {
     const chat: ChatSection;
     const messagePrompt: MessagePromptSection;
     const picker: PickerSection;
+    const filePicker: FilePickerSection;
     const hints: HintsSection;
     const errors: ErrorsSection;
   }

@@ -2,7 +2,7 @@ import * as _opentui from '@opentui/core';
 import { Message } from './domain';
 
 declare global {
-  type SectionName = 'dialogs' | 'chat' | 'messagePrompt' | 'picker';
+  type SectionName = 'dialogs' | 'chat' | 'messagePrompt' | 'picker' | 'filePicker';
 
   // ── 7-navigation ──────────────────────────────────────────────────────────────────────
   type Navigation = {
@@ -41,6 +41,8 @@ declare global {
     /** Redraw the open chat's read receipt. Follows every change to its tail or watermark. */
     repaintReceipt(): void;
     send(text: string): Promise<void>;
+    /** Attach a local file: an optimistic pending bubble, then the real upload via mtcute. */
+    sendFile(filePath: string): Promise<void>;
     /** The window lost focus; what lands in the open chat from now on stays unread. */
     windowBlur(): void;
     /** The window came back: read whatever landed in the open chat while it was away. */

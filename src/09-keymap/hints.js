@@ -1,5 +1,11 @@
-/** @type {Record<SectionName, 'dialogs' | 'chat' | 'prompt' | 'picker'>} */
-const GROUPS = { dialogs: 'dialogs', chat: 'chat', messagePrompt: 'prompt', picker: 'picker' };
+/** @type {Record<SectionName, 'dialogs' | 'chat' | 'prompt' | 'picker' | 'filePicker'>} */
+const GROUPS = {
+  dialogs: 'dialogs',
+  chat: 'chat',
+  messagePrompt: 'prompt',
+  picker: 'picker',
+  filePicker: 'filePicker',
+};
 
 // Appended to every section's own keys. The 1/2/3 pane jumps stay off the bar — 4-labels.js
 // already prints them on the pane borders.

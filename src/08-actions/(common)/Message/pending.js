@@ -1,8 +1,8 @@
 /** @type {typeof Message.pending} */
-(text) => ({
+(text, media = null) => ({
   id: Random.id(),
   text,
-  media: null,
+  media,
   pending: true,
   sender: { id: null, isSelf: true, displayName: null },
   chatId: undefined,

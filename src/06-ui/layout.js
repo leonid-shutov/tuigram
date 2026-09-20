@@ -23,6 +23,7 @@ screen.wrapper.add(
       }),
       config.hints && ui.hints.component,
       ui.picker.component,
+      ui.filePicker.component,
       ui.errors.component,
     ],
   }),
