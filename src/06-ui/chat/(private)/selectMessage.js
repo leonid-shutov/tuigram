@@ -8,6 +8,6 @@
   const clamped = Math.max(0, Math.min(index, children.length - 1));
   self.selectedIndex = clamped;
   const bubble = children[clamped];
-  self.scroll.scrollChildIntoView(bubble.id);
+  ScrollBox.reveal(self.scroll, bubble);
   if (self.focused) bubble.focus();
 };

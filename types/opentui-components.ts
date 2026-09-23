@@ -25,6 +25,8 @@ declare global {
   const ScrollBox: ComponentFactory<_opentui.ScrollBoxOptions, _opentui.ScrollBoxRenderable> & {
     preserveScroll(component: _opentui.ScrollBoxRenderable, mutate: () => void): void;
     scrollToBottom(component: _opentui.ScrollBoxRenderable): void;
+    /** Scroll `child` fully into view, top-pinned when it is as tall as the viewport. */
+    reveal(component: _opentui.ScrollBoxRenderable, child: _opentui.Renderable): void;
   };
   const QRCode: ComponentFactory<QRCodeOptions, QRCodeRenderable>;
   const FilePicker: ComponentFactory<FilePickerRenderableOptions, FilePickerRenderable>;
