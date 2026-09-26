@@ -24,6 +24,11 @@
   whole keymap — not just `j` and `k` — works on a Cyrillic layout. `/` now reaches the chat search
   from the messages as well as the chat list.
 
+### Changed
+
+- A notification from a group now names the sender: the body reads `Timur: pushed the v9 tag` instead of
+  just the message. Private chats and channels are unchanged — there the chat name is already the sender.
+
 ### Fixed
 
 - Sending a message scrolls the chat to the very bottom, so the message you just sent is visible even when
