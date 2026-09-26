@@ -11,6 +11,7 @@ export type ThemePalette = {
   accent: string;
   accentAlt: string;
   danger: string;
+  warning: string;
 };
 
 export type BorderChars = {
@@ -69,6 +70,9 @@ export type Source = {
   /** Proxy URL to connect through, e.g. `socks5://user:pass@host:port`,
    * `http://host:port`, or a `t.me/proxy?...` MTProxy link. Unset connects directly. */
   proxy?: string;
+  /** Check registry.npmjs.org / the tap formula for a newer release, once a day at most.
+   * Defaults to true; $TUIGRAM_UPDATE overrides both this and the default. */
+  updateCheck?: boolean;
 } & Record<string, unknown>;
 
 /** One entry of the `(common)/schema.js` table: a `Source` field's default, whether
@@ -85,4 +89,5 @@ export type ConfigSchema = {
   hints: ConfigSchemaField<boolean>;
   imageProtocol: ConfigSchemaField<ImageProtocol>;
   proxy: ConfigSchemaField<string | undefined>;
+  updateCheck: ConfigSchemaField<boolean>;
 };

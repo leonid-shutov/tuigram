@@ -52,10 +52,15 @@ declare global {
   /** Terminal window focus, as reported by the terminal — see src/5-store/window.js. */
   type WindowStore = { focused: boolean };
 
+  /** The release the last check found, or null once dismissed/upgraded; see
+   * src/(common)/Update and src/05-store/update.js. */
+  type UpdateStore = { available: UpdateRelease | null };
+
   namespace store {
     const dialogs: DialogsStore;
     const chat: ChatStore;
     const window: WindowStore;
+    const update: UpdateStore;
   }
 }
 

@@ -4,6 +4,11 @@
 
 ### Added
 
+- A check for a newer release at startup (registry.npmjs.org for npm installs, the Homebrew tap's formula
+  for brew installs; never on a git checkout). A notice appears above the key hint bar when one is found:
+  `alt+u` runs the upgrade and exits so you can restart into it, `alt+shift+u` dismisses it for the rest
+  of the session. `tuigram upgrade` runs the same upgrade from the command line. Off with
+  `"updateCheck": false` in `config.json` or `TUIGRAM_UPDATE=0`.
 - Install from the Homebrew tap: `brew install leonid-shutov/tap/tuigram`. Every release bumps the formula
   right after it lands on npm; prereleases stay off Homebrew.
 - `gg` and `G` jump to the ends: the first or last chat in the list, the oldest loaded or newest message

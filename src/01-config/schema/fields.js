@@ -25,4 +25,9 @@
     hotReload: false, // read once at boot; changing it needs a restart regardless
     validate: (value) => typeof value === 'string' && value.trim() !== '',
   },
+  updateCheck: {
+    default: true,
+    hotReload: false, // the check runs once at startup; flipping it later has nothing left to do
+    validate: (value) => typeof value === 'boolean',
+  },
 });

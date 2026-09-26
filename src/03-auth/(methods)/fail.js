@@ -15,4 +15,4 @@ then edit or delete ${config.paths.credentials} and start tuigram again.`;
 };
 
 /** @type {AuthSelf['fail']} */
-(error) => auth.exit(explain(error), 1);
+(error) => Crash.exit(explain(error), 1);

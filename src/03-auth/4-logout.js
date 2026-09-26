@@ -9,6 +9,6 @@ if (config.cli.command === 'logout') {
       Result.from(() => node.fs.rmSync(config.paths.session + suffix, { force: true }));
     }
     const where = revoked ? 'signed out' : 'session removed locally (Telegram was not reachable)';
-    auth.exit(`${where}; deleted ${config.paths.session}`, 0);
+    Crash.exit(`${where}; deleted ${config.paths.session}`, 0);
   });
 }

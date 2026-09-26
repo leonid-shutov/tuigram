@@ -12,6 +12,8 @@ const group = (config) => Keymap.extras.createBindingLookup(config).bindings;
     'app.search': 'ctrl+p',
     'app.openConfig': 'ctrl+e',
     'app.errors': 'alt+e',
+    'app.upgrade': 'alt+u',
+    'app.dismissUpdate': 'alt+shift+u',
   }),
 
   // The unmodified pane jumps. Installed only in the panes that are not a text field, which is

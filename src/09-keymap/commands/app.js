@@ -8,4 +8,6 @@
   'app.search': { title: 'Jump to chat', hint: 'Search', run: () => navigation.select('picker') },
   'app.openConfig': { title: 'Edit config', run: () => actions.openConfig() },
   'app.errors': { title: 'Errors', run: () => ui.errors.advance() },
+  'app.upgrade': { title: 'Upgrade tuigram', run: () => actions.upgrade() },
+  'app.dismissUpdate': { title: 'Dismiss update', run: () => actions.dismissUpdate() },
 });

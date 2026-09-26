@@ -4,7 +4,9 @@
 const os = require('os');
 const path = require('path');
 const { spawnSync } = require('child_process');
-const { appendFileSync, mkdirSync, writeFileSync } = require('fs');
+const { appendFileSync, mkdirSync, realpathSync, writeFileSync } = require('fs');
+const channel = require('./channel');
+const pkg = require('../package.json');
 
 const RELAUNCH = 'TUIGRAM_RELAUNCHED';
 const FFI_FLAGS = ['--experimental-ffi'];
@@ -20,6 +22,7 @@ if (args.includes('--help') || args.includes('-h')) {
       '',
       'Commands:',
       '  logout           sign out and delete the stored session',
+      '  upgrade          check for and install a newer release',
       '',
       'Options:',
       '  -h, --help       show this message',
@@ -34,8 +37,36 @@ if (args.includes('--help') || args.includes('-h')) {
 }
 
 if (args.includes('--version') || args.includes('-v')) {
-  process.stdout.write(`${require('../package.json').version}\n`);
+  process.stdout.write(`${pkg.version}\n`);
   process.exit(0);
+}
+
+// This never boots the renderer or the sandbox, so it runs here rather than through
+// src/(common)/Update/ (which loads after 02-screen and 03-auth, so a subcommand routed
+// through it would need working FFI, a working opentui and a valid session — exactly the states
+// where someone most needs to upgrade). No version check either: both upgrade commands are
+// already idempotent, so this is a plain detect-channel-and-spawn, reusing channel.upgradePlan
+// (the same recipe src/(common)/Update/upgradePlan.js drives in-app) instead of its own copy.
+if (args[0] === 'upgrade') {
+  const rootDir = realpathSync(path.resolve(__dirname, '..'));
+  const run = (cmd, cmdArgs) => spawnSync(cmd, cmdArgs, { stdio: 'inherit' }).status ?? 1;
+  const kind = channel.detect(rootDir);
+
+  if (kind === 'git') {
+    process.stderr.write('tuigram: this is a git checkout, not an installed copy — nothing to upgrade\n');
+    process.exit(1);
+  } else if (kind === 'unknown') {
+    process.stderr.write('tuigram: could not tell how this copy was installed\n');
+    process.exit(1);
+  } else {
+    const installPlan = channel.upgradePlan(rootDir, 'latest');
+    let status = 0;
+    for (const step of installPlan.steps) {
+      status = run(step.cmd, step.args);
+      if (status !== 0) break;
+    }
+    process.exit(status);
+  }
 }
 
 // opentui talks to its Zig backend through node:ffi, which Node only exposes behind
@@ -80,7 +111,7 @@ const mockConsole = {
   error: (...args) => writeLog(...args),
 };
 
-const ISSUES_URL = require('../package.json').bugs.url;
+const ISSUES_URL = pkg.bugs.url;
 
 // Injected into the VM context below so src/(common)/Crash/hard.js can print the identical
 // report for a runtime crash — this runs before that VM exists, so it can't import from there.
@@ -121,6 +152,15 @@ process.on('uncaughtException', (error) => bootCrash('uncaught', error));
     extras: await import('@opentui/keymap/extras'),
   };
   const rootDir = path.resolve(__dirname, '..');
-  const context = { console: mockConsole, tui, Keymap, process, AbortController, crashReport };
+  const context = {
+    console: mockConsole,
+    tui,
+    Keymap,
+    process,
+    AbortController,
+    crashReport,
+    Channel: channel,
+    packageVersion: pkg.version,
+  };
   await uncommonjs.loadTree(context, { rootDir });
 })();

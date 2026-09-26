@@ -41,6 +41,13 @@ module.exports = [
         Fuzzy: true,
         Hash: true,
         Link: true,
+        Version: true,
+        Fetch: true,
+        Engines: true,
+
+        // Update common
+        Update: true,
+        Source: true,
 
         // config common
         source: true,
@@ -86,6 +93,8 @@ module.exports = [
         Keymap: true,
         AbortController: true,
         crashReport: true,
+        Channel: true,
+        packageVersion: true,
         URL: true,
         screen: true,
         auth: true,

@@ -21,6 +21,7 @@ screen.wrapper.add(
           }),
         ],
       }),
+      ui.updateNotification.component,
       config.hints && ui.hints.component,
       ui.picker.component,
       ui.filePicker.component,

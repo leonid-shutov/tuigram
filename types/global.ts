@@ -14,6 +14,7 @@ import * as _path from 'node:path';
 import * as _child_process from 'node:child_process';
 import * as _url from 'node:url';
 import * as _assert from 'node:assert';
+import * as _https from 'node:https';
 import { Result as _Result } from 'metautil';
 
 declare global {
@@ -88,6 +89,10 @@ declare global {
     };
     /** Proxy URL to connect through, read once at boot; unset connects directly. */
     proxy: string | undefined;
+    /** Whether to check registry.npmjs.org / the tap formula for a newer release, once a day at
+     * most, read once at boot from config.json + $TUIGRAM_UPDATE. Not in ConfigSelf: reload()
+     * skips every field whose `hotReload` is false, and this one's check already ran. */
+    updateCheck: boolean;
     /**
      * Re-read config.json and recompute theme/hints/dialogEmoji/imageProtocol in place. Layout
      * decisions already baked in at boot (the hints bar's presence, the terminal background) need
@@ -143,6 +148,8 @@ declare global {
     fromPromise<T>(promise: Promise<T>): Promise<_Result<T>>;
   };
 
+  /** Process termination: `hard` for a crash, `soft` for one the app survives, `exit` for a
+   * clean shutdown. */
   namespace Crash {
     /** Restore the terminal, print to stderr, exit 1. Never returns. */
     function hard(error: unknown, notice?: string): never;
@@ -151,6 +158,13 @@ declare global {
      * `ui.errors.report`; this is for the ones they neither caused nor can act on.
      */
     function soft(error: unknown): void;
+    /**
+     * The graceful counterpart to `hard`: dispose the auth UI, restore the terminal, close the
+     * Telegram client, then write `tuigram: <message>` to stderr and exit with `code`. Returns
+     * before the process goes down — the exit waits on the client closing — so a caller that
+     * has more statements after it must `return`.
+     */
+    function exit(message: string, code: number): void;
   }
 
   namespace Explain {
@@ -180,6 +194,9 @@ declare global {
     const notify: (title: string, body?: string) => void;
     /** Hand a file to the OS's default handler, in its own process. */
     const open: (path: string) => void;
+    /** Run `cmd` in the foreground (inherited stdio) and resolve its exit code; rejects only if
+     * the process itself couldn't be spawned. */
+    const run: (cmd: string, args: string[]) => Promise<number | null>;
   }
 
   /** Shared by `OS/notify.js` and `OS/open.js`: fire a child off and stop caring about it. */
@@ -190,6 +207,43 @@ declare global {
    * boot-time crash already uses, so `Crash.hard` matches it exactly. Also logs to the log file.
    */
   const crashReport: (label: string, detail: string) => void;
+
+  /**
+   * Injected by `bin/tuigram.js` (`bin/channel.js`), same pattern as `crashReport` above: how an
+   * install is shaped, and how to upgrade it, is decided once, since `bin/tuigram.js`'s own
+   * `upgrade` subcommand needs the exact same detection and plan before the sandbox exists to
+   * run them through src/(common)/Update/ instead.
+   */
+  namespace Channel {
+    const detect: (rootDir: string) => UpdateChannel;
+    const brewBinary: (rootDir: string) => string;
+    const npmPrefix: (rootDir: string) => string | null;
+    /** The per-channel upgrade plan for `rootDir`'s install, targeting `version` (a concrete
+     * version, or `'latest'`), or `null` when there is nothing to run. */
+    const upgradePlan: (rootDir: string, version: string) => UpgradePlan | null;
+    /** Whether `upgradePlan`'s prefix (if any) can actually be written to — `true` when there is
+     * no prefix to check, e.g. brew, or no plan at all. */
+    const writable: (plan: UpgradePlan | null) => boolean;
+  }
+
+  /** Injected by `bin/tuigram.js`: this install's own `package.json` version, read once before
+   * the sandbox exists (the same read `--version` already uses) rather than re-reading it from
+   * `__rootDir` in here. */
+  const packageVersion: string;
+
+  /** A generic never-rejecting HTTPS GET, with no knowledge of what it's fetching — used by
+   * src/(common)/Update/'s own `(common)/Source/` to reach npm's registry and the homebrew
+   * tap, but not tied to either. */
+  namespace Fetch {
+    /** One HTTPS GET; resolves `null` on any failure, timeout, or over-size response rather
+     * than rejecting. */
+    const once: (
+      url: string,
+      headers: Record<string, string>,
+    ) => Promise<{ status: number; location: string | null; body: string } | null>;
+    /** `once`, following up to 2 `https:` redirects; `null` on any non-2xx or failure. */
+    const text: (url: string, headers: Record<string, string>) => Promise<string | null>;
+  }
 
   namespace Fuzzy {
     const score: (query: string, text: string) => number | null;
@@ -206,6 +260,23 @@ declare global {
 
   namespace Random {
     const id: () => number;
+  }
+
+  namespace Engines {
+    /** The minimum version out of a leading `>=` range, else `null` (unknown, not "none"). */
+    const minimum: (range: string | undefined) => string | null;
+  }
+
+  /** Hand-rolled semver: metautil has no version helper, and this repo only ever compares
+   * versions it itself publishes. */
+  namespace Version {
+    type Parsed = { core: [number, number, number]; pre: (string | number)[] };
+    /** MAJOR.MINOR.PATCH[-pre][+build], numeric core required; anything else is `null`. */
+    const parse: (version: string) => Parsed | null;
+    /** -1 | 0 | 1; unparseable on either side compares as a tie (`0`), never a spurious update. */
+    const compare: (left: string, right: string) => -1 | 0 | 1;
+    /** `compare(candidate, current) > 0`, and never a prerelease onto a stable `current`. */
+    const newer: (candidate: string, current: string) => boolean;
   }
 
   const Frame: (props: { title: string; children: OpenTUIChildren }) => _opentui.BoxRenderable;
@@ -236,7 +307,6 @@ declare global {
   type AuthModule = {
     client: TelegramClient;
     ui: AuthUiModule;
-    exit(message: string, code: number): never | void;
     fail(error: unknown): void;
     secureSession(): void;
   };
@@ -302,6 +372,38 @@ declare global {
     hints(section: SectionName): Hint[];
   };
 
+  // ── (common)/Update ───────────────────────────────────────────────────────────────────
+  /** 'git' and 'unknown' both mean "never check" — a checkout, or a shape check() doesn't know. */
+  type UpdateChannel = 'brew' | 'npm' | 'git' | 'unknown';
+  type UpdateRelease = { version: string; minNode: string | null };
+  /** What `actions.upgrade()` runs, in order; the prefix to check for write access first (`null`
+   * for brew, which owns its own permissions); and the channel-appropriate command to show the
+   * user when that prefix isn't writable (`null` when, as for brew, it never needs to be shown). */
+  type UpgradePlan = {
+    steps: { cmd: string; args: string[] }[];
+    prefix: string | null;
+    manualCommand: string | null;
+  };
+
+  namespace Update {
+    /** Fetch the latest release for `Channel.detect(__rootDir)`, or `null` when there is nothing
+     * newer to offer. Runs once per launch, with no caching between runs. Never rejects. */
+    const check: () => Promise<UpdateRelease | null>;
+    /** The per-channel upgrade plan for `release`, or `null` when there is nothing to run. */
+    const upgradePlan: (release: UpdateRelease) => UpgradePlan | null;
+    /** `false` when `release.minNode` is satisfied (or there is none); `true` when the running
+     * Node is too old, in which case the notice row shows a message instead of the upgrade key,
+     * and `upgrade()` refuses to proceed past. */
+    const blockedByNode: (release: UpdateRelease) => boolean;
+  }
+
+  /** Visible only within src/(common)/Update/ at runtime (its own `(common)/` subdir), same as
+   * `Binding` above is scoped to src/09-keymap/ — see the loader's Common-dir rule. */
+  namespace Source {
+    const npm: () => Promise<UpdateRelease | null>;
+    const brew: () => Promise<UpdateRelease | null>;
+  }
+
   // ── the sandbox ───────────────────────────────────────────────────────────────────────
   const screen: ScreenModule;
   const keymap: KeymapModule;
@@ -344,6 +446,7 @@ declare global {
       FilePickerSelf &
       HintsSelf &
       ErrorsSelf &
+      UpdateSelf &
       Navigation &
       Actions,
     SelfConflicts
@@ -351,6 +454,11 @@ declare global {
     Record<SelfConflicts, any>;
 
   const self: AppSelf;
+
+  /** Injected by uncommonjs's `loadTree`: the resolved package root, i.e. `path.resolve(__dirname,
+   * '..')` from `bin/tuigram.js`. Used by src/(common)/Update to read package.json and detect
+   * the install channel, since src/ otherwise has no `__dirname`. */
+  const __rootDir: string;
 
   namespace node {
     const timers: typeof _timers;
@@ -362,5 +470,6 @@ declare global {
     const child_process: typeof _child_process;
     const url: typeof _url;
     const assert: typeof _assert;
+    const https: typeof _https;
   }
 }

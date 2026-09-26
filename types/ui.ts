@@ -248,6 +248,21 @@ declare global {
     dismiss(): void;
   };
 
+  // ── 6-ui/updateNotification ──────────────────────────────────────────────────────────
+  /**
+   * The row above the hint bar. Not a `Section` and not a `SectionName`: nothing focuses it,
+   * it only reflects `store.update.available`.
+   */
+  type UpdateSection = {
+    component: _opentui.BoxRenderable;
+    /** Draw the notice for `release`. */
+    display(release: UpdateRelease): void;
+    /** Hide the row — there is nothing to show, or the notice was dismissed. */
+    hide(): void;
+  };
+
+  type UpdateSelf = UpdateSection & { text: _opentui.TextRenderable };
+
   namespace ui {
     const dialogs: DialogsSection;
     const chat: ChatSection;
@@ -256,6 +271,7 @@ declare global {
     const filePicker: FilePickerSection;
     const hints: HintsSection;
     const errors: ErrorsSection;
+    const updateNotification: UpdateSection;
   }
 }
 

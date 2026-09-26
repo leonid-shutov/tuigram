@@ -24,3 +24,5 @@ Array.fromAsync(messenger.iterDialogs())
 Array.fromAsync(messenger.iterDialogs({ archived: true }))
   .then(store.dialogs.setArchived)
   .catch((error) => Crash.soft(error));
+
+actions.checkUpdate();
