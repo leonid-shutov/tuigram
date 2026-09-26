@@ -284,6 +284,7 @@ declare global {
   // ── 3-auth ────────────────────────────────────────────────────────────────────────────
   type AuthScreenHandle = {
     onKey(handler: (event: _opentui.KeyEvent) => void): void;
+    onPaste(handler: (event: _opentui.PasteEvent) => void): void;
     render(): void;
     dispose(): void;
   };

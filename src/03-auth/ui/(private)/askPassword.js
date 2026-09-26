@@ -34,4 +34,12 @@ const isPrintable = (event) =>
         draw();
       }
     });
+
+    handle.onPaste((event) => {
+      const pasted = tui.stripAnsiSequences(tui.decodePasteBytes(event.bytes)).replace(/[\n\r]/g, '');
+      if (pasted !== '') {
+        buffer += pasted;
+        draw();
+      }
+    });
   });
