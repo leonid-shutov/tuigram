@@ -16,6 +16,12 @@ declare global {
   type Actions = {
     historyRead(event: HistoryReadEvent): void;
     loadChat(chatId: number): Promise<void>;
+    /** Fetch a fast first page of dialogs so the list has something to show before the full fetch lands. */
+    loadDialogsPreview(): void;
+    /** Fetch the full dialog list and repaint; settles the dialogs UI's loading state either way. */
+    loadDialogs(): void;
+    /** Fetch archived dialogs into the store. */
+    loadArchivedDialogs(): void;
     loadOlder(): Promise<void>;
     /** Fetch a message's 320px thumbnail, if it has one, and push it into its bubble. */
     loadThumb(message: ChatMessage): void;
