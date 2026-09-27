@@ -11,20 +11,27 @@ const CELLAR = /\/Cellar\/tuigram\/[^/]+\/libexec\/lib\/node_modules\/tuigram$/;
 const GLOBAL = /\/lib\/node_modules\/tuigram$/;
 const NPM_SUFFIX = '/lib/node_modules/tuigram';
 
-// git checked before Cellar/global: an `npm link`ed checkout sits under lib/node_modules as a
-// symlink and would otherwise match npm.
-/** @param {string} rootDir @returns {'git' | 'brew' | 'npm' | 'unknown'} */
+// mise's npm backend doesn't go through lib/node_modules at all -- its bin is a shim that execs
+// Node directly on .../mise/installs/npm-tuigram/<version>/node_modules/.mise/tuigram@<version>/
+// node_modules/tuigram/bin/tuigram.js. The `.*` covers that `.mise/tuigram@<version>/` dedup
+// layer, which is mise's own linker's implementation detail and not worth pinning exactly.
+const MISE = /\/mise\/installs\/npm-tuigram\/.*\/node_modules\/tuigram$/;
+
+// git checked before Cellar/global/mise: an `npm link`ed checkout sits under lib/node_modules as
+// a symlink and would otherwise match npm.
+/** @param {string} rootDir @returns {'git' | 'brew' | 'npm' | 'mise' | 'unknown'} */
 const detectUncached = (rootDir) => {
   if (existsSync(path.join(rootDir, '.git'))) return 'git';
   if (CELLAR.test(rootDir)) return 'brew';
   if (GLOBAL.test(rootDir)) return 'npm';
+  if (MISE.test(rootDir)) return 'mise';
   return 'unknown';
 };
 
 /** @type {{ rootDir: string; kind: ReturnType<typeof detectUncached> } | null} */
 let cached = null;
 
-/** @param {string} rootDir @returns {'git' | 'brew' | 'npm' | 'unknown'} */
+/** @param {string} rootDir @returns {'git' | 'brew' | 'npm' | 'mise' | 'unknown'} */
 const detect = (rootDir) => {
   if (cached === null || cached.rootDir !== rootDir) cached = { rootDir, kind: detectUncached(rootDir) };
   return cached.kind;
@@ -72,11 +79,22 @@ const brewPlan = (rootDir) => {
   };
 };
 
+// mise owns its own install directory the same way brew owns the Cellar, so there is no prefix
+// to check -- and `mise upgrade` (unlike npm's `install`) already re-resolves to whatever's
+// newest under the version constraint the user configured, so no explicit version is passed.
+/** @returns {Plan} */
+const misePlan = () => ({
+  prefix: null,
+  manualCommand: null,
+  steps: [{ cmd: 'mise', args: ['upgrade', 'npm:tuigram'] }],
+});
+
 /** @param {string} rootDir @param {string} version @returns {Plan | null} */
 const upgradePlan = (rootDir, version) => {
   const kind = detect(rootDir);
   if (kind === 'npm') return npmPlan(rootDir, version);
   if (kind === 'brew') return brewPlan(rootDir);
+  if (kind === 'mise') return misePlan();
   return null;
 };
 

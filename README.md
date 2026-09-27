@@ -10,6 +10,12 @@ A lightweight, terminal-based Telegram client written in **Node.js** with Vim-fl
 brew install leonid-shutov/tap/tuigram
 ```
 
+or with [mise](https://mise.jdx.dev), which installs Node.js 26 alongside it:
+
+```sh
+mise use -g node@26 npm:tuigram
+```
+
 or from npm, which needs a Node.js 26.4 or newer of your own:
 
 ```sh
@@ -99,7 +105,7 @@ Optional, and read from `$XDG_CONFIG_HOME/tuigram/config.json`:
 | `dialogEmoji`   | `true`      | `true`, `false` — turn off on fonts with no emoji coverage                                                                                                                                     |
 | `hints`         | `true`      | `true`, `false` — set to false to hide the key hint bar and reclaim its row                                                                                                                    |
 | `proxy`         | _(none)_    | a proxy URL — `socks5://`, `socks4://`, `http://`/`https://`, or a `t.me/proxy?...` MTProxy link; connects directly if unset                                                                  |
-| `updateCheck`   | `true`      | `true`, `false` — check registry.npmjs.org (npm installs) or the tap's formula (brew installs) at startup                                                                                     |
+| `updateCheck`   | `true`      | `true`, `false` — check registry.npmjs.org (npm and mise installs) or the tap's formula (brew installs) at startup                                                                            |
 
 `daylight` is the light theme. `ascii-terminal` draws its borders out of `+`, `-` and `|` for fonts
 without box-drawing glyphs. Unknown keys and invalid values are ignored — each falls back to its
@@ -108,12 +114,13 @@ is logged to `tuigram.log` (see Files below) so a typo doesn't go unnoticed.
 
 ### Update checks
 
-At startup, tuigram asks registry.npmjs.org (npm installs) or the `leonid-shutov/homebrew-tap`
-formula on GitHub (brew installs) whether a newer release exists — never anything more, and never
-on a git checkout. When one is found, `alt+u upgrade to <version>` appears in its own row above the
-key hint bar (so it shows even with `hints: false`); `alt+u` runs the upgrade in place and exits so
-you can restart into it, `alt+shift+u` dismisses that version for the rest of the session (it
-resurfaces on the next restart, since nothing is written to disk). Set `"updateCheck": false` in
+At startup, tuigram asks registry.npmjs.org (npm and mise installs) or the
+`leonid-shutov/homebrew-tap` formula on GitHub (brew installs) whether a newer release exists —
+never anything more, and never on a git checkout. When one is found, `alt+u upgrade to <version>`
+appears in its own row above the key hint bar (so it shows even with `hints: false`); `alt+u` runs
+the upgrade in place and exits so you can restart into it, `alt+shift+u` dismisses that version
+for the rest of the session (it resurfaces on the next restart, since nothing is written to
+disk). Set `"updateCheck": false` in
 `config.json` to turn the check off entirely; `tuigram upgrade` runs it from the command line
 instead, without starting the TUI.
 

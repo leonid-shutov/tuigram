@@ -375,7 +375,7 @@ declare global {
 
   // ── (common)/Update ───────────────────────────────────────────────────────────────────
   /** 'git' and 'unknown' both mean "never check" — a checkout, or a shape check() doesn't know. */
-  type UpdateChannel = 'brew' | 'npm' | 'git' | 'unknown';
+  type UpdateChannel = 'brew' | 'npm' | 'mise' | 'git' | 'unknown';
   type UpdateRelease = { version: string; minNode: string | null };
   /** What `actions.upgrade()` runs, in order; the prefix to check for write access first (`null`
    * for brew, which owns its own permissions); and the channel-appropriate command to show the
@@ -403,6 +403,7 @@ declare global {
   namespace Source {
     const npm: () => Promise<UpdateRelease | null>;
     const brew: () => Promise<UpdateRelease | null>;
+    const mise: () => Promise<UpdateRelease | null>;
   }
 
   // ── the sandbox ───────────────────────────────────────────────────────────────────────
