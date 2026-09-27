@@ -5,6 +5,15 @@ async () => {
   const plan = Update.upgradePlan(release);
   if (plan === null) return;
 
+  // Empty steps (aur) means there is nothing here that can run itself -- only pacman's own
+  // helper should touch those files, so this is unconditional, unlike the writable() check
+  // below, and unprefixed with sudo since plan.manualCommand already names the whole command.
+  if (plan.steps.length === 0) {
+    console.log(`[update] manual only: ${plan.manualCommand}`);
+    ui.errors.report(`Run: ${plan.manualCommand}`, new Error('this install channel has no automatic upgrade'));
+    return;
+  }
+
   // npm install -g only *warns* on EBADENGINE without --engine-strict, so without this check the
   // upgrade would succeed and tuigram would then refuse to boot. Leave the bar showing.
   if (Update.blockedByNode(release)) {

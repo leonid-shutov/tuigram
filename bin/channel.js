@@ -1,7 +1,7 @@
 'use strict';
 
 const path = require('path');
-const { existsSync, accessSync, constants } = require('fs');
+const { existsSync, accessSync, readdirSync, constants } = require('fs');
 
 // brew's formula (rewrite_shebang + bin.install_symlink) roots tuigram at
 // <prefix>/Cellar/tuigram/<version>/libexec/lib/node_modules/tuigram; npm's global install roots
@@ -17,12 +17,27 @@ const NPM_SUFFIX = '/lib/node_modules/tuigram';
 // layer, which is mise's own linker's implementation detail and not worth pinning exactly.
 const MISE = /\/mise\/installs\/npm-tuigram\/.*\/node_modules\/tuigram$/;
 
-// git checked before Cellar/global/mise: an `npm link`ed checkout sits under lib/node_modules as
-// a symlink and would otherwise match npm.
-/** @param {string} rootDir @returns {'git' | 'brew' | 'npm' | 'mise' | 'unknown'} */
+// Arch's npm prefix is /usr, so the AUR package's `npm install --prefix /usr` lands at exactly
+// the same path a plain `sudo npm i -g` would use -- GLOBAL alone can't tell them apart. Only
+// pacman's own local database can, and that's what decides whether upgrading in place would
+// fight pacman for ownership of these files.
+const AUR_ROOT = '/usr/lib/node_modules/tuigram';
+const PACMAN_LOCAL_DB = '/var/lib/pacman/local';
+const isPacmanOwned = () => {
+  try {
+    return readdirSync(PACMAN_LOCAL_DB).some((entry) => /^tuigram-\d/u.test(entry));
+  } catch {
+    return false;
+  }
+};
+
+// git checked before Cellar/global/mise/aur: an `npm link`ed checkout sits under lib/node_modules
+// as a symlink and would otherwise match npm.
+/** @param {string} rootDir @returns {'git' | 'brew' | 'npm' | 'mise' | 'aur' | 'unknown'} */
 const detectUncached = (rootDir) => {
   if (existsSync(path.join(rootDir, '.git'))) return 'git';
   if (CELLAR.test(rootDir)) return 'brew';
+  if (rootDir === AUR_ROOT && isPacmanOwned()) return 'aur';
   if (GLOBAL.test(rootDir)) return 'npm';
   if (MISE.test(rootDir)) return 'mise';
   return 'unknown';
@@ -31,7 +46,7 @@ const detectUncached = (rootDir) => {
 /** @type {{ rootDir: string; kind: ReturnType<typeof detectUncached> } | null} */
 let cached = null;
 
-/** @param {string} rootDir @returns {'git' | 'brew' | 'npm' | 'mise' | 'unknown'} */
+/** @param {string} rootDir @returns {'git' | 'brew' | 'npm' | 'mise' | 'aur' | 'unknown'} */
 const detect = (rootDir) => {
   if (cached === null || cached.rootDir !== rootDir) cached = { rootDir, kind: detectUncached(rootDir) };
   return cached.kind;
@@ -48,6 +63,9 @@ const brewBinary = (rootDir) => {
 /** @param {string} rootDir @returns {string | null} */
 const npmPrefix = (rootDir) => (rootDir.endsWith(NPM_SUFFIX) ? rootDir.slice(0, -NPM_SUFFIX.length) : null);
 
+// An empty `steps` means there is nothing this process can run itself -- `manualCommand` is the
+// only thing to show, unconditionally (unlike brew's `null`, which relies on `writable()` always
+// being true for a null prefix). Right now only the aur plan is shaped this way.
 /** @typedef {{ prefix: string | null; manualCommand: string | null; steps: { cmd: string; args: string[] }[] }} Plan */
 
 // npm on a machine with several Node versions on PATH (mise, nvm, asdf) has several global
@@ -89,12 +107,22 @@ const misePlan = () => ({
   steps: [{ cmd: 'mise', args: ['upgrade', 'npm:tuigram'] }],
 });
 
+// pacman's package is the source of truth here, and only an AUR helper knows which one the user
+// prefers (yay, paru, ...) and has the sudo prompt for it -- there is nothing to run in-process.
+/** @returns {Plan} */
+const aurPlan = () => ({
+  prefix: null,
+  manualCommand: 'update tuigram with your AUR helper, e.g. yay -Syu tuigram',
+  steps: [],
+});
+
 /** @param {string} rootDir @param {string} version @returns {Plan | null} */
 const upgradePlan = (rootDir, version) => {
   const kind = detect(rootDir);
   if (kind === 'npm') return npmPlan(rootDir, version);
   if (kind === 'brew') return brewPlan(rootDir);
   if (kind === 'mise') return misePlan();
+  if (kind === 'aur') return aurPlan();
   return null;
 };
 

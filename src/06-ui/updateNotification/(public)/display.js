@@ -22,6 +22,13 @@ const UPDATE_GAP = '  ';
     return;
   }
 
+  // Empty steps (aur) means there is nothing `alt+u` could run at all -- only pacman's own
+  // helper should touch those files. Show the command unconditionally, not just when unwritable.
+  if (plan.steps.length === 0) {
+    show(`${release.version} available — ${plan.manualCommand}`);
+    return;
+  }
+
   // A sudo-installed npm prefix can't be upgraded from in here — show the command instead of a
   // key that would just fail with EACCES after the renderer is already torn down.
   if (!Channel.writable(plan)) {
