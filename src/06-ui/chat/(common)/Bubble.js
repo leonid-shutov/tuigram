@@ -22,11 +22,13 @@ const SCROLL_HINT = ' hold shift to scroll ';
     // A message longer than the chat section is unreadable and impossible to select sensibly, so
     // the bubble never outgrows the section: '100%' is the scroll viewport's inner height, which
     // yoga re-resolves on every layout pass — it tracks a terminal resize and the message prompt
-    // growing under it with nothing to recompute. `flexShrink: 0` here AND on the picture/label
-    // keeps them at their own rows instead of being squeezed onto shared lines (a label landing on
-    // the text's first line); the message text is the one child that DOES shrink — see insert.js —
-    // so it absorbs the cap and becomes the bubble's scroll window. `overflow` then clips whatever
-    // the text hasn't scrolled to, inside the bubble's own border.
+    // growing under it with nothing to recompute. `flexShrink: 0` here AND on the label keeps them
+    // at their own rows instead of being squeezed onto shared lines (a label landing on the text's
+    // first line). The picture and the text are the two children that DO shrink, in that order —
+    // see Picture.js and insert.js — so a tall photo gives up rows before the caption loses even
+    // one line, and the text only becomes the bubble's scroll window once the picture has hit its
+    // own floor. `overflow` then clips whatever the text hasn't scrolled to, inside the bubble's
+    // own border.
     maxHeight: '100%',
     flexShrink: 0,
     overflow: 'hidden',

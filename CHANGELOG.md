@@ -15,7 +15,8 @@
   in a chat. A long list no longer has to be walked with `j` and `k`.
 - `Shift+j` and `Shift+k` scroll a message that's too tall for the chat pane, line by line, instead of
   leaving the rest of it permanently hidden. Its border reads "hold shift to scroll" whenever there's
-  more to see.
+  more to see. A photo or video thumbnail shrinks first, down to a minimum, so a caption below a tall
+  one keeps its own lines instead of being squeezed to a single scrollable one on a small screen.
 - `Enter` on a message opens its media in the system viewer, and opens the message in the default browser
   when its text is nothing but an `http(s)` link.
 - `e` on one of your own text messages reopens it in the message box for editing; `Enter` pushes the new
