@@ -53,6 +53,8 @@ export type Message = {
   chatId: number;
   chatName: string;
   isGroup: boolean;
+  /** Set when the message was forwarded; `id` is null for a sender with forwards hidden. */
+  forwardedFrom: { id: number | null; displayName: string } | null;
 };
 
 export type PendingMessage = Omit<Message, 'chatId' | 'chatName'> & { chatId: undefined; chatName: undefined };

@@ -27,6 +27,8 @@
   live only while that pane has focus. Every binding is matched on the Latin key it sits on, so the
   whole keymap — not just `j` and `k` — works on a Cyrillic layout. `/` now reaches the chat search
   from the messages as well as the chat list.
+- A forwarded message shows `↪ Forwarded from <name>` above its content, with the original sender's
+  name colored the same way a group's sender names are.
 
 ### Changed
 

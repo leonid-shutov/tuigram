@@ -8,4 +8,5 @@
   chatId: undefined,
   chatName: undefined,
   isGroup: false,
+  forwardedFrom: null,
 });
