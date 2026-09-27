@@ -4,7 +4,15 @@ async (chatId) => {
   const pager = messenger.getHistory(chatId, 30, 20);
   store.chat.open(chatId, pager);
   ui.chat.clear();
-  ui.chat.setHeader(chatId, store.dialogs.find(chatId)?.name ?? '');
+  const dialog = store.dialogs.find(chatId);
+  ui.chat.setHeader(chatId, dialog?.name ?? '');
+  if (dialog?.isUser) {
+    void messenger.getPresence(chatId).then((presence) => {
+      if (store.chat.chatId !== chatId) return;
+      store.chat.setPresence(presence);
+      actions.repaintPresence();
+    });
+  }
 
   const [{ value }, readUpTo] = await Promise.all([pager.next(), messenger.getReadOutboxMaxId(chatId)]);
 

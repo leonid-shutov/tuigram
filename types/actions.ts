@@ -1,5 +1,5 @@
 import * as _opentui from '@opentui/core';
-import { Message } from './domain';
+import { Message, Presence } from './domain';
 
 declare global {
   type SectionName = 'dialogs' | 'chat' | 'messagePrompt' | 'picker' | 'filePicker';
@@ -39,11 +39,15 @@ declare global {
     /** Enter on the focused message: its medium, else its text when that is nothing but an http(s) link. */
     openSelected(): void;
     openChat(chatId: number): void;
+    /** A user's online/last-seen state changed. Ignored unless it's the counterpart of the open chat. */
+    presenceUpdate(chatId: number, presence: Presence): void;
     receiveMessage(message: Message): void;
     /** Push the dialog list to both of its views. Follows every store.dialogs mutation. */
     repaintDialogs(): void;
     /** Redraw the hint bar for whichever section is focused. Follows every `navigation.select`. */
     repaintHints(): void;
+    /** Redraw the open chat's presence suffix. Follows every change to store.chat.presence. */
+    repaintPresence(): void;
     /** Redraw the open chat's read receipt. Follows every change to its tail or watermark. */
     repaintReceipt(): void;
     send(text: string): Promise<void>;

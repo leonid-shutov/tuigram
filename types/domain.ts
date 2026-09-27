@@ -67,6 +67,14 @@ export type Dialog = {
   unreadCount: number;
   isUnread: boolean;
   isMuted: boolean | null;
+  /** Whether this dialog's peer is a real, non-self user — the only kind with a presence. */
+  isUser: boolean;
+};
+
+/** A person's online/last-seen state, straight off mtcute's `UserStatus`, minus the `bot` case. */
+export type Presence = {
+  status: 'online' | 'offline' | 'recently' | 'within_week' | 'within_month' | 'long_time_ago';
+  lastOnline: Date | null;
 };
 
 export type DialogOption = { chatId: number; name: string; description: string };

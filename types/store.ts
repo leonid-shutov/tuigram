@@ -1,4 +1,4 @@
-import { Dialog, Message, PendingMessage, LinkedDialogsHandle } from './domain';
+import { Dialog, Message, PendingMessage, LinkedDialogsHandle, Presence } from './domain';
 
 declare global {
   /** A message held in the open chat's window — ours before the server confirms it, or theirs. */
@@ -34,6 +34,8 @@ declare global {
     readUpTo: number;
     /** The open chat's history pager; the store holds it but never advances it. */
     pager: AsyncGenerator<Message[]> | null;
+    /** The open chat partner's online/last-seen state; `null` until fetched, or for non-users. */
+    presence: Presence | null;
     append(message: ChatMessage): void;
     confirm(tempId: number, message: Message): Confirmation;
     /** Take a message back out of the window — the store half of undoing a failed send. */
@@ -44,6 +46,7 @@ declare global {
     prepend(older: ChatMessage[]): void;
     /** Swap a held message for the server's copy of the same id; throws when it isn't held. */
     replace(message: Message): void;
+    setPresence(presence: Presence | null): void;
     /** Derived, recomputed on every read: `null` when the last message isn't ours. */
     readonly receipt: Receipt | null;
     setReadUpTo(maxReadId: number): void;

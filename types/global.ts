@@ -1,7 +1,13 @@
 import * as _opentui from '@opentui/core';
-import { TelegramClient, Message as MtCuteMessage, Dialog as MtCuteDialog } from '@mtcute/node';
+import {
+  TelegramClient,
+  Message as MtCuteMessage,
+  Dialog as MtCuteDialog,
+  User as MtCuteUser,
+  UserStatusUpdate,
+} from '@mtcute/node';
 import { Dispatcher } from '@mtcute/dispatcher';
-import { Message, Dialog, FileMedia as _FileMedia, ImageMedia, Media, PendingMessage } from './domain';
+import { Message, Dialog, FileMedia as _FileMedia, ImageMedia, Media, PendingMessage, Presence } from './domain';
 import { LinkedList as _LinkedList } from './collections';
 import { Paths, Source, ThemeDefinition, ResolvedTheme, ImageProtocol as _ImageProtocol, ConfigSchema } from './config';
 
@@ -115,6 +121,11 @@ declare global {
   namespace Dialog {
     function from(dialog: MtCuteDialog): Dialog;
     function fromMessage(message: Message, unreadCount?: number): Dialog;
+  }
+
+  namespace Presence {
+    /** `null` for the `'bot'` status — nothing to show for a bot. */
+    function from(entity: MtCuteUser | UserStatusUpdate): Presence | null;
   }
 
   namespace Emoji {
@@ -326,10 +337,13 @@ declare global {
     /** The bytes of the full medium behind a file id. Not cached — see the method's note. */
     downloadMedia(fileId: string): Promise<Uint8Array>;
     editMessage(chatId: number, messageId: number, text: string): Promise<Message>;
+    /** The chat partner's current online/last-seen state, or `null` for a bot or a peer that's gone. */
+    getPresence(chatId: number): Promise<Presence | null>;
     getReadOutboxMaxId(chatId: number): Promise<number>;
     iterDialogs(options?: { chunkSize?: number; archived?: boolean }): AsyncGenerator<Dialog>;
     onHistoryRead(handler: (event: HistoryReadEvent) => void): void;
     onNewMessage(handler: (message: Message) => void): void;
+    onPresenceUpdate(handler: (chatId: number, presence: Presence) => void): void;
     readHistory(chatId: number): Promise<unknown>;
     sendMessage(chatId: number, text: string): Promise<Message>;
     sendFile(chatId: number, filePath: string, params?: { caption?: string }): Promise<Message>;

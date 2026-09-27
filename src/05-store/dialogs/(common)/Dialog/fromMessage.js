@@ -8,4 +8,5 @@
   isPinned: false,
   isMuted: false,
   isUnread: true,
+  isUser: false,
 });

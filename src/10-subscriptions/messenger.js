@@ -5,3 +5,4 @@ messenger.dispatcher.onError((error) => {
 
 void messenger.onNewMessage(actions.receiveMessage);
 void messenger.onHistoryRead(actions.historyRead);
+void messenger.onPresenceUpdate(actions.presenceUpdate);

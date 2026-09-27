@@ -1,6 +1,6 @@
 import * as _opentui from '@opentui/core';
 import * as _events from 'node:events';
-import { Dialog, DialogOption as _DialogOption, ImageMedia } from './domain';
+import { Dialog, DialogOption as _DialogOption, ImageMedia, Presence } from './domain';
 
 declare global {
   type DialogOption = _DialogOption;
@@ -74,8 +74,12 @@ declare global {
   type ChatSection = Section & {
     /** The bordered pane: the header, then the messages. Carries both border titles. */
     component: _opentui.BoxRenderable;
-    /** The open chat's name, pinned under the top border and outside the scrolling content. */
-    header: _opentui.TextRenderable;
+    /** The name/presence row, pinned under the top border and outside the scrolling content. */
+    header: _opentui.BoxRenderable;
+    /** The open chat's name, left-aligned in the header. */
+    headerName: _opentui.TextRenderable;
+    /** The open chat partner's presence, right-aligned in the header; blank for non-users. */
+    headerPresence: _opentui.TextRenderable;
     /** The messages alone — everything the cursor and the scroll position are about. */
     scroll: _opentui.ScrollBoxRenderable;
     /** Cursor position among the ScrollBox's children; -1 when the chat is empty. */
@@ -102,6 +106,8 @@ declare global {
     selectLast(): void;
     /** Fill the header line with the open chat's glyph and name. */
     setHeader(chatId: number, name: string): void;
+    /** Update the header's presence suffix; `null` clears it. */
+    setPresence(presence: Presence | null): void;
     setReceipt(receipt: Receipt | null): void;
     /** Replace the bottom title; stays until the next explicit change. */
     setStatus(status: string): void;

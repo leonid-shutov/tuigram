@@ -15,4 +15,5 @@ const isMutedOf = ({ silent, muteUntil }) => {
   unreadCount,
   isUnread,
   isMuted: isMutedOf(raw.notifySettings),
+  isUser: peer.type === 'user' && !peer.isSelf,
 });

@@ -36,6 +36,7 @@ module.exports = [
         Explain: true,
         Message: true,
         Dialog: true,
+        Presence: true,
         AsyncIterator: true,
         isThenable: true,
         Fuzzy: true,
