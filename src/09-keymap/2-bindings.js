@@ -41,6 +41,8 @@ const group = (config) => Keymap.extras.createBindingLookup(config).bindings;
     'chat.open': 'return',
     'chat.copy': ['y', 'c'],
     'chat.edit': 'e',
+    'chat.scrollDown': ['shift+j', 'shift+down'],
+    'chat.scrollUp': ['shift+k', 'shift+up'],
   }),
 
   prompt: group({

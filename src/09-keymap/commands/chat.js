@@ -7,4 +7,6 @@
   'chat.open': { title: 'Open media or link', hint: 'Open', run: () => actions.openSelected() },
   'chat.copy': { title: 'Copy message text', hint: 'Copy', run: () => actions.copySelected() },
   'chat.edit': { title: 'Edit message', hint: 'Edit', run: () => actions.editSelected() },
+  'chat.scrollDown': { title: 'Scroll message down', hint: 'Scroll down', run: () => ui.chat.scrollMessage(1) },
+  'chat.scrollUp': { title: 'Scroll message up', hint: 'Scroll up', run: () => ui.chat.scrollMessage(-1) },
 });

@@ -13,6 +13,9 @@
   right after it lands on npm; prereleases stay off Homebrew.
 - `gg` and `G` jump to the ends: the first or last chat in the list, the oldest loaded or newest message
   in a chat. A long list no longer has to be walked with `j` and `k`.
+- `Shift+j` and `Shift+k` scroll a message that's too tall for the chat pane, line by line, instead of
+  leaving the rest of it permanently hidden. Its border reads "hold shift to scroll" whenever there's
+  more to see.
 - `Enter` on a message opens its media in the system viewer, and opens the message in the default browser
   when its text is nothing but an `http(s)` link.
 - `e` on one of your own text messages reopens it in the message box for editing; `Enter` pushes the new

@@ -86,6 +86,8 @@ declare global {
     /** Move the cursor, in messages. */
     down(count?: number): void;
     up(count?: number): void;
+    /** Scroll the selected message's text inside its bubble, in lines. No-op when the bubble fits. */
+    scrollMessage(lines: number): void;
     /** The oldest message loaded so far, which also asks for more history. */
     first(): void;
     append(message: ChatMessage): void;
@@ -125,6 +127,9 @@ declare global {
       insert(message: ChatMessage, index?: number): void;
       selectMessage(index: number): void;
       senderColor(key: string): string;
+      /** Derived, recomputed on every read: the TextRenderable under the cursor — the bubble's
+       * scroll window — or `null` when the selected message has no text or the chat is empty. */
+      readonly selectedText: _opentui.TextRenderable | null;
     };
 
   // ── 6-ui/messagePrompt ────────────────────────────────────────────────────────────────

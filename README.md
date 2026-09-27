@@ -49,6 +49,7 @@ export TUIGRAM_API_HASH=0123456789abcdef0123456789abcdef
 | `ctrl+p`                | fuzzy chat search — from anywhere, including mid-message  |
 | `/`                     | fuzzy chat search — from the chat list or the messages    |
 | `j` / `k` / `↑` / `↓`   | move through chats and messages                           |
+| `Shift+j` / `Shift+k` / `Shift+↑` / `Shift+↓` | scroll a message too tall for the pane (its border reads "hold shift to scroll") |
 | `gg` / `G`              | jump to the first / last chat, or oldest / newest message |
 | `Enter`                 | open the selected chat, open the selected message's media or link, or send the message |
 | `e`                     | edit the selected message, if it's yours                  |
