@@ -17,7 +17,8 @@ async () => {
   const seed = seeding ? config.schema.resolveDefaults() : null;
   if (seeding) Result.from(() => node.fs.writeFileSync(settingsSeed, `${JSON.stringify(seed, null, 2)}\n`));
 
-  const [cmd, ...args] = (process.env.VISUAL || process.env.EDITOR || 'vi').split(' ');
+  const fallbackEditor = process.platform === 'win32' ? 'notepad' : 'vi';
+  const [cmd, ...args] = (process.env.VISUAL || process.env.EDITOR || fallbackEditor).split(' ');
   screen.renderer.suspend();
   const ran = await Result.fromPromise(spawnEditor(cmd, [...args, target]));
 

@@ -5,11 +5,18 @@ const { existsSync, accessSync, readdirSync, constants } = require('fs');
 
 // brew's formula (rewrite_shebang + bin.install_symlink) roots tuigram at
 // <prefix>/Cellar/tuigram/<version>/libexec/lib/node_modules/tuigram; npm's global install roots
-// it at <prefix>/lib/node_modules/tuigram. Both regexes are POSIX path shapes, consistent with
-// the rest of the repo (XDG paths, OS.open, spawnDetached) — this app has no Windows story.
+// it at <prefix>/lib/node_modules/tuigram on POSIX (Windows npm installs skip the `lib/` layer
+// entirely -- see WIN_GLOBAL below). realpathSync gives back backslash paths on Windows, so
+// rootDir is normalized to forward slashes before any of these run; brew/pacman never exist on
+// Windows, so CELLAR/AUR_ROOT stay POSIX-only by construction.
 const CELLAR = /\/Cellar\/tuigram\/[^/]+\/libexec\/lib\/node_modules\/tuigram$/;
 const GLOBAL = /\/lib\/node_modules\/tuigram$/;
 const NPM_SUFFIX = '/lib/node_modules/tuigram';
+
+// Windows-only, gated on process.platform: without that gate, a POSIX checkout sitting under
+// some unrelated project's local node_modules/tuigram would also match this shape.
+const WIN_GLOBAL = /\/node_modules\/tuigram$/;
+const WIN_NPM_SUFFIX = '/node_modules/tuigram';
 
 // mise's npm backend doesn't go through lib/node_modules at all -- its bin is a shim that execs
 // Node directly on .../mise/installs/npm-tuigram/<version>/node_modules/.mise/tuigram@<version>/
@@ -36,10 +43,12 @@ const isPacmanOwned = () => {
 /** @param {string} rootDir @returns {'git' | 'brew' | 'npm' | 'mise' | 'aur' | 'unknown'} */
 const detectUncached = (rootDir) => {
   if (existsSync(path.join(rootDir, '.git'))) return 'git';
-  if (CELLAR.test(rootDir)) return 'brew';
+  const normalized = rootDir.replaceAll('\\', '/');
+  if (CELLAR.test(normalized)) return 'brew';
   if (rootDir === AUR_ROOT && isPacmanOwned()) return 'aur';
-  if (GLOBAL.test(rootDir)) return 'npm';
-  if (MISE.test(rootDir)) return 'mise';
+  if (GLOBAL.test(normalized)) return 'npm';
+  if (process.platform === 'win32' && WIN_GLOBAL.test(normalized)) return 'npm';
+  if (MISE.test(normalized)) return 'mise';
   return 'unknown';
 };
 
@@ -61,7 +70,13 @@ const brewBinary = (rootDir) => {
 };
 
 /** @param {string} rootDir @returns {string | null} */
-const npmPrefix = (rootDir) => (rootDir.endsWith(NPM_SUFFIX) ? rootDir.slice(0, -NPM_SUFFIX.length) : null);
+const npmPrefix = (rootDir) => {
+  const normalized = rootDir.replaceAll('\\', '/');
+  if (normalized.endsWith(NPM_SUFFIX)) return rootDir.slice(0, -NPM_SUFFIX.length);
+  const winMatch = process.platform === 'win32' && normalized.endsWith(WIN_NPM_SUFFIX);
+  if (winMatch) return rootDir.slice(0, -WIN_NPM_SUFFIX.length);
+  return null;
+};
 
 // An empty `steps` means there is nothing this process can run itself -- `manualCommand` is the
 // only thing to show, unconditionally (unlike brew's `null`, which relies on `writable()` always

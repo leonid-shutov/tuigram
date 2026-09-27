@@ -49,7 +49,10 @@ if (args.includes('--version') || args.includes('-v')) {
 // (the same recipe src/(common)/Update/upgradePlan.js drives in-app) instead of its own copy.
 if (args[0] === 'upgrade') {
   const rootDir = realpathSync(path.resolve(__dirname, '..'));
-  const run = (cmd, cmdArgs) => spawnSync(cmd, cmdArgs, { stdio: 'inherit' }).status ?? 1;
+  // npm's Windows CLI entry is a .cmd shim, not a native exe -- spawn can't launch that directly
+  // without a shell. mise/brew steps are native executables and unaffected by the extra shell.
+  const run = (cmd, cmdArgs) =>
+    spawnSync(cmd, cmdArgs, { stdio: 'inherit', shell: process.platform === 'win32' }).status ?? 1;
   const kind = channel.detect(rootDir);
 
   if (kind === 'git') {
