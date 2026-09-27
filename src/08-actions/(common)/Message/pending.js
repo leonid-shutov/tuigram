@@ -1,5 +1,5 @@
 /** @type {typeof Message.pending} */
-(text, media = null) => ({
+(text, media = []) => ({
   id: Random.id(),
   text,
   media,

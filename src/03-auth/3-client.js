@@ -12,6 +12,9 @@ const options = {
   apiHash,
   storage: config.paths.session,
   logLevel: 0,
+  // An album arrives as one update per picture; mtcute gathers them into one message group, at
+  // the cost of up to this many ms of delay on albums only. 250 is mtcute's recommended value.
+  updates: { messageGroupingInterval: 250 },
 };
 
 if (config.proxy !== undefined) {

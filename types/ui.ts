@@ -1,6 +1,6 @@
 import * as _opentui from '@opentui/core';
 import * as _events from 'node:events';
-import { Dialog, DialogOption as _DialogOption, ImageMedia, Presence } from './domain';
+import { Dialog, DialogOption as _DialogOption, ImageMedia, Media as _Media, Presence } from './domain';
 
 declare global {
   type DialogOption = _DialogOption;
@@ -62,14 +62,41 @@ declare global {
     };
 
   // ── 6-ui/chat ─────────────────────────────────────────────────────────────────────────
-  /** A message drawn as a bordered box, with its picture — when it has one — above the text. */
-  const Bubble: (
-    message: ChatMessage,
-    picture: _opentui.ImageRenderable | null,
-    text: _opentui.TextRenderable | null,
-  ) => _opentui.BoxRenderable;
-  /** A medium's thumbnail, or null when the sender omitted the dimensions to size it from. */
-  const Picture: (media: ImageMedia, protocol: _opentui.ImageRenderProtocol) => _opentui.ImageRenderable | null;
+  /** A message drawn as a bordered box: album counter, picture and media label above the text. */
+  namespace Bubble {
+    /** Build a message's bubble, painted. Its picture exists only when some medium is drawable. */
+    const create: (message: ChatMessage) => BubbleView;
+    /** Redraw every node from `view.message` and `view.mediumIndex`; the other Bubble functions call it. */
+    const paint: (view: BubbleView) => void;
+    /** Draw a new copy of the message: an edit, or a thumbnail that finished downloading. */
+    const update: (view: BubbleView, message: ChatMessage) => void;
+    /** Flip an album by `step` media, wrapping around. No-op with fewer than two. */
+    const flipAlbum: (view: BubbleView, step: number) => void;
+    /** A stable colour per sender, for names in group bubbles and forward lines. */
+    const senderColor: (key: string) => string;
+  }
+  /** An empty thumbnail slot of `size` cells; `Bubble.paint` sets the source of the part on screen. */
+  const Picture: (
+    protocol: _opentui.ImageRenderProtocol,
+    size: { cols: number; rows: number },
+  ) => _opentui.ImageRenderable;
+
+  /** One bubble, its nodes and what they draw. Only the Bubble functions write to it. */
+  type BubbleView = {
+    box: _opentui.BoxRenderable;
+    /** The album's `‹ 2/4 ›`; hidden for a lone message. */
+    counter: _opentui.TextRenderable;
+    /** Null when no part was drawable when the bubble was built, or images are off. */
+    picture: _opentui.ImageRenderable | null;
+    /** The current part's media label; hidden when its picture says it all. */
+    label: _opentui.TextRenderable;
+    /** The message's text; hidden when empty. */
+    text: _opentui.TextRenderable;
+    /** The message this bubble draws, thumbnails included. */
+    message: ChatMessage;
+    /** Index into `message.media` of the medium on screen. */
+    mediumIndex: number;
+  };
 
   type ChatSection = Section & {
     /** The bordered pane: the header, then the messages. Carries both border titles. */
@@ -101,7 +128,7 @@ declare global {
     /** Remove a message's bubble and unfile it, cursor included. */
     drop(messageId: number): void;
     prepend(older: ChatMessage[]): void;
-    /** Swap a held message's bubble text for its edited copy, in place. */
+    /** Redraw a message's bubble from a new copy of it — an edit or a downloaded thumbnail — in place. */
     replace(message: ChatMessage): void;
     selectLast(): void;
     /** Fill the header line with the open chat's glyph and name. */
@@ -113,28 +140,23 @@ declare global {
     setStatus(status: string): void;
     /** Show a transient word in the receipt's corner, then restore the receipt after `ms`. */
     flashStatus(status: string, ms?: number): void;
-    setThumb(messageId: number, bytes: Uint8Array): void;
+    /** Flip the selected album by `step` media, wrapping around. No-op with fewer than two. */
+    flipSelectedAlbum(step: number): void;
+    /** Derived, recomputed on every read: the medium on screen in the selected message. */
+    readonly selectedMedium: _Media | null;
   };
 
   type ChatSelf = ChatSection &
     Emitting & {
       /** True only while the chat is the selected section — gates whether the cursor takes opentui focus. */
       focused: boolean;
-      /** Message id to the bubble drawing it and the image/text inside — the section's only id-keyed view state. */
-      bubbles: Map<
-        number,
-        {
-          bubble: _opentui.BoxRenderable;
-          picture: _opentui.ImageRenderable | null;
-          text: _opentui.TextRenderable | null;
-        }
-      >;
+      /** Message id to the bubble drawing it — the section's only id-keyed view state. */
+      bubbles: Map<number, BubbleView>;
       /** Build a message's bubble, place it, and file it under its id. Omit `index` to append. */
       insert(message: ChatMessage, index?: number): void;
       selectMessage(index: number): void;
-      senderColor(key: string): string;
       /** Derived, recomputed on every read: the TextRenderable under the cursor — the bubble's
-       * scroll window — or `null` when the selected message has no text or the chat is empty. */
+       * scroll window — or `null` when the chat is empty. */
       readonly selectedText: _opentui.TextRenderable | null;
     };
 
@@ -213,10 +235,7 @@ declare global {
    * themselves against these instead.
    */
   type PickerOnImpl = (event: 'pick' | 'close', handler: (...args: any[]) => void) => void;
-  type FilePickerOnImpl = (
-    event: 'select' | 'cancel' | 'mode' | 'error',
-    handler: (...args: any[]) => void,
-  ) => void;
+  type FilePickerOnImpl = (event: 'select' | 'cancel' | 'mode' | 'error', handler: (...args: any[]) => void) => void;
   type MessagePromptOnImpl = (event: keyof MessagePromptEventMap, handler: (...args: any[]) => void) => void;
 
   // ── 6-ui/hints ────────────────────────────────────────────────────────────────────────

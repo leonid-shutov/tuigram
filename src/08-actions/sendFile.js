@@ -4,7 +4,9 @@ async (filePath) => {
   if (chatId === null) return;
 
   const fileName = node.path.basename(filePath);
-  const pending = Message.pending('', { type: 'document', fileId: '', fileName, mimeType: 'application/octet-stream' });
+  const pending = Message.pending('', [
+    { type: 'document', fileId: '', fileName, mimeType: 'application/octet-stream' },
+  ]);
   store.chat.append(pending);
   ui.chat.append(pending);
   ui.chat.selectLast();

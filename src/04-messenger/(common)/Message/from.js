@@ -2,7 +2,7 @@
 (message) => ({
   id: message.id,
   text: message.text,
-  media: Media.from(message),
+  media: [Media.from(message)].filter((medium) => medium !== null),
   pending: false,
   sender: {
     ...Obj.pick(message.sender, ['id', 'displayName']),

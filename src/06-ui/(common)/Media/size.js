@@ -5,7 +5,7 @@
 // so a thumbnail landing later never reflows the chat and never fights preserveScroll's
 // height-based anchoring. Terminal cells run about 2:1, so a square image wants half as many
 // rows as columns. This is the nominal size only: on a bubble capped by the viewport (see
-// Bubble.js), layout may draw the picture shorter than `rows`, down to Picture's own floor.
+// Bubble/create.js), layout may draw the picture shorter than `rows`, down to Picture's own floor.
 const COLS = 40;
 const MAX_ROWS = 20;
 const CELL_ASPECT = 2;

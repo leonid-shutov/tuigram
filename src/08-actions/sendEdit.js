@@ -10,9 +10,13 @@ async (messageId, text) => {
 
   const edited = await Result.fromPromise(messenger.editMessage(chatId, messageId, text));
   if (!edited.ok) return void ui.errors.report('Could not edit the message.', edited.error);
-  const message = edited.unwrap();
 
   if (store.chat.chatId !== chatId) return;
+  // Telegram answers with one album part, and a thumbnail may have landed while the edit was in
+  // flight: the media stay the ones held now.
+  const held = store.chat.messages.find(({ id }) => id === messageId);
+  if (held === undefined) return;
+  const message = { ...edited.unwrap(), media: held.media };
   store.chat.replace(message);
   ui.chat.replace(message);
 

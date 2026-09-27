@@ -115,7 +115,10 @@ declare global {
 
   namespace Message {
     const from: (message: MtCuteMessage) => Message;
-    const pending: (text: string, media?: Media | null) => PendingMessage;
+    /** One message from every Telegram message of an album: the captioned part's id and text,
+     * every part's medium. */
+    const fromAlbum: (parts: MtCuteMessage[]) => Message;
+    const pending: (text: string, media?: Media[]) => PendingMessage;
   }
 
   namespace Dialog {
@@ -140,6 +143,8 @@ declare global {
     function isImage(media: Media | null): media is ImageMedia;
     /** Bubble size in cells, or null when the medium has no drawable image. */
     const size: (media: ImageMedia) => { cols: number; rows: number } | null;
+    /** The size of the first drawable medium among `media`, shared by every picture in the album. */
+    const albumSize: (media: Media[]) => { cols: number; rows: number } | null;
     /** Whether the medium carries something downloadable. Contacts, polls and dice do not. */
     function isFile(media: Media): media is FileMedia;
     /** File extension to give a downloaded medium the sender left unnamed. */
@@ -336,6 +341,7 @@ declare global {
     downloadThumb(fileId: string): Promise<Uint8Array | null>;
     /** The bytes of the full medium behind a file id. Not cached — see the method's note. */
     downloadMedia(fileId: string): Promise<Uint8Array>;
+    /** Edit a message's text. For an album the answer carries only the edited part's medium. */
     editMessage(chatId: number, messageId: number, text: string): Promise<Message>;
     /** The chat partner's current online/last-seen state, or `null` for a bot or a peer that's gone. */
     getPresence(chatId: number): Promise<Presence | null>;

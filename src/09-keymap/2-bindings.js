@@ -38,6 +38,8 @@ const group = (config) => Keymap.extras.createBindingLookup(config).bindings;
     'chat.up': ['k', 'up'],
     'chat.first': 'gg',
     'chat.last': 'shift+g',
+    'chat.albumNext': ['l', 'right'],
+    'chat.albumPrevious': ['h', 'left'],
     'chat.open': 'return',
     'chat.copy': ['y', 'c'],
     'chat.edit': 'e',

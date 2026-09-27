@@ -7,6 +7,8 @@ export type MediaImage = {
   preview: Uint8Array | null;
   /** File id of the 320px thumbnail, for `messenger.downloadThumb`. */
   thumbId: string | null;
+  /** The 320px thumbnail itself, once `actions.loadThumb` has downloaded it. */
+  thumb: Uint8Array | null;
   /** Dimensions of the full medium, used to size the bubble before any pixels arrive. */
   width: number;
   height: number;
@@ -22,7 +24,7 @@ export type MediaFile = {
   mimeType: string;
 };
 
-/** The two variants that carry a drawable image, and so the only ones with `preview`/`thumbId`. */
+/** The two variants that carry a drawable image, and so the only ones with `preview`/`thumbId`/`thumb`. */
 export type ImageMedia =
   | ({ type: 'video'; duration: number; isAnimation: boolean; isRound: boolean } & MediaImage & MediaFile)
   | ({ type: 'photo' } & MediaImage & MediaFile);
@@ -45,9 +47,13 @@ export type Media =
 export type FileMedia = Extract<Media, MediaFile>;
 
 export type Message = {
+  /** Telegram sends an album as one message per picture; tuigram folds it into one message. Its
+   * id is the Telegram message carrying the text — the caption's part, or the first part when
+   * there is no caption — so an edit targets it directly. */
   id: number;
   text: string;
-  media: Media | null;
+  /** Everything attached: nothing, one medium, or every picture of an album in the order sent. */
+  media: Media[];
   pending: boolean;
   sender: { id: number | null; isSelf: boolean; displayName: string | null };
   chatId: number;

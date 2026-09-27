@@ -1,12 +1,23 @@
+// A thumbnail lands on its medium in the store, and the bubble redraws from the updated message —
+// so it outlives an album flip, and an edit carries it forward with the rest of the media.
 /** @type {Actions['loadThumb']} */
-({ id, media }) => {
-  if (!Media.isImage(media)) return;
-  const { thumbId } = media;
-  if (thumbId === null) return;
-  void messenger
-    .downloadThumb(thumbId)
-    .then((bytes) => {
-      if (bytes !== null) ui.chat.setThumb(id, bytes);
-    })
-    .catch((error) => Crash.soft(error));
+({ id, chatId, media }) => {
+  for (const [index, medium] of media.entries()) {
+    if (!Media.isImage(medium) || medium.thumbId === null) continue;
+    void messenger
+      .downloadThumb(medium.thumbId)
+      .then((bytes) => {
+        // The chat may have been switched, or the message dropped, while the download ran.
+        if (bytes === null || store.chat.chatId !== chatId) return;
+        const held = store.chat.messages.find((message) => message.id === id);
+        // A pending message (no chatId yet) is ours, still uploading: nothing of it is fetched.
+        if (held === undefined || held.chatId === undefined) return;
+        const part = held.media[index];
+        if (!Media.isImage(part)) return;
+        const message = { ...held, media: held.media.with(index, { ...part, thumb: bytes }) };
+        store.chat.replace(message);
+        ui.chat.replace(message);
+      })
+      .catch((error) => Crash.soft(error));
+  }
 };

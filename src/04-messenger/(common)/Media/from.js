@@ -11,6 +11,7 @@ const image = (media) => {
   return {
     preview: ArrayBuffer.isView(stripped) ? stripped : null,
     thumbId: media.getThumbnail(Thumbnail.THUMB_320x320_BOX)?.fileId ?? null,
+    thumb: null,
     width: media.width,
     height: media.height,
   };
