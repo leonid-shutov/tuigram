@@ -30,7 +30,7 @@ const fileInfo = (media) => ({
 /** @param {import('@mtcute/node').Photo} media */
 const photoInfo = (media) => ({ fileId: media.fileId, fileName: null, mimeType: 'image/jpeg' });
 
-/** @type {typeof Media.from} */
+/** @type {MessengerSelf['toMedia']} */
 (message) => {
   // .media rebuilds its object on every access, so read it once.
   const media = message.media;

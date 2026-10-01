@@ -9,7 +9,7 @@ const time = (s) => `${Math.floor(s / 60)}:${String(Math.floor(s % 60)).padStart
  */
 const withTime = (text, duration) => (duration > 0 ? `${text} ${time(duration)}` : text);
 
-/** @type {typeof Preview.ofMedia} */
+/** @type {typeof Media.label} */
 (media) => {
   switch (media.type) {
     case 'photo':

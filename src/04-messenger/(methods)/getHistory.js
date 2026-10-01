@@ -20,14 +20,14 @@
       for (const message of history) {
         const isOutsideAlbum = album.length > 0 && message.groupedIdUnique !== album[0].groupedIdUnique;
         if (isOutsideAlbum) {
-          page.push(Message.fromAlbum(album));
+          page.push(self.toAlbum(album));
           album = [];
         }
-        if (message.groupedIdUnique === null) page.push(Message.from(message));
+        if (message.groupedIdUnique === null) page.push(self.toMessage(message));
         else album.push(message);
       }
       // Nothing older is coming, so the album being collected is as whole as it gets.
-      if (isLastPage && album.length > 0) page.push(Message.fromAlbum(album));
+      if (isLastPage && album.length > 0) page.push(self.toAlbum(album));
 
       yield page;
 

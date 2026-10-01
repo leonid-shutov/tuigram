@@ -4,4 +4,4 @@ const { InputMedia } = npm['@mtcute/node'];
 (chatId, filePath, params) =>
   messenger.tg
     .sendMedia(chatId, InputMedia.auto(`file:${filePath}`, { fileName: node.path.basename(filePath), ...params }), {})
-    .then(Message.from);
+    .then(self.toMessage);

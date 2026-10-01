@@ -107,28 +107,14 @@ declare global {
     reload(): void;
   };
 
-  namespace Preview {
-    /** One-line summary of a message: its text, else a label for its media. */
-    const of: (message: Message | PendingMessage | null | undefined) => string;
-    const ofMedia: (media: Media) => string;
-  }
-
   namespace Message {
-    const from: (message: MtCuteMessage) => Message;
-    /** One message from every Telegram message of an album: the captioned part's id and text,
-     * every part's medium. */
-    const fromAlbum: (parts: MtCuteMessage[]) => Message;
     const pending: (text: string, media?: Media[]) => PendingMessage;
+    /** One-line summary of a message: its text, else a label for its media. */
+    const preview: (message: Message | PendingMessage | null | undefined) => string;
   }
 
   namespace Dialog {
-    function from(dialog: MtCuteDialog): Dialog;
     function fromMessage(message: Message, unreadCount?: number): Dialog;
-  }
-
-  namespace Presence {
-    /** `null` for the `'bot'` status — nothing to show for a bot. */
-    function from(entity: MtCuteUser | UserStatusUpdate): Presence | null;
   }
 
   namespace Emoji {
@@ -138,17 +124,14 @@ declare global {
   }
 
   namespace Media {
-    const from: (message: MtCuteMessage) => Media | null;
     /** Narrows to the variants carrying an image; the union's only tag test for it. */
     function isImage(media: Media | null): media is ImageMedia;
-    /** Bubble size in cells, or null when the medium has no drawable image. */
-    const size: (media: ImageMedia) => { cols: number; rows: number } | null;
-    /** The size of the first drawable medium among `media`, shared by every picture in the album. */
-    const albumSize: (media: Media[]) => { cols: number; rows: number } | null;
     /** Whether the medium carries something downloadable. Contacts, polls and dice do not. */
     function isFile(media: Media): media is FileMedia;
     /** File extension to give a downloaded medium the sender left unnamed. */
     const extension: (mimeType: string) => string;
+    /** One-line label for a medium with no caption of its own — 📷 Photo, 🎬 GIF, etc. */
+    const label: (media: Media) => string;
   }
 
   const LinkedDialogs: { from: (dialogs: Dialog[]) => import('./domain').LinkedDialogsHandle };
@@ -355,6 +338,19 @@ declare global {
     sendFile(chatId: number, filePath: string, params?: { caption?: string }): Promise<Message>;
   };
 
+  /** The mtcute→domain conversions, private to this section — everywhere else only ever sees the
+   * already-converted `Message`/`Dialog`/`Presence`/`Media` that `MessengerModule`'s methods return. */
+  type MessengerSelf = MessengerModule & {
+    toMessage(message: MtCuteMessage): Message;
+    /** One message from every Telegram message of an album: the captioned part's id and text,
+     * every part's medium. */
+    toAlbum(parts: MtCuteMessage[]): Message;
+    toMedia(message: MtCuteMessage): Media | null;
+    toDialog(dialog: MtCuteDialog): Dialog;
+    /** `null` for the `'bot'` status — nothing to show for a bot. */
+    toPresence(entity: MtCuteUser | UserStatusUpdate): Presence | null;
+  };
+
   // ── 9-keymap ──────────────────────────────────────────────────────────────────────────
   type KeymapEngine = InstanceType<typeof import('@opentui/keymap').Keymap<_opentui.Renderable, _opentui.KeyEvent>>;
   type KeymapBinding = import('@opentui/keymap').Binding<_opentui.Renderable, _opentui.KeyEvent>;
@@ -462,7 +458,7 @@ declare global {
       ConfigSelf &
       AuthSelf &
       AuthUiSelf &
-      MessengerModule &
+      MessengerSelf &
       DialogsStore &
       ChatStore &
       DialogsSelf &

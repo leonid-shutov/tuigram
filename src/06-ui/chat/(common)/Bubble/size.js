@@ -10,7 +10,7 @@ const COLS = 40;
 const MAX_ROWS = 20;
 const CELL_ASPECT = 2;
 
-/** @type {typeof Media.size} */
+/** @type {typeof Bubble.size} */
 (media) => {
   const { width, height } = media;
   // A medium whose dimensions the sender omitted has nothing to lay out from.

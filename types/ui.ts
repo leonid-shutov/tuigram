@@ -74,6 +74,10 @@ declare global {
     const flipAlbum: (view: BubbleView, step: number) => void;
     /** A stable colour per sender, for names in group bubbles and forward lines. */
     const senderColor: (key: string) => string;
+    /** Bubble size in cells, or null when the medium has no drawable image. */
+    const size: (media: ImageMedia) => { cols: number; rows: number } | null;
+    /** The size of the first drawable medium among `media`, shared by every picture in the album. */
+    const albumSize: (media: _Media[]) => { cols: number; rows: number } | null;
   }
   /** An empty thumbnail slot of `size` cells; `Bubble.paint` sets the source of the part on screen. */
   const Picture: (

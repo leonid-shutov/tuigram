@@ -1,8 +1,8 @@
-/** @type {typeof Message.from} */
+/** @type {MessengerSelf['toMessage']} */
 (message) => ({
   id: message.id,
   text: message.text,
-  media: [Media.from(message)].filter((medium) => medium !== null),
+  media: [self.toMedia(message)].filter((medium) => medium !== null),
   pending: false,
   sender: {
     ...Obj.pick(message.sender, ['id', 'displayName']),

@@ -6,7 +6,7 @@
   const gutter = config.dialogEmoji ? `${Emoji.fromHash(chatId)} ` : '';
   const nameWidth = width - gutter.length;
   const nameWithDot = `${gutter}${name.slice(0, nameWidth - 2).padEnd(nameWidth - 2)} ●`;
-  const preview = Preview.of(lastMessage);
+  const preview = Message.preview(lastMessage);
   const description = preview === '' ? '' : `${' '.repeat(gutter.length)}${preview.slice(0, nameWidth - 2)} `;
   return { chatId, name: shouldShowDot ? nameWithDot : `${gutter}${name}`, description };
 };

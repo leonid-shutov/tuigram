@@ -2,6 +2,6 @@
 // parts into one message group instead of dispatching each as a new message.
 /** @type {MessengerModule['onNewMessage']} */
 (handler) => {
-  messenger.dispatcher.onNewMessage((message) => handler(Message.from(message)));
-  messenger.dispatcher.onMessageGroup((group) => handler(Message.fromAlbum(group.messages)));
+  messenger.dispatcher.onNewMessage((message) => handler(self.toMessage(message)));
+  messenger.dispatcher.onMessageGroup((group) => handler(self.toAlbum(group.messages)));
 };

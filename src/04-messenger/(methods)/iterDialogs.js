@@ -10,6 +10,6 @@
     for await (const dialog of source) {
       if (seen.has(dialog.peer.id)) continue;
       seen.add(dialog.peer.id);
-      yield Dialog.from(dialog);
+      yield self.toDialog(dialog);
     }
   })();

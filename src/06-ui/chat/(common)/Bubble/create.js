@@ -8,7 +8,7 @@ const SCROLL_HINT = ' hold shift to scroll ';
 (message) => {
   const { sender, isGroup, forwardedFrom } = message;
   const protocol = config.imageProtocol;
-  const size = Media.albumSize(message.media);
+  const size = Bubble.albumSize(message.media);
   const muted = { fg: config.theme.muted, flexShrink: 0, visible: false };
   const counter = Text(muted);
   const picture = protocol === 'off' || size === null ? null : Picture(protocol, size);

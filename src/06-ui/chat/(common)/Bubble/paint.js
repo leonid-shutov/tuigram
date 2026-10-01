@@ -14,7 +14,7 @@ const put = (node, content) => {
     picture.visible = drawn;
     if (drawn) picture.source = medium.thumb ?? medium.preview ?? undefined;
   }
-  put(label, medium === null || (drawn && medium.type === 'photo') ? '' : Preview.ofMedia(medium));
+  put(label, medium === null || (drawn && medium.type === 'photo') ? '' : Media.label(medium));
   put(counter, media.length > 1 ? `‹ ${mediumIndex + 1}/${media.length} ›` : '');
   put(text, message.text);
 };

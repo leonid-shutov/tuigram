@@ -6,11 +6,11 @@ const isMutedOf = ({ silent, muteUntil }) => {
   return silent ?? null;
 };
 
-/** @type {typeof Dialog.from} */
+/** @type {MessengerSelf['toDialog']} */
 ({ peer, lastMessage, isPinned, unreadCount, isUnread, raw }) => ({
   chatId: peer.id,
   name: peer.displayName,
-  lastMessage: lastMessage && Message.from(lastMessage),
+  lastMessage: lastMessage && self.toMessage(lastMessage),
   isPinned,
   unreadCount,
   isUnread,
