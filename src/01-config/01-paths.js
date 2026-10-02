@@ -10,14 +10,18 @@ const xdg = (variable, ...fallback) =>
 const configDir = xdg('XDG_CONFIG_HOME', '.config');
 const dataDir = xdg('XDG_DATA_HOME', '.local', 'share');
 const stateDir = xdg('XDG_STATE_HOME', '.local', 'state');
+const cacheDir = xdg('XDG_CACHE_HOME', '.cache');
 
 // 0700: an api_hash and a live session live here.
 for (const dir of [configDir, dataDir]) node.fs.mkdirSync(dir, { recursive: true, mode: 0o700 });
+// 0755: cached thumbnails/media aren't secrets, unlike the two above.
+node.fs.mkdirSync(cacheDir, { recursive: true, mode: 0o755 });
 
 ({
   config: configDir,
   data: dataDir,
   state: stateDir,
+  cache: cacheDir,
   settings: node.path.join(configDir, 'config.json'),
   settingsBackup: node.path.join(configDir, 'config.json.bak'),
   settingsSeed: node.path.join(configDir, 'config.json.seed'),

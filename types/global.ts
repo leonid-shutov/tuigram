@@ -204,6 +204,12 @@ declare global {
     const run: (cmd: string, args: string[]) => Promise<number | null>;
   }
 
+  namespace Cache {
+    /** Writes `bytes` to `path` atomically (via a sibling `.part` file, renamed into place) and
+     * resolves to `path`. Rejects, cleaning up the `.part` file, if the write fails. */
+    const write: (path: string, bytes: Uint8Array) => Promise<string>;
+  }
+
   /** Shared by `OS/notify.js` and `OS/open.js`: fire a child off and stop caring about it. */
   const spawnDetached: (tag: string, cmd: string, args: string[]) => void;
 
@@ -338,8 +344,9 @@ declare global {
     tg: TelegramClient;
     dispatcher: Dispatcher;
     getHistory(chatId: number, firstPageSize: number, pageSize?: number): AsyncGenerator<Message[]>;
-    /** The 320px thumbnail behind a file id, or null if it could not be fetched. Cached. */
-    downloadThumb(fileId: string): Promise<Uint8Array | null>;
+    /** Path to the larger thumbnail (800px box, falling back to 320px) behind a file id, on
+     * disk, or null if it could not be fetched. Cached in memory and on disk. */
+    downloadThumb(fileId: string): Promise<string | null>;
     /** The bytes of the full medium behind a file id. Not cached — see the method's note. */
     downloadMedia(fileId: string): Promise<Uint8Array>;
     /** Edit a message's text. For an album the answer carries only the edited part's medium. */

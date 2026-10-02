@@ -5,10 +5,10 @@
 export type MediaImage = {
   /** Complete JPEG of the ~40px stripped thumbnail; mtcute inflates it for us. */
   preview: Uint8Array | null;
-  /** File id of the 320px thumbnail, for `messenger.downloadThumb`. */
+  /** File id of the larger background-downloaded thumbnail (800px box, falling back to 320px), for `messenger.downloadThumb`. */
   thumbId: string | null;
-  /** The 320px thumbnail itself, once `actions.loadThumb` has downloaded it. */
-  thumb: Uint8Array | null;
+  /** Path to the larger thumbnail on disk, once `actions.loadThumb` has downloaded it. */
+  thumb: string | null;
   /** Dimensions of the full medium, used to size the bubble before any pixels arrive. */
   width: number;
   height: number;

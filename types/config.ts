@@ -49,6 +49,7 @@ export type Paths = {
   config: string;
   data: string;
   state: string;
+  cache: string;
   settings: string;
   settingsBackup: string;
   settingsSeed: string;

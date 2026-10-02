@@ -4,13 +4,17 @@ const { Thumbnail } = npm['@mtcute/node'];
 
 // The stripped thumbnail ('i') is a ~40px JPEG carried inside the message; mtcute's Thumbnail
 // splices the standard JPEG tables back on, so these bytes are decodable with no download.
-// The 320px one ('m') costs a request, so keep only its file id and leave fetching to the UI.
+// The 800px box ('x') costs a request, so keep only its file id and leave fetching to the UI.
+// Not every photo has one, so fall back to the 320px box ('m'), then give up.
 /** @param {import('@mtcute/node').Photo | import('@mtcute/node').Video} media */
 const image = (media) => {
   const stripped = media.getThumbnail(Thumbnail.THUMB_STRIP)?.location;
   return {
     preview: ArrayBuffer.isView(stripped) ? stripped : null,
-    thumbId: media.getThumbnail(Thumbnail.THUMB_320x320_BOX)?.fileId ?? null,
+    thumbId:
+      media.getThumbnail(Thumbnail.THUMB_800x800_BOX)?.fileId ??
+      media.getThumbnail(Thumbnail.THUMB_320x320_BOX)?.fileId ??
+      null,
     thumb: null,
     width: media.width,
     height: media.height,

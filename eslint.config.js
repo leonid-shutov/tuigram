@@ -44,6 +44,7 @@ module.exports = [
         Version: true,
         Fetch: true,
         Engines: true,
+        Cache: true,
 
         // Update common
         Update: true,

@@ -6,15 +6,15 @@
     if (!Media.isImage(medium) || medium.thumbId === null) continue;
     void messenger
       .downloadThumb(medium.thumbId)
-      .then((bytes) => {
+      .then((path) => {
         // The chat may have been switched, or the message dropped, while the download ran.
-        if (bytes === null || store.chat.chatId !== chatId) return;
+        if (path === null || store.chat.chatId !== chatId) return;
         const held = store.chat.messages.find((message) => message.id === id);
         // A pending message (no chatId yet) is ours, still uploading: nothing of it is fetched.
         if (held === undefined || held.chatId === undefined) return;
         const part = held.media[index];
         if (!Media.isImage(part)) return;
-        const message = { ...held, media: held.media.with(index, { ...part, thumb: bytes }) };
+        const message = { ...held, media: held.media.with(index, { ...part, thumb: path }) };
         store.chat.replace(message);
         ui.chat.replace(message);
       })
