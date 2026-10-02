@@ -25,6 +25,11 @@ jobs:
           tag="${GITHUB_REF_NAME#v}"
           pkg="$(node -p "require('./package.json').version")"
           [ "$tag" = "$pkg" ] || { echo "tag $tag != package.json $pkg"; exit 1; }
+      - name: Write the shipped app key
+        run: node scripts/write-app-key.js
+        env:
+          TUIGRAM_SHIPPED_API_ID: ${{ secrets.TUIGRAM_SHIPPED_API_ID }}
+          TUIGRAM_SHIPPED_API_HASH: ${{ secrets.TUIGRAM_SHIPPED_API_HASH }}
       - run: npm publish
 
   bump-formula:

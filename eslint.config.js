@@ -39,6 +39,7 @@ module.exports = [
         isThenable: true,
         Fuzzy: true,
         Hash: true,
+        Base64: true,
         Link: true,
         Version: true,
         Fetch: true,
@@ -107,8 +108,8 @@ module.exports = [
     },
   },
   {
-    // The entry point is plain CommonJS; prettier formats the repo at 120.
-    files: ['bin/**/*.js'],
+    // bin/ and scripts/ are plain CommonJS; prettier formats the repo at 120.
+    files: ['bin/**/*.js', 'scripts/**/*.js'],
     rules: {
       'max-len': ['error', { code: 120, ignoreUrls: true }],
     },

@@ -21,6 +21,7 @@ import * as _child_process from 'node:child_process';
 import * as _url from 'node:url';
 import * as _assert from 'node:assert';
 import * as _https from 'node:https';
+import * as _buffer from 'node:buffer';
 import { Result as _Result } from 'metautil';
 
 declare global {
@@ -60,8 +61,13 @@ declare global {
   };
 
   const config: ConfigSelf & {
-    /** Credentials are strings everywhere they are read from (env, JSON file, the form). */
-    credentials: { apiId: string | undefined; apiHash: string | undefined };
+    /** Credentials are strings everywhere they are read from (env, JSON file, the form, the shipped
+     * key). `source` says which one won; `undefined` means none did and the form is next. */
+    credentials: {
+      apiId: string | undefined;
+      apiHash: string | undefined;
+      source: 'env' | 'file' | 'shipped' | undefined;
+    };
     cli: { command: string | null; args: string[] };
     paths: Paths;
     /** The parsed, migrated, validated `config.json` snapshot theme/dialogEmoji/hints/imageProtocol/
@@ -252,6 +258,11 @@ declare global {
     const fnv1a: (key: string) => number;
   }
 
+  namespace Base64 {
+    /** Joins base64 pieces and decodes them (trimmed); '' for anything that is not a list. */
+    const decodeFragments: (fragments: unknown) => string;
+  }
+
   namespace Link {
     /** The URL when the text is nothing but one http(s) link, else null. */
     const only: (text: string) => string | null;
@@ -291,7 +302,8 @@ declare global {
   type AuthUiModule = {
     current: AuthScreenHandle | null;
     dispose(): void;
-    credentialsForm(): Promise<{ apiId: string; apiHash: string }>;
+    /** `invalid`: the key the user gave did not work, and the form says so above the instructions. */
+    credentialsForm(options: { invalid: boolean }): Promise<{ apiId: string; apiHash: string }>;
     passwordPrompt(invalid: boolean): Promise<string>;
     phoneCode(options: { invalid: boolean; sentVia: string | null }): Promise<string>;
     phoneNumber(): Promise<string>;
@@ -309,6 +321,12 @@ declare global {
     ui: AuthUiModule;
     fail(error: unknown): void;
     secureSession(): void;
+    /** A client on `config.credentials` as they stand at call time. */
+    createClient(): TelegramClient;
+    /** Writes credentials.json (0600) and makes it the active key. */
+    saveCredentials(credentials: { apiId: string; apiHash: string }): void;
+    /** Whether Telegram did not accept the app key itself. */
+    keyRejected(error: unknown): boolean;
   };
 
   type AuthSelf = Omit<AuthModule, 'ui'> & { ui: AuthUiSelf };
@@ -493,5 +511,6 @@ declare global {
     const url: typeof _url;
     const assert: typeof _assert;
     const https: typeof _https;
+    const buffer: typeof _buffer;
   }
 }

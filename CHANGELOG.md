@@ -32,6 +32,10 @@
 
 ### Changed
 
+- Installed copies sign in without any setup: no more registering an app at my.telegram.org first,
+  the first launch goes straight to the QR code. If tuigram ever needs an API key of your own, it asks
+  during sign-in — with step-by-step instructions — and carries on, no restart. A key you already set (in
+  `credentials.json` or `TUIGRAM_API_ID` / `TUIGRAM_API_HASH`) keeps taking priority.
 - A notification from a group now names the sender: the body reads `Timur: pushed the v9 tag` instead of
   just the message. Private chats and channels are unchanged — there the chat name is already the sender.
 

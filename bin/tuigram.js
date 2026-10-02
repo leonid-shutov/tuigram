@@ -28,8 +28,8 @@ if (args.includes('--help') || args.includes('-h')) {
       '  -h, --help       show this message',
       '  -v, --version    show the version',
       '',
-      'On first run tuigram asks for your own Telegram api_id / api_hash',
-      '(https://my.telegram.org) and stores them under $XDG_CONFIG_HOME/tuigram.',
+      'tuigram ships a Telegram app key. To use your own (https://my.telegram.org),',
+      'set TUIGRAM_API_ID / TUIGRAM_API_HASH or $XDG_CONFIG_HOME/tuigram/credentials.json.',
       '',
     ].join('\n'),
   );

@@ -32,19 +32,20 @@ Then run `tuigram`.
 
 ## First run
 
-tuigram does not ship Telegram API credentials — every user registers their own pair, and it
-is tied to your account, so never share it:
+The first launch shows a QR code: open Telegram on your phone → **Settings → Devices → Link
+Desktop Device** and scan it. Press `p` on that screen to sign in with a phone number and code
+instead. Later launches reuse the stored session and go straight to your chats.
+
+### Using your own API key
 
 1. open <https://my.telegram.org> and log in
-2. choose **API development tools** and create an app
-3. copy the `api_id` and `api_hash`
+2. choose **API development tools**
+3. fill in any app title and short name, e.g. `tuigram`
+4. copy the `api_id` and `api_hash` shown on the next page
 
-The first launch asks for them in the TUI and saves them. Then it shows a QR code: open
-Telegram on your phone → **Settings → Devices → Link Desktop Device** and scan it. Press `p`
-on that screen to sign in with a phone number and code instead. Later launches reuse the
-stored session and go straight to your chats.
-
-You can skip the prompt by setting the credentials in the environment instead:
+tuigram saves them to `credentials.json` (see [Files](#files)) and uses them from then on. Your
+own key always takes priority, so you can also supply it upfront — in that file, or in the
+environment:
 
 ```sh
 export TUIGRAM_API_ID=1234567
@@ -53,23 +54,23 @@ export TUIGRAM_API_HASH=0123456789abcdef0123456789abcdef
 
 ## Keys
 
-| Key                     | Does                                                      |
-| ----------------------- | --------------------------------------------------------- |
-| `Tab` / `Shift+Tab`     | cycle chat list → messages → message box                  |
-| `1` `2` `3`             | jump straight to a pane (not while typing)                |
-| `alt+1` `alt+2` `alt+3` | the same, and works while typing                          |
-| `ctrl+p`                | fuzzy chat search — from anywhere, including mid-message  |
-| `/`                     | fuzzy chat search — from the chat list or the messages    |
-| `j` / `k` / `↑` / `↓`   | move through chats and messages                           |
-| `Shift+j` / `Shift+k` / `Shift+↑` / `Shift+↓` | scroll a message too tall for the pane (its border reads "hold shift to scroll") |
-| `gg` / `G`              | jump to the first / last chat, or oldest / newest message |
-| `Enter`                 | open the selected chat, open the selected message's media or link, or send the message |
-| `e`                     | edit the selected message, if it's yours                  |
-| `Shift+Enter`           | start a new line in the message box                       |
-| `Esc`                   | leave the message box; cancel an edit; close the search   |
-| `alt+u`                 | upgrade tuigram, once a newer release is available        |
-| `alt+shift+u`           | dismiss that update notice                                |
-| `ctrl+c`                | quit                                                      |
+| Key                                           | Does                                                                                   |
+| --------------------------------------------- | -------------------------------------------------------------------------------------- |
+| `Tab` / `Shift+Tab`                           | cycle chat list → messages → message box                                               |
+| `1` `2` `3`                                   | jump straight to a pane (not while typing)                                             |
+| `alt+1` `alt+2` `alt+3`                       | the same, and works while typing                                                       |
+| `ctrl+p`                                      | fuzzy chat search — from anywhere, including mid-message                               |
+| `/`                                           | fuzzy chat search — from the chat list or the messages                                 |
+| `j` / `k` / `↑` / `↓`                         | move through chats and messages                                                        |
+| `Shift+j` / `Shift+k` / `Shift+↑` / `Shift+↓` | scroll a message too tall for the pane (its border reads "hold shift to scroll")       |
+| `gg` / `G`                                    | jump to the first / last chat, or oldest / newest message                              |
+| `Enter`                                       | open the selected chat, open the selected message's media or link, or send the message |
+| `e`                                           | edit the selected message, if it's yours                                               |
+| `Shift+Enter`                                 | start a new line in the message box                                                    |
+| `Esc`                                         | leave the message box; cancel an edit; close the search                                |
+| `alt+u`                                       | upgrade tuigram, once a newer release is available                                     |
+| `alt+shift+u`                                 | dismiss that update notice                                                             |
+| `ctrl+c`                                      | quit                                                                                   |
 
 Every binding is matched on the Latin key it sits on, so the whole keymap keeps working on a
 Cyrillic layout without switching back — `о` moves down, `пп` is `gg`, and so on.
@@ -110,8 +111,8 @@ Optional, and read from `$XDG_CONFIG_HOME/tuigram/config.json`:
 | `imageProtocol` | `auto`      | `auto`, `kitty`, `sixel`, `blocks`, `off`                                                                                                                                                      |
 | `dialogEmoji`   | `true`      | `true`, `false` — turn off on fonts with no emoji coverage                                                                                                                                     |
 | `hints`         | `true`      | `true`, `false` — set to false to hide the key hint bar and reclaim its row                                                                                                                    |
-| `proxy`         | _(none)_    | a proxy URL — `socks5://`, `socks4://`, `http://`/`https://`, or a `t.me/proxy?...` MTProxy link; connects directly if unset                                                                  |
-| `updateCheck`   | `true`      | `true`, `false` — check registry.npmjs.org (npm/mise), the tap's formula (brew), or the AUR at startup                                                                                        |
+| `proxy`         | _(none)_    | a proxy URL — `socks5://`, `socks4://`, `http://`/`https://`, or a `t.me/proxy?...` MTProxy link; connects directly if unset                                                                   |
+| `updateCheck`   | `true`      | `true`, `false` — check registry.npmjs.org (npm/mise), the tap's formula (brew), or the AUR at startup                                                                                         |
 
 `daylight` is the light theme. `ascii-terminal` draws its borders out of `+`, `-` and `|` for fonts
 without box-drawing glyphs. Unknown keys and invalid values are ignored — each falls back to its

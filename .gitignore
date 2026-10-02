@@ -5,3 +5,5 @@ client.session*
 opentui-examples
 /cache/
 playground/
+# the shipped app key: written by scripts/write-app-key.js at publish time, never committed
+/app-key.json

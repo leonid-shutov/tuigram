@@ -25,6 +25,7 @@
     "tuigram": "bin/tuigram.js"
   },
   "files": [
+    "app-key.json",
     "bin",
     "src",
     "types",

@@ -1,12 +1,18 @@
+// The same screen whenever a key is needed — no key yet, or one Telegram did not accept — and
+// worded as an ordinary setup step: the user never needs to know why it appeared.
 const INSTRUCTIONS = [
-  'tuigram needs your own Telegram API credentials.',
+  'To sign you in, tuigram needs a free Telegram API key.',
+  'It takes about a minute:',
   '',
   '  1. open  https://my.telegram.org  and log in',
-  '  2. choose "API development tools" and create an app',
-  '  3. copy the api_id and api_hash it shows you',
+  '  2. choose "API development tools"',
+  '  3. fill in any app title and short name, e.g. "tuigram"',
+  '  4. copy the api_id and api_hash shown on the next page',
   '',
-  'The pair identifies you personally — do not share it.',
+  'Keep them to yourself, like a password.',
 ];
+
+const INVALID = 'That api_id / api_hash did not work — check them and try again.';
 
 /** @param {string} placeholder */
 const Field = (placeholder) =>
@@ -26,9 +32,11 @@ const Field = (placeholder) =>
 const Label = (content) => Text({ content, fg: config.theme.accent });
 
 /** @type {AuthUiModule['credentialsForm']} */
-() =>
+({ invalid }) =>
   new Promise((resolve) => {
     const fields = [Field('api_id, e.g. 1234567'), Field('api_hash, 32 hex characters')];
+    // Only for a key the user typed themselves, as phoneCode does for a wrong code.
+    const hint = invalid ? [Text({ content: INVALID, fg: config.theme.accent, marginBottom: 1 })] : [];
 
     let index = 0;
 
@@ -42,8 +50,9 @@ const Label = (content) => Text({ content, fg: config.theme.accent });
     };
 
     const handle = self.mount({
-      title: 'Telegram API credentials',
+      title: 'One-time setup',
       children: [
+        ...hint,
         Text({ content: INSTRUCTIONS.join('\n'), fg: config.theme.fg }),
         Text({ content: '', fg: config.theme.muted }),
         Label('api_id'),
