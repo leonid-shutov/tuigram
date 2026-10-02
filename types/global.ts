@@ -260,6 +260,12 @@ declare global {
     const score: (query: string, text: string) => number | null;
   }
 
+  namespace Layout {
+    /** The text as if typed on the other keyboard layout (QWERTY ⇄ ЙЦУКЕН), char by char;
+     * characters on neither layout pass through. Lowercased. */
+    const swap: (text: string) => string;
+  }
+
   namespace Hash {
     const fnv1a: (key: string) => number;
   }

@@ -38,6 +38,7 @@ module.exports = [
         AsyncIterator: true,
         isThenable: true,
         Fuzzy: true,
+        Layout: true,
         Hash: true,
         Base64: true,
         Link: true,
