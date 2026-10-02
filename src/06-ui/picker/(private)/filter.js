@@ -21,7 +21,7 @@
 
   self.list.options = matches.map(({ dialog }) => ({
     name: dialog.name,
-    description: Message.preview(dialog.lastMessage),
+    description: Message.preview(dialog.lastMessage) ?? '',
     value: dialog,
   }));
 

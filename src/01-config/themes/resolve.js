@@ -7,6 +7,7 @@
     borderChars: theme.borderChars,
     selfBorder: theme.selfBorder ?? theme.palette.border,
     selected: theme.selected ?? theme.palette.accent,
+    unread: theme.unread ?? theme.palette.accent,
     senderColors: theme.senderColors ?? config.schema.defaults.senderColors,
   };
 };

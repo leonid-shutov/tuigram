@@ -1,6 +1,6 @@
 const MAX_WIDTH = 140;
 const MAX_HEIGHT = 48;
-const DIALOGS_RATIO = 0.26;
+const DIALOGS_RATIO = 0.34;
 const DIALOGS_MIN = 22;
 const DIALOGS_MAX = 34;
 

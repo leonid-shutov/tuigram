@@ -34,6 +34,8 @@ export type ThemeDefinition = {
   borderChars?: BorderChars;
   selfBorder?: string;
   selected?: string;
+  /** The unread count in the dialogs list; defaults to `accent`. */
+  unread?: string;
   senderColors?: string[];
 };
 
@@ -42,6 +44,7 @@ export type ResolvedTheme = ThemePalette & {
   borderChars?: BorderChars;
   selfBorder: string;
   selected: string;
+  unread: string;
   senderColors: string[];
 };
 

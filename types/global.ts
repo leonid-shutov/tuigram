@@ -48,6 +48,7 @@ declare global {
     '@mtcute/dispatcher': typeof import('@mtcute/dispatcher');
     '@opentui/keymap': typeof import('@opentui/keymap');
     metautil: typeof import('metautil');
+    'string-width': typeof import('string-width');
   };
   /** The subset of `config` that reload.js recomputes in place; see [[config.reload]] below. */
   type ConfigSelf = {
@@ -115,12 +116,14 @@ declare global {
 
   namespace Message {
     const pending: (text: string, media?: Media[]) => PendingMessage;
-    /** One-line summary of a message: its text, else a label for its media. */
-    const preview: (message: Message | PendingMessage | null | undefined) => string;
+    /** One-line summary of a message: its text, else a label for its media; null for none. */
+    const preview: (message: Message | PendingMessage | null | undefined) => string | null;
   }
 
   namespace Dialog {
     function fromMessage(message: Message, unreadCount?: number): Dialog;
+    /** An unread count as shown in the dialogs list, capped at '999+'; null for none. */
+    function unreadBadge(count: number): string | null;
   }
 
   namespace Emoji {
@@ -273,6 +276,15 @@ declare global {
   namespace Base64 {
     /** Joins base64 pieces and decodes them (trimmed); '' for anything that is not a list. */
     const decodeFragments: (fragments: unknown) => string;
+  }
+
+  /** Text measured in terminal cells rather than UTF-16 units: CJK and most emoji take two. */
+  namespace Cells {
+    const width: (text: string) => number;
+    /** The longest prefix of `text` that fits in `width` cells. */
+    const clip: (text: string, width: number) => string;
+    /** `text` clipped, then padded with spaces to exactly `width` cells. */
+    const fit: (text: string, width: number) => string;
   }
 
   namespace Link {

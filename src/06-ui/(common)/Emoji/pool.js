@@ -1,7 +1,7 @@
 // Glyphs for the dialogs-list gutter. Every entry must be a SINGLE codepoint in U+1F300–1F5FF
-// or U+1F680–1F6C5 with Emoji_Presentation=Yes — that makes each exactly 2 cells wide AND 2
-// UTF-16 units, which is what Option.from's `.slice()` / `.padEnd()` arithmetic assumes. ZWJ
-// sequences, skin-tone modifiers and VS16 glyphs all break it. Append, never reorder:
+// or U+1F680–1F6C5 with Emoji_Presentation=Yes — that makes each exactly 2 cells wide in every
+// terminal, so all names start in one column. ZWJ sequences, skin-tone modifiers and VS16 glyphs
+// render at different widths across terminals, which breaks it. Append, never reorder:
 // Hash.fnv1a indexes into this array, so reordering reshuffles everyone's glyph.
 [
   '🐌',

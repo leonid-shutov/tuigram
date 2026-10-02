@@ -19,7 +19,19 @@ declare global {
   const Box: ComponentFactory<_opentui.BoxOptions, _opentui.BoxRenderable>;
   const Image: ComponentFactory<_opentui.ImageRenderableOptions, _opentui.ImageRenderable>;
   const Input: ComponentFactory<_opentui.InputRenderableOptions, _opentui.InputRenderable>;
-  const Select: ComponentFactory<_opentui.SelectRenderableOptions, _opentui.SelectRenderable>;
+  const Select: ComponentFactory<_opentui.SelectRenderableOptions, _opentui.SelectRenderable> & {
+    /**
+     * Repaint each visible row's trailing `marker` substring in its own colour, bypassing
+     * SelectRenderable's one-colour-per-row text draw. Reaches into undocumented opentui
+     * internals; throws immediately if the installed opentui no longer has what it needs,
+     * rather than drawing silently wrong. Call once, right after creating the Select — it stays
+     * live across every later `options` write and scroll.
+     */
+    paintMarker<TOption extends _opentui.SelectOption & { marker: string }>(
+      component: _opentui.SelectRenderable,
+      colorFor: (option: TOption) => _opentui.RGBA,
+    ): void;
+  };
   const Text: ComponentFactory<_opentui.TextOptions, _opentui.TextRenderable>;
   const Textarea: ComponentFactory<_opentui.TextareaOptions, _opentui.TextareaRenderable>;
   const ScrollBox: ComponentFactory<_opentui.ScrollBoxOptions, _opentui.ScrollBoxRenderable> & {

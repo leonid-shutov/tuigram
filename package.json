@@ -50,7 +50,8 @@
     "@opentui/core": "^0.5.7",
     "@opentui/keymap": "^0.5.11",
     "@opentui/qrcode": "^0.5.7",
-    "metautil": "6.0.0-alpha.0"
+    "metautil": "6.0.0-alpha.0",
+    "string-width": "^7.2.0"
   },
   "devDependencies": {
     "@types/node": "^26.4.0",

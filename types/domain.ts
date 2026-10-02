@@ -83,7 +83,11 @@ export type Presence = {
   lastOnline: Date | null;
 };
 
-export type DialogOption = { chatId: number; name: string; description: string };
+/**
+ * `marker` is the unread count or dot that ends `name`, repainted in its own colour ('' when none):
+ * the theme's `unread`, or `muted` (the preview line's colour) for a muted chat.
+ */
+export type DialogOption = { chatId: number; name: string; description: string; marker: string; isMuted: boolean };
 
 export type LinkedDialogsHandle = {
   find(chatId: number): Dialog | null;

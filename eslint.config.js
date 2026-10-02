@@ -42,6 +42,7 @@ module.exports = [
         Hash: true,
         Base64: true,
         Link: true,
+        Cells: true,
         Version: true,
         Fetch: true,
         Engines: true,
