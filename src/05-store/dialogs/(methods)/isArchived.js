@@ -1,2 +1,2 @@
 /** @type {DialogsStore['isArchived']} */
-(chatId) => self.archived.has(chatId);
+(chatId) => self.archive.find(chatId) !== null;

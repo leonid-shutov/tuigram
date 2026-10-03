@@ -5,7 +5,7 @@
   'app.focusDialogs': { title: 'Chat list', run: () => navigation.select('dialogs') },
   'app.focusChat': { title: 'Messages', run: () => navigation.select('chat') },
   'app.focusPrompt': { title: 'Message box', run: () => navigation.select('messagePrompt') },
-  'app.search': { title: 'Jump to chat', hint: 'Search', run: () => navigation.select('picker') },
+  'app.search': { title: 'Jump to chat', hint: 'Search', run: () => actions.searchChats() },
   'app.openConfig': { title: 'Edit config', run: () => actions.openConfig() },
   'app.errors': { title: 'Errors', run: () => ui.errors.advance() },
   'app.upgrade': { title: 'Upgrade tuigram', run: () => actions.upgrade() },

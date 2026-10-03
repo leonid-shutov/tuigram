@@ -6,8 +6,16 @@ const isMutedOf = ({ silent, muteUntil }) => {
   return silent ?? null;
 };
 
+// The same split mtcute's Dialog.filterFolder draws, so a folder's rules classify chats alike.
+/** @param {import('@mtcute/node').Peer} peer @returns {Dialog['kind']} */
+const kindOf = (peer) => {
+  if (peer.type === 'user') return peer.isBot ? 'bot' : 'user';
+  if (peer.isGroup) return 'group';
+  return peer.chatType === 'channel' ? 'channel' : 'other';
+};
+
 /** @type {MessengerSelf['toDialog']} */
-({ peer, lastMessage, isPinned, unreadCount, isUnread, raw }) => ({
+({ peer, lastMessage, isPinned, isArchived, unreadCount, isUnread, raw }) => ({
   chatId: peer.id,
   name: peer.displayName,
   lastMessage: lastMessage && self.toMessage(lastMessage),
@@ -16,4 +24,8 @@ const isMutedOf = ({ silent, muteUntil }) => {
   isUnread,
   isMuted: isMutedOf(raw.notifySettings),
   isUser: peer.type === 'user' && !peer.isSelf,
+  kind: kindOf(peer),
+  isContact: peer.type === 'user' && peer.isContact,
+  isArchived,
+  activity: lastMessage?.date.getTime() ?? 0,
 });

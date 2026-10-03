@@ -15,5 +15,5 @@ Box({
   customBorderChars: config.theme.borderChars,
   borderColor: config.theme.accent,
   titleColor: config.theme.accent,
-  children: [self.input, self.list],
+  children: [self.search],
 });

@@ -1,9 +1,49 @@
 import * as _opentui from '@opentui/core';
 import type { QRCodeOptions, QRCodeRenderable } from '@opentui/qrcode';
+import type { ResolvedTheme } from './config';
 import type { FilePickerRenderableOptions, FilePickerRenderable } from '@leonid-shutov/opentui-file-picker';
 
 type ChildNode = _opentui.BaseRenderable | null | undefined | false | '';
 type Children = ChildNode | Children[];
+
+type _SearchListItem = { name: string; description: string; value: unknown };
+
+type _SearchListOptions = _opentui.BoxOptions & {
+  theme: ResolvedTheme;
+  placeholder?: string;
+};
+
+/** A query line over the items that match it, ranked by `Fuzzy.rank`. */
+interface _SearchListRenderable extends _opentui.BoxRenderable {
+  input: _opentui.TextareaRenderable;
+  list: _opentui.SelectRenderable;
+  items: SearchListItem[];
+  /** The query the list was last ranked for; `null` until the next `filter`. */
+  query: string | null;
+  placeholder: string;
+  /** The highlighted item's value, `null` when nothing matches. */
+  readonly selected: unknown;
+  /** Swap what is searched, re-filtering against the current query. */
+  setItems(items: SearchListItem[]): void;
+  /** Clear the query and show every item. */
+  reset(): void;
+  filter(): void;
+  moveUp(): void;
+  moveDown(): void;
+}
+
+type _PanelOptions = _opentui.BoxOptions & {
+  /** The parts each edge's title is built from, in drawing order; the last gives way first. */
+  titleParts?: { top?: string[]; bottom?: string[] };
+};
+
+/** A box whose edge titles are built from named parts. */
+interface _PanelRenderable extends _opentui.BoxRenderable {
+  /** Set a declared title part's text. */
+  setTitlePart(name: string, text: string): void;
+  /** Empty a declared title part; the title closes up around it. */
+  clearTitlePart(name: string): void;
+}
 
 type ComponentFactory<TOptions extends object, TInstance extends _opentui.BaseRenderable> = (
   props?: { children?: Children } & Partial<Omit<TOptions, 'children'>>,
@@ -11,6 +51,11 @@ type ComponentFactory<TOptions extends object, TInstance extends _opentui.BaseRe
 
 declare global {
   type OpenTUIChildren = Children;
+  type SearchListItem = _SearchListItem;
+  type SearchListOptions = _SearchListOptions;
+  type SearchListRenderable = _SearchListRenderable;
+  type PanelOptions = _PanelOptions;
+  type PanelRenderable = _PanelRenderable;
 
   function Component<TOptions extends object, TInstance extends _opentui.BaseRenderable>(
     RenderableClass: new (ctx: _opentui.RenderContext, options: TOptions) => TInstance,
@@ -41,6 +86,8 @@ declare global {
     reveal(component: _opentui.ScrollBoxRenderable, child: _opentui.Renderable): void;
   };
   const QRCode: ComponentFactory<QRCodeOptions, QRCodeRenderable>;
+  const SearchList: ComponentFactory<_SearchListOptions, _SearchListRenderable>;
+  const Panel: ComponentFactory<_PanelOptions, _PanelRenderable>;
   const FilePicker: ComponentFactory<FilePickerRenderableOptions, FilePickerRenderable>;
 }
 

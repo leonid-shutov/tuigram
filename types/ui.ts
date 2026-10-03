@@ -38,7 +38,7 @@ declare global {
   // ── 6-ui/dialogs ──────────────────────────────────────────────────────────────────────
   type DialogsSection = Section & {
     list: _opentui.SelectRenderable;
-    component: _opentui.BoxRenderable;
+    component: PanelRenderable;
     on(event: 'open', handler: (chatId: number) => void): void;
     /** Move the cursor, in rows. */
     moveDown(count?: number): void;
@@ -49,6 +49,10 @@ declare global {
     open(): void;
     render(dialogs: Dialog[]): void;
     select(chatId: number): void;
+    /** Name the shown folder in the top border. */
+    setFolder(title: string): void;
+    /** Leave the top border without a folder name. */
+    clearFolder(): void;
     /** The list stopped loading: stop the spinner, and say why when it failed. */
     settle(error?: unknown): void;
   };
@@ -188,22 +192,30 @@ declare global {
 
   // ── 6-ui/picker ───────────────────────────────────────────────────────────────────────
   type PickerSection = Section & {
-    input: _opentui.TextareaRenderable;
-    list: _opentui.SelectRenderable;
+    search: SearchListRenderable;
     component: _opentui.BoxRenderable;
-    /** Snapshot of the dialog list to filter against — a projection, never a source of truth. */
-    items: Dialog[];
-    on(event: 'pick', handler: (chatId: number) => void): void;
+    /** Serve `request` on the next focus: its title, placeholder and items, and what a pick means. */
+    open<T>(request: PickerRequest<T>): void;
     on(event: 'close', handler: () => void): void;
     moveDown(): void;
     moveUp(): void;
-    /** Report the highlighted result as the `pick` intent. */
+    /** Hand the highlighted result to the open request. */
     pick(): void;
     close(): void;
-    setItems(dialogs: Dialog[]): void;
   };
 
-  type PickerSelf = PickerSection & Emitting & { filter(query: string): void };
+  /** One row to search: `value` is what `onPick` receives. */
+  type PickerItem<T = unknown> = { name: string; description: string; value: T };
+
+  /** One use of the picker. The items are a snapshot taken at open — never a source of truth. */
+  type PickerRequest<T = unknown> = {
+    title: string;
+    placeholder: string;
+    items: PickerItem<T>[];
+    onPick(value: T): void;
+  };
+
+  type PickerSelf = PickerSection & Emitting & { request: PickerRequest<any> | null };
 
   // ── 6-ui/filePicker ───────────────────────────────────────────────────────────────────
   type FilePickerSection = Section & {
@@ -238,7 +250,6 @@ declare global {
    * an overloaded member cannot be indexed with `['on']`, so the implementations type
    * themselves against these instead.
    */
-  type PickerOnImpl = (event: 'pick' | 'close', handler: (...args: any[]) => void) => void;
   type FilePickerOnImpl = (event: 'select' | 'cancel' | 'mode' | 'error', handler: (...args: any[]) => void) => void;
   type MessagePromptOnImpl = (event: keyof MessagePromptEventMap, handler: (...args: any[]) => void) => void;
 

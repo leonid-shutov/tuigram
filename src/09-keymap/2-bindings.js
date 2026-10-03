@@ -33,6 +33,13 @@ const group = (config) => Keymap.extras.createBindingLookup(config).bindings;
     'dialogs.open': 'return',
   }),
 
+  // Their own layer, enabled only once the account has folders to move between.
+  folders: group({
+    'folders.next': ['l', 'right'],
+    'folders.previous': ['h', 'left'],
+    'folders.pick': 'f',
+  }),
+
   chat: group({
     'chat.down': ['j', 'down'],
     'chat.up': ['k', 'up'],

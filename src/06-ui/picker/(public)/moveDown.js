@@ -1,2 +1,2 @@
 /** @type {PickerSection['moveDown']} */
-() => self.list.moveDown();
+() => self.search.moveDown();

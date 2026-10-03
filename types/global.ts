@@ -5,9 +5,19 @@ import {
   Dialog as MtCuteDialog,
   User as MtCuteUser,
   UserStatusUpdate,
+  tl,
 } from '@mtcute/node';
 import { Dispatcher } from '@mtcute/dispatcher';
-import { Message, Dialog, FileMedia as _FileMedia, ImageMedia, Media, PendingMessage, Presence } from './domain';
+import {
+  Message,
+  Dialog as _Dialog,
+  Folder as _Folder,
+  FileMedia as _FileMedia,
+  ImageMedia,
+  Media,
+  PendingMessage,
+  Presence,
+} from './domain';
 import { LinkedList as _LinkedList } from './collections';
 import { Paths, Source, ThemeDefinition, ResolvedTheme, ImageProtocol as _ImageProtocol, ConfigSchema } from './config';
 
@@ -124,6 +134,20 @@ declare global {
     function fromMessage(message: Message, unreadCount?: number): Dialog;
     /** An unread count as shown in the dialogs list, capped at '999+'; null for none. */
     function unreadBadge(count: number): string | null;
+    /** The first dialog per chat id, in their order. */
+    function unique(dialogs: Iterable<Dialog>): Dialog[];
+  }
+
+  type Dialog = _Dialog;
+  type Folder = _Folder;
+
+  namespace Folder {
+    /** "All chats": every chat outside the archive, in the main list's own order. */
+    const ALL: _Folder;
+    /** Whether a folder's rules and peer lists take in this dialog; Telegram's own filter, ported. */
+    const includes: (folder: _Folder, dialog: Dialog) => boolean;
+    /** The folder's chats: its pinned ones in their order, then the rest, latest activity first. */
+    const view: (folder: _Folder, dialogs: Iterable<Dialog>) => Dialog[];
   }
 
   namespace Emoji {
@@ -261,6 +285,8 @@ declare global {
 
   namespace Fuzzy {
     const score: (query: string, text: string) => number | null;
+    /** The items whose `name` matches, best first; a wrong-layout query ranks a notch lower. */
+    const rank: <T extends { name: string }>(query: string, items: T[]) => T[];
   }
 
   namespace Layout {
@@ -373,6 +399,10 @@ declare global {
     getPresence(chatId: number): Promise<Presence | null>;
     getReadOutboxMaxId(chatId: number): Promise<number>;
     iterDialogs(options?: { chunkSize?: number; archived?: boolean }): AsyncGenerator<Dialog>;
+    /** The account's folders in the user's order, "All chats" among them. */
+    getFolders(): Promise<Folder[]>;
+    /** Telegram changed a folder, added or removed one, or reordered them. */
+    onFoldersChange(handler: () => void): void;
     onHistoryRead(handler: (event: HistoryReadEvent) => void): void;
     onNewMessage(handler: (message: Message) => void): void;
     onPresenceUpdate(handler: (chatId: number, presence: Presence) => void): void;
@@ -390,6 +420,7 @@ declare global {
     toAlbum(parts: MtCuteMessage[]): Message;
     toMedia(message: MtCuteMessage): Media | null;
     toDialog(dialog: MtCuteDialog): Dialog;
+    toFolder(filter: tl.TypeDialogFilter): Folder;
     /** `null` for the `'bot'` status — nothing to show for a bot. */
     toPresence(entity: MtCuteUser | UserStatusUpdate): Presence | null;
   };
@@ -422,10 +453,18 @@ declare global {
 
   type KeymapModule = {
     engine: KeymapEngine;
-    commands: Record<'app' | 'dialogs' | 'chat' | 'prompt' | 'picker' | 'filePicker', Commands>;
+    commands: Record<'app' | 'dialogs' | 'folders' | 'chat' | 'prompt' | 'picker' | 'filePicker', Commands>;
     /** Bindings by the layer that installs them; the seam a `keys` block in config.json would feed. */
     bindings: Record<
-      'global' | 'panes' | 'dialogs' | 'chat' | 'prompt' | 'picker' | 'filePickerBrowse' | 'filePickerFilter',
+      | 'global'
+      | 'panes'
+      | 'dialogs'
+      | 'folders'
+      | 'chat'
+      | 'prompt'
+      | 'picker'
+      | 'filePickerBrowse'
+      | 'filePickerFilter',
       readonly KeymapBinding[]
     >;
     /** What the hint bar should advertise with `section` focused, in the order to read them. */
@@ -494,7 +533,8 @@ declare global {
     | 'moveUp'
     | 'moveDown'
     | 'render'
-    | 'replace';
+    | 'replace'
+    | 'setAll';
 
   type AppSelf = Omit<
     ScreenModule &
@@ -503,6 +543,7 @@ declare global {
       AuthUiSelf &
       MessengerSelf &
       DialogsStore &
+      FoldersStore &
       ChatStore &
       DialogsSelf &
       ChatSelf &

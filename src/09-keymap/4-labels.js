@@ -16,5 +16,4 @@ for (const [section, command] of PANES) {
   ui[section].setLabel(` ${Keymap.extras.formatKeySequence(binding.sequence)} `);
 }
 
-ui.picker.setLabel(` ${keymap.commands.app['app.search'].title} `);
 ui.filePicker.setLabel(` ${keymap.commands.prompt['prompt.attach'].title} `);

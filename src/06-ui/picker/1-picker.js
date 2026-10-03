@@ -1,2 +1,2 @@
-// A projection to filter against, never a source of truth — the store owns every dialog.
-({ items: [] });
+// The request being served: the caller's snapshot of what to search, and what a pick means.
+({ request: null });

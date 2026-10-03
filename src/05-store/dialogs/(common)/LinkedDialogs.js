@@ -3,10 +3,8 @@
   from: (dialogs) => {
     // find/findNode/bump are all keyed by chatId, so a repeated id would make them ambiguous.
     // iterDialogs already dedupes the stream; this keeps the invariant true for any caller of
-    // the public setDialogs. First occurrence wins — `new Map(entries)` would keep the last.
-    const byChatId = new Map();
-    for (const dialog of dialogs) if (!byChatId.has(dialog.chatId)) byChatId.set(dialog.chatId, dialog);
-    const unique = [...byChatId.values()];
+    // the public setDialogs. First occurrence wins.
+    const unique = Dialog.unique(dialogs);
 
     const pinned = LinkedList.from(unique.filter((d) => d.isPinned));
     const unpinned = LinkedList.from(unique.filter((d) => !d.isPinned));

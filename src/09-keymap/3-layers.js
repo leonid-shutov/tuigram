@@ -18,6 +18,14 @@ void keymap.engine.registerLayer({
 });
 
 void keymap.engine.registerLayer({
+  target: ui.dialogs.component,
+  targetMode: 'focus-within',
+  enabled: () => store.folders.hasCustom,
+  commands: named(commands.folders),
+  bindings: bindings.folders,
+});
+
+void keymap.engine.registerLayer({
   target: ui.chat.component,
   targetMode: 'focus-within',
   commands: named(commands.chat),

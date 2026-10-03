@@ -1,5 +1,5 @@
 ({
   list: LinkedDialogs.from([]),
-  /** Chat ids in the archive folder; filled once the archived dialogs finish loading. */
-  archived: new Set(),
+  /** The archive folder's dialogs; empty until they finish loading. */
+  archive: LinkedDialogs.from([]),
 });

@@ -7,9 +7,12 @@ declare global {
   // ── 7-navigation ──────────────────────────────────────────────────────────────────────
   type Navigation = {
     selected: SectionName;
+    /** The section focused before `selected`, where `back` returns to. */
+    previous: SectionName;
     cycle: SectionName[];
     cycleSection(step: 1 | -1): void;
     select(section: SectionName): void;
+    back(): void;
   };
 
   // ── 8-actions ─────────────────────────────────────────────────────────────────────────
@@ -20,8 +23,10 @@ declare global {
     loadDialogsPreview(): void;
     /** Fetch the full dialog list and repaint; settles the dialogs UI's loading state either way. */
     loadDialogs(): void;
-    /** Fetch archived dialogs into the store. */
+    /** Fetch archived dialogs into the store and repaint; folders may show them. */
     loadArchivedDialogs(): void;
+    /** Fetch the account's folders into the store and repaint. Reruns whenever Telegram changes them. */
+    loadFolders(): void;
     loadOlder(): Promise<void>;
     /** Fetch a message's 320px thumbnail, if it has one, and push it into its bubble. */
     loadThumb(message: ChatMessage): void;
@@ -39,10 +44,19 @@ declare global {
     /** Enter on the focused message: its medium, else its text when that is nothing but an http(s) link. */
     openSelected(): void;
     openChat(chatId: number): void;
+    /** Open the picker over every chat; a pick opens that chat. */
+    searchChats(): void;
+    /** Open the picker over the folders; a pick shows that folder. */
+    pickFolder(): void;
+    /** Show a folder in the dialogs pane and focus it. */
+    openFolder(folderId: number): void;
+    /** Show the folder `step` away from the current one, wrapping around. */
+    stepFolder(step: number): void;
     /** A user's online/last-seen state changed. Ignored unless it's the counterpart of the open chat. */
     presenceUpdate(chatId: number, presence: Presence): void;
     receiveMessage(message: Message): void;
-    /** Push the dialog list to both of its views. Follows every store.dialogs mutation. */
+    /** Push the current folder's dialogs to the pane. Follows every store.dialogs and store.folders
+     * mutation. */
     repaintDialogs(): void;
     /** Redraw the hint bar for whichever section is focused. Follows every `navigation.select`. */
     repaintHints(): void;

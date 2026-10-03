@@ -9,5 +9,6 @@ actions.repaintHints();
 actions.loadDialogsPreview();
 actions.loadDialogs();
 actions.loadArchivedDialogs();
+actions.loadFolders();
 
 actions.checkUpdate();

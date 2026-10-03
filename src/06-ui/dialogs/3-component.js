@@ -1,4 +1,4 @@
-Box({
+Panel({
   id: 'dialogsWrapper',
   focusable: true,
   width: screen.size.dialogsWidth,
@@ -9,5 +9,6 @@ Box({
   focusedBorderColor: config.theme.accent,
   titleColor: config.theme.muted,
   bottomTitleAlignment: 'right',
+  titleParts: { top: ['label', 'folder'], bottom: ['status'] },
   children: [self.list],
 });

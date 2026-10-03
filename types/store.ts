@@ -1,4 +1,4 @@
-import { Dialog, Message, PendingMessage, LinkedDialogsHandle, Presence } from './domain';
+import { Dialog, Folder, Message, PendingMessage, LinkedDialogsHandle, Presence } from './domain';
 
 declare global {
   /** A message held in the open chat's window — ours before the server confirms it, or theirs. */
@@ -13,9 +13,13 @@ declare global {
 
   type DialogsStore = {
     list: LinkedDialogsHandle;
-    /** Chat ids in the archive folder; filled once the archived dialogs finish loading. */
-    archived: Set<number>;
+    /** The archive folder's dialogs; empty until they finish loading. */
+    archive: LinkedDialogsHandle;
+    /** The main list, archive aside: what "All chats" shows and the chat search reads. */
     all(): Dialog[];
+    /** What a folder shows; "All chats" is `all()`, any other folder also reaches the archive. */
+    inFolder(folder: Folder): Dialog[];
+    /** A dialog in either the main list or the archive. */
     find(chatId: number): Dialog | null;
     isArchived(chatId: number): boolean;
     isMuted(chatId: number): boolean;
@@ -24,6 +28,19 @@ declare global {
     setAll(dialogs: Dialog[]): void;
     setArchived(dialogs: Dialog[]): void;
     setUnread(chatId: number, unreadCount: number): void;
+  };
+
+  type FoldersStore = {
+    /** In the user's order, "All chats" among them; just that one until the folders load. */
+    list: Folder[];
+    selectedId: number;
+    setAll(folders: Folder[]): void;
+    readonly selected: Folder;
+    select(folderId: number): void;
+    /** Select the folder `step` away from the current one, wrapping around. */
+    step(step: number): void;
+    /** Whether the account has folders of its own beyond "All chats". */
+    readonly hasCustom: boolean;
   };
 
   type ChatStore = {
@@ -61,6 +78,7 @@ declare global {
 
   namespace store {
     const dialogs: DialogsStore;
+    const folders: FoldersStore;
     const chat: ChatStore;
     const window: WindowStore;
     const update: UpdateStore;

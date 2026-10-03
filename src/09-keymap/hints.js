@@ -1,10 +1,10 @@
-/** @type {Record<SectionName, 'dialogs' | 'chat' | 'prompt' | 'picker' | 'filePicker'>} */
+/** @type {Record<SectionName, (keyof KeymapModule['commands'])[]>} */
 const GROUPS = {
-  dialogs: 'dialogs',
-  chat: 'chat',
-  messagePrompt: 'prompt',
-  picker: 'picker',
-  filePicker: 'filePicker',
+  dialogs: ['dialogs', 'folders'],
+  chat: ['chat'],
+  messagePrompt: ['prompt'],
+  picker: ['picker'],
+  filePicker: ['filePicker'],
 };
 
 // Appended to every section's own keys. The 1/2/3 pane jumps stay off the bar — 4-labels.js
@@ -23,7 +23,8 @@ const FORMAT = {
 (section) => {
   /** @type {[string, Command][]} */
   const tail = TAIL.map((name) => [name, keymap.commands.app[name]]);
-  const entries = [...Object.entries(keymap.commands[GROUPS[section]]), ...tail];
+  const own = GROUPS[section].flatMap((group) => Object.entries(keymap.commands[group]));
+  const entries = [...own, ...tail];
 
   // `active` — not the `registered` of 4-labels.js — is what makes the bar focus-aware: it drops
   // what the focused layers cannot reach, and orders the rest by precedence. So the panes advertise

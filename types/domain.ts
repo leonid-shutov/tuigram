@@ -75,6 +75,39 @@ export type Dialog = {
   isMuted: boolean | null;
   /** Whether this dialog's peer is a real, non-self user — the only kind with a presence. */
   isUser: boolean;
+  /** What the peer is, as a folder's rules classify it. */
+  kind: 'user' | 'bot' | 'group' | 'channel' | 'other';
+  /** Whether the peer is a user in our contacts. */
+  isContact: boolean;
+  /** Whether the chat sits in the archive folder. */
+  isArchived: boolean;
+  /** When the last message arrived, in ms; what a folder's unpinned chats are ordered by. */
+  activity: number;
+};
+
+/**
+ * A Telegram chat folder: a filter over the dialogs, never a list of its own. `id` 0 is
+ * "All chats", which the dialogs store renders as its own list rather than through the filter.
+ */
+export type Folder = {
+  id: number;
+  title: string;
+  /** A shared folder: exactly its pinned and included chats, with no rules. */
+  isChatlist: boolean;
+  /** Chats pinned inside this folder, in their order; they head the folder above the rest. */
+  pinnedIds: number[];
+  includeIds: Set<number>;
+  excludeIds: Set<number>;
+  rules: {
+    contacts: boolean;
+    nonContacts: boolean;
+    groups: boolean;
+    broadcasts: boolean;
+    bots: boolean;
+    excludeMuted: boolean;
+    excludeRead: boolean;
+    excludeArchived: boolean;
+  };
 };
 
 /** A person's online/last-seen state, straight off mtcute's `UserStatus`, minus the `bot` case. */

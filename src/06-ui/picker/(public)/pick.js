@@ -1,5 +1,5 @@
 /** @type {PickerSection['pick']} */
 () => {
-  const selected = self.list.getSelectedOption();
-  if (selected !== null) self.emit('pick', selected.value.chatId);
+  const value = self.search.selected;
+  if (value !== null) self.request?.onPick(value);
 };
