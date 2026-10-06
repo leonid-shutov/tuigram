@@ -10,6 +10,7 @@ const group = (config) => Keymap.extras.createBindingLookup(config).bindings;
     'app.focusChat': 'alt+2',
     'app.focusPrompt': 'alt+3',
     'app.search': 'ctrl+p',
+    'app.help': 'alt+k',
     'app.openConfig': 'ctrl+e',
     'app.restart': 'ctrl+r',
     'app.errors': 'alt+e',
@@ -24,6 +25,7 @@ const group = (config) => Keymap.extras.createBindingLookup(config).bindings;
     'app.focusChat': '2',
     'app.focusPrompt': '3',
     'app.search': '/',
+    'app.help': '?',
   }),
 
   dialogs: group({

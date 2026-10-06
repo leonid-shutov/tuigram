@@ -24,6 +24,7 @@ module.exports = [
         __rootDir: true,
 
         // common
+        Arr: true,
         Obj: true,
         Rate: true,
         Random: true,

@@ -46,6 +46,8 @@ declare global {
     openChat(chatId: number): void;
     /** Open the picker over every chat; a pick opens that chat. */
     searchChats(): void;
+    /** Open the picker on what the focused pane can do; picking a command runs it there. */
+    showKeys(): void;
     /** Open the picker over the folders; a pick shows that folder. */
     pickFolder(): void;
     /** Show a folder in the dialogs pane and focus it. */

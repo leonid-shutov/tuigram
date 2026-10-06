@@ -215,6 +215,11 @@ declare global {
     function take<T>(source: AsyncIterable<T> | Iterable<T>, n: number): AsyncGenerator<T>;
   }
 
+  namespace Arr {
+    /** Each item under its own `key`, for lookups by that field; a later duplicate wins. */
+    function keyBy<T, K extends keyof T>(key: K, items: readonly T[]): Map<T[K], T>;
+  }
+
   namespace Obj {
     function pick<T extends object, K extends keyof T>(obj: T, keys: K[]): Pick<T, K>;
   }
@@ -440,17 +445,31 @@ declare global {
   /** One named app action. `title` is what the pane labels and, later, a help screen read. */
   type Command = {
     title: string;
-    /** A bar-sized label for the hint bar, which falls back to `title` when a command omits it. */
-    hint?: string;
+    /** A bar-sized label for the hint bar, which falls back to `title` when a command omits it;
+     * `false` keeps the command off the bar, though the keys palette still lists it. */
+    hint?: string | false;
+    /** Which hints the bar keeps when it runs out of width; `'normal'` when omitted. */
+    priority?: HintPriority;
+    /** Folds the named partner into this command's hint, e.g. `j/k Move`. Set on the leading command
+     * only; the partner keeps its own hint for when this one has no active binding. */
+    pair?: { with: string; hint: string };
     run(): void;
   };
 
-  /** One entry of the hint bar: the keys to press, and what pressing them does. */
-  type Hint = { keys: string; label: string };
+  /** `essential` is what a first-time user could not guess; `obvious` is what anybody would. */
+  type HintPriority = 'essential' | 'normal' | 'obvious';
+
+  /** One entry of the hint bar: the keys to press, what pressing them does, and how much it matters. */
+  type Hint = { keys: string; label: string; priority: HintPriority };
+
+  /** A command the focused section can reach, with every binding that reaches it, best first. */
+  type AvailableCommand = { name: string; command: Command; bindings: KeymapActiveBinding[] };
 
   namespace Binding {
     /** The binding to put in front of a reader: the unmodified one, else whatever came first. */
     const plainest: (bindings: readonly KeymapActiveBinding[]) => KeymapActiveBinding | undefined;
+    /** A binding as the bar and the keys palette print it: `gg`, `esc`, `alt+/`. */
+    const format: (binding: KeymapActiveBinding) => string;
   }
 
   /** Commands as they are written: keyed by the name the bindings point at. */
@@ -472,6 +491,8 @@ declare global {
       | 'filePickerFilter',
       readonly KeymapBinding[]
     >;
+    /** What `section` can reach — its own groups and the app's — in declared order. */
+    available(section: SectionName): AvailableCommand[];
     /** What the hint bar should advertise with `section` focused, in the order to read them. */
     hints(section: SectionName): Hint[];
   };

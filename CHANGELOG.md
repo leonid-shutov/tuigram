@@ -4,6 +4,13 @@
 
 ### Added
 
+- `?` (or `alt+k` while typing) opens a searchable list of everything the focused pane can do, with
+  every key bound to it; picking an entry runs it.
+- The key hint bar now leads with the keys nobody would guess — edit, copy, search, attach, folders —
+  and puts the obvious ones (`j/k`, `enter`, `tab`) last, so a narrow terminal drops those first.
+  Opposite pairs share one hint (`j/k Move`, `gg/G Ends`, `h/l Album`), and Shift on a letter is written
+  as its capital (`G`, not `shift+g`). Message scrolling is left to the bubble's own "hold shift to
+  scroll" border.
 - After the machine wakes from sleep, tuigram restarts itself to reconnect and reload your chats;
   `ctrl+r` does the same on demand.
 - A check for a newer release at startup (registry.npmjs.org for npm installs, the Homebrew tap's formula
@@ -15,7 +22,7 @@
   right after it lands on npm; prereleases stay off Homebrew.
 - `gg` and `G` jump to the ends: the first or last chat in the list, the oldest loaded or newest message
   in a chat. A long list no longer has to be walked with `j` and `k`.
-- `Shift+j` and `Shift+k` scroll a message that's too tall for the chat pane, line by line, instead of
+- `J` and `K` (`Shift+j`, `Shift+k`) scroll a message that's too tall for the chat pane, line by line, instead of
   leaving the rest of it permanently hidden. Its border reads "hold shift to scroll" whenever there's
   more to see. A photo or video thumbnail shrinks first, down to a minimum, so a caption below a tall
   one keeps its own lines instead of being squeezed to a single scrollable one on a small screen.
