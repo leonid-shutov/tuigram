@@ -101,6 +101,7 @@ module.exports = [
         crashReport: true,
         Channel: true,
         packageVersion: true,
+        __restartExitCode: true,
         URL: true,
         screen: true,
         auth: true,

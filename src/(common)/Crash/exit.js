@@ -9,7 +9,7 @@ let exiting = false;
   exiting = true;
 
   const done = () => {
-    process.stderr.write(`tuigram: ${message}\n`);
+    if (message !== null) process.stderr.write(`tuigram: ${message}\n`);
     process.exit(code);
   };
 

@@ -10,6 +10,9 @@ const pkg = require('../package.json');
 
 const RELAUNCH = 'TUIGRAM_RELAUNCHED';
 const FFI_FLAGS = ['--experimental-ffi'];
+// The app exits with this to be started again from scratch (src/08-actions/restart.js).
+const RESTART = 75;
+const RESTARTED = 'TUIGRAM_RESTARTED';
 
 const args = process.argv.slice(2);
 
@@ -83,17 +86,21 @@ if (args[0] === 'upgrade') {
 // ourselves with it; RELAUNCH guards against a loop if the flag is ignored. (opentui's own
 // error also names --allow-ffi, but that is a permission-model flag: passing it without
 // --permission is fatal on Node >= 24, and node:ffi does not need it otherwise.)
-const hasFfi = FFI_FLAGS.every((flag) => process.execArgv.includes(flag));
-
-if (!hasFfi && process.env[RELAUNCH] !== '1') {
-  const argv = [...process.execArgv, ...FFI_FLAGS, __filename, ...args];
-  const env = { ...process.env, [RELAUNCH]: '1' };
-  const { status, error } = spawnSync(process.execPath, argv, { stdio: 'inherit', env });
-  if (error) {
-    process.stderr.write(`tuigram: ${error.message}\n`);
-    process.exit(1);
+// The parent stays around even when the flag is already there: it starts the app again whenever
+// it exits with RESTART.
+if (process.env[RELAUNCH] !== '1') {
+  const missing = FFI_FLAGS.filter((flag) => !process.execArgv.includes(flag));
+  const argv = [...process.execArgv, ...missing, __filename, ...args];
+  let env = { ...process.env, [RELAUNCH]: '1' };
+  for (;;) {
+    const { status, error } = spawnSync(process.execPath, argv, { stdio: 'inherit', env });
+    if (error) {
+      process.stderr.write(`tuigram: ${error.message}\n`);
+      process.exit(1);
+    }
+    if (status !== RESTART) process.exit(status ?? 0);
+    env = { ...env, [RESTARTED]: '1' };
   }
-  process.exit(status ?? 0);
 }
 
 // Past this point we have FFI, so the app can actually boot. Nothing below must run in the
@@ -105,7 +112,8 @@ const stateHome = process.env.XDG_STATE_HOME || path.join(os.homedir(), '.local'
 const LOG_FILE = process.env.TUIGRAM_LOG || path.join(stateHome, 'tuigram', 'tuigram.log');
 
 mkdirSync(path.dirname(LOG_FILE), { recursive: true, mode: 0o700 });
-writeFileSync(LOG_FILE, '', { mode: 0o600 }); // truncate on startup
+// Truncate on startup, but keep one session's log across restarts.
+if (process.env[RESTARTED] !== '1') writeFileSync(LOG_FILE, '', { mode: 0o600 });
 
 const formatArgs = (args) =>
   args.map((arg) => (typeof arg === 'object' ? JSON.stringify(arg, null, 2) : String(arg))).join(' ');
@@ -170,6 +178,7 @@ process.on('uncaughtException', (error) => bootCrash('uncaught', error));
     crashReport,
     Channel: channel,
     packageVersion: pkg.version,
+    __restartExitCode: RESTART,
   };
   await uncommonjs.loadTree(context, { rootDir });
 })();

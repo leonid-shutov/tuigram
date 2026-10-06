@@ -192,11 +192,11 @@ declare global {
     function soft(error: unknown): void;
     /**
      * The graceful counterpart to `hard`: dispose the auth UI, restore the terminal, close the
-     * Telegram client, then write `tuigram: <message>` to stderr and exit with `code`. Returns
-     * before the process goes down — the exit waits on the client closing — so a caller that
-     * has more statements after it must `return`.
+     * Telegram client, then write `tuigram: <message>` to stderr (unless it's null) and exit with
+     * `code`. Returns before the process goes down — the exit waits on the client closing — so a
+     * caller that has more statements after it must `return`.
      */
-    function exit(message: string, code: number): void;
+    function exit(message: string | null, code: number): void;
   }
 
   namespace Explain {
@@ -229,6 +229,8 @@ declare global {
     /** Run `cmd` in the foreground (inherited stdio) and resolve its exit code; rejects only if
      * the process itself couldn't be spawned. */
     const run: (cmd: string, args: string[]) => Promise<number | null>;
+    /** Call `handler` whenever the process wakes after being frozen: machine suspend, SIGSTOP. */
+    const onWake: (handler: () => void) => void;
   }
 
   namespace Cache {
@@ -268,6 +270,9 @@ declare global {
    * the sandbox exists (the same read `--version` already uses) rather than re-reading it from
    * `__rootDir` in here. */
   const packageVersion: string;
+
+  /** Injected by `bin/tuigram.js`: the exit code that makes it start the app again. */
+  const __restartExitCode: number;
 
   /** A generic never-rejecting HTTPS GET, with no knowledge of what it's fetching — used by
    * src/(common)/Update/'s own `(common)/Source/` to reach npm's registry and the homebrew

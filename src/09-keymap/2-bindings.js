@@ -11,6 +11,7 @@ const group = (config) => Keymap.extras.createBindingLookup(config).bindings;
     'app.focusPrompt': 'alt+3',
     'app.search': 'ctrl+p',
     'app.openConfig': 'ctrl+e',
+    'app.restart': 'ctrl+r',
     'app.errors': 'alt+e',
     'app.upgrade': 'alt+u',
     'app.dismissUpdate': 'alt+shift+u',

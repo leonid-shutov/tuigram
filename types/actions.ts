@@ -55,6 +55,9 @@ declare global {
     /** A user's online/last-seen state changed. Ignored unless it's the counterpart of the open chat. */
     presenceUpdate(chatId: number, presence: Presence): void;
     receiveMessage(message: Message): void;
+    /** Shut down and have bin/tuigram.js start the app again from scratch: on wake from sleep
+     * and on ctrl+r. */
+    restart(): void;
     /** Push the current folder's dialogs to the pane. Follows every store.dialogs and store.folders
      * mutation. */
     repaintDialogs(): void;

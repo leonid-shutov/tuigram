@@ -4,6 +4,8 @@
 
 ### Added
 
+- After the machine wakes from sleep, tuigram restarts itself to reconnect and reload your chats;
+  `ctrl+r` does the same on demand.
 - A check for a newer release at startup (registry.npmjs.org for npm installs, the Homebrew tap's formula
   for brew installs; never on a git checkout). A notice appears above the key hint bar when one is found:
   `alt+u` runs the upgrade and exits so you can restart into it, `alt+shift+u` dismisses it for the rest
