@@ -1,7 +1,7 @@
 /** @type {Actions['loadChat']} */
 async (chatId) => {
   // The generator is inert until the first next(), so it is safe to build before opening.
-  const pager = messenger.getHistory(chatId, 30, 20);
+  const pager = messenger.getHistory(chatId, 30, 50);
   store.chat.open(chatId, pager);
   ui.chat.clear();
   const dialog = store.dialogs.find(chatId);
