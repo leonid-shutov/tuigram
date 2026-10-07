@@ -45,8 +45,8 @@ type _PanelOptions = _opentui.BoxOptions & {
 interface _PanelRenderable extends _opentui.BoxRenderable {
   /** Set a declared title part's text. */
   setTitlePart(name: string, text: string): void;
-  /** A declared title part's current text. */
-  getTitlePart(name: string): string;
+  /** Show `text` over a declared part for `ms`; the part's own text comes back after. */
+  flashTitlePart(name: string, text: string, ms: number): void;
   /** Empty a declared title part; the title closes up around it. */
   clearTitlePart(name: string): void;
 }

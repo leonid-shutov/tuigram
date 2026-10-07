@@ -139,10 +139,12 @@ declare global {
     selectLast(): void;
     /** Update the presence at the top border's right; `null` clears it. */
     setPresence(presence: Presence | null): void;
+    /** The read state of the last outgoing message, at the bottom border's right. */
     setReceipt(receipt: Receipt | null): void;
-    /** Replace the bottom title; stays until the next explicit change. */
+    /** Show `status` at the bottom border's left until `clearStatus`. */
     setStatus(status: string): void;
-    /** Show a transient word in the receipt's corner, then restore the receipt after `ms`. */
+    clearStatus(): void;
+    /** Show a transient word over the status for `ms`; the status comes back after. */
     flashStatus(status: string, ms?: number): void;
     /** Flip the selected album by `step` media, wrapping around. No-op with fewer than two. */
     flipSelectedAlbum(step: number): void;

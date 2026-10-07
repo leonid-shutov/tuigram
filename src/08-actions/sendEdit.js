@@ -7,8 +7,8 @@ async (messageId, text) => {
   if (text.trim() === '') return void ui.chat.flashStatus('cannot be empty');
 
   ui.chat.setStatus('editing…');
-
   const edited = await Result.fromPromise(messenger.editMessage(chatId, messageId, text));
+  ui.chat.clearStatus();
   if (!edited.ok) return void ui.errors.report('Could not edit the message.', edited.error);
 
   if (store.chat.chatId !== chatId) return;
@@ -24,6 +24,4 @@ async (messageId, text) => {
   if (dialog === null) Crash.hard(new Error(`dialog ${chatId} is not held`));
   if (dialog.lastMessage?.id === messageId) dialog.lastMessage = message;
   actions.repaintDialogs();
-
-  actions.repaintReceipt();
 };

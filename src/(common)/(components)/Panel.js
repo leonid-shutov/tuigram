@@ -12,7 +12,8 @@ const TITLE_GAP = 1;
 // both groups showing, the left one is the title and the right one, which opentui has no slot for,
 // is drawn here in the same colour; it gives way, whole, before the left one does. An edge with
 // parts owns its title: a direct `title` / `bottomTitle` write or alignment is overwritten next
-// frame.
+// frame. A flash shows over a part for a while; writes to the part meanwhile land underneath it,
+// and are what shows once it's over.
 Component(
   class PanelRenderable extends tui.BoxRenderable {
     /**
@@ -28,6 +29,8 @@ Component(
           Object.values(edge).flatMap((names) => names.map((name) => [name, ''])),
         ),
       );
+      /** @type {Map<string, { text: string, timer: NodeJS.Timeout }>} */
+      this.flashes = new Map();
     }
 
     /**
@@ -46,9 +49,22 @@ Component(
       this.setTitlePart(name, '');
     }
 
-    /** @param {string} name */
-    getTitlePart(name) {
-      return this.partTexts.get(name) ?? '';
+    /**
+     * A later flash of the same part replaces this one, timer included.
+     * @param {string} name
+     * @param {string} text
+     * @param {number} ms
+     */
+    flashTitlePart(name, text, ms) {
+      if (!this.partTexts.has(name)) throw new Error(`Panel has no title part "${name}"`);
+      node.timers.clearTimeout(this.flashes.get(name)?.timer);
+      const timer = node.timers.setTimeout(() => {
+        this.flashes.delete(name);
+        this.requestRender();
+      }, ms);
+      timer.unref();
+      this.flashes.set(name, { text, timer });
+      this.requestRender();
     }
 
     /**
@@ -60,7 +76,7 @@ Component(
       /** @type {string[]} */
       const shown = [];
       for (const name of names) {
-        const text = this.partTexts.get(name) ?? '';
+        const text = this.flashes.get(name)?.text ?? this.partTexts.get(name) ?? '';
         if (text === '') continue;
         const gap = shown.length === 0 ? 0 : SEPARATOR.length;
         const clipped = Cells.clip(text, room - gap).trimEnd();
@@ -88,6 +104,12 @@ Component(
       super.renderSelf(buffer);
       if (top?.right) this.drawRight(buffer, top.right, this._screenY);
       if (bottom?.right) this.drawRight(buffer, bottom.right, this._screenY + this.height - 1);
+    }
+
+    destroySelf() {
+      for (const { timer } of this.flashes.values()) node.timers.clearTimeout(timer);
+      this.flashes.clear();
+      super.destroySelf();
     }
 
     /**

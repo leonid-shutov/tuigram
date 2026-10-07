@@ -11,15 +11,13 @@ const fileNameFor = (media) => {
 /** @type {Actions['openMedia']} */
 async (media) => {
   const file = node.path.join(CACHE, fileNameFor(media));
-  const opened = await Result.fromAsync(async () => {
-    if (!node.fs.existsSync(file)) {
-      ui.chat.setStatus('downloading…');
-      await Cache.write(file, await messenger.downloadMedia(media.fileId));
-    }
-    OS.open(file);
-  });
-  // Repaint first: it writes the same bottom title the notice does, so reporting last is what
-  // keeps the notice on screen.
-  actions.repaintReceipt();
+  if (!node.fs.existsSync(file)) {
+    ui.chat.setStatus('downloading…');
+    const download = messenger.downloadMedia(media.fileId).then((bytes) => Cache.write(file, bytes));
+    const downloaded = await Result.fromPromise(download);
+    ui.chat.clearStatus();
+    if (!downloaded.ok) return void ui.errors.report('Could not open the media.', downloaded.error);
+  }
+  const opened = Result.from(() => OS.open(file));
   if (!opened.ok) ui.errors.report('Could not open the media.', opened.error);
 };

@@ -1,2 +1,2 @@
 /** @type {ChatSection['setReceipt']} */
-(receipt) => self.component.setTitlePart('status', receipt ?? '');
+(receipt) => self.component.setTitlePart('receipt', receipt ?? '');

@@ -8,6 +8,9 @@ Panel({
   borderColor: config.theme.border,
   focusedBorderColor: config.theme.accent,
   titleColor: config.theme.muted,
-  titleParts: { top: { left: ['label', 'name'], right: ['presence'] }, bottom: { right: ['status'] } },
+  titleParts: {
+    top: { left: ['label', 'name'], right: ['presence'] },
+    bottom: { left: ['status'], right: ['receipt'] },
+  },
   children: [self.scroll],
 });
