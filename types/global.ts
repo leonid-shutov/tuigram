@@ -309,6 +309,14 @@ declare global {
     const fnv1a: (key: string) => number;
   }
 
+  /** Calendar days in local time. */
+  namespace Day {
+    /** Equal for two dates on the same local day. */
+    const key: (date: Date) => string;
+    /** `Today`, `Yesterday`, else `Mon, 6 Oct` — with the year only when it isn't `now`'s. */
+    const label: (date: Date, now?: Date) => string;
+  }
+
   namespace Base64 {
     /** Joins base64 pieces and decodes them (trimmed); '' for anything that is not a list. */
     const decodeFragments: (fragments: unknown) => string;

@@ -117,7 +117,7 @@ declare global {
     headerPresence: _opentui.TextRenderable;
     /** The messages alone — everything the cursor and the scroll position are about. */
     scroll: _opentui.ScrollBoxRenderable;
-    /** Cursor position among the ScrollBox's children; -1 when the chat is empty. */
+    /** Cursor position among the bubbles, day separators skipped; -1 when the chat is empty. */
     selectedIndex: number;
     /** Derived, recomputed on every read: the message at the cursor, `null` when the chat is empty. */
     readonly selectedMessage: ChatMessage | null;
@@ -160,6 +160,12 @@ declare global {
       focused: boolean;
       /** Message id to the bubble drawing it — the section's only id-keyed view state. */
       bubbles: Map<number, BubbleView>;
+      /** Day key (see `Day.key`) to the separator drawn above that day's earliest bubble. */
+      days: Map<string, _opentui.TextRenderable>;
+      /** Derived, recomputed on every read: the bubbles in display order, separators skipped. */
+      readonly boxes: _opentui.Renderable[];
+      /** Give every day one separator, right above its earliest bubble, and drop the rest. */
+      redate(): void;
       /** Build a message's bubble, place it, and file it under its id. Omit `index` to append. */
       insert(message: ChatMessage, index?: number): void;
       selectMessage(index: number): void;

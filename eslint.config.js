@@ -42,6 +42,7 @@ module.exports = [
         Fuzzy: true,
         Layout: true,
         Hash: true,
+        Day: true,
         Base64: true,
         Link: true,
         Cells: true,

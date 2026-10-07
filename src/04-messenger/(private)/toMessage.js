@@ -18,4 +18,5 @@
           id: message.forward.sender.type === 'anonymous' ? null : message.forward.sender.id,
           displayName: message.forward.sender.displayName,
         },
+  date: message.date,
 });
