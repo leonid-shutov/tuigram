@@ -3,9 +3,8 @@ async (chatId) => {
   // The generator is inert until the first next(), so it is safe to build before opening.
   const pager = messenger.getHistory(chatId, 30, 50);
   store.chat.open(chatId, pager);
-  ui.chat.clear();
   const dialog = store.dialogs.find(chatId);
-  ui.chat.setHeader(chatId, dialog?.name ?? '');
+  ui.chat.open(chatId, dialog?.name ?? '');
   if (dialog?.isUser) {
     void messenger.getPresence(chatId).then((presence) => {
       if (store.chat.chatId !== chatId) return;

@@ -32,15 +32,21 @@ interface _SearchListRenderable extends _opentui.BoxRenderable {
   moveDown(): void;
 }
 
+/** One edge's groups. Within a group the last part gives way first; the right group, whole, before
+ * the left one. */
+type _PanelEdge = { left?: string[]; right?: string[] };
+
 type _PanelOptions = _opentui.BoxOptions & {
-  /** The parts each edge's title is built from, in drawing order; the last gives way first. */
-  titleParts?: { top?: string[]; bottom?: string[] };
+  /** The parts each edge's title is built from: a group per side, in drawing order. */
+  titleParts?: { top?: _PanelEdge; bottom?: _PanelEdge };
 };
 
 /** A box whose edge titles are built from named parts. */
 interface _PanelRenderable extends _opentui.BoxRenderable {
   /** Set a declared title part's text. */
   setTitlePart(name: string, text: string): void;
+  /** A declared title part's current text. */
+  getTitlePart(name: string): string;
   /** Empty a declared title part; the title closes up around it. */
   clearTitlePart(name: string): void;
 }
@@ -54,6 +60,7 @@ declare global {
   type SearchListItem = _SearchListItem;
   type SearchListOptions = _SearchListOptions;
   type SearchListRenderable = _SearchListRenderable;
+  type PanelEdge = _PanelEdge;
   type PanelOptions = _PanelOptions;
   type PanelRenderable = _PanelRenderable;
 

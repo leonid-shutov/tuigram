@@ -8,7 +8,6 @@ Panel({
   borderColor: config.theme.border,
   focusedBorderColor: config.theme.accent,
   titleColor: config.theme.muted,
-  bottomTitleAlignment: 'right',
-  titleParts: { top: ['label', 'folder'], bottom: ['status'] },
+  titleParts: { top: { left: ['label', 'folder'] }, bottom: { right: ['status'] } },
   children: [self.list],
 });

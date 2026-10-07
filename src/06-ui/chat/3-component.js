@@ -1,4 +1,4 @@
-Box({
+Panel({
   id: 'chatWrapper',
   focusable: true,
   flexGrow: 1,
@@ -7,6 +7,7 @@ Box({
   customBorderChars: config.theme.borderChars,
   borderColor: config.theme.border,
   focusedBorderColor: config.theme.accent,
-  bottomTitleAlignment: 'right',
-  children: [self.header, self.scroll],
+  titleColor: config.theme.muted,
+  titleParts: { top: { left: ['label', 'name'], right: ['presence'] }, bottom: { right: ['status'] } },
+  children: [self.scroll],
 });

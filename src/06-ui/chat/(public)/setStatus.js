@@ -1,2 +1,2 @@
 /** @type {ChatSection['setStatus']} */
-(status) => void (self.component.bottomTitle = ` ${status} `);
+(status) => self.component.setTitlePart('status', status);

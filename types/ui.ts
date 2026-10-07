@@ -107,14 +107,9 @@ declare global {
   };
 
   type ChatSection = Section & {
-    /** The bordered pane: the header, then the messages. Carries both border titles. */
-    component: _opentui.BoxRenderable;
-    /** The name/presence row, pinned under the top border and outside the scrolling content. */
-    header: _opentui.BoxRenderable;
-    /** The open chat's name, left-aligned in the header. */
-    headerName: _opentui.TextRenderable;
-    /** The open chat partner's presence, right-aligned in the header; blank for non-users. */
-    headerPresence: _opentui.TextRenderable;
+    /** The bordered pane around the messages. Its top border carries the label and the open chat's
+     * name on the left and the partner's presence on the right; its bottom border the status. */
+    component: PanelRenderable;
     /** The messages alone — everything the cursor and the scroll position are about. */
     scroll: _opentui.ScrollBoxRenderable;
     /** Cursor position among the bubbles, day separators skipped; -1 when the chat is empty. */
@@ -130,7 +125,10 @@ declare global {
     /** The oldest message loaded so far, which also asks for more history. */
     first(): void;
     append(message: ChatMessage): void;
+    /** Empty the pane: its messages, and the name, presence and status on its border. */
     clear(): void;
+    /** Start over on another chat: clear, then put its glyph and name on the top border. */
+    open(chatId: number, name: string): void;
     /** A pending message got its real id: re-key its bubble from the temp id. */
     confirm(tempId: number, messageId: number): void;
     /** Remove a message's bubble and unfile it, cursor included. */
@@ -139,9 +137,7 @@ declare global {
     /** Redraw a message's bubble from a new copy of it — an edit or a downloaded thumbnail — in place. */
     replace(message: ChatMessage): void;
     selectLast(): void;
-    /** Fill the header line with the open chat's glyph and name. */
-    setHeader(chatId: number, name: string): void;
-    /** Update the header's presence suffix; `null` clears it. */
+    /** Update the presence at the top border's right; `null` clears it. */
     setPresence(presence: Presence | null): void;
     setReceipt(receipt: Receipt | null): void;
     /** Replace the bottom title; stays until the next explicit change. */

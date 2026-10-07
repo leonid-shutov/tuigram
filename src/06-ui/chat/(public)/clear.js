@@ -4,5 +4,5 @@
   self.bubbles.clear();
   self.days.clear();
   self.selectedIndex = -1;
-  self.component.bottomTitle = undefined;
+  for (const part of ['name', 'presence', 'status']) self.component.clearTitlePart(part);
 };
