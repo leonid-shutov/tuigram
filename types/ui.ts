@@ -34,6 +34,8 @@ declare global {
   namespace Option {
     /** A dialog as one row of the dialogs list, padded to the panel width. */
     function from(dialog: Dialog): _DialogOption;
+    /** Everything `from` reads but the chat id, joined: an unchanged key means an unchanged row. */
+    function key(dialog: Dialog): string;
   }
 
   // ── 6-ui/dialogs ──────────────────────────────────────────────────────────────────────
@@ -64,6 +66,8 @@ declare global {
       loading: boolean;
       /** The interval driving the bottom-border spinner, cleared by `settle`. */
       spinner: NodeJS.Timeout;
+      /** The rows `render` last built, by chat id, each with the key it was built from. */
+      rows: Map<number, { key: string; option: _DialogOption }>;
     };
 
   // ── 6-ui/chat ─────────────────────────────────────────────────────────────────────────

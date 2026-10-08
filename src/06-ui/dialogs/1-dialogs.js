@@ -1,1 +1,1 @@
-({ loading: true });
+({ loading: true, rows: new Map() });

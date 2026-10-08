@@ -330,6 +330,8 @@ declare global {
   /** Text measured in terminal cells rather than UTF-16 units: CJK and most emoji take two. */
   namespace Cells {
     const width: (text: string) => number;
+    /** `clip`, plus the width in cells the clipped prefix takes. */
+    const cut: (text: string, width: number) => { text: string; cells: number };
     /** The longest prefix of `text` that fits in `width` cells. */
     const clip: (text: string, width: number) => string;
     /** `text` clipped, then padded with spaces to exactly `width` cells. */

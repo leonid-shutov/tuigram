@@ -1,5 +1,5 @@
 /** @type {typeof Cells.fit} */
 (text, width) => {
-  const clipped = Cells.clip(text, width);
-  return clipped + ' '.repeat(width - Cells.width(clipped));
+  const { text: clipped, cells } = Cells.cut(text, width);
+  return clipped + ' '.repeat(width - cells);
 };
