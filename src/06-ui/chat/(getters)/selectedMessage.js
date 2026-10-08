@@ -1,8 +1,6 @@
-// The store's chat and this section's bubbles are appended, prepended and dropped by the same
-// actions in the same order, so the cursor's index names the same message in both — the section
-// never needs to cache message data itself.
+// The bubble holds the copy of the message it draws, so the cursor never reads the store.
 /** @type {() => ChatSection['selectedMessage']} */
 () => {
-  if (self.selectedIndex === -1) return null;
-  return store.chat.messages[self.selectedIndex] ?? null;
+  if (self.selectedMessageId === null) return null;
+  return self.views.get(self.selectedMessageId)?.message ?? null;
 };

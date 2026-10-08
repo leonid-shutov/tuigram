@@ -18,7 +18,7 @@ import {
   PendingMessage,
   Presence,
 } from './domain';
-import { LinkedList as _LinkedList } from './collections';
+import { KeyedList as _KeyedList, LinkedList as _LinkedList } from './collections';
 import { Paths, Source, ThemeDefinition, ResolvedTheme, ImageProtocol as _ImageProtocol, ConfigSchema } from './config';
 
 import * as _timers from 'node:timers';
@@ -171,6 +171,11 @@ declare global {
 
   namespace LinkedList {
     function from<T>(values?: Iterable<T>): _LinkedList<T>;
+  }
+
+  namespace KeyedList {
+    /** Throws on a repeated key: the index could only name one of them. */
+    function from<T, K>(items: Iterable<T>, keyOf: (item: T) => K): _KeyedList<T, K>;
   }
 
   type Result<T = unknown> = _Result<T>;

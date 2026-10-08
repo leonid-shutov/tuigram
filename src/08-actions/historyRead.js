@@ -3,7 +3,7 @@
   if (isOutbox) {
     if (store.chat.chatId !== chatId) return;
     store.chat.setReadUpTo(maxReadId);
-    actions.repaintReceipt();
+    actions.repaintChat();
     return;
   }
   store.dialogs.setUnread(chatId, unreadCount);

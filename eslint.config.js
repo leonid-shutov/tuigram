@@ -29,6 +29,7 @@ module.exports = [
         Rate: true,
         Random: true,
         OS: true,
+        KeyedList: true,
         LinkedList: true,
         LinkedDialogs: true,
         Result: true,

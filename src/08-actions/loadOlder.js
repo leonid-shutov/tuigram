@@ -7,7 +7,6 @@ async () => {
   const pager = store.chat.pager;
   if (loadingMore || pager === null) return;
   loadingMore = true;
-  const chatId = store.chat.chatId;
 
   const paged = await Result.fromPromise(pager.next());
   loadingMore = false;
@@ -15,11 +14,11 @@ async () => {
 
   const { value, done } = paged.unwrap();
   if (done || value === undefined || value.length === 0) return;
-  if (store.chat.chatId !== chatId) return;
+  if (store.chat.pager !== pager) return;
 
-  // the pager yields newest-first; both halves take the batch oldest-first
+  // the pager yields newest-first; the store takes the batch oldest-first
   const older = value.toReversed();
   store.chat.prepend(older);
-  ui.chat.prepend(older);
+  actions.repaintChat();
   for (const message of older) actions.loadThumb(message);
 };

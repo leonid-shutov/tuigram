@@ -7,10 +7,6 @@ declare global {
   /** Whether the chat advertises a receipt on our own last message, and which one. */
   type Receipt = 'read' | 'unread';
 
-  /** What `confirm` did: swapped the pending message for the server's copy, dropped it as a
-   * duplicate of one already held, or found the chat switched. */
-  type Confirmation = 'confirmed' | 'dropped' | 'gone';
-
   type DialogsStore = {
     list: LinkedDialogsHandle;
     /** The archive folder's dialogs; empty until they finish loading. */
@@ -54,7 +50,8 @@ declare global {
     /** The open chat partner's online/last-seen state; `null` until fetched, or for non-users. */
     presence: Presence | null;
     append(message: ChatMessage): void;
-    confirm(tempId: number, message: Message): Confirmation;
+    /** Swap a pending message for the server's copy, or drop it when that copy is already held. */
+    confirm(tempId: number, message: Message): void;
     /** Take a message back out of the window — the store half of undoing a failed send. */
     drop(tempId: number): void;
     /** Whether the window holds the server's copy of a message — pending entries never match. */
@@ -63,6 +60,8 @@ declare global {
     prepend(older: ChatMessage[]): void;
     /** Swap a held message for the server's copy of the same id; throws when it isn't held. */
     replace(message: Message): void;
+    /** Lay the first page under the window, dropping held entries the page already has. */
+    seed(page: Message[]): void;
     setPresence(presence: Presence | null): void;
     /** Derived, recomputed on every read: `null` when the last message isn't ours. */
     readonly receipt: Receipt | null;

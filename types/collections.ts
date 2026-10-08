@@ -18,3 +18,15 @@ export type LinkedList<T> = {
   moveToFront(node: LinkedListNode<T>): T;
   [Symbol.iterator](): Iterator<T>;
 };
+
+/** An ordered list with an index by key, rebuilt rather than mutated — see KeyedList.js. */
+export type KeyedList<T, K> = {
+  readonly length: number;
+  /** The item at `position`, or `null` past either end. */
+  at(position: number): T | null;
+  get(key: K): T | null;
+  has(key: K): boolean;
+  /** The item's position, or -1 when no item has `key`. */
+  indexOf(key: K): number;
+  [Symbol.iterator](): Iterator<T>;
+};

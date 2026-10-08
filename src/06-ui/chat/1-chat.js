@@ -1,6 +1,6 @@
 ({
   focused: false,
-  bubbles: new Map(),
+  views: KeyedList.from([], (/** @type {BubbleView} */ view) => view.message.id),
   days: new Map(),
-  selectedIndex: -1,
+  selectedMessageId: null,
 });

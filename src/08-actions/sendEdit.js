@@ -18,7 +18,7 @@ async (messageId, text) => {
   if (held === undefined) return;
   const message = { ...edited.unwrap(), media: held.media };
   store.chat.replace(message);
-  ui.chat.replace(message);
+  actions.repaintChat();
 
   const dialog = store.dialogs.find(chatId);
   if (dialog === null) Crash.hard(new Error(`dialog ${chatId} is not held`));

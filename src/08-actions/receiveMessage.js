@@ -9,9 +9,8 @@
 
   if (isOpen) {
     store.chat.append(message);
-    ui.chat.append(message);
+    actions.repaintChat();
     actions.loadThumb(message);
-    actions.repaintReceipt();
   }
   if (isSeen) {
     store.dialogs.markRead(message.chatId);

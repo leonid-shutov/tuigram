@@ -1,5 +1,6 @@
 import * as _opentui from '@opentui/core';
 import * as _events from 'node:events';
+import { KeyedList as _KeyedList } from './collections';
 import { Dialog, DialogOption as _DialogOption, ImageMedia, Media as _Media, Presence } from './domain';
 
 declare global {
@@ -112,8 +113,6 @@ declare global {
     component: PanelRenderable;
     /** The messages alone — everything the cursor and the scroll position are about. */
     scroll: _opentui.ScrollBoxRenderable;
-    /** Cursor position among the bubbles, day separators skipped; -1 when the chat is empty. */
-    selectedIndex: number;
     /** Derived, recomputed on every read: the message at the cursor, `null` when the chat is empty. */
     readonly selectedMessage: ChatMessage | null;
     on(event: 'reachTop', handler: () => void): void;
@@ -124,23 +123,13 @@ declare global {
     scrollMessage(lines: number): void;
     /** The oldest message loaded so far, which also asks for more history. */
     first(): void;
-    append(message: ChatMessage): void;
-    /** Empty the pane: its messages, and the name, presence and status on its border. */
-    clear(): void;
-    /** Start over on another chat: clear, then put its glyph and name on the top border. */
+    /** Start over on another chat: put its glyph and name on the top border and forget the cursor.
+     * The bubbles go with the next `render` of the freshly opened store. */
     open(chatId: number, name: string): void;
-    /** A pending message got its real id: re-key its bubble from the temp id. */
-    confirm(tempId: number, messageId: number): void;
-    /** Remove a message's bubble and unfile it, cursor included. */
-    drop(messageId: number): void;
-    prepend(older: ChatMessage[]): void;
-    /** Redraw a message's bubble from a new copy of it — an edit or a downloaded thumbnail — in place. */
-    replace(message: ChatMessage): void;
+    /** Make the pane match the open chat: one bubble per message, in order, reusing each bubble
+     * whose id is still held, plus the receipt and presence on the border. */
+    render(chat: { messages: ChatMessage[]; receipt: Receipt | null; presence: Presence | null }): void;
     selectLast(): void;
-    /** Update the presence at the top border's right; `null` clears it. */
-    setPresence(presence: Presence | null): void;
-    /** The read state of the last outgoing message, at the bottom border's right. */
-    setReceipt(receipt: Receipt | null): void;
     /** Show `status` at the bottom border's left until `clearStatus`. */
     setStatus(status: string): void;
     clearStatus(): void;
@@ -156,17 +145,21 @@ declare global {
     Emitting & {
       /** True only while the chat is the selected section — gates whether the cursor takes opentui focus. */
       focused: boolean;
-      /** Message id to the bubble drawing it — the section's only id-keyed view state. */
-      bubbles: Map<number, BubbleView>;
+      /** The bubbles in display order, by message id, as `render` last left them. */
+      views: _KeyedList<BubbleView, number>;
       /** Day key (see `Day.key`) to the separator drawn above that day's earliest bubble. */
       days: Map<string, _opentui.TextRenderable>;
-      /** Derived, recomputed on every read: the bubbles in display order, separators skipped. */
-      readonly boxes: _opentui.Renderable[];
+      /** The message under the cursor, by id, so the cursor survives messages landing above it;
+       * `null` when nothing is selected. */
+      selectedMessageId: number | null;
+      /** Derived, recomputed on every read: the cursor's position in `views`, -1 when unset. */
+      readonly selectedIndex: number;
       /** Give every day one separator, right above its earliest bubble, and drop the rest. */
       redate(): void;
-      /** Build a message's bubble, place it, and file it under its id. Omit `index` to append. */
-      insert(message: ChatMessage, index?: number): void;
-      selectMessage(index: number): void;
+      /** Put the cursor on the bubble at `index`, clamped, and bring it into view. */
+      selectAt(index: number): void;
+      /** Draw the receipt and presence on the border. */
+      paintHeader(receipt: Receipt | null, presence: Presence | null): void;
       /** Derived, recomputed on every read: the TextRenderable under the cursor — the bubble's
        * scroll window — or `null` when the chat is empty. */
       readonly selectedText: _opentui.TextRenderable | null;

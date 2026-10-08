@@ -60,15 +60,14 @@ declare global {
     /** Shut down and have bin/tuigram.js start the app again from scratch: on wake from sleep
      * and on ctrl+r. */
     restart(): void;
+    /** Push the open chat — messages, receipt and presence — to the pane. Follows every
+     * store.chat mutation. */
+    repaintChat(): void;
     /** Push the current folder's dialogs to the pane. Follows every store.dialogs and store.folders
      * mutation. */
     repaintDialogs(): void;
     /** Redraw the hint bar for whichever section is focused. Follows every `navigation.select`. */
     repaintHints(): void;
-    /** Redraw the open chat's presence suffix. Follows every change to store.chat.presence. */
-    repaintPresence(): void;
-    /** Redraw the open chat's read receipt. Follows every change to its tail or watermark. */
-    repaintReceipt(): void;
     send(text: string): Promise<void>;
     /** Attach a local file: an optimistic pending bubble, then the real upload via mtcute. */
     sendFile(filePath: string): Promise<void>;

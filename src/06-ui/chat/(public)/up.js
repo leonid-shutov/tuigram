@@ -5,6 +5,6 @@ const PREFETCH_MARGIN = 15;
 /** @type {ChatSection['up']} */
 (count = 1) => {
   if (self.selectedIndex <= 0) return void self.emit('reachTop');
-  self.selectMessage(self.selectedIndex - count);
+  self.selectAt(self.selectedIndex - count);
   if (self.selectedIndex < PREFETCH_MARGIN) self.emit('reachTop');
 };

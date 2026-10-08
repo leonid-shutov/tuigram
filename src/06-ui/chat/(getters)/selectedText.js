@@ -2,7 +2,6 @@
 // A bare photo's text is hidden and empty, so scrolling it is a no-op.
 /** @type {() => ChatSelf['selectedText']} */
 () => {
-  const message = self.selectedMessage;
-  if (message === null) return null;
-  return self.bubbles.get(message.id)?.text ?? null;
+  if (self.selectedMessageId === null) return null;
+  return self.views.get(self.selectedMessageId)?.text ?? null;
 };
