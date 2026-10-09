@@ -60,11 +60,11 @@ declare global {
     /** Shut down and have bin/tuigram.js start the app again from scratch: on wake from sleep
      * and on ctrl+r. */
     restart(): void;
-    /** Push the open chat — messages, receipt and presence — to the pane. Follows every
-     * store.chat mutation. */
+    /** Push the open chat — messages, receipt and presence — to the pane. Runs on every `change`
+     * of store.chat. */
     repaintChat(): void;
-    /** Push the current folder's dialogs to the pane. Follows every store.dialogs and store.folders
-     * mutation. */
+    /** Push the current folder's dialogs to the pane. Runs on every `change` of store.dialogs and
+     * store.folders. */
     repaintDialogs(): void;
     /** Redraw the hint bar for whichever section is focused. Follows every `navigation.select`. */
     repaintHints(): void;

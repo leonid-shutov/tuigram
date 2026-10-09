@@ -132,7 +132,7 @@ declare global {
     open(chatId: number, name: string): void;
     /** Make the pane match the open chat: one bubble per message, in order, reusing each bubble
      * whose id is still held, plus the receipt and presence on the border. */
-    render(chat: { messages: ChatMessage[]; receipt: Receipt | null; presence: Presence | null }): void;
+    render(chat: { messages: readonly ChatMessage[]; receipt: Receipt | null; presence: Presence | null }): void;
     selectLast(): void;
     /** Show `status` at the bottom border's left until `clearStatus`. */
     setStatus(status: string): void;

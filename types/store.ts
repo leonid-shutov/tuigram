@@ -78,7 +78,8 @@ declare global {
     readonly list: readonly Folder[];
   };
 
-  type ChatStore = {
+  /** The chat store as its own files see it through `self`: everything, writable. */
+  type ChatStoreSelf = StoreEvents & {
     /** The open chat, and the app's single source of truth for which chat that is. */
     chatId: number | null;
     /** The loaded window, oldest first. */
@@ -105,6 +106,22 @@ declare global {
     /** Derived, recomputed on every read: `null` when the last message isn't ours. */
     readonly receipt: Receipt | null;
     setReadUpTo(maxReadId: number): void;
+  };
+
+  /**
+   * The chat store as the rest of the app sees it: read-only but for its mutators, so a held
+   * message can only be swapped through one (see src/05-store/chat/2-chat.js), and every mutator
+   * emits `change`.
+   */
+  type ChatStore = Omit<
+    ChatStoreSelf,
+    'chatId' | 'messages' | 'readUpTo' | 'pager' | 'presence' | 'emitter' | 'emit'
+  > & {
+    readonly chatId: number | null;
+    readonly messages: readonly Readonly<ChatMessage>[];
+    readonly readUpTo: number;
+    readonly pager: AsyncGenerator<Message[]> | null;
+    readonly presence: Presence | null;
   };
 
   /** Terminal window focus, as reported by the terminal — see src/5-store/window.js. */

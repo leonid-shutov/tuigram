@@ -585,7 +585,7 @@ declare global {
       MessengerSelf &
       DialogsStoreSelf &
       FoldersStoreSelf &
-      ChatStore &
+      ChatStoreSelf &
       DialogsSelf &
       ChatSelf &
       MessagePromptSelf &

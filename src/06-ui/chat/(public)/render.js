@@ -3,7 +3,7 @@
 // only when the store swapped in a new copy of the message (see 05-store/chat/2-chat.js for the
 // two rules this relies on). Since held messages never change order, walking the window from the
 // newest end and inserting each new bubble above the one after it lays everything out in place.
-/** @param {ChatMessage[]} messages */
+/** @param {readonly ChatMessage[]} messages */
 const reconcile = (messages) => {
   const previous = self.views;
   /** @type {BubbleView[]} */

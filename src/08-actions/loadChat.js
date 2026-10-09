@@ -3,14 +3,12 @@ async (chatId) => {
   // The generator is inert until the first next(), so it is safe to build before opening.
   const pager = messenger.getHistory(chatId, 30, 50);
   store.chat.open(chatId, pager);
-  actions.repaintChat();
   const dialog = store.dialogs.find(chatId);
   ui.chat.open(chatId, dialog?.name ?? '');
   if (dialog?.isUser) {
     void messenger.getPresence(chatId).then((presence) => {
       if (store.chat.chatId !== chatId) return;
       store.chat.setPresence(presence);
-      actions.repaintChat();
     });
   }
 
@@ -23,7 +21,6 @@ async (chatId) => {
   store.chat.setReadUpTo(readUpTo);
   const messages = value.toReversed();
   store.chat.seed(messages);
-  actions.repaintChat();
   ui.chat.selectLast();
   for (const message of messages) actions.loadThumb(message);
 

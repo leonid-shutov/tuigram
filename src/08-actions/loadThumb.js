@@ -16,7 +16,6 @@
         if (!Media.isImage(part)) return;
         const message = { ...held, media: held.media.with(index, { ...part, thumb: path }) };
         store.chat.replace(message);
-        actions.repaintChat();
       })
       .catch((error) => Crash.soft(error));
   }

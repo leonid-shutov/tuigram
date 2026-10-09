@@ -9,7 +9,6 @@
 
   if (isOpen) {
     store.chat.append(message);
-    actions.repaintChat();
     actions.loadThumb(message);
   }
   if (isSeen) {

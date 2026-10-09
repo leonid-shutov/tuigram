@@ -19,6 +19,5 @@ async () => {
   // the pager yields newest-first; the store takes the batch oldest-first
   const older = value.toReversed();
   store.chat.prepend(older);
-  actions.repaintChat();
   for (const message of older) actions.loadThumb(message);
 };
