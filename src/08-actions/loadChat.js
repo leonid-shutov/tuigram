@@ -28,6 +28,5 @@ async (chatId) => {
   for (const message of messages) actions.loadThumb(message);
 
   store.dialogs.markRead(chatId);
-  actions.repaintDialogs();
   void messenger.readHistory(chatId).catch((error) => Crash.soft(error));
 };

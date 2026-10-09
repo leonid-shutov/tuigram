@@ -19,6 +19,5 @@ async (text) => {
     actions.repaintChat();
 
     store.dialogs.receive(message);
-    actions.repaintDialogs();
   }
 };

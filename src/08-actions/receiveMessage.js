@@ -22,6 +22,4 @@
   ) {
     actions.notify(message);
   }
-
-  actions.repaintDialogs();
 };

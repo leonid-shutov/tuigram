@@ -1,2 +1,2 @@
-/** @type {DialogsStore['all']} */
+/** @type {DialogsStoreSelf['all']} */
 () => [...self.list];

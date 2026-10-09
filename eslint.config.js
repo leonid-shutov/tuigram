@@ -66,6 +66,9 @@ module.exports = [
         resolveConfig: true,
         resolveTheme: true,
 
+        // store common
+        Mutation: true,
+
         // ui common
         theme: true,
         Component: true,

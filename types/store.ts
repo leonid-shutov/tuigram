@@ -7,7 +7,24 @@ declare global {
   /** Whether the chat advertises a receipt on our own last message, and which one. */
   type Receipt = 'read' | 'unread';
 
-  type DialogsStore = {
+  /**
+   * A store's change event: every mutator emits `change` once it returns, by way of `Mutation`,
+   * so `on('change')` hears about every change made through the store.
+   */
+  type StoreEvents = {
+    emitter: import('node:events').EventEmitter;
+    emit(event: 'change'): void;
+    on(event: 'change', handler: () => void): void;
+  };
+
+  /**
+   * Wrap a store mutator so the store emits `change` once it returns: synchronously, so a
+   * listener sees the new state before the caller's next line, and not at all if it throws.
+   */
+  const Mutation: <F extends (...args: any[]) => unknown>(store: Pick<StoreEvents, 'emit'>, mutate: F) => F;
+
+  /** The dialogs store as its own files see it through `self`: everything, writable. */
+  type DialogsStoreSelf = StoreEvents & {
     list: LinkedDialogsHandle;
     /** The archive folder's dialogs; empty until they finish loading. */
     archive: LinkedDialogsHandle;
@@ -21,12 +38,29 @@ declare global {
     isMuted(chatId: number): boolean;
     markRead(chatId: number): void;
     receive(message: Message): Dialog;
+    /** Swap the dialog's last message for its edited copy; an edit of any other message is a no-op. */
+    replaceLast(message: Message): void;
     setAll(dialogs: Dialog[]): void;
     setArchived(dialogs: Dialog[]): void;
     setUnread(chatId: number, unreadCount: number): void;
   };
 
-  type FoldersStore = {
+  /**
+   * The dialogs store as the rest of the app sees it: the dialogs it hands out are read-only, so
+   * the only way to change one is a mutator, and every mutator emits `change`.
+   */
+  type DialogsStore = Omit<
+    DialogsStoreSelf,
+    'list' | 'archive' | 'emitter' | 'emit' | 'all' | 'inFolder' | 'find' | 'receive'
+  > & {
+    all(): Readonly<Dialog>[];
+    inFolder(folder: Folder): Readonly<Dialog>[];
+    find(chatId: number): Readonly<Dialog> | null;
+    receive(message: Message): Readonly<Dialog>;
+  };
+
+  /** The folders store as its own files see it through `self`: everything, writable. */
+  type FoldersStoreSelf = StoreEvents & {
     /** In the user's order, "All chats" among them; just that one until the folders load. */
     list: Folder[];
     selectedId: number;
@@ -37,6 +71,11 @@ declare global {
     step(step: number): void;
     /** Whether the account has folders of its own beyond "All chats". */
     readonly hasCustom: boolean;
+  };
+
+  /** The folders store as the rest of the app sees it: read-only but for its mutators. */
+  type FoldersStore = Omit<FoldersStoreSelf, 'list' | 'selectedId' | 'emitter' | 'emit'> & {
+    readonly list: readonly Folder[];
   };
 
   type ChatStore = {

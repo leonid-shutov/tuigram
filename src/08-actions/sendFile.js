@@ -22,6 +22,5 @@ async (filePath) => {
     actions.repaintChat();
 
     store.dialogs.receive(message);
-    actions.repaintDialogs();
   }
 };

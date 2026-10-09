@@ -583,8 +583,8 @@ declare global {
       AuthSelf &
       AuthUiSelf &
       MessengerSelf &
-      DialogsStore &
-      FoldersStore &
+      DialogsStoreSelf &
+      FoldersStoreSelf &
       ChatStore &
       DialogsSelf &
       ChatSelf &

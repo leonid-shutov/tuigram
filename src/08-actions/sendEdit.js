@@ -20,8 +20,6 @@ async (messageId, text) => {
   store.chat.replace(message);
   actions.repaintChat();
 
-  const dialog = store.dialogs.find(chatId);
-  if (dialog === null) Crash.hard(new Error(`dialog ${chatId} is not held`));
-  if (dialog.lastMessage?.id === messageId) dialog.lastMessage = message;
-  actions.repaintDialogs();
+  if (store.dialogs.find(chatId) === null) Crash.hard(new Error(`dialog ${chatId} is not held`));
+  store.dialogs.replaceLast(message);
 };
