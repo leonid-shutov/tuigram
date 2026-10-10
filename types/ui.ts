@@ -202,6 +202,10 @@ declare global {
     on(event: 'close', handler: () => void): void;
     moveDown(): void;
     moveUp(): void;
+    pageDown(): void;
+    pageUp(): void;
+    first(): void;
+    last(): void;
     /** Hand the highlighted result to the open request. */
     pick(): void;
     close(): void;

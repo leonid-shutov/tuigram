@@ -104,6 +104,28 @@ Component(
       this.list.moveDown();
     }
 
+    // As many items as the list shows at once: each takes a second line when it has a description.
+    get pageSize() {
+      return Math.max(1, Math.floor(this.list.height / (this.list.showDescription ? 2 : 1)));
+    }
+
+    pageUp() {
+      this.list.moveUp(this.pageSize);
+    }
+
+    pageDown() {
+      this.list.moveDown(this.pageSize);
+    }
+
+    first() {
+      if (this.list.options.length > 0) this.list.setSelectedIndex(0);
+    }
+
+    last() {
+      const count = this.list.options.length;
+      if (count > 0) this.list.setSelectedIndex(count - 1);
+    }
+
     focus() {
       this.input.focus();
     }

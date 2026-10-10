@@ -29,6 +29,12 @@ interface _SearchListRenderable extends _opentui.BoxRenderable {
   filter(): void;
   moveUp(): void;
   moveDown(): void;
+  /** How many items the list shows at once. */
+  readonly pageSize: number;
+  pageUp(): void;
+  pageDown(): void;
+  first(): void;
+  last(): void;
 }
 
 /** One edge's groups. Within a group the last part gives way first; the right group, whole, before

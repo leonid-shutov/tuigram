@@ -2,6 +2,12 @@
 
 ## [Unreleased]
 
+### Added
+
+- The pickers (chat search, the `?` key list, folders) move with `ctrl+n` / `ctrl+p` and `ctrl+j` / `ctrl+k`
+  as well as the arrows, like fzf and Telescope, so your hands stay on the keyboard while you type.
+  `PageUp` / `PageDown` move a page at a time, and `ctrl+Home` / `ctrl+End` jump to the first or last result.
+
 ## [1.1.0] - 2026-10-10
 
 ### Added

@@ -63,9 +63,15 @@ const group = (config) => Keymap.extras.createBindingLookup(config).bindings;
     'prompt.attach': 'ctrl+o',
   }),
 
+  // Typing goes to the query, so moving takes the arrows or a ctrl chord: fzf's and Telescope's
+  // ctrl+j/k and ctrl+n/p. Most terminals send ctrl+j as a bare linefeed, which `return` is not.
   picker: group({
-    'picker.down': 'down',
-    'picker.up': 'up',
+    'picker.down': ['down', 'ctrl+n', 'ctrl+j', 'linefeed'],
+    'picker.up': ['up', 'ctrl+p', 'ctrl+k'],
+    'picker.pageDown': 'pagedown',
+    'picker.pageUp': 'pageup',
+    'picker.first': 'ctrl+home',
+    'picker.last': 'ctrl+end',
     'picker.pick': 'return',
     'picker.close': 'escape',
   }),
