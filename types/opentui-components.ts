@@ -1,7 +1,6 @@
 import * as _opentui from '@opentui/core';
 import type { QRCodeOptions, QRCodeRenderable } from '@opentui/qrcode';
 import type { ResolvedTheme } from './config';
-import type { FilePickerRenderableOptions, FilePickerRenderable } from '@leonid-shutov/opentui-file-picker';
 
 type ChildNode = _opentui.BaseRenderable | null | undefined | false | '';
 type Children = ChildNode | Children[];
@@ -51,6 +50,56 @@ interface _PanelRenderable extends _opentui.BoxRenderable {
   clearTitlePart(name: string): void;
 }
 
+type _FileEntry = { name: string; isDirectory: boolean };
+
+type _FilePickerKeyBinding = { name: string; ctrl?: boolean; shift?: boolean; meta?: boolean };
+
+type _FilePickerKeyBindings = Partial<
+  Record<
+    'moveUp' | 'moveDown' | 'first' | 'last' | 'open' | 'goUp' | 'startFilter' | 'acceptFilter' | 'cancel',
+    _FilePickerKeyBinding[]
+  >
+>;
+
+type _FilePickerOptions = _opentui.RenderableOptions<any> & {
+  /** Defaults to `process.cwd()`. */
+  startDirectory?: string;
+  /** Applied to files only — directories always stay navigable so a filtered file type stays reachable. */
+  filter?: (entry: _FileEntry) => boolean;
+  backgroundColor?: _opentui.ColorInput;
+  focusedBackgroundColor?: _opentui.ColorInput;
+  textColor?: _opentui.ColorInput;
+  focusedTextColor?: _opentui.ColorInput;
+  selectedBackgroundColor?: _opentui.ColorInput;
+  selectedTextColor?: _opentui.ColorInput;
+  directoryColor?: _opentui.ColorInput;
+  fileColor?: _opentui.ColorInput;
+  descriptionColor?: _opentui.ColorInput;
+  errorColor?: _opentui.ColorInput;
+  keyBindings?: _FilePickerKeyBindings;
+};
+
+/** Browses the local filesystem and lets the user pick one file, netrw-style. */
+interface _FilePickerRenderable extends _opentui.Renderable {
+  readonly cwd: string;
+  readonly selectedEntry: _FileEntry | null;
+  /** Whether the live filter is being edited right now, as opposed to merely applied. */
+  readonly filtering: boolean;
+  readonly filter: string;
+  refresh(): void;
+  moveUp(steps?: number): void;
+  moveDown(steps?: number): void;
+  first(): void;
+  last(): void;
+  open(): void;
+  goUp(): void;
+  backspace(): void;
+  startFilter(): void;
+  acceptFilter(): void;
+  clearFilter(): void;
+  cancel(): void;
+}
+
 type ComponentFactory<TOptions extends object, TInstance extends _opentui.BaseRenderable> = (
   props?: { children?: Children } & Partial<Omit<TOptions, 'children'>>,
 ) => TInstance;
@@ -63,6 +112,11 @@ declare global {
   type PanelEdge = _PanelEdge;
   type PanelOptions = _PanelOptions;
   type PanelRenderable = _PanelRenderable;
+  type FileEntry = _FileEntry;
+  type FilePickerKeyBinding = _FilePickerKeyBinding;
+  type FilePickerKeyBindings = _FilePickerKeyBindings;
+  type FilePickerOptions = _FilePickerOptions;
+  type FilePickerRenderable = _FilePickerRenderable;
 
   function Component<TOptions extends object, TInstance extends _opentui.BaseRenderable>(
     RenderableClass: new (ctx: _opentui.RenderContext, options: TOptions) => TInstance,
@@ -95,7 +149,22 @@ declare global {
   const QRCode: ComponentFactory<QRCodeOptions, QRCodeRenderable>;
   const SearchList: ComponentFactory<_SearchListOptions, _SearchListRenderable>;
   const Panel: ComponentFactory<_PanelOptions, _PanelRenderable>;
-  const FilePicker: ComponentFactory<FilePickerRenderableOptions, FilePickerRenderable>;
+  const FilePicker: ComponentFactory<_FilePickerOptions, _FilePickerRenderable> & {
+    Events: {
+      /** A file was chosen. Payload: its absolute path. The renderable does not hide itself. */
+      readonly SELECT: 'select';
+      /** The user asked to leave without picking anything. */
+      readonly CANCEL: 'cancel';
+      /** The browsed directory changed. Payload: the new absolute path. */
+      readonly DIRECTORY_CHANGED: 'directoryChanged';
+      /** The highlighted row changed. Payload: (index, entry). */
+      readonly SELECTION_CHANGED: 'selectionChanged';
+      /** Entered or left filter-editing mode. Payload: whether filtering is now active. */
+      readonly MODE_CHANGED: 'modeChanged';
+      /** A `readdir`/`stat` failed. Payload: the raw error. */
+      readonly ERROR: 'error';
+    };
+  };
 }
 
 export {};

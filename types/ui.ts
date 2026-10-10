@@ -220,7 +220,7 @@ declare global {
 
   // ── 6-ui/filePicker ───────────────────────────────────────────────────────────────────
   type FilePickerSection = Section & {
-    list: import('@leonid-shutov/opentui-file-picker').FilePickerRenderable;
+    list: FilePickerRenderable;
     component: _opentui.BoxRenderable;
     on(event: 'select', handler: (filePath: string) => void): void;
     on(event: 'cancel', handler: () => void): void;

@@ -128,20 +128,6 @@ module.exports = [
     },
   },
   {
-    // A standalone package: real ESM imports, no injected globals.
-    files: ['packages/**/*.js'],
-    rules: {
-      'max-len': ['error', { code: 120, ignoreUrls: true }],
-      'no-nested-ternary': 'off',
-      camelcase: 'off',
-      'new-cap': 'off',
-      curly: 'off',
-    },
-    languageOptions: {
-      sourceType: 'module',
-    },
-  },
-  {
     files: ['playground/**/*.js'],
     rules: {
       'max-len': ['error', { code: 120, ignoreUrls: true }],

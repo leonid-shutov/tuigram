@@ -53,7 +53,6 @@ declare global {
   /** Every dependency in package.json, keyed by package name. Named ones are typed. */
   const npm: Record<string, any> & {
     '@opentui/qrcode': typeof import('@opentui/qrcode');
-    '@leonid-shutov/opentui-file-picker': typeof import('@leonid-shutov/opentui-file-picker');
     '@mtcute/node': typeof import('@mtcute/node');
     '@mtcute/dispatcher': typeof import('@mtcute/dispatcher');
     '@opentui/keymap': typeof import('@opentui/keymap');
