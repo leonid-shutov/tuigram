@@ -16,11 +16,13 @@ or with [mise](https://mise.jdx.dev), which installs Node.js 26 alongside it:
 mise use -g node@26 npm:tuigram
 ```
 
+<!-- AUR package pending: registration on aur.archlinux.org is temporarily closed.
 or on Arch, from the [AUR](https://aur.archlinux.org/packages/tuigram):
 
 ```sh
 yay -S tuigram
 ```
+-->
 
 or from npm, which needs a Node.js 26.4 or newer of your own:
 
