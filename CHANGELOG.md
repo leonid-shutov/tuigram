@@ -38,6 +38,28 @@
   from the messages as well as the chat list.
 - A forwarded message shows `↪ Forwarded from <name>` above its content, with the original sender's
   name colored the same way a group's sender names are.
+- Chat folders: when your account has Telegram folders, `h` / `l` step between them in the chat list and
+  `f` picks one from a searchable list.
+- Albums show as one message; `h` / `l` flip through its pictures.
+- `ctrl+o` in the message box attaches a file, picked from a netrw-style browser: `j` / `k` to move, `l` or
+  `Enter` to open a folder or send the file, `h` or `-` to go up, `/` to filter.
+- `y` (or `c`) copies the selected message's text to the clipboard, on terminals that support OSC 52.
+- `ctrl+e` opens `config.json` in `$VISUAL` / `$EDITOR` (`vi` by default), pre-filled with the defaults
+  if you don't have one yet. Saved changes apply as soon as the editor closes; `proxy` and
+  `updateCheck` take effect on the next start.
+- Errors show up on screen for a few seconds instead of only in the log; `alt+e` expands one to its
+  detail, and dismisses it.
+- The message list is split by day: `Today`, `Yesterday`, then the date.
+- Unread counts in the chat list.
+- The open chat's name and online status / last seen sit on the chat pane's top border.
+- Calls render as messages instead of being skipped.
+- `proxy` in `config.json`: `socks5://`, `socks4://`, `http(s)://`, or a `t.me/proxy?...` MTProxy link.
+- `"hints": false` in `config.json` hides the key hint bar.
+- Install with mise: `mise use -g node@26 npm:tuigram`.
+- npm installs on Windows are recognized, so the update check and `alt+u` work there.
+- Chat search finds chats typed on the wrong keyboard layout: `ghbdtn` matches `привет`, and the other way
+  round.
+- The 2FA password field accepts paste.
 
 ### Changed
 
@@ -47,6 +69,12 @@
   `credentials.json` or `TUIGRAM_API_ID` / `TUIGRAM_API_HASH`) keeps taking priority.
 - A notification from a group now names the sender: the body reads `Timur: pushed the v9 tag` instead of
   just the message. Private chats and channels are unchanged — there the chat name is already the sender.
+- Photo and video thumbnails download at up to 800px (was 320px), and are cached on disk under
+  `$XDG_CACHE_HOME/tuigram` (default `~/.cache`) together with media opened in the system viewer, which
+  used to go to the temp directory.
+- The read receipt and status messages moved from the chat pane footer to its bottom border.
+- History loads in pages of 50 messages and starts fetching the next one earlier, so holding `k` no
+  longer stalls at the top; the chat list's first screen loads 25 chats at once.
 
 ### Fixed
 

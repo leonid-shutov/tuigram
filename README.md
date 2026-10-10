@@ -68,10 +68,17 @@ export TUIGRAM_API_HASH=0123456789abcdef0123456789abcdef
 | `j` / `k` / `↑` / `↓`             | move through chats and messages                                                        |
 | `J` / `K` / `Shift+↑` / `Shift+↓` | scroll a message too tall for the pane (its border reads "hold shift to scroll")       |
 | `gg` / `G`                        | jump to the first / last chat, or oldest / newest message                              |
+| `h` / `l` / `←` / `→`             | previous / next folder in the chat list; previous / next picture in an album           |
+| `f`                               | pick a folder from a searchable list                                                   |
 | `Enter`                           | open the selected chat, open the selected message's media or link, or send the message |
+| `y` / `c`                         | copy the selected message's text                                                       |
 | `e`                               | edit the selected message, if it's yours                                               |
+| `ctrl+o`                          | attach a file from the message box                                                     |
 | `Shift+Enter`                     | start a new line in the message box                                                    |
 | `Esc`                             | leave the message box; cancel an edit; close the search                                |
+| `ctrl+e`                          | edit `config.json` in `$VISUAL` / `$EDITOR`; changes apply when the editor closes      |
+| `alt+e`                           | expand the error on screen, or dismiss it                                              |
+| `ctrl+r`                          | restart and reconnect (happens on its own after the machine wakes from sleep)          |
 | `alt+u`                           | upgrade tuigram, once a newer release is available                                     |
 | `alt+shift+u`                     | dismiss that update notice                                                             |
 | `ctrl+c`                          | quit                                                                                   |
@@ -83,11 +90,13 @@ Cyrillic layout without switching back — `о` moves down, `пп` is `gg`, and 
 
 - QR sign-in in the terminal, with phone + code and a 2FA password as fallbacks
 - Live incoming messages, sending plain text, and read-state sync in both directions
-- A read/unread receipt for your own last message, in the chat pane footer
+- A read/unread receipt for your own last message, on the chat pane's bottom border
 - Inline photo and video thumbnails — the stripped thumbnail travels inside the message and draws
-  instantly, then the 320px version downloads in the background
+  instantly, then an 800px version downloads in the background; albums flip with `h` / `l`
 - Rich previews for ~18 media types, in the chat list and in the message pane
-- Fuzzy chat search
+- Fuzzy chat search, forgiving of a wrong keyboard layout
+- Telegram chat folders
+- Sending files, copying and editing messages
 - Desktop notifications; muted chats stay quiet
 - Per-sender name colors in groups, and a stable per-chat emoji glyph
 - Endless upward history paging
@@ -145,6 +154,7 @@ instead, without starting the TUI.
 | API credentials | `$XDG_CONFIG_HOME/tuigram/credentials.json` — mode `0600`                                     |
 | Session         | `$XDG_DATA_HOME/tuigram/session.db` (default `~/.local/share`) — mode `0600`                  |
 | Log             | `$XDG_STATE_HOME/tuigram/tuigram.log` (default `~/.local/state`), override with `TUIGRAM_LOG` |
+| Cache           | `$XDG_CACHE_HOME/tuigram` (default `~/.cache`) — thumbnails and opened media, safe to delete  |
 
 ## Commands
 
