@@ -49,4 +49,5 @@ const reconcile = (messages) => {
   }
 
   self.paintHeader(receipt, presence);
+  self.paintDate();
 };

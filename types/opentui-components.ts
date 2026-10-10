@@ -32,8 +32,16 @@ interface _SearchListRenderable extends _opentui.BoxRenderable {
 }
 
 /** One edge's groups. Within a group the last part gives way first; the right group, whole, before
- * the left one. */
-type _PanelEdge = { left?: string[]; right?: string[] };
+ * the left one. The centre group shows whole, and only while it clears both side titles. */
+type _PanelEdge = { left?: string[]; right?: string[]; center?: string[] };
+
+/** An edge's groups joined for one frame. */
+type _ComposedEdge = {
+  title: string | undefined;
+  alignment: 'left' | 'right';
+  right?: string;
+  center?: string;
+};
 
 type _PanelOptions = _opentui.BoxOptions & {
   /** The parts each edge's title is built from: a group per side, in drawing order. */
@@ -110,6 +118,7 @@ declare global {
   type SearchListOptions = _SearchListOptions;
   type SearchListRenderable = _SearchListRenderable;
   type PanelEdge = _PanelEdge;
+  type ComposedEdge = _ComposedEdge;
   type PanelOptions = _PanelOptions;
   type PanelRenderable = _PanelRenderable;
   type FileEntry = _FileEntry;

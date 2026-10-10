@@ -3,5 +3,6 @@
 (chatId, name) => {
   self.selectedMessageId = null;
   self.component.clearTitlePart('status');
+  self.component.clearTitlePart('date');
   self.component.setTitlePart('name', config.dialogEmoji ? `${Emoji.fromHash(chatId)} ${name}` : name);
 };

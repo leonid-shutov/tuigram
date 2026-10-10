@@ -10,7 +10,7 @@ Panel({
   titleColor: config.theme.muted,
   titleParts: {
     top: { left: ['label', 'name'], right: ['presence'] },
-    bottom: { left: ['status'], right: ['receipt'] },
+    bottom: { left: ['status'], center: ['date'], right: ['receipt'] },
   },
   children: [self.scroll],
 });

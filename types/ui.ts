@@ -164,6 +164,8 @@ declare global {
       selectAt(index: number): void;
       /** Draw the receipt and presence on the border. */
       paintHeader(receipt: Receipt | null, presence: Presence | null): void;
+      /** Draw the selected message's day and time on the bottom border; blank with no selection. */
+      paintDate(): void;
       /** Derived, recomputed on every read: the TextRenderable under the cursor — the bubble's
        * scroll window — or `null` when the chat is empty. */
       readonly selectedText: _opentui.TextRenderable | null;
