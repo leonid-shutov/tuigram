@@ -2,6 +2,8 @@
 
 ## [Unreleased]
 
+## [1.1.0] - 2026-10-10
+
 ### Added
 
 - `?` (or `alt+k` while typing) opens a searchable list of everything the focused pane can do, with
@@ -113,5 +115,6 @@ First public release.
 
 Supersedes the `1.0.0-alpha.*` series, which is not itemized here.
 
-[unreleased]: https://github.com/leonid-shutov/tuigram/compare/v1.0.0...HEAD
+[unreleased]: https://github.com/leonid-shutov/tuigram/compare/v1.1.0...HEAD
+[1.1.0]: https://github.com/leonid-shutov/tuigram/compare/v1.0.0...v1.1.0
 [1.0.0]: https://github.com/leonid-shutov/tuigram/releases/tag/v1.0.0
