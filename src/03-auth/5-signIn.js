@@ -56,6 +56,40 @@ const recover = async (error) => {
   if (failure !== null) auth.fail(failure);
 };
 
-attempt()
-  .catch(recover)
-  .finally(() => self.ui.dispose());
+// A session that has signed in before keeps its account in storage, readable without the network.
+// Not on `logout`: 4-logout.js is already on its way out with the client.
+const knownAccount = async () => {
+  if (config.cli.command === 'logout') return false;
+  const account = await Result.fromPromise(self.client.prepare().then(() => self.client.storage.self.fetch()));
+  return account.ok && account.unwrap() !== null;
+};
+
+// Checks a known account's session with Telegram while the rest of the app loads and paints:
+// mtcute's start() returns at its first getMe when the session is good. Anything else — revoked,
+// key not accepted, start() wanting a fresh sign-in (with no QR handler, phone or password it
+// throws) — forgets the account and starts over, so the next run takes the blocking path below
+// with its screens and recovery. If the account cannot be forgotten, that next run would land
+// here again, so it ends in auth.fail instead of a restart loop.
+// Either way the returned promise never settles: nothing waiting on the session may run.
+/** @returns {Promise<void>} */
+const confirm = () =>
+  self.client.start({}).then(
+    () => self.secureSession(),
+    async (error) => {
+      console.log(`[auth] stored session not accepted: ${Explain.line(error)}`);
+      const forgotten = await Result.fromPromise(self.client.storage.self.store(null));
+      if (forgotten.ok) Crash.exit(null, __restartExitCode);
+      else auth.fail(error);
+      await new Promise(() => {});
+    },
+  );
+
+// Only the sign-in itself holds up the tree. A known account goes straight on, its session
+// confirmed behind it; `ready` is what Telegram calls at startup wait on (start.js).
+(async () => {
+  if (await knownAccount()) return { ready: confirm() };
+  await attempt()
+    .catch(recover)
+    .finally(() => self.ui.dispose());
+  return { ready: Promise.resolve() };
+})();

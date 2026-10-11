@@ -1,3 +1,5 @@
+screen.splash.destroy();
+
 screen.wrapper.add(
   Box({
     id: 'app',

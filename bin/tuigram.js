@@ -9,7 +9,8 @@ const channel = require('./channel');
 const pkg = require('../package.json');
 
 const RELAUNCH = 'TUIGRAM_RELAUNCHED';
-const FFI_FLAGS = ['--experimental-ffi'];
+// FFI is experimental, and Node says so on stderr before the renderer has the screen.
+const NODE_FLAGS = ['--experimental-ffi', '--disable-warning=ExperimentalWarning'];
 // The app exits with this to be started again from scratch (src/08-actions/restart.js).
 const RESTART = 75;
 const RESTARTED = 'TUIGRAM_RESTARTED';
@@ -89,7 +90,7 @@ if (args[0] === 'upgrade') {
 // The parent stays around even when the flag is already there: it starts the app again whenever
 // it exits with RESTART.
 if (process.env[RELAUNCH] !== '1') {
-  const missing = FFI_FLAGS.filter((flag) => !process.execArgv.includes(flag));
+  const missing = NODE_FLAGS.filter((flag) => !process.execArgv.includes(flag));
   const argv = [...process.execArgv, ...missing, __filename, ...args];
   let env = { ...process.env, [RELAUNCH]: '1' };
   for (;;) {
@@ -180,5 +181,7 @@ process.on('uncaughtException', (error) => bootCrash('uncaught', error));
     packageVersion: pkg.version,
     __restartExitCode: RESTART,
   };
+  // mtcute's CommonJS bundles print an ESM deprecation notice on first require unless this is set.
+  globalThis._MTCUTE_CJS_DEPRECATION_WARNED = true;
   await uncommonjs.loadTree(context, { rootDir });
 })();

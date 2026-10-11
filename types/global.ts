@@ -414,6 +414,8 @@ declare global {
     ui: AuthUiModule;
     fail(error: unknown): void;
     secureSession(): void;
+    /** Settles once Telegram has accepted the session; never, when it did not and the app restarts. */
+    signIn: { ready: Promise<void> };
     /** A client on `config.credentials` as they stand at call time. */
     createClient(): TelegramClient;
     /** Writes credentials.json (0600) and makes it the active key. */

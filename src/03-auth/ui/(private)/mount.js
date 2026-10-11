@@ -1,6 +1,7 @@
 /** @type {AuthUiSelf['mount']} */
 ({ title, children }) => {
   if (self.current !== null) self.current.dispose();
+  screen.splash.destroy();
 
   const box = Frame({ title, children });
   /** @type {((event: import('@opentui/core').KeyEvent) => void)[]} */
@@ -26,7 +27,6 @@
       pasteListeners.length = 0;
       if (self.current !== handle) return;
       self.current = null;
-      screen.wrapper.remove(box);
       box.destroy();
     },
   };

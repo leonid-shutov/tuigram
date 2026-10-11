@@ -10,6 +10,8 @@ declare global {
     renderer: _opentui.CliRenderer;
     wrapper: _opentui.BoxRenderable;
     size: { width: number; height: number; dialogsWidth: number };
+    /** The startup placeholder; `destroy()` is idempotent. */
+    splash: _opentui.TextRenderable;
   };
 
   /**

@@ -6,9 +6,11 @@ process.on('unhandledRejection', (reason) => Crash.hard(reason, 'unhandled rejec
 ui[navigation.selected].focus();
 actions.repaintHints();
 
-actions.loadDialogsPreview();
-actions.loadDialogs();
-actions.loadArchivedDialogs();
-actions.loadFolders();
+auth.signIn.ready.then(() => {
+  actions.loadDialogsPreview();
+  actions.loadDialogs();
+  actions.loadArchivedDialogs();
+  actions.loadFolders();
+});
 
 actions.checkUpdate();

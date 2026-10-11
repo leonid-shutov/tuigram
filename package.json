@@ -43,7 +43,7 @@
     "prepublishOnly": "npm run lint && npm run types"
   },
   "dependencies": {
-    "@leonid-shutov/uncommonjs": "^1.0.1",
+    "@leonid-shutov/uncommonjs": "^1.0.2",
     "@mtcute/dispatcher": "^0.29.7",
     "@mtcute/node": "^0.29.7",
     "@opentui/core": "^0.5.7",
