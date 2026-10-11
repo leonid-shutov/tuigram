@@ -6,6 +6,7 @@
   ui.picker.open({
     title: ` ${keymap.commands.app['app.help'].title} `,
     placeholder: 'Search keys…',
+    pickHint: 'Run',
     // Every binding, not only the plainest the bar shows, so this also teaches the alternatives.
     items: entries.map(({ name, command, bindings }) => ({
       name: command.title,

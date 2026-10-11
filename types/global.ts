@@ -147,6 +147,8 @@ declare global {
     function unreadBadge(count: number): string | null;
     /** The first dialog per chat id, in their order. */
     function unique(dialogs: Iterable<Dialog>): Dialog[];
+    /** A picker row for the dialog: its name, its last message, and its chat id as the value. */
+    function toPickerItem(dialog: Dialog): PickerItem<number>;
   }
 
   type Dialog = _Dialog;
@@ -450,6 +452,8 @@ declare global {
     readHistory(chatId: number): Promise<unknown>;
     /** Send a text, as a reply to `replyTo` when given. */
     sendMessage(chatId: number, text: string, replyTo?: number): Promise<Message>;
+    /** Forward `message` from `fromChatId` to `toChatId`, every part of an album; resolves to the copy. */
+    forwardMessage(fromChatId: number, message: Message, toChatId: number): Promise<Message>;
     sendFile(chatId: number, filePath: string, params?: { caption?: string; replyTo?: number }): Promise<Message>;
   };
 

@@ -54,6 +54,7 @@ const group = (config) => Keymap.extras.createBindingLookup(config).bindings;
     'chat.copy': ['y', 'c'],
     'chat.edit': 'e',
     'chat.reply': 'r',
+    'chat.forward': 'f',
     'chat.scrollDown': ['shift+j', 'shift+down'],
     'chat.scrollUp': ['shift+k', 'shift+up'],
   }),

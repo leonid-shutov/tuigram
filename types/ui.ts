@@ -220,6 +220,8 @@ declare global {
     last(): void;
     /** Hand the highlighted result to the open request. */
     pick(): void;
+    /** What the hint bar calls a pick: the open request's `pickHint`, else 'Open'. */
+    readonly pickHint: string;
     close(): void;
   };
 
@@ -231,6 +233,8 @@ declare global {
     title: string;
     placeholder: string;
     items: PickerItem<T>[];
+    /** What the hint bar calls a pick; 'Open' when omitted. */
+    pickHint?: string;
     onPick(value: T): void;
   };
 

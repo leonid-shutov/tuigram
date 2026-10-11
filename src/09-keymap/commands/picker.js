@@ -22,7 +22,10 @@
   'picker.last': { title: 'Last result', run: () => ui.picker.last() },
   'picker.pick': {
     title: 'Choose the highlighted result',
-    hint: 'Open',
+    // Read at each repaint, which follows the picker taking focus: by then the request is in.
+    get hint() {
+      return ui.picker.pickHint;
+    },
     priority: 'obvious',
     run: () => ui.picker.pick(),
   },

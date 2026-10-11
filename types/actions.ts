@@ -34,6 +34,8 @@ declare global {
     loadReplies(messages: ChatMessage[]): void;
     /** Put the prompt in reply mode for the focused message and focus it. */
     replySelected(): void;
+    /** Pick a chat and forward the focused message there, an album whole. */
+    forwardSelected(): void;
     /** Copy the focused message's text to the system clipboard via OSC 52. */
     copySelected(): void;
     /** Push a new text to the server for an already-sent message. */
