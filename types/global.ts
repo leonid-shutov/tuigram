@@ -39,7 +39,7 @@ declare global {
   /** Global because `Media.isFile` narrows to it and `8-actions` passes it around. */
   type FileMedia = _FileMedia;
   type MessagePromptEventMap = {
-    send: [text: string];
+    send: [text: string, replyTo: number | null];
     edit: [messageId: number, text: string];
     exit: [];
   };
@@ -124,13 +124,18 @@ declare global {
   };
 
   namespace Message {
-    const pending: (text: string, media?: Media[]) => PendingMessage;
+    const pending: (text: string, media?: Media[], replyTo?: Message['replyTo']) => PendingMessage;
+    /** Narrows to a message the server has confirmed: false for null and for our pending ones. */
+    const isConfirmed: (message: Message | PendingMessage | null) => message is Message;
     /** One-line summary of a message: its text, else a label for its media; null for none. */
     const preview: (message: Message | PendingMessage | null | undefined) => string | null;
     /** True when `message` reads as part of `previous`'s burst: same sender, same day, minutes apart. */
     const continues: (previous: Message | PendingMessage | undefined, message: Message | PendingMessage) => boolean;
     /** True when `message` answers a message in its chat that is not resolved yet: the reply still
      * lacks the original's sender and text. */
+    /** What a reply quotes of `target`: its sender (`You` for ours) and a line of it; `deleted`
+     * when it is gone (null). */
+    const quote: (target: Message | null) => Omit<NonNullable<Message['replyTo']>, 'id'>;
     const awaitsQuote: (
       message: Message | PendingMessage,
     ) => message is Message & { replyTo: NonNullable<Message['replyTo']> & { id: number } };
@@ -342,6 +347,9 @@ declare global {
     const clip: (text: string, width: number) => string;
     /** `text` clipped, then padded with spaces to exactly `width` cells. */
     const fit: (text: string, width: number) => string;
+    /** `text` on one line, its whitespace runs collapsed to a space, ending in `…` where it had
+     * to be clipped to fit in `width` cells. */
+    const ellipsize: (text: string, width: number) => string;
   }
 
   namespace Link {
@@ -440,8 +448,9 @@ declare global {
     onNewMessage(handler: (message: Message) => void): void;
     onPresenceUpdate(handler: (chatId: number, presence: Presence) => void): void;
     readHistory(chatId: number): Promise<unknown>;
-    sendMessage(chatId: number, text: string): Promise<Message>;
-    sendFile(chatId: number, filePath: string, params?: { caption?: string }): Promise<Message>;
+    /** Send a text, as a reply to `replyTo` when given. */
+    sendMessage(chatId: number, text: string, replyTo?: number): Promise<Message>;
+    sendFile(chatId: number, filePath: string, params?: { caption?: string; replyTo?: number }): Promise<Message>;
   };
 
   /** The mtcute→domain conversions, private to this section — everywhere else only ever sees the

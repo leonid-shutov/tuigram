@@ -1,2 +1,2 @@
 /** @type {MessengerModule['sendMessage']} */
-(chatId, text) => messenger.tg.sendText(chatId, text).then(self.toMessage);
+(chatId, text, replyTo) => messenger.tg.sendText(chatId, text, { replyTo }).then(self.toMessage);

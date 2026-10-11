@@ -9,6 +9,8 @@
   `PageUp` / `PageDown` move a page at a time, and `ctrl+Home` / `ctrl+End` jump to the first or last result.
 - A reply shows what it answers: the original's sender and a line of its text, quoted at the top of
   the bubble.
+- `r` on a message replies to it: the box says who you are answering, `esc` drops the reply and keeps
+  what you typed, and a file attached meanwhile goes out as the reply too.
 
 ## [1.1.0] - 2026-10-10
 

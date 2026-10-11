@@ -1,5 +1,7 @@
 /** @type {Actions['loadChat']} */
 async (chatId) => {
+  // An edit or a reply names a message of the chat being left; it means nothing in this one.
+  ui.messagePrompt.reset();
   // The generator is inert until the first next(), so it is safe to build before opening.
   const pager = messenger.getHistory(chatId, 30, 50);
   store.chat.open(chatId, pager);

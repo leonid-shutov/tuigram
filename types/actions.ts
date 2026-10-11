@@ -32,6 +32,8 @@ declare global {
     loadThumb(message: ChatMessage): void;
     /** Resolve the sender and text of what each message replies to, and push them into its bubble. */
     loadReplies(messages: ChatMessage[]): void;
+    /** Put the prompt in reply mode for the focused message and focus it. */
+    replySelected(): void;
     /** Copy the focused message's text to the system clipboard via OSC 52. */
     copySelected(): void;
     /** Push a new text to the server for an already-sent message. */
@@ -70,9 +72,10 @@ declare global {
     repaintDialogs(): void;
     /** Redraw the hint bar for whichever section is focused. Follows every `navigation.select`. */
     repaintHints(): void;
-    send(text: string): Promise<void>;
+    /** Send a text, as a reply to `replyTo` when given: an optimistic pending bubble, then the real send. */
+    send(text: string, replyTo?: number | null): Promise<void>;
     /** Attach a local file: an optimistic pending bubble, then the real upload via mtcute. */
-    sendFile(filePath: string): Promise<void>;
+    sendFile(filePath: string, replyTo?: number | null): Promise<void>;
     /** The window lost focus; what lands in the open chat from now on stays unread. */
     windowBlur(): void;
     /** The window came back: read whatever landed in the open chat while it was away. */

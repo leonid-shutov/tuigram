@@ -1,6 +1,7 @@
 /** @type {typeof Message.awaitsQuote} */
 (message) => {
-  const { chatId, replyTo } = message;
-  if (chatId === undefined || replyTo === null || replyTo.id === null) return false;
+  if (!Message.isConfirmed(message)) return false;
+  const { replyTo } = message;
+  if (replyTo === null || replyTo.id === null) return false;
   return replyTo.sender === null && !replyTo.deleted;
 };

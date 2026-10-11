@@ -1,7 +1,7 @@
 import * as _opentui from '@opentui/core';
 import * as _events from 'node:events';
 import { KeyedList as _KeyedList } from './collections';
-import { Dialog, DialogOption as _DialogOption, ImageMedia, Media as _Media, Presence } from './domain';
+import { Dialog, DialogOption as _DialogOption, ImageMedia, Media as _Media, Message, Presence } from './domain';
 
 declare global {
   type DialogOption = _DialogOption;
@@ -178,10 +178,18 @@ declare global {
     component: _opentui.BoxRenderable;
     input: _opentui.TextareaRenderable;
     on<K extends keyof MessagePromptEventMap>(event: K, handler: (...args: MessagePromptEventMap[K]) => void): void;
-    /** Report the typed text as the `send` (or, while editing, `edit`) intent and empty the box. */
+    /** Report the typed text as the `send` (with the message it replies to, if any) or, while
+     * editing, `edit` intent, and empty the box. */
     send(): void;
     /** Stash the current draft, seed the box with a message's text, and enter edit mode. */
     edit(messageId: number, text: string): void;
+    /** Enter reply mode for `messageId`, keeping the draft; the border names `quote`. */
+    reply(messageId: number, quote: Omit<NonNullable<Message['replyTo']>, 'id'>): void;
+    /** Leave reply mode, returning the id it replied to, or null outside it. */
+    takeReply(): number | null;
+    /** Leave edit and reply mode, as when another chat opens. */
+    reset(): void;
+    /** Leave reply mode, else edit mode, else the box. */
     exit(): void;
   };
 
@@ -189,6 +197,8 @@ declare global {
     Emitting & {
       /** The message id being edited, or `null` outside edit mode. */
       editing: number | null;
+      /** The message id the next send answers, or `null` outside reply mode. */
+      replyingTo: number | null;
       /** The draft that was in the box before `edit` was called, restored when the edit is cancelled. */
       draft: string;
       /** Leave edit mode and restore the draft, without reporting any intent. */

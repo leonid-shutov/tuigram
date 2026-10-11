@@ -1,6 +1,6 @@
 ui.filePicker.on('select', (filePath) => {
   navigation.select('messagePrompt');
-  actions.sendFile(filePath);
+  actions.sendFile(filePath, ui.messagePrompt.takeReply());
 });
 ui.filePicker.on('cancel', () => navigation.select('messagePrompt'));
 ui.filePicker.on('mode', actions.repaintHints);

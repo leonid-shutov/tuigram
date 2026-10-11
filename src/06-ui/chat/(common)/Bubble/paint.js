@@ -9,10 +9,7 @@ const BAR = '▎';
 const QUOTE_CELLS = 40;
 
 /** @param {string} line */
-const clipQuote = (line) => {
-  const flat = line.replaceAll(/\s+/g, ' ');
-  return Cells.width(flat) > QUOTE_CELLS ? `${Cells.clip(flat, QUOTE_CELLS - 1)}…` : flat;
-};
+const clipQuote = (line) => Cells.ellipsize(line, QUOTE_CELLS);
 
 // Two rows whatever state the reply is in, so resolving it never changes the bubble's height:
 // unresolved it is `…` under `…`; with no one to name (a deleted original, a story) it is the

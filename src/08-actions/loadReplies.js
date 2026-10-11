@@ -1,14 +1,4 @@
-/** @typedef {import('../../types/domain').Message} Replied */
-/** @typedef {Omit<NonNullable<Replied['replyTo']>, 'id'>} Quote */
-
-/** @param {Replied | null} target @returns {Quote} */
-const quoteOf = (target) => {
-  if (target === null) return { sender: null, preview: null, deleted: true };
-  const { id, isSelf, displayName } = target.sender;
-  let name = displayName ?? 'Deleted account';
-  if (isSelf) name = 'You';
-  return { sender: { id, displayName: name }, preview: Message.preview(target), deleted: false };
-};
+/** @typedef {ReturnType<typeof Message.quote>} Quote */
 
 /** @param {number} chatId @param {number} id @param {Quote} resolved */
 const landReply = (chatId, id, resolved) => {
@@ -31,7 +21,7 @@ const landReply = (chatId, id, resolved) => {
     const replyTo = message.replyTo;
     const target = store.chat.findConfirmed(replyTo.id);
     if (target !== null) {
-      landReply(chatId, message.id, quoteOf(target));
+      landReply(chatId, message.id, Message.quote(target));
       continue;
     }
     const answering = missing.get(replyTo.id) ?? [];
@@ -44,7 +34,7 @@ const landReply = (chatId, id, resolved) => {
     .getMessages(chatId, ids)
     .then((targets) => {
       for (const [index, target] of targets.entries()) {
-        for (const id of missing.get(ids[index]) ?? []) landReply(chatId, id, quoteOf(target));
+        for (const id of missing.get(ids[index]) ?? []) landReply(chatId, id, Message.quote(target));
       }
     })
     .catch((error) => Crash.soft(error));

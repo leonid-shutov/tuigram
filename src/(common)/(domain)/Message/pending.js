@@ -1,5 +1,5 @@
 /** @type {typeof Message.pending} */
-(text, media = []) => ({
+(text, media = [], replyTo = null) => ({
   id: Random.id(),
   text,
   media,
@@ -9,6 +9,6 @@
   chatName: undefined,
   isGroup: false,
   forwardedFrom: null,
-  replyTo: null,
+  replyTo,
   date: new Date(),
 });

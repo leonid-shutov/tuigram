@@ -30,6 +30,7 @@
   },
   'chat.open': { title: 'Open media or link', hint: 'Open', priority: 'essential', run: () => actions.openSelected() },
   'chat.copy': { title: 'Copy message text', hint: 'Copy', priority: 'essential', run: () => actions.copySelected() },
+  'chat.reply': { title: 'Reply to message', hint: 'Reply', priority: 'essential', run: () => actions.replySelected() },
   'chat.edit': { title: 'Edit message', hint: 'Edit', priority: 'essential', run: () => actions.editSelected() },
   // Off the bar: the bubble's own border says "hold shift to scroll" exactly when there is more to see.
   'chat.scrollDown': { title: 'Scroll message down', hint: false, run: () => ui.chat.scrollMessage(1) },

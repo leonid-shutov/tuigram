@@ -1,5 +1,6 @@
 /** @type {MessagePromptSection['edit']} */
 (messageId, text) => {
+  self.takeReply();
   const { input } = self;
   self.draft = input.plainText;
   self.editing = messageId;
