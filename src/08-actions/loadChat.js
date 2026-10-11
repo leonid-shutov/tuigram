@@ -23,6 +23,7 @@ async (chatId) => {
   store.chat.seed(messages);
   ui.chat.selectLast();
   for (const message of messages) actions.loadThumb(message);
+  actions.loadReplies(messages);
 
   store.dialogs.markRead(chatId);
   void messenger.readHistory(chatId).catch((error) => Crash.soft(error));

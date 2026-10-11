@@ -13,10 +13,10 @@ async (messageId, text) => {
 
   if (store.chat.chatId !== chatId) return;
   // Telegram answers with one album part, and a thumbnail may have landed while the edit was in
-  // flight: the media stay the ones held now.
+  // flight: the media stay the ones held now. So does the reply, which comes back unresolved.
   const held = store.chat.messages.find(({ id }) => id === messageId);
   if (held === undefined) return;
-  const message = { ...edited.unwrap(), media: held.media };
+  const message = { ...edited.unwrap(), media: held.media, replyTo: held.replyTo };
   store.chat.replace(message);
 
   if (store.dialogs.find(chatId) === null) Crash.hard(new Error(`dialog ${chatId} is not held`));

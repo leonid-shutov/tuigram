@@ -20,4 +20,5 @@ async () => {
   const older = value.toReversed();
   store.chat.prepend(older);
   for (const message of older) actions.loadThumb(message);
+  actions.loadReplies(older);
 };

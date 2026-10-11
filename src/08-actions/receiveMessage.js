@@ -10,6 +10,7 @@
   if (isOpen) {
     store.chat.append(message);
     actions.loadThumb(message);
+    actions.loadReplies([message]);
   }
   if (isSeen) {
     store.dialogs.markRead(message.chatId);

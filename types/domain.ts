@@ -61,6 +61,15 @@ export type Message = {
   isGroup: boolean;
   /** Set when the message was forwarded; `id` is null for a sender with forwards hidden. */
   forwardedFrom: { id: number | null; displayName: string } | null;
+  /** Set when the message answers another. A reply within the chat carries only the id, so
+   * `sender` and `preview` stay null until `actions.loadReplies` resolves them; `deleted` when the
+   * original is gone. `id` is null for a reply to a story or to a private chat's message. */
+  replyTo: {
+    id: number | null;
+    sender: { id: number | null; displayName: string } | null;
+    preview: string | null;
+    deleted: boolean;
+  } | null;
   /** When it was sent; a pending message's is when we sent it. */
   date: Date;
 };

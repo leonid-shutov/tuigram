@@ -9,9 +9,9 @@
       .then((path) => {
         // The chat may have been switched, or the message dropped, while the download ran.
         if (path === null || store.chat.chatId !== chatId) return;
-        const held = store.chat.messages.find((message) => message.id === id);
-        // A pending message (no chatId yet) is ours, still uploading: nothing of it is fetched.
-        if (held === undefined || held.chatId === undefined) return;
+        // A pending message is ours, still uploading: nothing of it is fetched.
+        const held = store.chat.findConfirmed(id);
+        if (held === null) return;
         const part = held.media[index];
         if (!Media.isImage(part)) return;
         const message = { ...held, media: held.media.with(index, { ...part, thumb: path }) };

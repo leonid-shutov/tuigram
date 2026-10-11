@@ -97,6 +97,8 @@ declare global {
   /** One bubble, its nodes and what they draw. Only the Bubble functions write to it. */
   type BubbleView = {
     box: _opentui.BoxRenderable;
+    /** The two-line quote of what the message answers; hidden when it answers nothing. */
+    reply: _opentui.TextRenderable;
     /** The album's `‹ 2/4 ›`; hidden for a lone message. */
     counter: _opentui.TextRenderable;
     /** Null when no part was drawable when the bubble was built, or images are off. */

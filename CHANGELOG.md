@@ -7,6 +7,8 @@
 - The pickers (chat search, the `?` key list, folders) move with `ctrl+n` / `ctrl+p` and `ctrl+j` / `ctrl+k`
   as well as the arrows, like fzf and Telescope, so your hands stay on the keyboard while you type.
   `PageUp` / `PageDown` move a page at a time, and `ctrl+Home` / `ctrl+End` jump to the first or last result.
+- A reply shows what it answers: the original's sender and a line of its text, quoted at the top of
+  the bubble.
 
 ## [1.1.0] - 2026-10-10
 

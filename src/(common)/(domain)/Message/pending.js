@@ -9,5 +9,6 @@
   chatName: undefined,
   isGroup: false,
   forwardedFrom: null,
+  replyTo: null,
   date: new Date(),
 });

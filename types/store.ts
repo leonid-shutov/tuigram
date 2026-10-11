@@ -96,6 +96,8 @@ declare global {
     drop(tempId: number): void;
     /** Whether the window holds the server's copy of a message — pending entries never match. */
     hasConfirmed(messageId: number): boolean;
+    /** The server's copy of a held message, or null when it isn't held or is still pending. */
+    findConfirmed(messageId: number): Message | null;
     open(chatId: number, pager: AsyncGenerator<Message[]>): void;
     prepend(older: ChatMessage[]): void;
     /** Swap a held message for the server's copy of the same id; throws when it isn't held. */

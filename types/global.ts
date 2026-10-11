@@ -129,6 +129,11 @@ declare global {
     const preview: (message: Message | PendingMessage | null | undefined) => string | null;
     /** True when `message` reads as part of `previous`'s burst: same sender, same day, minutes apart. */
     const continues: (previous: Message | PendingMessage | undefined, message: Message | PendingMessage) => boolean;
+    /** True when `message` answers a message in its chat that is not resolved yet: the reply still
+     * lacks the original's sender and text. */
+    const awaitsQuote: (
+      message: Message | PendingMessage,
+    ) => message is Message & { replyTo: NonNullable<Message['replyTo']> & { id: number } };
   }
 
   namespace Dialog {
@@ -414,6 +419,8 @@ declare global {
     tg: TelegramClient;
     dispatcher: Dispatcher;
     getHistory(chatId: number, firstPageSize: number, pageSize?: number): AsyncGenerator<Message[]>;
+    /** The messages behind `ids`, in their order; null for one that is gone. Albums stay unfolded. */
+    getMessages(chatId: number, ids: number[]): Promise<(Message | null)[]>;
     /** Path to the larger thumbnail (800px box, falling back to 320px) behind a file id, on
      * disk, or null if it could not be fetched. Cached in memory and on disk. */
     downloadThumb(fileId: string): Promise<string | null>;

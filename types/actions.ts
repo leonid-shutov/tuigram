@@ -30,6 +30,8 @@ declare global {
     loadOlder(): Promise<void>;
     /** Fetch a message's 320px thumbnail, if it has one, and push it into its bubble. */
     loadThumb(message: ChatMessage): void;
+    /** Resolve the sender and text of what each message replies to, and push them into its bubble. */
+    loadReplies(messages: ChatMessage[]): void;
     /** Copy the focused message's text to the system clipboard via OSC 52. */
     copySelected(): void;
     /** Push a new text to the server for an already-sent message. */

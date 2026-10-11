@@ -13,6 +13,9 @@ const SCROLL_HINT = ' hold shift to scroll ';
   const counter = Text(muted);
   const picture = protocol === 'off' || size === null ? null : Picture(protocol, size);
   const label = Text({ ...muted, attributes: tui.TextAttributes.ITALIC });
+  // Always two rows, unresolved or not, so a reply resolving later never changes the bubble's
+  // height; `wrapMode: 'none'` keeps each line its own row even in a bubble narrower than it.
+  const reply = Text({ flexShrink: 0, wrapMode: 'none', visible: false });
   // `flexShrink: 1` (opentui's default, spelled out because it matters) so the text is the second
   // child to yield to the bubble's height cap, after the picture (see Picture.js) has given up
   // rows down to its own floor: yoga then hands the text whatever rows are left, and it becomes
@@ -47,8 +50,8 @@ const SCROLL_HINT = ' hold shift to scroll ';
     // A message longer than the chat section is unreadable and impossible to select sensibly, so
     // the bubble never outgrows the section: '100%' is the scroll viewport's inner height, which
     // yoga re-resolves on every layout pass — it tracks a terminal resize and the message prompt
-    // growing under it with nothing to recompute. `flexShrink: 0` here, on the forward line, AND
-    // on the labels keeps them at their own rows instead of being squeezed onto shared lines (a
+    // growing under it with nothing to recompute. `flexShrink: 0` here, on the forward line, the
+    // reply AND on the labels keeps them at their own rows instead of being squeezed onto shared lines (a
     // label landing on the text's first line). The picture and the text are the two children that
     // DO shrink, in that order — see Picture.js and `text` above — so a tall photo gives up rows
     // before the caption loses even one line, and the text only becomes the bubble's scroll
@@ -58,7 +61,7 @@ const SCROLL_HINT = ' hold shift to scroll ';
     flexShrink: 0,
     overflow: 'hidden',
 
-    children: [forwardText, counter, picture, label, text],
+    children: [forwardText, reply, counter, picture, label, text],
 
     // eslint-disable-next-line no-extra-parens -- prettier insists on these parens
     ...(name && {
@@ -75,7 +78,7 @@ const SCROLL_HINT = ' hold shift to scroll ';
   });
 
   /** @type {BubbleView} */
-  const view = { box, counter, picture, label, text, message, mediumIndex: 0 };
+  const view = { box, reply, counter, picture, label, text, message, mediumIndex: 0 };
   Bubble.paint(view);
   return view;
 };
