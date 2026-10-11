@@ -70,6 +70,23 @@ declare global {
       rows: Map<number, { key: string; option: _DialogOption }>;
     };
 
+  // ── 6-ui/(common) ─────────────────────────────────────────────────────────────────────
+  namespace Sender {
+    /** A stable colour per sender, for names in group bubbles, forward lines and quotes. */
+    const color: (key: string) => string;
+  }
+
+  /** The two quoted lines, as `Quote.paint` draws them: `head` in `color` (bold, or italic for a
+   * line standing in for a sender), `body` muted under it, or a bare bar when null. */
+  type QuoteLines = { color: string; head: string; body: string | null; italic: boolean };
+
+  /** A bar-led two-line quote: of what a message answers, in its bubble and in the message box. */
+  namespace Quote {
+    const from: (replyTo: Omit<NonNullable<Message['replyTo']>, 'id'>) => QuoteLines;
+    /** Each line ellipsized to `cells`, bar included. */
+    const paint: (lines: QuoteLines, cells: number) => _opentui.StyledText;
+  }
+
   // ── 6-ui/chat ─────────────────────────────────────────────────────────────────────────
   /** A message drawn as a bordered box: album counter, picture and media label above the text. */
   namespace Bubble {
@@ -81,8 +98,6 @@ declare global {
     const update: (view: BubbleView, message: ChatMessage) => void;
     /** Flip an album by `step` media, wrapping around. No-op with fewer than two. */
     const flipAlbum: (view: BubbleView, step: number) => void;
-    /** A stable colour per sender, for names in group bubbles and forward lines. */
-    const senderColor: (key: string) => string;
     /** Bubble size in cells, or null when the medium has no drawable image. */
     const size: (media: ImageMedia) => { cols: number; rows: number } | null;
     /** The size of the first drawable medium among `media`, shared by every picture in the album. */
@@ -183,7 +198,7 @@ declare global {
     send(): void;
     /** Stash the current draft, seed the box with a message's text, and enter edit mode. */
     edit(messageId: number, text: string): void;
-    /** Enter reply mode for `messageId`, keeping the draft; the border names `quote`. */
+    /** Enter reply mode for `messageId`, keeping the draft; `quote` is drawn above the input. */
     reply(messageId: number, quote: Omit<NonNullable<Message['replyTo']>, 'id'>): void;
     /** Leave reply mode, returning the id it replied to, or null outside it. */
     takeReply(): number | null;
@@ -203,6 +218,16 @@ declare global {
       draft: string;
       /** Leave edit mode and restore the draft, without reporting any intent. */
       clearEdit(): void;
+      /** The line over the input: the message being answered or edited; `null` hides it. */
+      quote: _opentui.TextRenderable;
+      /** The border-joined line between the quote and the input, shown with the quote. */
+      rule: _opentui.TextRenderable;
+      /** What `quote` draws, kept to redraw it at a new width. */
+      quoted: QuoteLines | null;
+      /** Draw `quoted` at the box's current width, or hide the quote. */
+      paintQuote(): void;
+      /** Show `quoted` over the input, or hide it with `null`. */
+      setQuote(quoted: QuoteLines | null): void;
     };
 
   // ── 6-ui/picker ───────────────────────────────────────────────────────────────────────

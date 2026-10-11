@@ -6,5 +6,5 @@
   self.editing = messageId;
   input.replaceText(text);
   input.setCursor(input.lineCount - 1, (text.split('\n').at(-1) ?? '').length);
-  self.component.bottomTitle = ' editing ';
+  self.setQuote({ color: config.theme.accent, head: '✎ Editing', body: text === '' ? null : text, italic: false });
 };

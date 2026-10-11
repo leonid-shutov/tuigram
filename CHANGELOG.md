@@ -9,10 +9,16 @@
   `PageUp` / `PageDown` move a page at a time, and `ctrl+Home` / `ctrl+End` jump to the first or last result.
 - A reply shows what it answers: the original's sender and a line of its text, quoted at the top of
   the bubble.
-- `r` on a message replies to it: the box says who you are answering, `esc` drops the reply and keeps
-  what you typed, and a file attached meanwhile goes out as the reply too.
+- `r` on a message replies to it: the message box quotes what you are answering above your text, the
+  way the bubble will, `esc` drops the reply and keeps what you typed, and a file attached meanwhile
+  goes out as the reply too.
 - `f` on a message forwards it: pick a chat and it goes out at once, with its "Forwarded from"
   header, an album whole; you stay in the chat you were reading.
+
+### Changed
+
+- Editing a message quotes the original above the message box, under an "Editing" heading, instead
+  of a label on its border.
 
 ## [1.1.0] - 2026-10-10
 

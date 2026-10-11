@@ -1,1 +1,1 @@
-({ editing: null, replyingTo: null, draft: '' });
+({ editing: null, replyingTo: null, draft: '', quoted: null });

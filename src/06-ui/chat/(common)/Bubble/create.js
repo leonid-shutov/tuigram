@@ -29,7 +29,7 @@ const SCROLL_HINT = ' hold shift to scroll ';
     Text({
       content: new tui.StyledText([
         tui.fg(config.theme.muted)(tui.italic('↪ Forwarded from ')),
-        tui.fg(Bubble.senderColor(String(forwardedFrom.id ?? forwardedFrom.displayName)))(
+        tui.fg(Sender.color(String(forwardedFrom.id ?? forwardedFrom.displayName)))(
           tui.italic(forwardedFrom.displayName.slice(0, 24)),
         ),
       ]),
@@ -67,7 +67,7 @@ const SCROLL_HINT = ' hold shift to scroll ';
     ...(name && {
       title: ` ${name} `,
       titleAlignment: 'left',
-      titleColor: Bubble.senderColor(String(sender.id)),
+      titleColor: Sender.color(String(sender.id)),
       minWidth: name.length + 6,
     }),
   });

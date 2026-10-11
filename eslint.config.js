@@ -83,6 +83,8 @@ module.exports = [
         ScrollBox: true,
         Media: true,
         Emoji: true,
+        Quote: true,
+        Sender: true,
         Option: true,
         Input: true,
 
