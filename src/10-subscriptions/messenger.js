@@ -5,5 +5,6 @@ messenger.dispatcher.onError((error) => {
 
 void messenger.onNewMessage(actions.receiveMessage);
 void messenger.onHistoryRead(actions.historyRead);
+void messenger.onDeleteMessage(actions.messagesDeleted);
 void messenger.onPresenceUpdate(actions.presenceUpdate);
 void messenger.onFoldersChange(actions.loadFolders);

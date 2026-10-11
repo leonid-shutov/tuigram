@@ -29,4 +29,5 @@ const toReplyTo = (message) => {
   forwardedFrom: message.forward === null ? null : toPeer(message.forward.sender),
   replyTo: toReplyTo(message),
   date: message.date,
+  deleteScopes: self.deleteScopesOf(message),
 });

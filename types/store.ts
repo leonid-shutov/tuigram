@@ -35,11 +35,15 @@ declare global {
     /** A dialog in either the main list or the archive. */
     find(chatId: number): Dialog | null;
     isArchived(chatId: number): boolean;
+    /** Ids of the chats, archive included, whose last message is one of `messageIds`. */
+    withLast(messageIds: number[]): number[];
     isMuted(chatId: number): boolean;
     markRead(chatId: number): void;
     receive(message: Message): Dialog;
     /** Swap the dialog's last message for its edited copy; an edit of any other message is a no-op. */
     replaceLast(message: Message): void;
+    /** Set the dialog's last message after a delete, without moving it or touching unread counts. */
+    setLast(chatId: number, message: Message | null): void;
     setAll(dialogs: Dialog[]): void;
     setArchived(dialogs: Dialog[]): void;
     setUnread(chatId: number, unreadCount: number): void;
@@ -102,11 +106,15 @@ declare global {
     prepend(older: ChatMessage[]): void;
     /** Swap a held message for the server's copy of the same id; throws when it isn't held. */
     replace(message: Message): void;
+    /** Take deleted messages out of the window; a reply to one then reads as a deleted original. */
+    remove(ids: number[]): void;
     /** Lay the first page under the window, dropping held entries the page already has. */
     seed(page: Message[]): void;
     setPresence(presence: Presence | null): void;
     /** Derived, recomputed on every read: `null` when the last message isn't ours. */
     readonly receipt: Receipt | null;
+    /** Derived: the newest confirmed message held, or `null` when the window has none. */
+    readonly lastConfirmed: Message | null;
     setReadUpTo(maxReadId: number): void;
   };
 

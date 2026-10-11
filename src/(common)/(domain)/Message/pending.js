@@ -11,4 +11,5 @@
   forwardedFrom: null,
   replyTo,
   date: new Date(),
+  deleteScopes: [],
 });

@@ -10,6 +10,7 @@ import {
 import { Dispatcher } from '@mtcute/dispatcher';
 import {
   Message,
+  DeleteScope as _DeleteScope,
   Dialog as _Dialog,
   Folder as _Folder,
   FileMedia as _FileMedia,
@@ -151,6 +152,7 @@ declare global {
     function toPickerItem(dialog: Dialog): PickerItem<number>;
   }
 
+  type DeleteScope = _DeleteScope;
   type Dialog = _Dialog;
   type Folder = _Folder;
 
@@ -423,6 +425,7 @@ declare global {
   type AuthSelf = Omit<AuthModule, 'ui'> & { ui: AuthUiSelf };
 
   // ── 4-messenger ───────────────────────────────────────────────────────────────────────
+  type DeleteEvent = { channelId: number | null; messageIds: number[] };
   type HistoryReadEvent = { chatId: number; isOutbox: boolean; maxReadId: number; unreadCount: number };
 
   type MessengerModule = {
@@ -448,12 +451,20 @@ declare global {
     onFoldersChange(handler: () => void): void;
     onHistoryRead(handler: (event: HistoryReadEvent) => void): void;
     onNewMessage(handler: (message: Message) => void): void;
+    /** Messages were deleted; `channelId` is null outside channels, where ids are not tied to a chat. */
+    onDeleteMessage(handler: (event: DeleteEvent) => void): void;
     onPresenceUpdate(handler: (chatId: number, presence: Presence) => void): void;
     readHistory(chatId: number): Promise<unknown>;
     /** Send a text, as a reply to `replyTo` when given. */
     sendMessage(chatId: number, text: string, replyTo?: number): Promise<Message>;
     /** Forward `message` from `fromChatId` to `toChatId`, every part of an album; resolves to the copy. */
     forwardMessage(fromChatId: number, message: Message, toChatId: number): Promise<Message>;
+    /** Delete `message` (every part of an album) for `scope`. */
+    deleteMessage(chatId: number, message: Message, scope: DeleteScope): Promise<void>;
+    /** Whether a chat is a channel, whose message ids are its own rather than the account's. */
+    isChannel(chatId: number): boolean;
+    /** The newest message of a chat, or null when it is empty. */
+    getLastMessage(chatId: number): Promise<Message | null>;
     sendFile(chatId: number, filePath: string, params?: { caption?: string; replyTo?: number }): Promise<Message>;
   };
 
@@ -464,6 +475,9 @@ declare global {
     /** One message from every Telegram message of an album: the captioned part's id and text,
      * every part's medium. */
     toAlbum(parts: MtCuteMessage[]): Message;
+    /** The ids of every Telegram message behind `message`: the parts of an album, else its own. */
+    albumIds(chatId: number, message: Message): Promise<number[]>;
+    deleteScopesOf(message: MtCuteMessage): DeleteScope[];
     toMedia(message: MtCuteMessage): Media | null;
     toDialog(dialog: MtCuteDialog): Dialog;
     toFolder(filter: tl.TypeDialogFilter): Folder;

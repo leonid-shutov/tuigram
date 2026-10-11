@@ -38,6 +38,12 @@
     run: () => actions.forwardSelected(),
   },
   'chat.edit': { title: 'Edit message', hint: 'Edit', priority: 'essential', run: () => actions.editSelected() },
+  'chat.delete': {
+    title: 'Delete message',
+    hint: 'Delete',
+    priority: 'essential',
+    run: () => actions.deleteSelected(),
+  },
   // Off the bar: the bubble's own border says "hold shift to scroll" exactly when there is more to see.
   'chat.scrollDown': { title: 'Scroll message down', hint: false, run: () => ui.chat.scrollMessage(1) },
   'chat.scrollUp': { title: 'Scroll message up', hint: false, run: () => ui.chat.scrollMessage(-1) },

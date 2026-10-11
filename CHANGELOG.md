@@ -14,6 +14,8 @@
   goes out as the reply too.
 - `f` on a message forwards it: pick a chat and it goes out at once, with its "Forwarded from"
   header, an album whole; you stay in the chat you were reading.
+- `d` on a message deletes it: choose for everyone or just for you where Telegram allows it, and
+  messages deleted elsewhere disappear from the chat live.
 
 ### Changed
 

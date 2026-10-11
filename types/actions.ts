@@ -36,6 +36,12 @@ declare global {
     replySelected(): void;
     /** Pick a chat and forward the focused message there, an album whole. */
     forwardSelected(): void;
+    /** Pick how to delete the focused message (for everyone or just for us) and delete it. */
+    deleteSelected(): void;
+    /** Take messages out of the open chat and refresh the dialog preview they may have been. */
+    dropMessages(chatId: number, ids: number[]): void;
+    /** Messages were deleted elsewhere. */
+    messagesDeleted(event: DeleteEvent): void;
     /** Copy the focused message's text to the system clipboard via OSC 52. */
     copySelected(): void;
     /** Push a new text to the server for an already-sent message. */

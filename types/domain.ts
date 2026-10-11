@@ -46,6 +46,9 @@ export type Media =
 /** Every variant of `Media` that carries something downloadable — what `openMedia` can act on. */
 export type FileMedia = Extract<Media, MediaFile>;
 
+/** Who a message can be deleted for: `everyone` revokes it in the chat, `me` removes only our copy. */
+export type DeleteScope = 'everyone' | 'me';
+
 export type Message = {
   /** Telegram sends an album as one message per picture; tuigram folds it into one message. Its
    * id is the Telegram message carrying the text — the caption's part, or the first part when
@@ -72,6 +75,8 @@ export type Message = {
   } | null;
   /** When it was sent; a pending message's is when we sent it. */
   date: Date;
+  /** What the delete picker offers, as the official clients decide it; empty when it can't be deleted. */
+  deleteScopes: DeleteScope[];
 };
 
 export type PendingMessage = Omit<Message, 'chatId' | 'chatName'> & { chatId: undefined; chatName: undefined };
