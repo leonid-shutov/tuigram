@@ -127,6 +127,8 @@ declare global {
     const pending: (text: string, media?: Media[]) => PendingMessage;
     /** One-line summary of a message: its text, else a label for its media; null for none. */
     const preview: (message: Message | PendingMessage | null | undefined) => string | null;
+    /** True when `message` reads as part of `previous`'s burst: same sender, same day, minutes apart. */
+    const continues: (previous: Message | PendingMessage | undefined, message: Message | PendingMessage) => boolean;
   }
 
   namespace Dialog {

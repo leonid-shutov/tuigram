@@ -18,6 +18,7 @@ const reconcile = (messages) => {
       if (below === null) self.scroll.add(view.box);
       else self.scroll.insertBefore(view.box, below);
     } else if (view.message !== message) Bubble.update(view, message);
+    view.box.marginTop = Message.continues(messages[i - 1], message) ? -1 : 0;
     views[i] = view;
     below = view.box;
   }
