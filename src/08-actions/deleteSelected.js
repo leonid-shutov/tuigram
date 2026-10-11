@@ -1,4 +1,4 @@
-// The picker doubles as the confirmation: nothing goes until a choice is picked, and esc cancels.
+// The choice dialog doubles as the confirmation: nothing goes until a choice is picked, and esc cancels.
 /** @type {Actions['deleteSelected']} */
 () => {
   const message = ui.chat.selectedMessage;
@@ -12,11 +12,11 @@
     everyone: isPrivate ? `Delete for me and ${message.chatName}` : 'Delete for everyone',
     me: deleteScopes.length === 1 ? 'Delete' : 'Delete for me',
   };
-  ui.picker.open({
+  ui.choice.open({
     title: ` ${keymap.commands.chat['chat.delete'].title} `,
-    placeholder: 'Delete…',
+    message: description,
     pickHint: 'Delete',
-    items: deleteScopes.map((scope) => ({ name: names[scope], description, value: scope })),
+    options: deleteScopes.map((scope) => ({ name: names[scope], value: scope })),
     /** @param {DeleteScope} scope */
     onPick: async (scope) => {
       navigation.select('chat');
@@ -27,5 +27,5 @@
       ui.chat.flashStatus('deleted');
     },
   });
-  navigation.select('picker');
+  navigation.select('choice');
 };

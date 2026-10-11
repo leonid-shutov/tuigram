@@ -2,7 +2,7 @@ import * as _opentui from '@opentui/core';
 import { Message, Presence } from './domain';
 
 declare global {
-  type SectionName = 'dialogs' | 'chat' | 'messagePrompt' | 'picker' | 'filePicker';
+  type SectionName = 'dialogs' | 'chat' | 'messagePrompt' | 'picker' | 'choice' | 'filePicker';
 
   // ── 7-navigation ──────────────────────────────────────────────────────────────────────
   type Navigation = {

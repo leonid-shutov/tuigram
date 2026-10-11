@@ -4,6 +4,7 @@ const GROUPS = {
   chat: ['chat'],
   messagePrompt: ['prompt'],
   picker: ['picker'],
+  choice: ['choice'],
   filePicker: ['filePicker'],
 };
 

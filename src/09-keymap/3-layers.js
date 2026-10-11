@@ -47,6 +47,13 @@ void keymap.engine.registerLayer({
 });
 
 void keymap.engine.registerLayer({
+  target: ui.choice.component,
+  targetMode: 'focus-within',
+  commands: named(commands.choice),
+  bindings: bindings.choice,
+});
+
+void keymap.engine.registerLayer({
   target: ui.filePicker.component,
   targetMode: 'focus-within',
   enabled: () => !ui.filePicker.filtering,

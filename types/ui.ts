@@ -265,6 +265,36 @@ declare global {
 
   type PickerSelf = PickerSection & Emitting & { request: PickerRequest<any> | null };
 
+  // ── 6-ui/choice ───────────────────────────────────────────────────────────────────────
+  /** A few options to read and pick between, with no query: the picker without its search. */
+  type ChoiceSection = Section & {
+    list: _opentui.SelectRenderable;
+    message: _opentui.TextRenderable;
+    component: _opentui.BoxRenderable;
+    /** Serve `request` on the next focus. */
+    open<T>(request: ChoiceRequest<T>): void;
+    on(event: 'close', handler: () => void): void;
+    moveDown(): void;
+    moveUp(): void;
+    /** Hand the highlighted option to the open request. */
+    pick(): void;
+    /** What the hint bar calls a pick: the open request's `pickHint`, else 'Choose'. */
+    readonly pickHint: string;
+    close(): void;
+  };
+
+  /** One use of the choice dialog. `message` is the line above the options. */
+  type ChoiceRequest<T = unknown> = {
+    title: string;
+    message: string;
+    options: { name: string; value: T }[];
+    /** What the hint bar calls a pick; 'Choose' when omitted. */
+    pickHint?: string;
+    onPick(value: T): void;
+  };
+
+  type ChoiceSelf = ChoiceSection & Emitting & { choosing: ChoiceRequest<any> | null };
+
   // ── 6-ui/filePicker ───────────────────────────────────────────────────────────────────
   type FilePickerSection = Section & {
     list: FilePickerRenderable;
@@ -361,6 +391,7 @@ declare global {
     const chat: ChatSection;
     const messagePrompt: MessagePromptSection;
     const picker: PickerSection;
+    const choice: ChoiceSection;
     const filePicker: FilePickerSection;
     const hints: HintsSection;
     const errors: ErrorsSection;

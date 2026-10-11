@@ -79,6 +79,14 @@ const group = (config) => Keymap.extras.createBindingLookup(config).bindings;
     'picker.close': 'escape',
   }),
 
+  // Nothing is typed here, so vim's j/k work.
+  choice: group({
+    'choice.down': ['j', 'down', 'ctrl+n'],
+    'choice.up': ['k', 'up', 'ctrl+p'],
+    'choice.pick': ['return', 'linefeed'],
+    'choice.close': 'escape',
+  }),
+
   // The picker is modal, netrw-style: these navigate, and `/` opens the filter. The filter layer
   // below deliberately claims almost nothing, so every printable key falls through to the
   // renderable and lands in the filter.

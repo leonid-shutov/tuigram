@@ -1,0 +1,17 @@
+Box({
+  id: 'choice',
+  position: 'absolute',
+  top: '25%',
+  left: '30%',
+  width: '40%',
+  minWidth: 36,
+  zIndex: 1000,
+  visible: false,
+  flexDirection: 'column',
+  backgroundColor: config.theme.bg,
+  borderStyle: config.theme.borderStyle,
+  customBorderChars: config.theme.borderChars,
+  borderColor: config.theme.accent,
+  titleColor: config.theme.accent,
+  children: [self.message, self.list],
+});

@@ -527,7 +527,7 @@ declare global {
 
   type KeymapModule = {
     engine: KeymapEngine;
-    commands: Record<'app' | 'dialogs' | 'folders' | 'chat' | 'prompt' | 'picker' | 'filePicker', Commands>;
+    commands: Record<'app' | 'dialogs' | 'folders' | 'chat' | 'prompt' | 'picker' | 'choice' | 'filePicker', Commands>;
     /** Bindings by the layer that installs them; the seam a `keys` block in config.json would feed. */
     bindings: Record<
       | 'global'
@@ -537,6 +537,7 @@ declare global {
       | 'chat'
       | 'prompt'
       | 'picker'
+      | 'choice'
       | 'filePickerBrowse'
       | 'filePickerFilter',
       readonly KeymapBinding[]
@@ -625,6 +626,7 @@ declare global {
       ChatSelf &
       MessagePromptSelf &
       PickerSelf &
+      ChoiceSelf &
       FilePickerSelf &
       HintsSelf &
       ErrorsSelf &
