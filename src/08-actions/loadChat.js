@@ -9,7 +9,7 @@ async (chatId) => {
   ui.chat.open(chatId, dialog?.name ?? '');
   if (dialog?.isUser) {
     void messenger.getPresence(chatId).then((presence) => {
-      if (store.chat.chatId !== chatId) return;
+      if (!store.chat.isOpen(chatId)) return;
       store.chat.setPresence(presence);
     });
   }

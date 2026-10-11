@@ -98,6 +98,8 @@ declare global {
     confirm(tempId: number, message: Message): void;
     /** Take a message back out of the window — the store half of undoing a failed send. */
     drop(tempId: number): void;
+    /** Whether `chatId` is the chat the window belongs to; never for a pending message's, which has none. */
+    isOpen(chatId: number | undefined): boolean;
     /** Whether the window holds the server's copy of a message — pending entries never match. */
     hasConfirmed(messageId: number): boolean;
     /** The server's copy of a held message, or null when it isn't held or is still pending. */

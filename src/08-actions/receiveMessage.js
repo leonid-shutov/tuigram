@@ -1,6 +1,6 @@
 /** @type {Actions['receiveMessage']} */
 (message) => {
-  const isOpen = store.chat.chatId === message.chatId;
+  const isOpen = store.chat.isOpen(message.chatId);
   // The stream re-delivers messages we already hold: our own, racing `send`, or a gap replay.
   if (isOpen && store.chat.hasConfirmed(message.id)) return;
   store.dialogs.receive(message);

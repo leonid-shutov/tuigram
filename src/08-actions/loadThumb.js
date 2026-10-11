@@ -8,7 +8,7 @@
       .downloadThumb(medium.thumbId)
       .then((path) => {
         // The chat may have been switched, or the message dropped, while the download ran.
-        if (path === null || store.chat.chatId !== chatId) return;
+        if (path === null || !store.chat.isOpen(chatId)) return;
         // A pending message is ours, still uploading: nothing of it is fetched.
         const held = store.chat.findConfirmed(id);
         if (held === null) return;

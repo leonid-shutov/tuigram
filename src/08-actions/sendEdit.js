@@ -11,7 +11,7 @@ async (messageId, text) => {
   ui.chat.clearStatus();
   if (!edited.ok) return void ui.errors.report('Could not edit the message.', edited.error);
 
-  if (store.chat.chatId !== chatId) return;
+  if (!store.chat.isOpen(chatId)) return;
   // Telegram answers with one album part, and a thumbnail may have landed while the edit was in
   // flight: the media stay the ones held now. So does the reply, which comes back unresolved.
   const held = store.chat.messages.find(({ id }) => id === messageId);

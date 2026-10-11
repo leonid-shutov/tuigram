@@ -2,7 +2,7 @@
 
 /** @param {number} chatId @param {number} id @param {Quote} resolved */
 const landReply = (chatId, id, resolved) => {
-  if (store.chat.chatId !== chatId) return;
+  if (!store.chat.isOpen(chatId)) return;
   const held = store.chat.findConfirmed(id);
   if (held === null || held.replyTo === null) return;
   store.chat.replace({ ...held, replyTo: { ...held.replyTo, ...resolved } });
