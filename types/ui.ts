@@ -9,9 +9,15 @@ declare global {
   type ScreenModule = {
     renderer: _opentui.CliRenderer;
     wrapper: _opentui.BoxRenderable;
-    size: { width: number; height: number; dialogsWidth: number };
+    /** `dialogsWidth` is the dialogs pane's current width, changed by `ui.dialogs.resize`, within `dialogsMin..dialogsMax`. */
+    size: { width: number; height: number; dialogsWidth: number; dialogsMin: number; dialogsMax: number };
     /** The startup placeholder; `destroy()` is idempotent. */
     splash: _opentui.TextRenderable;
+  };
+
+  type ScreenSelf = ScreenModule & {
+    /** The share of the screen the dialogs pane was last left at, read from disk; null when none is saved. */
+    savedDialogsRatio: number | null;
   };
 
   /**
@@ -54,6 +60,8 @@ declare global {
     open(): void;
     render(dialogs: Dialog[]): void;
     select(chatId: number): void;
+    /** Widen (or, negative, narrow) the pane by `delta` cells within the screen's bounds; false when already at the limit. */
+    resize(delta: number): boolean;
     /** Name the shown folder in the top border. */
     setFolder(title: string): void;
     /** Leave the top border without a folder name. */

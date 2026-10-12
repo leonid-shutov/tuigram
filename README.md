@@ -69,6 +69,7 @@ export TUIGRAM_API_HASH=0123456789abcdef0123456789abcdef
 | `J` / `K` / `Shift+↑` / `Shift+↓` | scroll a message too tall for the pane (its border reads "hold shift to scroll")       |
 | `gg` / `G`                        | jump to the first / last chat, or oldest / newest message                              |
 | `h` / `l` / `←` / `→`             | previous / next folder in the chat list; previous / next picture in an album           |
+| `H` / `L`                         | narrow / widen the chat list                                                           |
 | `f`                               | pick a folder from a searchable list                                                   |
 | `Enter`                           | open the selected chat, open the selected message's media or link, or send the message |
 | `y` / `c`                         | copy the selected message's text                                                       |

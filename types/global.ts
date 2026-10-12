@@ -616,7 +616,7 @@ declare global {
     | 'setAll';
 
   type AppSelf = Omit<
-    ScreenModule &
+    ScreenSelf &
       ConfigSelf &
       AuthSelf &
       AuthUiSelf &

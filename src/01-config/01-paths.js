@@ -25,6 +25,7 @@ node.fs.mkdirSync(cacheDir, { recursive: true, mode: 0o755 });
   settings: node.path.join(configDir, 'config.json'),
   settingsBackup: node.path.join(configDir, 'config.json.bak'),
   settingsSeed: node.path.join(configDir, 'config.json.seed'),
+  uiState: node.path.join(stateDir, 'ui.json'),
   credentials: node.path.join(configDir, 'credentials.json'),
   // better-sqlite3 also creates `-wal` / `-shm` siblings next to this file.
   session: node.path.join(dataDir, 'session.db'),

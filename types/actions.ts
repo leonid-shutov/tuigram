@@ -66,6 +66,8 @@ declare global {
     openFolder(folderId: number): void;
     /** Show the folder `step` away from the current one, wrapping around. */
     stepFolder(step: number): void;
+    /** Widen or narrow the dialogs pane by `delta` cells and redraw its rows to fit. */
+    resizeDialogs(delta: number): void;
     /** A user's online/last-seen state changed. Ignored unless it's the counterpart of the open chat. */
     presenceUpdate(chatId: number, presence: Presence): void;
     receiveMessage(message: Message): void;

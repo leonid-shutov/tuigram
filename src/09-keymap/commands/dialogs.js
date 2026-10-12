@@ -16,5 +16,12 @@
     run: () => ui.dialogs.first(),
   },
   'dialogs.last': { title: 'Last chat', hint: 'Last', priority: 'obvious', run: () => ui.dialogs.last() },
+  'dialogs.widen': {
+    title: 'Widen chat list',
+    hint: 'Widen',
+    pair: { with: 'dialogs.narrow', hint: 'Resize' },
+    run: () => actions.resizeDialogs(2),
+  },
+  'dialogs.narrow': { title: 'Narrow chat list', hint: 'Narrow', run: () => actions.resizeDialogs(-2) },
   'dialogs.open': { title: 'Open chat', hint: 'Open', priority: 'obvious', run: () => ui.dialogs.open() },
 });

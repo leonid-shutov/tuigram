@@ -56,6 +56,7 @@ export type Paths = {
   settings: string;
   settingsBackup: string;
   settingsSeed: string;
+  uiState: string;
   credentials: string;
   session: string;
   log: string;
