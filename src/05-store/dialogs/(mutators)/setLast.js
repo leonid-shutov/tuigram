@@ -1,4 +1,3 @@
-// What a dialog previews once its last message is deleted: the one before it, or nothing.
 Mutation(
   self,
   /** @type {DialogsStoreSelf['setLast']} */

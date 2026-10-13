@@ -453,6 +453,9 @@ declare global {
     onFoldersChange(handler: () => void): void;
     onHistoryRead(handler: (event: HistoryReadEvent) => void): void;
     onNewMessage(handler: (message: Message) => void): void;
+    /** A message was edited elsewhere. `partIds` are the Telegram messages it is made of: the one id,
+     * or every part of an album, whose folded `id` may now be another part's after a caption edit. */
+    onEditMessage(handler: (message: Message, partIds: number[]) => void): void;
     /** Messages were deleted; `channelId` is null outside channels, where ids are not tied to a chat. */
     onDeleteMessage(handler: (event: DeleteEvent) => void): void;
     onPresenceUpdate(handler: (chatId: number, presence: Presence) => void): void;

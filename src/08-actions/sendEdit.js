@@ -20,5 +20,6 @@ async (messageId, text) => {
   store.chat.replace(message);
 
   if (store.dialogs.find(chatId) === null) Crash.hard(new Error(`dialog ${chatId} is not held`));
-  store.dialogs.replaceLast(message);
+  // The list previews each dialog's last message, so only an edit of that one changes the dialog.
+  if (store.dialogs.previews(chatId, messageId)) store.dialogs.setLast(chatId, message);
 };

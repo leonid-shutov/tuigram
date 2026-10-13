@@ -1,9 +1,9 @@
 Mutation(
   self,
   /** @type {ChatStoreSelf['replace']} */
-  (message) => {
-    const index = self.messages.findIndex(({ id }) => id === message.id);
-    if (index === -1) Crash.hard(new Error(`message ${message.id} is not held`));
+  (message, heldId = message.id) => {
+    const index = self.messages.findIndex(({ id }) => id === heldId);
+    if (index === -1) Crash.hard(new Error(`message ${heldId} is not held`));
     self.messages[index] = message;
   },
 );

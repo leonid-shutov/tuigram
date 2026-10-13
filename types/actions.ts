@@ -71,6 +71,8 @@ declare global {
     /** A user's online/last-seen state changed. Ignored unless it's the counterpart of the open chat. */
     presenceUpdate(chatId: number, presence: Presence): void;
     receiveMessage(message: Message): void;
+    /** A message was edited elsewhere: redraw it in the open chat and refresh the dialog preview. */
+    messageEdited(message: Message, partIds: number[]): void;
     /** Shut down and have bin/tuigram.js start the app again from scratch: on wake from sleep
      * and on ctrl+r. */
     restart(): void;

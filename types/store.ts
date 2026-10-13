@@ -37,11 +37,11 @@ declare global {
     isArchived(chatId: number): boolean;
     /** Ids of the chats, archive included, whose last message is one of `messageIds`. */
     withLast(messageIds: number[]): number[];
+    /** Whether the chat's dialog previews the message `messageId` as its last. */
+    previews(chatId: number, messageId: number): boolean;
     isMuted(chatId: number): boolean;
     markRead(chatId: number): void;
     receive(message: Message): Dialog;
-    /** Swap the dialog's last message for its edited copy; an edit of any other message is a no-op. */
-    replaceLast(message: Message): void;
     /** Set the dialog's last message after a delete, without moving it or touching unread counts. */
     setLast(chatId: number, message: Message | null): void;
     setAll(dialogs: Dialog[]): void;
@@ -106,8 +106,9 @@ declare global {
     findConfirmed(messageId: number): Message | null;
     open(chatId: number, pager: AsyncGenerator<Message[]>): void;
     prepend(older: ChatMessage[]): void;
-    /** Swap a held message for the server's copy of the same id; throws when it isn't held. */
-    replace(message: Message): void;
+    /** Swap a held message for the server's copy; throws when it isn't held. The copy replaces the
+     * message held under `id`, which is its own unless an album's caption moved to another part. */
+    replace(message: Message, id?: number): void;
     /** Take deleted messages out of the window; a reply to one then reads as a deleted original. */
     remove(ids: number[]): void;
     /** Lay the first page under the window, dropping held entries the page already has. */
