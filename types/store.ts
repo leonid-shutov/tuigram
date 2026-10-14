@@ -1,7 +1,7 @@
 import { Dialog, Folder, Message, PendingMessage, LinkedDialogsHandle, Presence } from './domain';
 
 declare global {
-  /** A message held in the open chat's window — ours before the server confirms it, or theirs. */
+  /** A message in a cached chat — ours before the server confirms it, or theirs. */
   type ChatMessage = Message | PendingMessage;
 
   /** Whether the chat advertises a receipt on our own last message, and which one. */
@@ -9,11 +9,12 @@ declare global {
 
   /**
    * A store's change event: every mutator emits `change` once it returns, by way of `Mutation`,
-   * so `on('change')` hears about every change made through the store.
+   * so `on('change')` hears about every change made through the store. The mutator's arguments
+   * ride along to `emit`, for a store that tells changes apart by them.
    */
   type StoreEvents = {
     emitter: import('node:events').EventEmitter;
-    emit(event: 'change'): void;
+    emit(event: 'change', ...args: unknown[]): void;
     on(event: 'change', handler: () => void): void;
   };
 
@@ -22,6 +23,22 @@ declare global {
    * listener sees the new state before the caller's next line, and not at all if it throws.
    */
   const Mutation: <F extends (...args: any[]) => unknown>(store: Pick<StoreEvents, 'emit'>, mutate: F) => F;
+
+  /**
+   * A chat store mutator as written: handed the cached chat instead of its id. `ChatMutation`
+   * turns it back into the mutator callers see, `(chatId, ...args)`.
+   */
+  type ChatMutator<F> = F extends (chatId: number, ...args: infer A) => infer R
+    ? (chat: CachedChat, ...args: A) => Exclude<R, null>
+    : never;
+
+  /**
+   * Wrap a chat store mutator (visible only under src/05-store/chat): look its chat up by id, do
+   * nothing and answer null when it isn't cached, and emit `change` as `Mutation` does.
+   */
+  const ChatMutation: <A extends any[], R>(
+    mutate: (chat: CachedChat, ...args: A) => R,
+  ) => (chatId: number, ...args: A) => R | null;
 
   /** The dialogs store as its own files see it through `self`: everything, writable. */
   type DialogsStoreSelf = StoreEvents & {
@@ -47,6 +64,8 @@ declare global {
     setAll(dialogs: Dialog[]): void;
     setArchived(dialogs: Dialog[]): void;
     setUnread(chatId: number, unreadCount: number): void;
+    /** Move the dialog's outbox read mark up to `maxReadId`; never back. */
+    setReadUpTo(chatId: number, maxReadId: number): void;
   };
 
   /**
@@ -82,58 +101,80 @@ declare global {
     readonly list: readonly Folder[];
   };
 
-  /** The chat store as its own files see it through `self`: everything, writable. */
-  type ChatStoreSelf = StoreEvents & {
+  /** One chat as store.chat caches it: its messages, oldest first and whole at the newest end (see
+   * src/05-store/chat/2-chat.js). Its outbox read mark is its dialog's. */
+  type CachedChat = { messages: ChatMessage[] };
+
+  /**
+   * The chat store as its own files see it through `self`: everything, writable. It caches a
+   * chat per recently opened or preloaded one; every mutator names its chat first, does nothing when that
+   * chat isn't cached, and emits `change` only when it is the open one.
+   */
+  type ChatStoreSelf = Omit<StoreEvents, 'emit'> & {
     /** The open chat, and the app's single source of truth for which chat that is. */
-    chatId: number | null;
-    /** The loaded window, oldest first. */
-    messages: ChatMessage[];
-    readUpTo: number;
-    /** The open chat's history pager; the store holds it but never advances it. */
-    pager: AsyncGenerator<Message[]> | null;
+    openChatId: number | null;
+    /** The cached chats, in order of caching: the first is the next to evict. */
+    chats: Map<number, CachedChat>;
+    /** The open chat as cached; null before the first chat opens. */
+    readonly opened: CachedChat | null;
     /** The open chat partner's online/last-seen state; `null` until fetched, or for non-users. */
     presence: Presence | null;
-    append(message: ChatMessage): void;
-    /** Swap a pending message for the server's copy, or drop it when that copy is already held. */
-    confirm(tempId: number, message: Message): void;
-    /** Take a message back out of the window — the store half of undoing a failed send. */
-    drop(tempId: number): void;
-    /** Whether `chatId` is the chat the window belongs to; never for a pending message's, which has none. */
+    /** Emit `change` when `chatId` is the open chat. */
+    emit(event: 'change', chatId: number | undefined): void;
+    /** The cached chat behind `chatId`, or null when it isn't cached. */
+    getById(chatId: number): CachedChat | null;
+    /** Drop a cached chat's oldest messages beyond `config.history.firstPageSize`. */
+    trim(chat: CachedChat): void;
+    /** Drop the chats cached longest ago beyond `config.history.maxCachedChats`, never the open one. */
+    evict(): void;
+    append(chatId: number, message: ChatMessage): void;
+    /** Swap a pending message for the server's copy, or drop it when that copy is already cached. */
+    confirm(chatId: number, tempId: number, message: Message): void;
+    /** Take a message back out of the chat — the store half of undoing a failed send. */
+    drop(chatId: number, tempId: number): void;
+    /** Whether `chatId` is the open chat; never for a pending message's, which has none. */
     isOpen(chatId: number | undefined): boolean;
-    /** Whether the window holds the server's copy of a message — pending entries never match. */
-    hasConfirmed(messageId: number): boolean;
-    /** The server's copy of a held message, or null when it isn't held or is still pending. */
-    findConfirmed(messageId: number): Message | null;
-    open(chatId: number, pager: AsyncGenerator<Message[]>): void;
-    prepend(older: ChatMessage[]): void;
-    /** Swap a held message for the server's copy; throws when it isn't held. The copy replaces the
-     * message held under `id`, which is its own unless an album's caption moved to another part. */
-    replace(message: Message, id?: number): void;
-    /** Take deleted messages out of the window; a reply to one then reads as a deleted original. */
-    remove(ids: number[]): void;
-    /** Lay the first page under the window, dropping held entries the page already has. */
-    seed(page: Message[]): void;
-    setPresence(presence: Presence | null): void;
-    /** Derived, recomputed on every read: `null` when the last message isn't ours. */
-    readonly receipt: Receipt | null;
-    /** Derived: the newest confirmed message held, or `null` when the window has none. */
-    readonly lastConfirmed: Message | null;
-    setReadUpTo(maxReadId: number): void;
+    /** Whether the chat has the server's copy of a message — pending entries never match. */
+    hasConfirmed(chatId: number, messageId: number): boolean;
+    /** The server's copy of a cached message, or null when it isn't cached or is still pending. */
+    findConfirmed(chatId: number, messageId: number): Message | null;
+    /** The newest confirmed message the chat has, or `null` when it has none. */
+    lastConfirmed(chatId: number): Message | null;
+    /** The oldest confirmed message the chat has — what older history pages below, and what a
+     * page lands under — or `null` when it has none. */
+    oldestConfirmed(chatId: number): Message | null;
+    /** Whether the chat is cached and nothing from the server has landed in it, so it needs its
+     * first page: it was just cached, or holds only our pending sends. */
+    needsFirstPage(chatId: number): boolean;
+    /** The cached chats that have the server's copy of any of `messageIds`. */
+    holding(messageIds: number[]): number[];
+    /** Cache `chatId`, empty until something lands in it, and move it to the back of the eviction line. */
+    cache(chatId: number): void;
+    /** Make `chatId` the open chat, cached from now on. */
+    open(chatId: number): void;
+    /** Lay a page, oldest first, under the chat's oldest confirmed message: only what is older than
+     * it lands. Answers what landed, or null when the chat isn't cached. */
+    prepend(chatId: number, older: Message[]): Message[] | null;
+    /** Swap a cached message for the server's copy; throws when it isn't cached. The copy replaces the
+     * message cached under `id`, which is its own unless an album's caption moved to another part. */
+    replace(chatId: number, message: Message, id?: number): void;
+    /** Take deleted messages out of the chat; a reply to one then reads as a deleted original. */
+    remove(chatId: number, ids: number[]): void;
+    /** Set the open chat's presence; ignored once `chatId` is no longer open. */
+    setPresence(chatId: number, presence: Presence | null): void;
   };
 
   /**
-   * The chat store as the rest of the app sees it: read-only but for its mutators, so a held
+   * The chat store as the rest of the app sees it: read-only but for its mutators, so a cached
    * message can only be swapped through one (see src/05-store/chat/2-chat.js), and every mutator
-   * emits `change`.
+   * emits `change` for the open chat.
    */
   type ChatStore = Omit<
     ChatStoreSelf,
-    'chatId' | 'messages' | 'readUpTo' | 'pager' | 'presence' | 'emitter' | 'emit'
+    'openChatId' | 'chats' | 'opened' | 'presence' | 'emitter' | 'emit' | 'getById' | 'trim' | 'evict'
   > & {
-    readonly chatId: number | null;
-    readonly messages: readonly Readonly<ChatMessage>[];
-    readonly readUpTo: number;
-    readonly pager: AsyncGenerator<Message[]> | null;
+    readonly openChatId: number | null;
+    readonly opened: { readonly messages: readonly Readonly<ChatMessage>[] } | null;
     readonly presence: Presence | null;
   };
 

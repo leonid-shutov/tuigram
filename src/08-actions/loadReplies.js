@@ -2,24 +2,23 @@
 
 /** @param {number} chatId @param {number} id @param {Quote} resolved */
 const landReply = (chatId, id, resolved) => {
-  if (!store.chat.isOpen(chatId)) return;
-  const held = store.chat.findConfirmed(id);
-  if (held === null || held.replyTo === null) return;
-  store.chat.replace({ ...held, replyTo: { ...held.replyTo, ...resolved } });
+  const cached = store.chat.findConfirmed(chatId, id);
+  if (cached === null || cached.replyTo === null) return;
+  store.chat.replace(chatId, { ...cached, replyTo: { ...cached.replyTo, ...resolved } });
 };
 
 /** @type {Actions['loadReplies']} */
 (messages) => {
-  // Replies resolve only into the open chat — the one the store holds. Read once, it is also what
-  // a fetch's answer is checked against, in case the chat was switched while it ran.
-  const chatId = store.chat.chatId;
-  if (chatId === null) return;
-  /** Replied-to id to the held messages answering it. @type {Map<number, number[]>} */
+  // Every caller hands over one chat's messages. Replies resolve only into a cached chat that has them,
+  // and only its own cached messages are looked through for the originals.
+  if (messages.length === 0) return;
+  const { chatId } = messages[0];
+  /** Replied-to id to the cached messages answering it. @type {Map<number, number[]>} */
   const missing = new Map();
   for (const message of messages) {
-    if (message.chatId !== chatId || !Message.awaitsQuote(message)) continue;
+    if (!Message.awaitsQuote(message) || !store.chat.hasConfirmed(chatId, message.id)) continue;
     const replyTo = message.replyTo;
-    const target = store.chat.findConfirmed(replyTo.id);
+    const target = store.chat.findConfirmed(chatId, replyTo.id);
     if (target !== null) {
       landReply(chatId, message.id, Message.quote(target));
       continue;

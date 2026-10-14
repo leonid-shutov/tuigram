@@ -1,6 +1,8 @@
 /** @type {ChatStoreSelf['findConfirmed']} */
-(messageId) => {
+(chatId, messageId) => {
+  const chat = self.getById(chatId);
+  if (chat === null) return null;
   /** @param {ChatMessage} message @returns {message is import('../../../../types/domain').Message} */
   const isWanted = (message) => Message.isConfirmed(message) && message.id === messageId;
-  return self.messages.find(isWanted) ?? null;
+  return chat.messages.find(isWanted) ?? null;
 };

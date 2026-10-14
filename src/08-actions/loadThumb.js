@@ -2,20 +2,19 @@
 // so it outlives an album flip, and an edit carries it forward with the rest of the media.
 /** @type {Actions['loadThumb']} */
 ({ id, chatId, media }) => {
+  if (!store.chat.isOpen(chatId) || !store.chat.hasConfirmed(chatId, id)) return;
   for (const [index, medium] of media.entries()) {
-    if (!Media.isImage(medium) || medium.thumbId === null) continue;
+    if (!Media.isImage(medium) || medium.thumbId === null || medium.thumb !== null) continue;
     void messenger
       .downloadThumb(medium.thumbId)
       .then((path) => {
-        // The chat may have been switched, or the message dropped, while the download ran.
-        if (path === null || !store.chat.isOpen(chatId)) return;
-        // A pending message is ours, still uploading: nothing of it is fetched.
-        const held = store.chat.findConfirmed(id);
-        if (held === null) return;
-        const part = held.media[index];
+        // The message may have been dropped, or its chat evicted, while the download ran.
+        const cached = store.chat.findConfirmed(chatId, id);
+        if (path === null || cached === null) return;
+        const part = cached.media[index];
         if (!Media.isImage(part)) return;
-        const message = { ...held, media: held.media.with(index, { ...part, thumb: path }) };
-        store.chat.replace(message);
+        const message = { ...cached, media: cached.media.with(index, { ...part, thumb: path }) };
+        store.chat.replace(chatId, message);
       })
       .catch((error) => Crash.soft(error));
   }

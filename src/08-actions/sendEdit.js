@@ -1,9 +1,9 @@
 /** @type {Actions['sendEdit']} */
 async (messageId, text) => {
-  const chatId = store.chat.chatId;
+  const chatId = store.chat.openChatId;
   if (chatId === null) return;
-  const current = store.chat.messages.find(({ id }) => id === messageId);
-  if (current === undefined || current.text === text) return;
+  const current = store.chat.findConfirmed(chatId, messageId);
+  if (current === null || current.text === text) return;
   if (text.trim() === '') return void ui.chat.flashStatus('cannot be empty');
 
   ui.chat.setStatus('editing…');
@@ -11,15 +11,14 @@ async (messageId, text) => {
   ui.chat.clearStatus();
   if (!edited.ok) return void ui.errors.report('Could not edit the message.', edited.error);
 
-  if (!store.chat.isOpen(chatId)) return;
   // Telegram answers with one album part, and a thumbnail may have landed while the edit was in
-  // flight: the media stay the ones held now. So does the reply, which comes back unresolved.
-  const held = store.chat.messages.find(({ id }) => id === messageId);
-  if (held === undefined) return;
-  const message = { ...edited.unwrap(), media: held.media, replyTo: held.replyTo };
-  store.chat.replace(message);
+  // flight: the media stay the ones cached now. So does the reply, which comes back unresolved.
+  const cached = store.chat.findConfirmed(chatId, messageId);
+  if (cached === null) return;
+  const message = { ...edited.unwrap(), media: cached.media, replyTo: cached.replyTo };
+  store.chat.replace(chatId, message);
 
-  if (store.dialogs.find(chatId) === null) Crash.hard(new Error(`dialog ${chatId} is not held`));
+  if (store.dialogs.find(chatId) === null) Crash.hard(new Error(`dialog ${chatId} is not in the store`));
   // The list previews each dialog's last message, so only an edit of that one changes the dialog.
   if (store.dialogs.previews(chatId, messageId)) store.dialogs.setLast(chatId, message);
 };

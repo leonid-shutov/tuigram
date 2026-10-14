@@ -1,11 +1,11 @@
 Mutation(
   self,
   /** @type {ChatStoreSelf['open']} */
-  (chatId, pager) => {
-    self.chatId = chatId;
-    self.messages = [];
-    self.readUpTo = 0;
-    self.pager = pager;
+  (chatId) => {
+    const left = self.opened;
+    if (left !== null) self.trim(left);
+    self.cache(chatId);
+    self.openChatId = chatId;
     self.presence = null;
   },
 );

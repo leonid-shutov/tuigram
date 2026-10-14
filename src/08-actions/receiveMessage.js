@@ -1,17 +1,17 @@
+// Every cached chat takes what arrives, open or not; a chat that isn't cached has nothing to add
+// to, and the store and the loads below pass over it.
 /** @type {Actions['receiveMessage']} */
 (message) => {
-  const isOpen = store.chat.isOpen(message.chatId);
-  // The stream re-delivers messages we already hold: our own, racing `send`, or a gap replay.
-  if (isOpen && store.chat.hasConfirmed(message.id)) return;
+  // The stream re-delivers messages we already have cached: our own, racing `send`, or a gap replay.
+  if (store.chat.hasConfirmed(message.chatId, message.id)) return;
   store.dialogs.receive(message);
 
-  const isSeen = isOpen && store.window.focused;
+  const isSeen = store.chat.isOpen(message.chatId) && store.window.focused;
 
-  if (isOpen) {
-    store.chat.append(message);
-    actions.loadThumb(message);
-    actions.loadReplies([message]);
-  }
+  store.chat.append(message.chatId, message);
+  actions.loadThumb(message);
+  actions.loadReplies([message]);
+
   if (isSeen) {
     store.dialogs.markRead(message.chatId);
     void messenger.readHistory(message.chatId).catch((error) => Crash.soft(error));

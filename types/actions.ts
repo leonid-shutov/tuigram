@@ -18,7 +18,6 @@ declare global {
   // ── 8-actions ─────────────────────────────────────────────────────────────────────────
   type Actions = {
     historyRead(event: HistoryReadEvent): void;
-    loadChat(chatId: number): Promise<void>;
     /** Fetch a fast first page of dialogs so the list has something to show before the full fetch lands. */
     loadDialogsPreview(): void;
     /** Fetch the full dialog list and repaint; settles the dialogs UI's loading state either way. */
@@ -27,11 +26,18 @@ declare global {
     loadArchivedDialogs(): void;
     /** Fetch the account's folders into the store and repaint. Reruns whenever Telegram changes them. */
     loadFolders(): void;
+    /** Fill a cached chat, open or not, with its first page: its newest messages, the ones it
+     * opens with. */
+    loadFirstPage(chatId: number): Promise<void>;
+    /** Cache the chats at the top of the chat list, as many as the cache holds, and fill them one
+     * at a time, so opening one is instant. Stops at a flood wait. */
+    preloadChats(): Promise<void>;
     loadOlder(): Promise<void>;
     /** Fetch a message's 320px thumbnail, if it has one, and push it into its bubble. */
-    loadThumb(message: ChatMessage): void;
-    /** Resolve the sender and text of what each message replies to, and push them into its bubble. */
-    loadReplies(messages: ChatMessage[]): void;
+    loadThumb(message: Message): void;
+    /** Resolve the sender and text of what each message replies to, and push them into its bubble.
+     * The messages are one chat's; those not cached are skipped. */
+    loadReplies(messages: Message[]): void;
     /** Put the prompt in reply mode for the focused message and focus it. */
     replySelected(): void;
     /** Pick a chat and forward the focused message there, an album whole. */
@@ -55,7 +61,8 @@ declare global {
     openMedia(media: FileMedia): Promise<void>;
     /** Enter on the focused message: its medium, else its text when that is nothing but an http(s) link. */
     openSelected(): void;
-    openChat(chatId: number): void;
+    /** Show a chat and focus it; one not open yet opens, its newest page fetched unless cached. */
+    openChat(chatId: number): Promise<void>;
     /** Open the picker over every chat; a pick opens that chat. */
     searchChats(): void;
     /** Open the picker on what the focused pane can do; picking a command runs it there. */
@@ -77,7 +84,7 @@ declare global {
      * and on ctrl+r. */
     restart(): void;
     /** Push the open chat — messages, receipt and presence — to the pane. Runs on every `change`
-     * of store.chat. */
+     * of store.chat, and when the open chat's outbox read mark moves on its dialog. */
     repaintChat(): void;
     /** Push the current folder's dialogs to the pane. Runs on every `change` of store.dialogs and
      * store.folders. */

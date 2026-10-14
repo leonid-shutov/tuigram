@@ -25,7 +25,7 @@ const reconcile = (messages) => {
 
   self.views = KeyedList.from(views, (view) => view.message.id);
   // `below` is always a bubble still held, so the ones gone can wait until the walk is done.
-  for (const view of previous) if (!self.views.has(view.message.id)) view.box.destroy();
+  for (const view of previous) if (!self.views.has(view.message.id)) view.box.destroyRecursively();
   self.redate();
 };
 

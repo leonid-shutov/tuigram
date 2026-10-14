@@ -1,2 +1,2 @@
 /** @type {ChatStoreSelf['hasConfirmed']} */
-(messageId) => self.messages.some(({ id, pending }) => !pending && id === messageId);
+(chatId, messageId) => self.findConfirmed(chatId, messageId) !== null;

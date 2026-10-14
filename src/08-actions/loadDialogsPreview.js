@@ -2,6 +2,9 @@
 () => {
   const chunkSize = 25;
   Array.fromAsync(AsyncIterator.take(messenger.iterDialogs({ chunkSize }), chunkSize))
-    .then((dialogs) => store.dialogs.setAll(dialogs))
+    .then((dialogs) => {
+      store.dialogs.setAll(dialogs);
+      void actions.preloadChats();
+    })
     .catch(ui.dialogs.settle);
 };

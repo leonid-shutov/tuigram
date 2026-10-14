@@ -80,6 +80,16 @@ declare global {
       source: 'env' | 'file' | 'shipped' | undefined;
     };
     cli: { command: string | null; args: string[] };
+    /** Hardcoded, not config.json fields: see src/01-config/11-history.js. */
+    history: {
+      /** Messages a chat opens with, and what a cached chat is trimmed back to once left. */
+      firstPageSize: number;
+      /** Messages each scroll past the top fetches. */
+      pageSize: number;
+      /** At most this many chats stay cached, the open one among them: the top of the chat list at
+       * start, then the ones opened most recently. */
+      maxCachedChats: number;
+    };
     paths: Paths;
     /** The parsed, migrated, validated `config.json` snapshot theme/dialogEmoji/hints/imageProtocol/
      * proxy are derived from at boot; refreshed by `config.reload()`. */
@@ -137,6 +147,8 @@ declare global {
     /** What a reply quotes of `target`: its sender (`You` for ours) and a line of it; `deleted`
      * when it is gone (null). */
     const quote: (target: Message | null) => Omit<NonNullable<Message['replyTo']>, 'id'>;
+    /** The receipt `last` carries, read or not by `readUpTo`; null when it isn't ours, or there is none. */
+    const receipt: (last: Message | PendingMessage | undefined, readUpTo: number) => Receipt | null;
     const awaitsQuote: (
       message: Message | PendingMessage,
     ) => message is Message & { replyTo: NonNullable<Message['replyTo']> & { id: number } };
@@ -433,7 +445,12 @@ declare global {
   type MessengerModule = {
     tg: TelegramClient;
     dispatcher: Dispatcher;
-    getHistory(chatId: number, firstPageSize: number, pageSize?: number): AsyncGenerator<Message[]>;
+    /** A page of history, newest first, sized by `config.history`: the newest messages, or those
+     * below `before` (an album from below its oldest part). Empty once nothing older is left. */
+    getPage(chatId: number, options?: { before?: Message | null }): Promise<Message[]>;
+    /** Whether an error is a flood wait mtcute did not sleep through: one that holds every call of
+     * its method until it runs out. */
+    isFloodWait(error: unknown): boolean;
     /** The messages behind `ids`, in their order; null for one that is gone. Albums stay unfolded. */
     getMessages(chatId: number, ids: number[]): Promise<(Message | null)[]>;
     /** Path to the larger thumbnail (800px box, falling back to 320px) behind a file id, on
@@ -445,7 +462,6 @@ declare global {
     editMessage(chatId: number, messageId: number, text: string): Promise<Message>;
     /** The chat partner's current online/last-seen state, or `null` for a bot or a peer that's gone. */
     getPresence(chatId: number): Promise<Presence | null>;
-    getReadOutboxMaxId(chatId: number): Promise<number>;
     iterDialogs(options?: { chunkSize?: number; archived?: boolean }): AsyncGenerator<Dialog>;
     /** The account's folders in the user's order, "All chats" among them. */
     getFolders(): Promise<Folder[]>;

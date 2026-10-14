@@ -1,5 +1,8 @@
+// Presence is the open chat's alone: fetched on every open, never cached.
 Mutation(
   self,
   /** @type {ChatStoreSelf['setPresence']} */
-  (presence) => void (self.presence = presence),
+  (chatId, presence) => {
+    if (self.isOpen(chatId)) self.presence = presence;
+  },
 );

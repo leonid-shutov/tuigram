@@ -88,6 +88,8 @@ export type Dialog = {
   isPinned: boolean;
   unreadCount: number;
   isUnread: boolean;
+  /** The newest of our messages the peer has read: Telegram's outbox read mark. */
+  readUpTo: number;
   isMuted: boolean | null;
   /** Whether this dialog's peer is a real, non-self user — the only kind with a presence. */
   isUser: boolean;

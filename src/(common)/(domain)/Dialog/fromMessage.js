@@ -7,6 +7,7 @@
   name: message.chatName ?? '',
   lastMessage: message,
   unreadCount,
+  readUpTo: 0,
   isPinned: false,
   isMuted: false,
   isUnread: true,

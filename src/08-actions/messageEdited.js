@@ -1,27 +1,25 @@
-/** @param {import('../../types/domain').Message} held @param {import('../../types/domain').Message} message */
-const sameMedia = (held, message) =>
-  held.media.length === message.media.length &&
-  held.media.every(
+/** @param {import('../../types/domain').Message} cached @param {import('../../types/domain').Message} message */
+const sameMedia = (cached, message) =>
+  cached.media.length === message.media.length &&
+  cached.media.every(
     (medium, i) =>
       medium.type === message.media[i].type &&
       ('fileId' in medium ? medium.fileId : null) === ('fileId' in message.media[i] ? message.media[i].fileId : null),
   );
 
 /** @param {number} chatId @param {number[]} partIds */
-const heldPart = (chatId, partIds) => {
-  if (!store.chat.isOpen(chatId)) return null;
-  return partIds.map((id) => store.chat.findConfirmed(id)).find((found) => found !== null) ?? null;
-};
+const cachedPart = (chatId, partIds) =>
+  partIds.map((id) => store.chat.findConfirmed(chatId, id)).find((found) => found !== null) ?? null;
 
 /** @type {Actions['messageEdited']} */
 (message, partIds) => {
-  const held = heldPart(message.chatId, partIds);
+  const cached = cachedPart(message.chatId, partIds);
 
-  if (held !== null) {
-    const keepMedia = sameMedia(held, message);
-    if (held.text === message.text && keepMedia) return;
-    const edited = { ...message, media: keepMedia ? held.media : message.media, replyTo: held.replyTo };
-    store.chat.replace(edited, held.id);
+  if (cached !== null) {
+    const keepMedia = sameMedia(cached, message);
+    if (cached.text === message.text && keepMedia) return;
+    const edited = { ...message, media: keepMedia ? cached.media : message.media, replyTo: cached.replyTo };
+    store.chat.replace(message.chatId, edited, cached.id);
     if (!keepMedia) actions.loadThumb(edited);
   }
 

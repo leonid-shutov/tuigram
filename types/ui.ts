@@ -154,8 +154,9 @@ declare global {
     scrollMessage(lines: number): void;
     /** The oldest message loaded so far, which also asks for more history. */
     first(): void;
-    /** Start over on another chat: put its glyph and name on the top border and forget the cursor.
-     * The bubbles go with the next `render` of the freshly opened store. */
+    /** Start over on another chat: drop the last chat's bubbles, put its glyph and name on the top
+     * border and forget the cursor. Its own bubbles come with the next `render` of the freshly
+     * opened store. */
     open(chatId: number, name: string): void;
     /** Make the pane match the open chat: one bubble per message, in order, reusing each bubble
      * whose id is still held, plus the receipt and presence on the border. */

@@ -22,6 +22,9 @@
 
 - Editing a message quotes the original above the message box, under an "Editing" heading, instead
   of a label on its border.
+- Opening a chat is instant for the 20 at the top of your list, loaded in the background at start,
+  and for the last 20 you opened. Each stays in memory as it would look freshly opened, and new,
+  edited and deleted messages keep landing in it while it is closed.
 
 ## [1.1.0] - 2026-10-10
 

@@ -1,2 +1,2 @@
 /** @type {ChatStoreSelf['isOpen']} */
-(chatId) => self.chatId === chatId;
+(chatId) => self.openChatId === chatId;

@@ -1,11 +1,10 @@
 // A reply to a deleted message keeps its place but reads as a deleted original, swapped for a new
 // copy like any other change (see 2-chat.js).
-Mutation(
-  self,
-  /** @type {ChatStoreSelf['remove']} */
-  (ids) => {
+ChatMutation(
+  /** @type {ChatMutator<ChatStoreSelf['remove']>} */
+  (chat, ids) => {
     const gone = new Set(ids);
-    self.messages = self.messages
+    chat.messages = chat.messages
       .filter(({ id }) => !gone.has(id))
       .map((message) => {
         const { replyTo } = message;

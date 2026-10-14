@@ -68,6 +68,7 @@ module.exports = [
 
         // store common
         Mutation: true,
+        ChatMutation: true,
 
         // ui common
         theme: true,
