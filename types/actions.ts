@@ -59,8 +59,11 @@ declare global {
     openConfig(): Promise<void>;
     /** Download a medium and open it in the system's viewer. */
     openMedia(media: FileMedia): Promise<void>;
-    /** Enter on the focused message: its medium, else its text when that is nothing but an http(s) link. */
+    /** Enter on the focused message: its medium; else its text when that is nothing but an http(s)
+     * link; else a link in it, confirmed first, or picked from a list when there are several. */
     openSelected(): void;
+    /** Ask before opening `link`: where it goes, then open it or copy it. */
+    confirmLink(link: { label: string; url: string }): void;
     /** Show a chat and focus it; one not open yet opens, its newest page fetched unless cached. */
     openChat(chatId: number): Promise<void>;
     /** Open the picker over every chat; a pick opens that chat. */

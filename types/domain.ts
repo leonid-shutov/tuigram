@@ -55,6 +55,8 @@ export type Message = {
    * there is no caption — so an edit targets it directly. */
   id: number;
   text: string;
+  /** How `text` is formatted; empty for plain text. */
+  entities: Entity[];
   /** Everything attached: nothing, one medium, or every picture of an album in the order sent. */
   media: Media[];
   pending: boolean;
@@ -84,6 +86,15 @@ export type Message = {
    * A reaction or an edit may name any of them. */
   partIds: number[];
 };
+
+/** A formatted span of `Message.text`, in UTF-16 units, so `text.slice` cuts it out. `url` is set
+ * on a `link` only, and null there when the target is not one to hand a terminal (anything but
+ * http(s) or mailto). `mention` covers everything Telegram highlights as a name or a tag:
+ * @mentions, #hashtags, $cashtags, bot commands, and mentions by name. */
+export type Entity = { offset: number; length: number; kind: EntityKind; url?: string | null };
+
+export type EntityKind =
+  'bold' | 'italic' | 'underline' | 'strikethrough' | 'spoiler' | 'code' | 'pre' | 'blockquote' | 'link' | 'mention';
 
 /** One reaction and how many gave it. `emoji` is null for a custom emoji, which is a sticker a
  * terminal cannot draw; a paid reaction is `⭐`. `key` tells reactions apart where `emoji` can't:

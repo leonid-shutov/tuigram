@@ -17,6 +17,9 @@
   header, an album whole; you stay in the chat you were reading.
 - `d` on a message deletes it: choose for everyone or just for you where Telegram allows it, and
   messages deleted elsewhere disappear from the chat live.
+- Messages show their formatting: bold, italic, underline, strikethrough, code, quotes, spoilers
+  (dimmed), and highlighted mentions and hashtags. Links are underlined and, in a terminal with
+  hyperlinks (kitty, ghostty, WezTerm, iTerm2…), clickable.
 
 ### Changed
 

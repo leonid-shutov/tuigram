@@ -85,6 +85,7 @@ module.exports = [
         Media: true,
         Emoji: true,
         Quote: true,
+        Entities: true,
         Sender: true,
         Option: true,
         Input: true,

@@ -4,8 +4,7 @@
 (text) => {
   const trimmed = text.trim();
   if (trimmed === '' || /\s/u.test(trimmed)) return null;
-  const url = node.url.URL.parse(trimmed);
-  if (url === null) return null;
-  if (url.protocol !== 'http:' && url.protocol !== 'https:') return null;
-  return url.href;
+  const url = Link.safe(trimmed);
+  if (url === null || url.startsWith('mailto:')) return null;
+  return url;
 };

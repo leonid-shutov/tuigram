@@ -1,7 +1,15 @@
 import * as _opentui from '@opentui/core';
 import * as _events from 'node:events';
 import { KeyedList as _KeyedList } from './collections';
-import { Dialog, DialogOption as _DialogOption, ImageMedia, Media as _Media, Message, Presence } from './domain';
+import {
+  Dialog,
+  DialogOption as _DialogOption,
+  Entity,
+  ImageMedia,
+  Media as _Media,
+  Message,
+  Presence,
+} from './domain';
 
 declare global {
   type DialogOption = _DialogOption;
@@ -97,6 +105,11 @@ declare global {
     const from: (replyTo: Omit<NonNullable<Message['replyTo']>, 'id'>) => QuoteLines;
     /** Each line ellipsized to `cells`, bar included. */
     const paint: (lines: QuoteLines, cells: number) => _opentui.StyledText;
+  }
+
+  /** Message text drawn with its formatting: overlapping spans combine, links carry their URL. */
+  namespace Entities {
+    const paint: (text: string, entities: Entity[]) => _opentui.StyledText;
   }
 
   // ── 6-ui/chat ─────────────────────────────────────────────────────────────────────────
@@ -293,6 +306,7 @@ declare global {
   type ChoiceSection = Section & {
     list: _opentui.SelectRenderable;
     message: _opentui.TextRenderable;
+    body: _opentui.TextRenderable;
     component: _opentui.BoxRenderable;
     /** Serve `request` on the next focus. */
     open<T>(request: ChoiceRequest<T>): void;
@@ -306,10 +320,12 @@ declare global {
     close(): void;
   };
 
-  /** One use of the choice dialog. `message` is the line above the options. */
+  /** One use of the choice dialog. `message` is the line above the options, left out when empty;
+   * `body` is wrapped text under it, for what the line can't hold. */
   type ChoiceRequest<T = unknown> = {
     title: string;
     message: string;
+    body?: string | _opentui.StyledText;
     options: { name: string; value: T }[];
     /** What the hint bar calls a pick; 'Choose' when omitted. */
     pickHint?: string;

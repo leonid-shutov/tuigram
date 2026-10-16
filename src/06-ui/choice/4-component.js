@@ -13,5 +13,5 @@ Box({
   customBorderChars: config.theme.borderChars,
   borderColor: config.theme.accent,
   titleColor: config.theme.accent,
-  children: [self.message, self.list],
+  children: [self.message, self.body, self.list],
 });

@@ -2,6 +2,7 @@
 (text, media = [], replyTo = null) => ({
   id: Random.id(),
   text,
+  entities: [],
   media,
   pending: true,
   sender: { id: null, isSelf: true, displayName: null },

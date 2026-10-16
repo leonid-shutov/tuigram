@@ -22,7 +22,8 @@ const QUOTE_CELLS = 41;
   }
   put(label, medium === null || (drawn && medium.type === 'photo') ? '' : Media.label(medium));
   put(counter, media.length > 1 ? `‹ ${mediumIndex + 1}/${media.length} ›` : '');
-  put(text, message.text);
+  text.content = Entities.paint(message.text, message.entities);
+  text.visible = message.text !== '';
   reactions.visible = message.reactions.length > 0;
   if (reactions.visible) reactions.content = Reactions.paint(message.reactions);
 };

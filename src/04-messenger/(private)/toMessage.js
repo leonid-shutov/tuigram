@@ -17,6 +17,7 @@ const toReplyTo = (message) => {
 (message) => ({
   id: message.id,
   text: message.text,
+  entities: self.toEntities(message.entities),
   media: [self.toMedia(message)].filter((medium) => medium !== null),
   pending: false,
   sender: {

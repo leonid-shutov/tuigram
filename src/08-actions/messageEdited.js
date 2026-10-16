@@ -25,7 +25,7 @@ const cachedPart = (chatId, partIds) =>
       replyTo: cached.replyTo,
       reactions: Message.mergeReactions(cached.reactions, message.reactions),
     };
-    if (cached.text === message.text && keepMedia && Message.sameReactions(cached, edited)) return;
+    if (Message.sameText(cached, message) && keepMedia && Message.sameReactions(cached, edited)) return;
     store.chat.replace(message.chatId, edited, cached.id);
     if (!keepMedia) actions.loadThumb(edited);
   }

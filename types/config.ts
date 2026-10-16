@@ -36,6 +36,10 @@ export type ThemeDefinition = {
   selected?: string;
   /** The unread count in the dialogs list; defaults to `accent`. */
   unread?: string;
+  /** Links in message text; defaults to `accentAlt`. */
+  link?: string;
+  /** Inline code and code blocks in message text; defaults to `warning`. */
+  code?: string;
   senderColors?: string[];
 };
 
@@ -45,6 +49,8 @@ export type ResolvedTheme = ThemePalette & {
   selfBorder: string;
   selected: string;
   unread: string;
+  link: string;
+  code: string;
   senderColors: string[];
 };
 

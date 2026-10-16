@@ -2,6 +2,7 @@ import * as _opentui from '@opentui/core';
 import {
   TelegramClient,
   Message as MtCuteMessage,
+  MessageEntity as MtCuteMessageEntity,
   Dialog as MtCuteDialog,
   User as MtCuteUser,
   MessageReactions,
@@ -12,6 +13,7 @@ import { Dispatcher } from '@mtcute/dispatcher';
 import {
   Message,
   DeleteScope as _DeleteScope,
+  Entity,
   Dialog as _Dialog,
   Folder as _Folder,
   FileMedia as _FileMedia,
@@ -144,6 +146,8 @@ declare global {
     const preview: (message: Message | PendingMessage | null | undefined) => string | null;
     /** True when `message` reads as part of `previous`'s burst: same sender, same day, minutes apart. */
     const continues: (previous: Message | PendingMessage | undefined, message: Message | PendingMessage) => boolean;
+    /** True when both carry the same text, formatted the same way. */
+    const sameText: (a: Message, b: Message) => boolean;
     /** True when both carry the same reactions, in the same order. */
     const sameReactions: (a: Message, b: Message) => boolean;
     /** `incoming`, with each reaction whose owner it doesn't know (`mine: null`) taking `cached`'s word
@@ -156,6 +160,9 @@ declare global {
     const quote: (target: Message | null) => Omit<NonNullable<Message['replyTo']>, 'id'>;
     /** The receipt `last` carries, read or not by `readUpTo`; null when it isn't ours, or there is none. */
     const receipt: (last: Message | PendingMessage | undefined, readUpTo: number) => Receipt | null;
+    /** Every http(s) link in `message`, once per target, in text order: its text as shown, and
+     * where it goes. */
+    const links: (message: Message | PendingMessage) => { label: string; url: string }[];
     const awaitsQuote: (
       message: Message | PendingMessage,
     ) => message is Message & { replyTo: NonNullable<Message['replyTo']> & { id: number } };
@@ -378,6 +385,8 @@ declare global {
   namespace Link {
     /** The URL when the text is nothing but one http(s) link, else null. */
     const only: (text: string) => string | null;
+    /** The URL, normalized, when it is http(s) or mailto, else null. */
+    const safe: (url: string) => string | null;
   }
 
   namespace Random {
@@ -512,6 +521,8 @@ declare global {
     deleteScopesOf(message: MtCuteMessage): DeleteScope[];
     /** Empty for none; `mine` is null throughout for a `min` set. */
     toReactions(reactions: MessageReactions | null): Reaction[];
+    /** Only the kinds the chat draws; a custom emoji's text already is its stand-in emoji. */
+    toEntities(entities: ReadonlyArray<MtCuteMessageEntity>): Entity[];
     toMedia(message: MtCuteMessage): Media | null;
     toDialog(dialog: MtCuteDialog): Dialog;
     toFolder(filter: tl.TypeDialogFilter): Folder;
