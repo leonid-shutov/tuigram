@@ -13,6 +13,8 @@ declare global {
     size: { width: number; height: number; dialogsWidth: number; dialogsMin: number; dialogsMax: number };
     /** The startup placeholder; `destroy()` is idempotent. */
     splash: _opentui.TextRenderable;
+    /** True in a terminal known to draw `◖` / `◗` as round ends; read at paint time. */
+    drawsHalfDiscs: boolean;
   };
 
   type ScreenSelf = ScreenModule & {
@@ -113,6 +115,14 @@ declare global {
     /** The size of the first drawable medium among `media`, shared by every picture in the album. */
     const albumSize: (media: _Media[]) => { cols: number; rows: number } | null;
   }
+  /** The row of reactions under a bubble's text. */
+  namespace Reactions {
+    /** One line, `👍 3  ❤ 1  +2`: ours highlighted, the first few shown and the rest counted. */
+    const paint: (reactions: Message['reactions']) => _opentui.StyledText;
+    /** A count as the row shows it: shortened past three digits (1.2K, 12K, 3.4M). */
+    const count: (count: number) => string;
+  }
+
   /** An empty thumbnail slot of `size` cells; `Bubble.paint` sets the source of the part on screen. */
   const Picture: (
     protocol: _opentui.ImageRenderProtocol,
@@ -132,6 +142,8 @@ declare global {
     label: _opentui.TextRenderable;
     /** The message's text; hidden when empty. */
     text: _opentui.TextRenderable;
+    /** One line of reactions under the text; hidden when there are none. */
+    reactions: _opentui.TextRenderable;
     /** The message this bubble draws, thumbnails included. */
     message: ChatMessage;
     /** Index into `message.media` of the medium on screen. */

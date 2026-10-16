@@ -30,4 +30,6 @@ const toReplyTo = (message) => {
   replyTo: toReplyTo(message),
   date: message.date,
   deleteScopes: self.deleteScopesOf(message),
+  reactions: self.toReactions(message.reactions),
+  partIds: [message.id],
 });

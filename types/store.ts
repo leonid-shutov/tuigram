@@ -138,6 +138,9 @@ declare global {
     hasConfirmed(chatId: number, messageId: number): boolean;
     /** The server's copy of a cached message, or null when it isn't cached or is still pending. */
     findConfirmed(chatId: number, messageId: number): Message | null;
+    /** Like `findConfirmed`, but by any of the message's `partIds`: the album an update names one
+     * picture of. */
+    findPart(chatId: number, partId: number): Message | null;
     /** The newest confirmed message the chat has, or `null` when it has none. */
     lastConfirmed(chatId: number): Message | null;
     /** The oldest confirmed message the chat has — what older history pages below, and what a

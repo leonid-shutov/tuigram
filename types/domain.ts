@@ -77,7 +77,19 @@ export type Message = {
   date: Date;
   /** What the delete picker offers, as the official clients decide it; empty when it can't be deleted. */
   deleteScopes: DeleteScope[];
+  /** Every reaction on it, in Telegram's order (most counted first); empty when there are none.
+   * An album's are its reacted part's. */
+  reactions: Reaction[];
+  /** Every Telegram message behind it: the one id, every part of an album, none while pending.
+   * A reaction or an edit may name any of them. */
+  partIds: number[];
 };
+
+/** One reaction and how many gave it. `emoji` is null for a custom emoji, which is a sticker a
+ * terminal cannot draw; a paid reaction is `⭐`. `key` tells reactions apart where `emoji` can't:
+ * the emoji, `custom:<document id>`, or `paid`. `mine` is null when Telegram didn't say — a `min`
+ * set, whose counts are the same for everyone and so carry nobody's own choice. */
+export type Reaction = { key: string; emoji: string | null; count: number; mine: boolean | null };
 
 export type PendingMessage = Omit<Message, 'chatId' | 'chatName'> & { chatId: undefined; chatName: undefined };
 

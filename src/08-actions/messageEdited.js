@@ -9,16 +9,23 @@ const sameMedia = (cached, message) =>
 
 /** @param {number} chatId @param {number[]} partIds */
 const cachedPart = (chatId, partIds) =>
-  partIds.map((id) => store.chat.findConfirmed(chatId, id)).find((found) => found !== null) ?? null;
+  partIds.map((id) => store.chat.findPart(chatId, id)).find((found) => found !== null) ?? null;
 
+// An edit carries the message's whole current state, reactions included — and in a private chat a
+// reaction arrives as nothing but a hidden edit, with the text and media unchanged.
 /** @type {Actions['messageEdited']} */
 (message, partIds) => {
   const cached = cachedPart(message.chatId, partIds);
 
   if (cached !== null) {
     const keepMedia = sameMedia(cached, message);
-    if (cached.text === message.text && keepMedia) return;
-    const edited = { ...message, media: keepMedia ? cached.media : message.media, replyTo: cached.replyTo };
+    const edited = {
+      ...message,
+      media: keepMedia ? cached.media : message.media,
+      replyTo: cached.replyTo,
+      reactions: Message.mergeReactions(cached.reactions, message.reactions),
+    };
+    if (cached.text === message.text && keepMedia && Message.sameReactions(cached, edited)) return;
     store.chat.replace(message.chatId, edited, cached.id);
     if (!keepMedia) actions.loadThumb(edited);
   }

@@ -21,6 +21,9 @@ const SCROLL_HINT = ' hold shift to scroll ';
   // rows down to its own floor: yoga then hands the text whatever rows are left, and it becomes
   // the bubble's scroll window — see scrollMessage.
   const text = Text({ fg: config.theme.fg, flexShrink: 1, visible: false });
+  // One row at most (`Reactions.paint` folds the overflow into `+N`), and never squeezed: when the
+  // bubble hits its height cap the text scrolls, the reactions stay put under it.
+  const reactions = Text({ flexShrink: 0, wrapMode: 'none', visible: false });
 
   const name = isGroup && !sender.isSelf ? sender.displayName?.slice(0, 24) : undefined;
 
@@ -61,7 +64,7 @@ const SCROLL_HINT = ' hold shift to scroll ';
     flexShrink: 0,
     overflow: 'hidden',
 
-    children: [forwardText, reply, counter, picture, label, text],
+    children: [forwardText, reply, counter, picture, label, text, reactions],
 
     // eslint-disable-next-line no-extra-parens -- prettier insists on these parens
     ...(name && {
@@ -78,7 +81,7 @@ const SCROLL_HINT = ' hold shift to scroll ';
   });
 
   /** @type {BubbleView} */
-  const view = { box, reply, counter, picture, label, text, message, mediumIndex: 0 };
+  const view = { box, reply, counter, picture, label, text, reactions, message, mediumIndex: 0 };
   Bubble.paint(view);
   return view;
 };

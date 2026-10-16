@@ -10,7 +10,7 @@ const QUOTE_CELLS = 41;
 
 /** @type {typeof Bubble.paint} */
 (view) => {
-  const { message, mediumIndex, picture, reply, label, counter, text } = view;
+  const { message, mediumIndex, picture, reply, label, counter, text, reactions } = view;
   reply.visible = message.replyTo !== null;
   if (message.replyTo !== null) reply.content = Quote.paint(Quote.from(message.replyTo), QUOTE_CELLS);
   const { media } = message;
@@ -23,4 +23,6 @@ const QUOTE_CELLS = 41;
   put(label, medium === null || (drawn && medium.type === 'photo') ? '' : Media.label(medium));
   put(counter, media.length > 1 ? `‹ ${mediumIndex + 1}/${media.length} ›` : '');
   put(text, message.text);
+  reactions.visible = message.reactions.length > 0;
+  if (reactions.visible) reactions.content = Reactions.paint(message.reactions);
 };

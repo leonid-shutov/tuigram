@@ -80,6 +80,9 @@ declare global {
     receiveMessage(message: Message): void;
     /** A message was edited elsewhere: redraw it in the open chat and refresh the dialog preview. */
     messageEdited(message: Message, partIds: number[]): void;
+    /** A cached message's reactions changed: store the new set, keeping which are ours where it
+     * doesn't say. */
+    reactionsChanged(event: ReactionsEvent): void;
     /** Shut down and have bin/tuigram.js start the app again from scratch: on wake from sleep
      * and on ctrl+r. */
     restart(): void;

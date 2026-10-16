@@ -12,4 +12,6 @@
   replyTo,
   date: new Date(),
   deleteScopes: [],
+  reactions: [],
+  partIds: [],
 });

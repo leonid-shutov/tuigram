@@ -4,6 +4,7 @@ import {
   Message as MtCuteMessage,
   Dialog as MtCuteDialog,
   User as MtCuteUser,
+  MessageReactions,
   UserStatusUpdate,
   tl,
 } from '@mtcute/node';
@@ -18,6 +19,7 @@ import {
   Media,
   PendingMessage,
   Presence,
+  Reaction,
 } from './domain';
 import { KeyedList as _KeyedList, LinkedList as _LinkedList } from './collections';
 import { Paths, Source, ThemeDefinition, ResolvedTheme, ImageProtocol as _ImageProtocol, ConfigSchema } from './config';
@@ -142,6 +144,11 @@ declare global {
     const preview: (message: Message | PendingMessage | null | undefined) => string | null;
     /** True when `message` reads as part of `previous`'s burst: same sender, same day, minutes apart. */
     const continues: (previous: Message | PendingMessage | undefined, message: Message | PendingMessage) => boolean;
+    /** True when both carry the same reactions, in the same order. */
+    const sameReactions: (a: Message, b: Message) => boolean;
+    /** `incoming`, with each reaction whose owner it doesn't know (`mine: null`) taking `cached`'s word
+     * for it by key, or not ours when `cached` doesn't have it. */
+    const mergeReactions: (cached: Reaction[], incoming: Reaction[]) => Reaction[];
     /** True when `message` answers a message in its chat that is not resolved yet: the reply still
      * lacks the original's sender and text. */
     /** What a reply quotes of `target`: its sender (`You` for ours) and a line of it; `deleted`
@@ -441,6 +448,8 @@ declare global {
   // ── 4-messenger ───────────────────────────────────────────────────────────────────────
   type DeleteEvent = { channelId: number | null; messageIds: number[] };
   type HistoryReadEvent = { chatId: number; isOutbox: boolean; maxReadId: number; unreadCount: number };
+  /** A message's whole current reaction set; `messageId` may be any part of an album. */
+  type ReactionsEvent = { chatId: number; messageId: number; reactions: Reaction[] };
 
   type MessengerModule = {
     tg: TelegramClient;
@@ -475,6 +484,8 @@ declare global {
     /** Messages were deleted; `channelId` is null outside channels, where ids are not tied to a chat. */
     onDeleteMessage(handler: (event: DeleteEvent) => void): void;
     onPresenceUpdate(handler: (chatId: number, presence: Presence) => void): void;
+    /** A message's reactions changed, outside a private chat (there they come as an edit). */
+    onReactions(handler: (event: ReactionsEvent) => void): void;
     readHistory(chatId: number): Promise<unknown>;
     /** Send a text, as a reply to `replyTo` when given. */
     sendMessage(chatId: number, text: string, replyTo?: number): Promise<Message>;
@@ -499,6 +510,8 @@ declare global {
     /** The ids of every Telegram message behind `message`: the parts of an album, else its own. */
     albumIds(chatId: number, message: Message): Promise<number[]>;
     deleteScopesOf(message: MtCuteMessage): DeleteScope[];
+    /** Empty for none; `mine` is null throughout for a `min` set. */
+    toReactions(reactions: MessageReactions | null): Reaction[];
     toMedia(message: MtCuteMessage): Media | null;
     toDialog(dialog: MtCuteDialog): Dialog;
     toFolder(filter: tl.TypeDialogFilter): Folder;

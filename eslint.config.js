@@ -98,6 +98,7 @@ module.exports = [
         // chat common
         Bubble: true,
         Picture: true,
+        Reactions: true,
 
         // keymap common
         Binding: true,
