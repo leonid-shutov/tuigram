@@ -5,6 +5,8 @@ const INSET = 2;
 const PADDING = 2;
 // Border cells kept between a left and a right title.
 const TITLE_GAP = 1;
+const SPINNER_FRAMES = ['⠋', '⠙', '⠹', '⠸', '⠼', '⠴', '⠦', '⠧', '⠇', '⠏'];
+const SPINNER_INTERVAL_MS = 120;
 
 // A box whose edge titles are built from named parts. Each edge has a left and a right group, each
 // listing its parts in order; they are joined, and the last gives way first when the edge runs out
@@ -14,8 +16,8 @@ const TITLE_GAP = 1;
 // is drawn here too, on the edge's middle cell, whole or not at all: it never pushes the side
 // titles aside, it just skips the frame when it would touch one. An edge with
 // parts owns its title: a direct `title` / `bottomTitle` write or alignment is overwritten next
-// frame. A flash shows over a part for a while; writes to the part meanwhile land underneath it,
-// and are what shows once it's over.
+// frame. A flash shows over a part for a while, and a spinner until it's stopped; writes to the
+// part meanwhile land underneath them, and are what shows once they're over.
 Component(
   class PanelRenderable extends tui.BoxRenderable {
     /**
@@ -33,6 +35,8 @@ Component(
       );
       /** @type {Map<string, { text: string, timer: NodeJS.Timeout }>} */
       this.flashes = new Map();
+      /** @type {Map<string, { frame: number, timer?: NodeJS.Timeout }>} */
+      this.spinners = new Map();
     }
 
     /**
@@ -70,6 +74,52 @@ Component(
     }
 
     /**
+     * Shows nothing for the first `delay` ms, so a quick stop never flickers. A later spinner on the
+     * same part replaces this one, and this one's stop then does nothing.
+     * @param {string} name
+     * @param {number} [delay]
+     * @returns {{ stop(): void }} Its `stop` is a no-op once called.
+     */
+    spinTitlePart(name, delay = 0) {
+      if (!this.partTexts.has(name)) throw new Error(`Panel has no title part "${name}"`);
+      node.timers.clearTimeout(this.spinners.get(name)?.timer);
+      /** @type {{ frame: number, timer?: NodeJS.Timeout }} */
+      const spinner = { frame: -1 };
+      const tick = () => {
+        spinner.frame = (spinner.frame + 1) % SPINNER_FRAMES.length;
+        this.requestRender();
+      };
+      spinner.timer = node.timers
+        .setTimeout(() => {
+          tick();
+          spinner.timer = node.timers.setInterval(tick, SPINNER_INTERVAL_MS).unref();
+        }, delay)
+        .unref();
+      this.spinners.set(name, spinner);
+      return {
+        stop: () => {
+          if (this.spinners.get(name) !== spinner) return;
+          // A Timeout from either setter clears with either clearer.
+          node.timers.clearTimeout(spinner.timer);
+          this.spinners.delete(name);
+          this.requestRender();
+        },
+      };
+    }
+
+    /**
+     * The flash or spinner frame shown over a part, else its own text.
+     * @param {string} name
+     */
+    partText(name) {
+      const flash = this.flashes.get(name);
+      if (flash) return flash.text;
+      const frame = this.spinners.get(name)?.frame ?? -1;
+      if (frame >= 0) return SPINNER_FRAMES[frame];
+      return this.partTexts.get(name) ?? '';
+    }
+
+    /**
      * @param {string[]} names
      * @param {number} [room] Cells for the parts, padding excluded.
      * @param {boolean} [whole] Drop a part that doesn't fit instead of clipping it.
@@ -78,7 +128,7 @@ Component(
       /** @type {string[]} */
       const shown = [];
       for (const name of names) {
-        const text = this.flashes.get(name)?.text ?? this.partTexts.get(name) ?? '';
+        const text = this.partText(name);
         if (text === '') continue;
         const gap = shown.length === 0 ? 0 : SEPARATOR.length;
         const clipped = Cells.clip(text, room - gap).trimEnd();
@@ -114,6 +164,8 @@ Component(
     destroySelf() {
       for (const { timer } of this.flashes.values()) node.timers.clearTimeout(timer);
       this.flashes.clear();
+      for (const { timer } of this.spinners.values()) node.timers.clearTimeout(timer);
+      this.spinners.clear();
       super.destroySelf();
     }
 

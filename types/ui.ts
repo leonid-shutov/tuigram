@@ -84,8 +84,8 @@ declare global {
     Emitting & {
       /** True until the dialog list settles, either loaded or failed. */
       loading: boolean;
-      /** The interval driving the bottom-border spinner, cleared by `settle`. */
-      spinner: NodeJS.Timeout;
+      /** The bottom-border spinner, started as the section loads; `settle` stops it. */
+      spinner: { stop(): void };
       /** The rows `render` last built, by chat id, each with the key it was built from. */
       rows: Map<number, { key: string; option: _DialogOption }>;
     };
@@ -192,6 +192,9 @@ declare global {
     clearStatus(): void;
     /** Show a transient word over the status for `ms`; the status comes back after. */
     flashStatus(status: string, ms?: number): void;
+    /** Spin over the status while the open chat loads, after a short delay, until the returned
+     * spinner is stopped. Opening another chat stops it too. */
+    spin(): { stop(): void };
     /** Flip the selected album by `step` media, wrapping around. No-op with fewer than two. */
     flipSelectedAlbum(step: number): void;
     /** Derived, recomputed on every read: the medium on screen in the selected message. */
@@ -209,6 +212,8 @@ declare global {
       /** The message under the cursor, by id, so the cursor survives messages landing above it;
        * `null` when nothing is selected. */
       selectedMessageId: number | null;
+      /** The spinner `spin` last started; stopping it again is a no-op. */
+      spinner: { stop(): void };
       /** Derived, recomputed on every read: the cursor's position in `views`, -1 when unset. */
       readonly selectedIndex: number;
       /** Give every day one separator, right above its earliest bubble, and drop the rest. */

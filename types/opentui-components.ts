@@ -60,6 +60,9 @@ interface _PanelRenderable extends _opentui.BoxRenderable {
   setTitlePart(name: string, text: string): void;
   /** Show `text` over a declared part for `ms`; the part's own text comes back after. */
   flashTitlePart(name: string, text: string, ms: number): void;
+  /** Spin over a declared part, after `delay` ms, until the returned spinner is stopped; the part's
+   * own text comes back after. A later spin of the part replaces this one. */
+  spinTitlePart(name: string, delay?: number): { stop(): void };
   /** Empty a declared title part; the title closes up around it. */
   clearTitlePart(name: string): void;
 }

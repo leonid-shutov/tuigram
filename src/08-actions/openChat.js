@@ -15,7 +15,9 @@ async (chatId) => {
   }
 
   if (store.chat.needsFirstPage(chatId)) {
+    const spinner = ui.chat.spin();
     const loaded = await Result.fromPromise(actions.loadFirstPage(chatId));
+    spinner.stop();
     if (!loaded.ok) return void ui.errors.report('Could not load the chat.', loaded.error);
   } else {
     for (const message of store.chat.opened?.messages ?? []) {

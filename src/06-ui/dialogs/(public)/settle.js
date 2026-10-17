@@ -2,7 +2,7 @@
 (error) => {
   if (!self.loading) return;
   self.loading = false;
-  node.timers.clearInterval(self.spinner);
+  self.spinner.stop();
   if (error !== undefined) {
     self.component.setTitlePart('status', 'couldn’t load chats');
     ui.errors.report('Could not load your chats.', error);
