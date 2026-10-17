@@ -6,11 +6,22 @@ A lightweight, terminal-based Telegram client written in **Node.js** with Vim-fl
 
 ## Install
 
+The quickest way, on Linux or macOS. It installs [mise](https://mise.jdx.dev), then tuigram
+with it:
+
+```sh
+curl -fsSL https://mise.run/$(basename "$SHELL") | sh && ~/.local/bin/mise use -g node@26 npm:tuigram
+```
+
+Then open a new terminal.
+
+or with Homebrew:
+
 ```sh
 brew install leonid-shutov/tap/tuigram
 ```
 
-or with [mise](https://mise.jdx.dev), which installs Node.js 26 alongside it:
+or if you already use mise, which installs Node.js 26 alongside it:
 
 ```sh
 mise use -g node@26 npm:tuigram
