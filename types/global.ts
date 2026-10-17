@@ -472,8 +472,9 @@ declare global {
     /** The messages behind `ids`, in their order; null for one that is gone. Albums stay unfolded. */
     getMessages(chatId: number, ids: number[]): Promise<(Message | null)[]>;
     /** Path to the larger thumbnail (800px box, falling back to 320px) behind a file id, on
-     * disk, or null if it could not be fetched. Cached in memory and on disk. */
-    downloadThumb(fileId: string): Promise<string | null>;
+     * disk, or null if it could not be fetched. Cached in memory and on disk under `key`, the
+     * thumbnail's stable id. */
+    downloadThumb(fileId: string, key: string): Promise<string | null>;
     /** The bytes of the full medium behind a file id. Not cached — see the method's note. */
     downloadMedia(fileId: string): Promise<Uint8Array>;
     /** Edit a message's text. For an album the answer carries only the edited part's medium. */

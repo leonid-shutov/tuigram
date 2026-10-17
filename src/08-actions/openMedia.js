@@ -2,7 +2,7 @@ const CACHE = node.path.join(config.paths.cache, 'media');
 
 /** @param {FileMedia} media */
 const fileNameFor = (media) => {
-  const hash = Hash.fnv1a(media.fileId).toString(36);
+  const hash = Hash.fnv1a(media.fileKey).toString(36);
   const name =
     media.fileName === null ? `media.${Media.extension(media.mimeType)}` : node.path.basename(media.fileName);
   return `${hash}-${name}`;

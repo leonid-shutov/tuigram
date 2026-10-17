@@ -7,7 +7,7 @@ async (filePath, replyTo = null) => {
   const quoted = replyTo === null ? null : { id: replyTo, ...Message.quote(store.chat.findConfirmed(chatId, replyTo)) };
   const pending = Message.pending(
     '',
-    [{ type: 'document', fileId: '', fileName, mimeType: 'application/octet-stream' }],
+    [{ type: 'document', fileId: '', fileKey: '', fileName, mimeType: 'application/octet-stream' }],
     quoted,
   );
   store.chat.append(chatId, pending);

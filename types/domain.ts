@@ -7,6 +7,9 @@ export type MediaImage = {
   preview: Uint8Array | null;
   /** File id of the larger background-downloaded thumbnail (800px box, falling back to 320px), for `messenger.downloadThumb`. */
   thumbId: string | null;
+  /** Stable id of that same thumbnail: `thumbId` embeds a file reference Telegram rotates, so
+   * the one picture arrives under many ids, while this stays put. Names its file in the cache. */
+  thumbKey: string | null;
   /** Path to the larger thumbnail on disk, once `actions.loadThumb` has downloaded it. */
   thumb: string | null;
   /** Dimensions of the full medium, used to size the bubble before any pixels arrive. */
@@ -18,6 +21,8 @@ export type MediaImage = {
 export type MediaFile = {
   /** File id the client can download the full medium with. */
   fileId: string;
+  /** Stable id of the same file, unlike `fileId` (see `thumbKey`): what tells two copies apart. */
+  fileKey: string;
   /** Original file name provided by the sender, when available. */
   fileName: string | null;
   /** MIME type of the full medium. */

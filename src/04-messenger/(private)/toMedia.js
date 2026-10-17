@@ -9,12 +9,12 @@ const { Thumbnail } = npm['@mtcute/node'];
 /** @param {import('@mtcute/node').Photo | import('@mtcute/node').Video} media */
 const image = (media) => {
   const stripped = media.getThumbnail(Thumbnail.THUMB_STRIP)?.location;
+  const box =
+    media.getThumbnail(Thumbnail.THUMB_800x800_BOX) ?? media.getThumbnail(Thumbnail.THUMB_320x320_BOX) ?? null;
   return {
     preview: ArrayBuffer.isView(stripped) ? stripped : null,
-    thumbId:
-      media.getThumbnail(Thumbnail.THUMB_800x800_BOX)?.fileId ??
-      media.getThumbnail(Thumbnail.THUMB_320x320_BOX)?.fileId ??
-      null,
+    thumbId: box?.fileId ?? null,
+    thumbKey: box?.uniqueFileId ?? null,
     thumb: null,
     width: media.width,
     height: media.height,
@@ -26,13 +26,19 @@ const image = (media) => {
 /** @param {import('@mtcute/node').RawDocument} media */
 const fileInfo = (media) => ({
   fileId: media.fileId,
+  fileKey: media.uniqueFileId,
   fileName: media.fileName ?? null,
   mimeType: media.mimeType,
 });
 
 // A photo is the one medium that names itself: never a file name, always a JPEG.
 /** @param {import('@mtcute/node').Photo} media */
-const photoInfo = (media) => ({ fileId: media.fileId, fileName: null, mimeType: 'image/jpeg' });
+const photoInfo = (media) => ({
+  fileId: media.fileId,
+  fileKey: media.uniqueFileId,
+  fileName: null,
+  mimeType: 'image/jpeg',
+});
 
 /** @type {MessengerSelf['toMedia']} */
 (message) => {

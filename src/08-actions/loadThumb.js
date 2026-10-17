@@ -4,9 +4,11 @@
 ({ id, chatId, media }) => {
   if (!store.chat.isOpen(chatId) || !store.chat.hasConfirmed(chatId, id)) return;
   for (const [index, medium] of media.entries()) {
-    if (!Media.isImage(medium) || medium.thumbId === null || medium.thumb !== null) continue;
+    if (!Media.isImage(medium) || medium.thumbId === null || medium.thumbKey === null || medium.thumb !== null) {
+      continue;
+    }
     void messenger
-      .downloadThumb(medium.thumbId)
+      .downloadThumb(medium.thumbId, medium.thumbKey)
       .then((path) => {
         // The message may have been dropped, or its chat evicted, while the download ran.
         const cached = store.chat.findConfirmed(chatId, id);

@@ -4,7 +4,8 @@ const sameMedia = (cached, message) =>
   cached.media.every(
     (medium, i) =>
       medium.type === message.media[i].type &&
-      ('fileId' in medium ? medium.fileId : null) === ('fileId' in message.media[i] ? message.media[i].fileId : null),
+      ('fileKey' in medium ? medium.fileKey : null) ===
+        ('fileKey' in message.media[i] ? message.media[i].fileKey : null),
   );
 
 /** @param {number} chatId @param {number[]} partIds */
