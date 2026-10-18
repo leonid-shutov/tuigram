@@ -1,5 +1,5 @@
-// The host gets a line of its own, so where the link goes reads at a glance however long the rest
-// is. A link whose text is not its URL shows that text first, and then where it really goes,
+// The host is bold and starts the line, so where the link goes reads at a glance however long the
+// rest is. A link whose text is not its URL shows that text first, and then where it really goes,
 // since the text can claim anything.
 /** @type {Actions['confirmLink']} */
 ({ label, url }) => {
@@ -13,7 +13,7 @@
     body: new tui.StyledText([
       tui.fg(muted)(url.includes(label) ? scheme : `“${Cells.ellipsize(label, 60)}”\n→ ${scheme}`),
       tui.bold(tui.fg(link)(target.host)),
-      tui.fg(muted)(path === '/' ? '' : `\n${path}`),
+      tui.fg(muted)(path === '/' ? '' : path),
     ]),
     options: [
       { name: 'Open in browser', value: 'open' },
