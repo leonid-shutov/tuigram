@@ -144,20 +144,6 @@ without box-drawing glyphs. Unknown keys and invalid values are ignored — each
 default — and a file that fails to parse falls back to the defaults entirely; either way, a line
 is logged to `tuigram.log` (see Files below) so a typo doesn't go unnoticed.
 
-### Update checks
-
-At startup, tuigram asks registry.npmjs.org (npm and mise installs), the
-`leonid-shutov/homebrew-tap` formula on GitHub (brew installs), or aur.archlinux.org (AUR
-installs) whether a newer release exists — never anything more, and never on a git checkout. When
-one is found, `alt+u upgrade to <version>` appears in its own row above the key hint bar (so it
-shows even with `hints: false`); `alt+u` runs the upgrade in place and exits so you can restart
-into it (on the AUR it instead shows the command to run with your own AUR helper, since only that
-helper should touch pacman's files), `alt+shift+u` dismisses that version for the rest of the
-session (it resurfaces on the next restart, since nothing is written to disk). Set
-`"updateCheck": false` in
-`config.json` to turn the check off entirely; `tuigram upgrade` runs it from the command line
-instead, without starting the TUI.
-
 ## Files
 
 | What            | Where                                                                                         |
