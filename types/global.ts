@@ -94,6 +94,11 @@ declare global {
        * start, then the ones opened most recently. */
       maxCachedChats: number;
     };
+    /** Hardcoded, not a config.json field: see src/01-config/12-cache.js. */
+    cache: {
+      /** A cached file no hit has touched for this long is deleted at the next start. */
+      maxAgeMs: number;
+    };
     paths: Paths;
     /** The parsed, migrated, validated `config.json` snapshot theme/dialogEmoji/hints/imageProtocol/
      * proxy are derived from at boot; refreshed by `config.reload()`. */
@@ -288,6 +293,11 @@ declare global {
     /** Writes `bytes` to `path` atomically (via a sibling `.part` file, renamed into place) and
      * resolves to `path`. Rejects, cleaning up the `.part` file, if the write fails. */
     const write: (path: string, bytes: Uint8Array) => Promise<string>;
+    /** Deletes the files in `dir` whose mtime is older than `maxAgeMs` and resolves to how many
+     * went; a missing `dir` resolves to 0. A cache hit refreshes the mtime, so age is since use. */
+    const prune: (dir: string, maxAgeMs: number) => Promise<number>;
+    /** Refreshes `path`'s mtime, marking it used, and resolves to whether the file was there. */
+    const touch: (path: string) => Promise<boolean>;
   }
 
   /** Shared by `OS/notify.js` and `OS/open.js`: fire a child off and stop caring about it. */

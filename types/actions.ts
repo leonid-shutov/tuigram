@@ -107,6 +107,8 @@ declare global {
     windowFocus(): void;
     /** Fetch the latest release, if any, into `store.update.available` and draw its notice. */
     checkUpdate(): Promise<void>;
+    /** Delete the cached thumbnails and media no hit has touched for `config.cache.maxAgeMs`. */
+    pruneCache(): Promise<void>;
     /** Suspend the TUI and run the channel's upgrade command; exit cleanly on success. */
     upgrade(): Promise<void>;
     /** Remember the current update as dismissed and hide its notice. */

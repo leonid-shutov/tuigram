@@ -9,7 +9,7 @@ const cache = new Map();
   if (cached !== undefined) return cached;
   const file = node.path.join(config.paths.cache, 'thumbs', key);
   const request = (async () => {
-    if (node.fs.existsSync(file)) return file;
+    if (await Cache.touch(file)) return file;
     const bytes = await messenger.tg.downloadAsBuffer(fileId).catch(() => null);
     if (bytes === null) return null;
     return Cache.write(file, bytes).catch(() => null);

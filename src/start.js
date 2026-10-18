@@ -14,3 +14,4 @@ auth.signIn.ready.then(() => {
 });
 
 actions.checkUpdate();
+void actions.pruneCache();

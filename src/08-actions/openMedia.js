@@ -11,7 +11,8 @@ const fileNameFor = (media) => {
 /** @type {Actions['openMedia']} */
 async (media) => {
   const file = node.path.join(CACHE, fileNameFor(media));
-  if (!node.fs.existsSync(file)) {
+  const hit = await Cache.touch(file);
+  if (!hit) {
     ui.chat.setStatus('downloading…');
     const download = messenger.downloadMedia(media.fileId).then((bytes) => Cache.write(file, bytes));
     const downloaded = await Result.fromPromise(download);
