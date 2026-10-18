@@ -44,8 +44,8 @@
   },
   "dependencies": {
     "@leonid-shutov/uncommonjs": "^1.0.2",
-    "@mtcute/dispatcher": "^0.29.7",
-    "@mtcute/node": "^0.29.7",
+    "@mtcute/dispatcher": "^0.32.5",
+    "@mtcute/node": "^0.32.5",
     "@opentui/core": "^0.5.7",
     "@opentui/keymap": "^0.5.11",
     "@opentui/qrcode": "^0.5.7",
