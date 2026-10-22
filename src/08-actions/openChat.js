@@ -32,6 +32,5 @@ async (chatId) => {
   if (!store.chat.isOpen(chatId)) return;
 
   ui.chat.selectLast();
-  store.dialogs.markRead(chatId);
-  void messenger.readHistory(chatId).catch((error) => Crash.soft(error));
+  actions.readOpenChat();
 };

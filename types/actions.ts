@@ -106,6 +106,10 @@ declare global {
     send(text: string, replyTo?: number | null): Promise<void>;
     /** Attach a local file: an optimistic pending bubble, then the real upload via mtcute. */
     sendFile(filePath: string, replyTo?: number | null): Promise<void>;
+    /** Mark the open chat read, here and on Telegram, when the window is focused and it has anything
+     * unread. Runs whenever the open chat may have just been seen: it opened, a message landed in
+     * it, or the window came back. */
+    readOpenChat(): void;
     /** The window lost focus; what lands in the open chat from now on stays unread. */
     windowBlur(): void;
     /** The window came back: read whatever landed in the open chat while it was away. */
