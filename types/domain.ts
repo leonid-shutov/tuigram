@@ -160,6 +160,8 @@ export type Folder = {
 export type Presence = {
   status: 'online' | 'offline' | 'recently' | 'within_week' | 'within_month' | 'long_time_ago';
   lastOnline: Date | null;
+  /** When an `online` runs out unless word comes first; null for every other status. */
+  until: Date | null;
 };
 
 /**

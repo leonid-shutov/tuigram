@@ -78,8 +78,8 @@ declare global {
     stepFolder(step: number): void;
     /** Widen or narrow the dialogs pane by `delta` cells and redraw its rows to fit. */
     resizeDialogs(delta: number): void;
-    /** A user's online/last-seen state changed. Ignored unless it's the counterpart of the open chat. */
-    presenceUpdate(chatId: number, presence: Presence): void;
+    /** A user's online/last-seen state changed; kept for every user, open chat or not. */
+    presenceUpdate(userId: number, presence: Presence): void;
     receiveMessage(message: Message): void;
     /** A message was edited elsewhere: redraw it in the open chat and refresh the dialog preview. */
     messageEdited(message: Message, partIds: number[]): void;
@@ -89,9 +89,17 @@ declare global {
     /** Shut down and have bin/tuigram.js start the app again from scratch: on wake from sleep
      * and on ctrl+r. */
     restart(): void;
-    /** Push the open chat — messages, receipt and presence — to the pane. Runs on every `change`
-     * of store.chat, and when the open chat's outbox read mark moves on its dialog. */
+    /** Push the open chat's messages to the pane as bubbles. Runs on every `change` of store.chat. */
     repaintChat(): void;
+    /** Put the open chat's name on the pane's top border. Runs on every `change` of store.chat and
+     * store.dialogs, and after a config reload. */
+    repaintChatTitle(): void;
+    /** Draw whether our last message in the open chat was read. Runs on every `change` of
+     * store.chat (the last message) and store.dialogs (the read mark). */
+    repaintReceipt(): void;
+    /** Draw the open chat partner's presence. Runs on every `change` of store.chat (which chat is
+     * open) and store.peers. */
+    repaintPresence(): void;
     /** Push the current folder's dialogs to the pane. Runs on every `change` of store.dialogs and
      * store.folders. */
     repaintDialogs(): void;

@@ -165,7 +165,8 @@ declare global {
 
   type ChatSection = Section & {
     /** The bordered pane around the messages. Its top border carries the label and the open chat's
-     * name on the left and the partner's presence on the right; its bottom border the status. */
+     * name on the left and the partner's presence on the right; its bottom border the status, the
+     * selected message's date and the receipt. */
     component: PanelRenderable;
     /** The messages alone — everything the cursor and the scroll position are about. */
     scroll: _opentui.ScrollBoxRenderable;
@@ -179,13 +180,18 @@ declare global {
     scrollMessage(lines: number): void;
     /** The oldest message loaded so far, which also asks for more history. */
     first(): void;
-    /** Start over on another chat: drop the last chat's bubbles, put its glyph and name on the top
-     * border and forget the cursor. Its own bubbles come with the next `render` of the freshly
-     * opened store. */
-    open(chatId: number, name: string): void;
-    /** Make the pane match the open chat: one bubble per message, in order, reusing each bubble
-     * whose id is still held, plus the receipt and presence on the border. */
-    render(chat: { messages: readonly ChatMessage[]; receipt: Receipt | null; presence: Presence | null }): void;
+    /** Start over on another chat: drop the last chat's bubbles, forget the cursor and clear the
+     * status. Its bubbles and border come with the repaints of the freshly opened store. */
+    open(): void;
+    /** Make the bubbles match the open chat: one per message, in order, reusing each bubble whose
+     * id is still held. */
+    render(messages: readonly ChatMessage[]): void;
+    /** Put the chat's glyph and name on the top border. */
+    paintName(chatId: number, name: string): void;
+    /** Draw whether our last message was read on the bottom border; blank for null. */
+    paintReceipt(receipt: Receipt | null): void;
+    /** Draw the partner's online/last-seen state on the top border; blank for null. */
+    paintPresence(presence: Presence | null): void;
     selectLast(): void;
     /** Show `status` at the bottom border's left until `clearStatus`. */
     setStatus(status: string): void;
@@ -220,8 +226,6 @@ declare global {
       redate(): void;
       /** Put the cursor on the bubble at `index`, clamped, and bring it into view. */
       selectAt(index: number): void;
-      /** Draw the receipt and presence on the border. */
-      paintHeader(receipt: Receipt | null, presence: Presence | null): void;
       /** Draw the selected message's day and time on the bottom border; blank with no selection. */
       paintDate(): void;
       /** Derived, recomputed on every read: the TextRenderable under the cursor — the bubble's

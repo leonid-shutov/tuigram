@@ -45,6 +45,8 @@ declare global {
     list: LinkedDialogsHandle;
     /** The archive folder's dialogs; empty until they finish loading. */
     archive: LinkedDialogsHandle;
+    /** Link a fetched list, keeping any read mark the store already has further along. */
+    link(dialogs: Dialog[]): LinkedDialogsHandle;
     /** The main list, archive aside: what "All chats" shows and the chat search reads. */
     all(): Dialog[];
     /** What a folder shows; "All chats" is `all()`, any other folder also reaches the archive. */
@@ -74,7 +76,7 @@ declare global {
    */
   type DialogsStore = Omit<
     DialogsStoreSelf,
-    'list' | 'archive' | 'emitter' | 'emit' | 'all' | 'inFolder' | 'find' | 'receive'
+    'list' | 'archive' | 'link' | 'emitter' | 'emit' | 'all' | 'inFolder' | 'find' | 'receive'
   > & {
     all(): Readonly<Dialog>[];
     inFolder(folder: Folder): Readonly<Dialog>[];
@@ -102,7 +104,8 @@ declare global {
   };
 
   /** One chat as store.chat caches it: its messages, oldest first and whole at the newest end (see
-   * src/05-store/chat/2-chat.js). Its outbox read mark is its dialog's. */
+   * src/05-store/chat/2-chat.js). Its outbox read mark is its dialog's; its partner's presence is
+   * store.peers'. */
   type CachedChat = { messages: ChatMessage[] };
 
   /**
@@ -117,8 +120,6 @@ declare global {
     chats: Map<number, CachedChat>;
     /** The open chat as cached; null before the first chat opens. */
     readonly opened: CachedChat | null;
-    /** The open chat partner's online/last-seen state; `null` until fetched, or for non-users. */
-    presence: Presence | null;
     /** Emit `change` when `chatId` is the open chat. */
     emit(event: 'change', chatId: number | undefined): void;
     /** The cached chat behind `chatId`, or null when it isn't cached. */
@@ -163,8 +164,6 @@ declare global {
     replace(chatId: number, message: Message, id?: number): void;
     /** Take deleted messages out of the chat; a reply to one then reads as a deleted original. */
     remove(chatId: number, ids: number[]): void;
-    /** Set the open chat's presence; ignored once `chatId` is no longer open. */
-    setPresence(chatId: number, presence: Presence | null): void;
   };
 
   /**
@@ -174,12 +173,32 @@ declare global {
    */
   type ChatStore = Omit<
     ChatStoreSelf,
-    'openChatId' | 'chats' | 'opened' | 'presence' | 'emitter' | 'emit' | 'getById' | 'trim' | 'evict'
+    'openChatId' | 'chats' | 'opened' | 'emitter' | 'emit' | 'getById' | 'trim' | 'evict'
   > & {
     readonly openChatId: number | null;
     readonly opened: { readonly messages: readonly Readonly<ChatMessage>[] } | null;
-    readonly presence: Presence | null;
   };
+
+  /**
+   * The peers store as its own files see it through `self`: what other people are doing right now,
+   * as the stream reports it, for every user it reports on. A status that says how long it holds
+   * lapses on its own: the store keeps a timer per user and emits `change` when one runs out.
+   */
+  type PeersStoreSelf = StoreEvents & {
+    /** The last presence heard of, by user id. */
+    presence: Map<number, Presence>;
+    /** The timer that ends a user's `online` at its `until`, by user id. */
+    timers: Map<number, ReturnType<typeof setTimeout>>;
+    /** The user's presence, or null when none was heard of; in a private chat the user id is the chat's. */
+    presenceOf(userId: number): Presence | null;
+    /** Take the user's latest presence; null forgets it. */
+    setPresence(userId: number, presence: Presence | null): void;
+    /** The user's `online` ran out with no word since: they went offline at its `until`. */
+    lapse(userId: number): void;
+  };
+
+  /** The peers store as the rest of the app sees it: read-only but for its mutators. */
+  type PeersStore = Omit<PeersStoreSelf, 'presence' | 'timers' | 'lapse' | 'emitter' | 'emit'>;
 
   /** Terminal window focus, as reported by the terminal — see src/5-store/window.js. */
   type WindowStore = { focused: boolean };
@@ -192,6 +211,7 @@ declare global {
     const dialogs: DialogsStore;
     const folders: FoldersStore;
     const chat: ChatStore;
+    const peers: PeersStore;
     const window: WindowStore;
     const update: UpdateStore;
   }

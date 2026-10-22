@@ -1,8 +1,8 @@
-// Same glyph and config flag as dialogs/(common)/Option/from.js.
+// The border's name, receipt and presence follow from the store, which repaints them as it opens
+// the chat; what goes here is the pane's own state.
 /** @type {ChatSection['open']} */
-(chatId, name) => {
-  self.render({ messages: [], receipt: null, presence: null });
+() => {
+  self.render([]);
   self.spinner.stop();
   self.component.clearTitlePart('status');
-  self.component.setTitlePart('name', config.dialogEmoji ? `${Emoji.fromHash(chatId)} ${name}` : name);
 };

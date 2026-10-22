@@ -1,4 +1,4 @@
 /** @type {Actions['presenceUpdate']} */
-(chatId, presence) => {
-  store.chat.setPresence(chatId, presence);
+(userId, presence) => {
+  store.peers.setPresence(userId, presence);
 };

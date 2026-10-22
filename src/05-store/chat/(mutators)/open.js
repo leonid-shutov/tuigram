@@ -6,6 +6,5 @@ Mutation(
     if (left !== null) self.trim(left);
     self.cache(chatId);
     self.openChatId = chatId;
-    self.presence = null;
   },
 );

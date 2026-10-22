@@ -30,7 +30,7 @@ const reconcile = (messages) => {
 };
 
 /** @type {ChatSection['render']} */
-({ messages, receipt, presence }) => {
+(messages) => {
   const { selectedIndex } = self;
   // Older history landed above what was on screen: keep the view where it was. `redate` runs
   // inside, so the separators it adds count toward the height preserveScroll anchors by.
@@ -49,6 +49,5 @@ const reconcile = (messages) => {
     if (self.focused) (view?.box ?? self.component).focus();
   }
 
-  self.paintHeader(receipt, presence);
   self.paintDate();
 };

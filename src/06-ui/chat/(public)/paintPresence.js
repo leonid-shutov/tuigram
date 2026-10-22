@@ -21,8 +21,5 @@ const describe = (presence) => {
   return BUCKET_LABEL[presence.status];
 };
 
-/** @type {ChatSelf['paintHeader']} */
-(receipt, presence) => {
-  self.component.setTitlePart('receipt', receipt ?? '');
-  self.component.setTitlePart('presence', presence === null ? '' : describe(presence));
-};
+/** @type {ChatSection['paintPresence']} */
+(presence) => self.component.setTitlePart('presence', presence === null ? '' : describe(presence));

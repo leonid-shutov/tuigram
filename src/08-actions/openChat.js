@@ -8,10 +8,14 @@ async (chatId) => {
   const dialog = store.dialogs.find(chatId);
   if (dialog === null) Crash.hard(new Error(`dialog ${chatId} is not in the store`));
   // Ahead of the store, so a cached chat renders against a cleared selection.
-  ui.chat.open(chatId, dialog.name);
+  ui.chat.open();
   store.chat.open(chatId);
+  // The stream only says when a presence changes: what it is now comes from asking.
   if (dialog.isUser) {
-    void messenger.getPresence(chatId).then((presence) => store.chat.setPresence(chatId, presence));
+    messenger
+      .getPresence(chatId)
+      .then((presence) => store.peers.setPresence(chatId, presence))
+      .catch((error) => Crash.soft(error));
   }
 
   if (store.chat.needsFirstPage(chatId)) {

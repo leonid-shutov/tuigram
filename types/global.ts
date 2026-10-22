@@ -503,7 +503,7 @@ declare global {
     onEditMessage(handler: (message: Message, partIds: number[]) => void): void;
     /** Messages were deleted; `channelId` is null outside channels, where ids are not tied to a chat. */
     onDeleteMessage(handler: (event: DeleteEvent) => void): void;
-    onPresenceUpdate(handler: (chatId: number, presence: Presence) => void): void;
+    onPresenceUpdate(handler: (userId: number, presence: Presence) => void): void;
     /** A message's reactions changed, outside a private chat (there they come as an edit). */
     onReactions(handler: (event: ReactionsEvent) => void): void;
     readHistory(chatId: number): Promise<unknown>;
@@ -678,6 +678,7 @@ declare global {
       DialogsStoreSelf &
       FoldersStoreSelf &
       ChatStoreSelf &
+      PeersStoreSelf &
       DialogsSelf &
       ChatSelf &
       MessagePromptSelf &
