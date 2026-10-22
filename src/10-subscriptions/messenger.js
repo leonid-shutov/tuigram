@@ -9,4 +9,5 @@ void messenger.onReactions(actions.reactionsChanged);
 void messenger.onHistoryRead(actions.historyRead);
 void messenger.onDeleteMessage(actions.messagesDeleted);
 void messenger.onPresenceUpdate(actions.presenceUpdate);
+void messenger.onUserTyping(actions.userTyping);
 void messenger.onFoldersChange(actions.loadFolders);

@@ -1,4 +1,4 @@
-import { Dialog, Folder, Message, PendingMessage, LinkedDialogsHandle, Presence } from './domain';
+import { Dialog, Folder, Message, PendingMessage, LinkedDialogsHandle, Presence, TypingStatus } from './domain';
 
 declare global {
   /** A message in a cached chat — ours before the server confirms it, or theirs. */
@@ -208,8 +208,15 @@ declare global {
     presence: Map<number, Presence>;
     /** The timer that ends a user's `online` at its `until`, by user id. */
     timers: Map<number, ReturnType<typeof setTimeout>>;
+    /** Who is typing in each chat, by chat id and then user id, with the timer that ends it. */
+    typing: Map<number, Map<number, { status: TypingStatus; timer: ReturnType<typeof setTimeout> }>>;
     /** The user's presence, or null when none was heard of; in a private chat the user id is the chat's. */
     presenceOf(userId: number): Presence | null;
+    /** Who is typing in the chat right now, in the order they started. */
+    typingIn(chatId: number): { userId: number; status: TypingStatus }[];
+    /** Take a user's latest typing status in a chat; null ends it. Each runs out on its own, unless
+     * renewed, after the 6 seconds Telegram holds it for. */
+    setTyping(chatId: number, userId: number, status: TypingStatus | null): void;
     /** Take the user's latest presence; null forgets it. */
     setPresence(userId: number, presence: Presence | null): void;
     /** The user's `online` ran out with no word since: they went offline at its `until`. */
@@ -217,7 +224,7 @@ declare global {
   };
 
   /** The peers store as the rest of the app sees it: read-only but for its mutators. */
-  type PeersStore = Omit<PeersStoreSelf, 'presence' | 'timers' | 'lapse' | 'emitter' | 'emit'>;
+  type PeersStore = Omit<PeersStoreSelf, 'presence' | 'timers' | 'typing' | 'lapse' | 'emitter' | 'emit'>;
 
   /** Terminal window focus, as reported by the terminal — see src/5-store/window.js. */
   type WindowStore = { focused: boolean };

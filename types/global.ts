@@ -22,6 +22,7 @@ import {
   PendingMessage,
   Presence,
   Reaction,
+  TypingStatus,
 } from './domain';
 import { KeyedList as _KeyedList, LinkedList as _LinkedList } from './collections';
 import { Paths, Source, ThemeDefinition, ResolvedTheme, ImageProtocol as _ImageProtocol, ConfigSchema } from './config';
@@ -466,6 +467,10 @@ declare global {
   /** A message's whole current reaction set; `messageId` may be any part of an album. */
   type ReactionsEvent = { chatId: number; messageId: number; reactions: Reaction[] };
 
+  /** A user started or stopped doing something toward a message in a chat; `status` null when they
+   * stopped. In a private chat `chatId` is the user's. */
+  type TypingEvent = { chatId: number; userId: number; status: TypingStatus | null };
+
   type MessengerModule = {
     tg: TelegramClient;
     dispatcher: Dispatcher;
@@ -501,6 +506,8 @@ declare global {
     /** Messages were deleted; `channelId` is null outside channels, where ids are not tied to a chat. */
     onDeleteMessage(handler: (event: DeleteEvent) => void): void;
     onPresenceUpdate(handler: (userId: number, presence: Presence) => void): void;
+    /** Someone started or stopped typing, recording or sending something; in any chat, any topic. */
+    onUserTyping(handler: (event: TypingEvent) => void): void;
     /** A message's reactions changed, outside a private chat (there they come as an edit). */
     onReactions(handler: (event: ReactionsEvent) => void): void;
     readHistory(chatId: number): Promise<unknown>;

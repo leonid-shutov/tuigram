@@ -5,6 +5,8 @@
   // The stream re-delivers messages we already have cached: our own, racing `send`, or a gap replay.
   if (store.chat.hasConfirmed(message.chatId, message.id)) return;
   store.dialogs.receive(message);
+  // The message is what they were typing, as Telegram's own clients take it.
+  if (message.sender.id !== null) store.peers.setTyping(message.chatId, message.sender.id, null);
   store.chat.append(message.chatId, message);
   actions.loadThumb(message);
   actions.loadReplies([message]);

@@ -77,6 +77,8 @@ declare global {
     resizeDialogs(delta: number): void;
     /** A user's online/last-seen state changed; kept for every user, open chat or not. */
     presenceUpdate(userId: number, presence: Presence): void;
+    /** Someone started or stopped typing in a chat; kept for every chat, open or not. */
+    userTyping(event: TypingEvent): void;
     receiveMessage(message: Message): void;
     /** A message was edited elsewhere: redraw it in the open chat and refresh the dialog preview. */
     messageEdited(message: Message, partIds: number[]): void;
@@ -94,8 +96,8 @@ declare global {
     /** Draw whether our last message in the open chat was read. Runs on every `change` of
      * store.chat (the last message) and store.dialogs (the read mark). */
     repaintReceipt(): void;
-    /** Draw the open chat partner's presence. Runs on every `change` of store.chat (which chat is
-     * open) and store.peers. */
+    /** Draw who is typing in the open chat, or else its partner's presence. Runs on every `change` of
+     * store.chat (which chat is open, and who its typists are by name) and store.peers. */
     repaintPresence(): void;
     /** Push the current folder's dialogs to the pane. Runs on every `change` of store.dialogs and
      * store.folders. */

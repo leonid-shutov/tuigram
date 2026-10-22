@@ -9,6 +9,7 @@ import {
   Media as _Media,
   Message,
   Presence,
+  Typist,
 } from './domain';
 
 declare global {
@@ -190,8 +191,9 @@ declare global {
     paintName(chatId: number, name: string): void;
     /** Draw whether our last message was read on the bottom border; blank for null. */
     paintReceipt(receipt: Receipt | null): void;
-    /** Draw the partner's online/last-seen state on the top border; blank for null. */
-    paintPresence(presence: Presence | null): void;
+    /** Draw who is typing on the top border, or failing that the partner's online/last-seen state;
+     * blank for neither. */
+    paintPresence(presence: Presence | null, typists: Typist[]): void;
     selectLast(): void;
     /** Show `status` at the bottom border's left until `clearStatus`. */
     setStatus(status: string): void;

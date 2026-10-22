@@ -157,6 +157,29 @@ export type Folder = {
 };
 
 /** A person's online/last-seen state, straight off mtcute's `UserStatus`, minus the `bot` case. */
+/** What someone is doing toward a message, as the stream reports it: typing, or recording or
+ * sending something. mtcute's statuses but for the ones that end it or aren't about a message. */
+export type TypingStatus =
+  | 'typing'
+  | 'record_video'
+  | 'upload_video'
+  | 'record_voice'
+  | 'upload_voice'
+  | 'upload_photo'
+  | 'upload_document'
+  | 'geo'
+  | 'contact'
+  | 'game'
+  | 'record_round'
+  | 'upload_round'
+  | 'speak_call'
+  | 'history_import'
+  | 'sticker';
+
+/** Someone typing in the open chat, as the pane shows them: their name, or null when it has none
+ * to show (the partner of a private chat, or a member the cached messages don't name). */
+export type Typist = { name: string | null; status: TypingStatus };
+
 export type Presence = {
   status: 'online' | 'offline' | 'recently' | 'within_week' | 'within_month' | 'long_time_ago';
   lastOnline: Date | null;
