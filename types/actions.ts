@@ -88,14 +88,13 @@ declare global {
     /** Shut down and have bin/tuigram.js start the app again from scratch: on wake from sleep
      * and on ctrl+r. */
     restart(): void;
-    /** Push the open chat's messages to the pane as bubbles. Runs on every `change` of store.chat. */
+    /** Push the open chat's messages to the pane as bubbles, with the run of ours its partner hasn't
+     * read yet. Runs on every `change` of store.chat (the messages) and store.dialogs (the read
+     * mark). */
     repaintChat(): void;
     /** Put the open chat's name on the pane's top border. Runs on every `change` of store.chat and
      * store.dialogs, and after a config reload. */
     repaintChatTitle(): void;
-    /** Draw whether our last message in the open chat was read. Runs on every `change` of
-     * store.chat (the last message) and store.dialogs (the read mark). */
-    repaintReceipt(): void;
     /** Draw who is typing in the open chat, or else its partner's presence. Runs on every `change` of
      * store.chat (which chat is open, and who its typists are by name) and store.peers. */
     repaintPresence(): void;

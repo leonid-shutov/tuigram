@@ -3,8 +3,11 @@
 // only when the store swapped in a new copy of the message (see 05-store/chat/2-chat.js for the
 // two rules this relies on). Since held messages never change order, walking the window from the
 // newest end and inserting each new bubble above the one after it lays everything out in place.
-/** @param {readonly ChatMessage[]} messages */
-const reconcile = (messages) => {
+// Only the unseen run makes room for the bar, and it is always the chat's end: a bubble resized there
+// can't move a view scrolled up, and sticky scroll keeps a view at the bottom pinned. Older history
+// landing never changes the run, so inside `preserveScroll` the gutter writes are no-ops.
+/** @param {readonly ChatMessage[]} messages @param {number} unseenFrom */
+const reconcile = (messages, unseenFrom) => {
   const previous = self.views;
   /** @type {BubbleView[]} */
   const views = new Array(messages.length);
@@ -18,7 +21,12 @@ const reconcile = (messages) => {
       if (below === null) self.scroll.add(view.box);
       else self.scroll.insertBefore(view.box, below);
     } else if (view.message !== message) Bubble.update(view, message);
-    view.box.marginTop = Message.continues(messages[i - 1], message) ? -1 : 0;
+    // Only a changed margin is written: opentui's setters schedule a render whatever the value, and
+    // most passes (any dialog changing, say) change nothing here.
+    const top = Message.continues(messages[i - 1], message) ? -1 : 0;
+    if (view.box.marginTop !== top) view.box.marginTop = top;
+    const right = i >= unseenFrom ? Bubble.GUTTER : 0;
+    if (view.box.marginRight !== right) view.box.marginRight = right;
     views[i] = view;
     below = view.box;
   }
@@ -30,14 +38,15 @@ const reconcile = (messages) => {
 };
 
 /** @type {ChatSection['render']} */
-(messages) => {
+(messages, unseenFrom) => {
   const { selectedIndex } = self;
+  self.unseenFrom = unseenFrom;
   // Older history landed above what was on screen: keep the view where it was. `redate` runs
   // inside, so the separators it adds count toward the height preserveScroll anchors by.
   const head = self.views.at(0)?.message ?? null;
   const prepended = head !== null && messages.findIndex(({ id }) => id === head.id) > 0;
-  if (prepended) ScrollBox.preserveScroll(self.scroll, () => reconcile(messages));
-  else reconcile(messages);
+  if (prepended) ScrollBox.preserveScroll(self.scroll, () => reconcile(messages, unseenFrom));
+  else reconcile(messages, unseenFrom);
 
   // The message under the cursor went away (a failed send dropped, or a pending one swapped for
   // the server's copy under a new id): the cursor stays at its place, on whatever now fills it.

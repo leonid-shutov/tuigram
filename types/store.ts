@@ -4,9 +4,6 @@ declare global {
   /** A message in a cached chat — ours before the server confirms it, or theirs. */
   type ChatMessage = Message | PendingMessage;
 
-  /** Whether the chat advertises a receipt on our own last message, and which one. */
-  type Receipt = 'read' | 'unread';
-
   /**
    * A store's change event: every mutator emits `change` once it returns, by way of `Mutation`,
    * so `on('change')` hears about every change made through the store. The mutator's arguments

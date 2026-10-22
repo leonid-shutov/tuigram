@@ -15,6 +15,7 @@ const scroll = ScrollBox({
     flexDirection: 'column',
     gap: 1,
     paddingX: 1,
+    renderAfter: (buffer) => self.drawUnseen(buffer),
   },
 
   // The track and thumb otherwise fall back to opentui's hardcoded greys, which ignore the theme.

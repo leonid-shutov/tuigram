@@ -124,6 +124,8 @@ declare global {
     const update: (view: BubbleView, message: ChatMessage) => void;
     /** Flip an album by `step` media, wrapping around. No-op with fewer than two. */
     const flipAlbum: (view: BubbleView, step: number) => void;
+    /** Cells our bubbles in the unseen run keep clear on their right for its bar. */
+    const GUTTER: number;
     /** Bubble size in cells, or null when the medium has no drawable image. */
     const size: (media: ImageMedia) => { cols: number; rows: number } | null;
     /** The size of the first drawable medium among `media`, shared by every picture in the album. */
@@ -166,8 +168,8 @@ declare global {
 
   type ChatSection = Section & {
     /** The bordered pane around the messages. Its top border carries the label and the open chat's
-     * name on the left and the partner's presence on the right; its bottom border the status, the
-     * selected message's date and the receipt. */
+     * name on the left and the partner's presence on the right; its bottom border the status and
+     * the selected message's date. */
     component: PanelRenderable;
     /** The messages alone — everything the cursor and the scroll position are about. */
     scroll: _opentui.ScrollBoxRenderable;
@@ -185,12 +187,11 @@ declare global {
      * status. Its bubbles and border come with the repaints of the freshly opened store. */
     open(): void;
     /** Make the bubbles match the open chat: one per message, in order, reusing each bubble whose
-     * id is still held. */
-    render(messages: readonly ChatMessage[]): void;
+     * id is still held, and the 🙈 bar beside our messages not read yet: those from `unseenFrom` on,
+     * an index into `messages` (`messages.length` for none). */
+    render(messages: readonly ChatMessage[], unseenFrom: number): void;
     /** Put the chat's glyph and name on the top border. */
     paintName(chatId: number, name: string): void;
-    /** Draw whether our last message was read on the bottom border; blank for null. */
-    paintReceipt(receipt: Receipt | null): void;
     /** Draw who is typing on the top border, or failing that the partner's online/last-seen state;
      * blank for neither. */
     paintPresence(presence: Presence | null, typists: Typist[]): void;
@@ -222,6 +223,12 @@ declare global {
       selectedMessageId: number | null;
       /** The spinner `spin` last started; stopping it again is a no-op. */
       spinner: { stop(): void };
+      /** Where the unseen run `render` last laid out the gutter for starts in `views`, which line up
+       * with its messages one for one; `views.length` for none. */
+      unseenFrom: number;
+      /** Draw the bar beside the bubbles from `unseenFrom` on, in the gutter right of them. Runs as
+       * the scroll content's `renderAfter`. */
+      drawUnseen(buffer: _opentui.OptimizedBuffer): void;
       /** Derived, recomputed on every read: the cursor's position in `views`, -1 when unset. */
       readonly selectedIndex: number;
       /** Give every day one separator, right above its earliest bubble, and drop the rest. */

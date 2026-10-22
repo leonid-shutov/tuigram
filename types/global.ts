@@ -164,8 +164,10 @@ declare global {
     /** What a reply quotes of `target`: its sender (`You` for ours) and a line of it; `deleted`
      * when it is gone (null). */
     const quote: (target: Message | null) => Omit<NonNullable<Message['replyTo']>, 'id'>;
-    /** The receipt `last` carries, read or not by `readUpTo`; null when it isn't ours, or there is none. */
-    const receipt: (last: Message | PendingMessage | undefined, readUpTo: number) => Receipt | null;
+    /** Where the run of our messages that ends the chat, and that the other side hasn't read past
+     * `readUpTo` yet, starts in `messages`, pending ones included; `messages.length` when the chat
+     * ends on anything else. */
+    const unseenFrom: (messages: readonly (Message | PendingMessage)[], readUpTo: number) => number;
     /** Every http(s) link in `message`, once per target, in text order: its text as shown, and
      * where it goes. */
     const links: (message: Message | PendingMessage) => { label: string; url: string }[];

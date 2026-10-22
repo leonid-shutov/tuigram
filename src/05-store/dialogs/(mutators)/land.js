@@ -8,6 +8,7 @@ Mutation(
       else {
         const { name, kind, isUser, isContact, isMuted } = dialog;
         Object.assign(early, { name, kind, isUser, isContact, isMuted });
+        early.readUpTo = Math.max(early.readUpTo, dialog.readUpTo);
       }
     }
   },

@@ -4,4 +4,5 @@
   days: new Map(),
   selectedMessageId: null,
   spinner: { stop: () => {} },
+  unseenFrom: 0,
 });

@@ -102,7 +102,8 @@ Cyrillic layout without switching back — `о` moves down, `пп` is `gg`, and 
 
 - QR sign-in in the terminal, with phone + code and a 2FA password as fallbacks
 - Live incoming messages, sending plain text, and read-state sync in both directions
-- A read/unread receipt for your own last message, on the chat pane's bottom border
+- Read receipts that only speak up when there's news: a 🙈 bar beside your messages the other side
+  hasn't seen yet, which shortens as they read and goes once they've read it all
 - Inline photo and video thumbnails — the stripped thumbnail travels inside the message and draws
   instantly, then an 800px version downloads in the background; albums flip with `h` / `l`
 - Rich previews for ~18 media types, in the chat list and in the message pane

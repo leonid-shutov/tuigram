@@ -29,6 +29,8 @@
 - Opening a chat is instant for the 20 at the top of your list, loaded in the background at start,
   and for the last 20 you opened. Each stays in memory as it would look freshly opened, and new,
   edited and deleted messages keep landing in it while it is closed.
+- The read/unread receipt on the chat pane's border is gone. Your messages the other side hasn't seen
+  yet get a 🙈 bar beside them instead, which shortens as they read and goes once they've read it all.
 
 ## [1.1.0] - 2026-10-10
 
