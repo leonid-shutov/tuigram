@@ -1,8 +1,6 @@
-Mutation(
-  self,
-  /** @type {DialogsStoreSelf['setLast']} */
-  (chatId, message) => {
-    const dialog = self.find(chatId);
-    if (dialog !== null) dialog.lastMessage = message;
+DialogMutation(
+  /** @type {DialogMutator<DialogsStoreSelf['setLast']>} */
+  (dialog, message) => {
+    dialog.lastMessage = message;
   },
 );

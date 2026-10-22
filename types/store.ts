@@ -40,6 +40,23 @@ declare global {
     mutate: (chat: CachedChat, ...args: A) => R,
   ) => (chatId: number, ...args: A) => R | null;
 
+  /**
+   * A dialogs store mutator as written: handed the dialog instead of its chat's id. `DialogMutation`
+   * turns it back into the mutator callers see, `(chatId, ...args)`.
+   */
+  type DialogMutator<F> = F extends (chatId: number, ...args: infer A) => void
+    ? (dialog: Dialog, ...args: A) => void
+    : never;
+
+  /**
+   * Wrap a dialogs store mutator (visible only under src/05-store/dialogs): look its dialog up by
+   * chat id in the main list or the archive, do nothing when there is none, and emit `change` as
+   * `Mutation` does.
+   */
+  const DialogMutation: <A extends any[]>(
+    mutate: (dialog: Dialog, ...args: A) => void,
+  ) => (chatId: number, ...args: A) => void;
+
   /** The dialogs store as its own files see it through `self`: everything, writable. */
   type DialogsStoreSelf = StoreEvents & {
     list: LinkedDialogsHandle;

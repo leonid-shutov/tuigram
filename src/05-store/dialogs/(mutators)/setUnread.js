@@ -1,9 +1,6 @@
-Mutation(
-  self,
-  /** @type {DialogsStoreSelf['setUnread']} */
-  (chatId, unreadCount) => {
-    const dialog = self.find(chatId);
-    if (dialog === null) return;
+DialogMutation(
+  /** @type {DialogMutator<DialogsStoreSelf['setUnread']>} */
+  (dialog, unreadCount) => {
     dialog.unreadCount = unreadCount;
   },
 );
