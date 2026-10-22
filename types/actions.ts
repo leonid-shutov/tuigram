@@ -18,12 +18,9 @@ declare global {
   // ── 8-actions ─────────────────────────────────────────────────────────────────────────
   type Actions = {
     historyRead(event: HistoryReadEvent): void;
-    /** Fetch a fast first page of dialogs so the list has something to show before the full fetch lands. */
-    loadDialogsPreview(): void;
-    /** Fetch the full dialog list and repaint; settles the dialogs UI's loading state either way. */
-    loadDialogs(): void;
-    /** Fetch archived dialogs into the store and repaint; folders may show them. */
-    loadArchivedDialogs(): void;
+    /** Fetch the dialog list a page at a time, the main list and then the archive, landing each page
+     * in the store as it comes; settles the dialogs UI's loading state once the main list is in. */
+    loadDialogs(): Promise<void>;
     /** Fetch the account's folders into the store and repaint. Reruns whenever Telegram changes them. */
     loadFolders(): void;
     /** Fill a cached chat, open or not, with its first page: its newest messages, the ones it

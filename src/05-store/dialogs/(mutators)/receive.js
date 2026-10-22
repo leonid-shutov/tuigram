@@ -9,6 +9,8 @@ Mutation(
     const node = archived ?? self.list.findNode(message.chatId);
     if (node !== null) {
       dialog = node.value;
+      // Nothing newer than what the dialog shows: the stream re-delivering a message.
+      if (dialog.lastMessage !== null && dialog.lastMessage.id >= message.id) return dialog;
       dialog.lastMessage = message;
       (archived === null ? self.list : self.archive).bump(node);
     } else {

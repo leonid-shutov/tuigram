@@ -175,5 +175,7 @@ export type LinkedDialogsHandle = {
   findNode(chatId: number): import('./collections').LinkedListNode<Dialog> | null;
   bump(node: import('./collections').LinkedListNode<Dialog>): void;
   unshift(dialog: Dialog): void;
+  /** Add a dialog at the end of its half, pinned or not; the list mustn't have its chat yet. */
+  push(dialog: Dialog): void;
   [Symbol.iterator](): Iterator<Dialog>;
 };

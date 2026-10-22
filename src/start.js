@@ -7,9 +7,7 @@ ui[navigation.selected].focus();
 actions.repaintHints();
 
 auth.signIn.ready.then(() => {
-  actions.loadDialogsPreview();
   actions.loadDialogs();
-  actions.loadArchivedDialogs();
   actions.loadFolders();
 });
 

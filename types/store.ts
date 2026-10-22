@@ -60,10 +60,8 @@ declare global {
   /** The dialogs store as its own files see it through `self`: everything, writable. */
   type DialogsStoreSelf = StoreEvents & {
     list: LinkedDialogsHandle;
-    /** The archive folder's dialogs; empty until they finish loading. */
+    /** The archive folder's dialogs; empty until its pages land. */
     archive: LinkedDialogsHandle;
-    /** Link a fetched list, keeping any read mark the store already has further along. */
-    link(dialogs: Dialog[]): LinkedDialogsHandle;
     /** The main list, archive aside: what "All chats" shows and the chat search reads. */
     all(): Dialog[];
     /** What a folder shows; "All chats" is `all()`, any other folder also reaches the archive. */
@@ -77,11 +75,15 @@ declare global {
     previews(chatId: number, messageId: number): boolean;
     isMuted(chatId: number): boolean;
     markRead(chatId: number): void;
+    /** Take a new message in: it becomes the dialog's last and moves the dialog up, a chat the list
+     * hasn't reached gets a dialog made from it, and one no newer than the last changes nothing. */
     receive(message: Message): Dialog;
     /** Set the dialog's last message after a delete, without moving it or touching unread counts. */
     setLast(chatId: number, message: Message | null): void;
-    setAll(dialogs: Dialog[]): void;
-    setArchived(dialogs: Dialog[]): void;
+    /** Lay a page of the fetched list, newest first, at the end of the main list or the archive,
+     * each dialog where its `isArchived` says. A chat the store already has stays as it is, but
+     * for who it is: its name, kind and mute. */
+    land(dialogs: Dialog[]): void;
     setUnread(chatId: number, unreadCount: number): void;
     /** Move the dialog's outbox read mark up to `maxReadId`; never back. */
     setReadUpTo(chatId: number, maxReadId: number): void;
@@ -93,7 +95,7 @@ declare global {
    */
   type DialogsStore = Omit<
     DialogsStoreSelf,
-    'list' | 'archive' | 'link' | 'emitter' | 'emit' | 'all' | 'inFolder' | 'find' | 'receive'
+    'list' | 'archive' | 'emitter' | 'emit' | 'all' | 'inFolder' | 'find' | 'receive'
   > & {
     all(): Readonly<Dialog>[];
     inFolder(folder: Folder): Readonly<Dialog>[];

@@ -38,7 +38,6 @@ module.exports = [
         Message: true,
         Dialog: true,
         Folder: true,
-        AsyncIterator: true,
         isThenable: true,
         Fuzzy: true,
         Layout: true,

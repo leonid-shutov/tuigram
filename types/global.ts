@@ -262,10 +262,6 @@ declare global {
     function stack(error: unknown): string;
   }
 
-  namespace AsyncIterator {
-    function take<T>(source: AsyncIterable<T> | Iterable<T>, n: number): AsyncGenerator<T>;
-  }
-
   namespace Arr {
     /** Each item under its own `key`, for lookups by that field; a later duplicate wins. */
     function keyBy<T, K extends keyof T>(key: K, items: readonly T[]): Map<T[K], T>;
@@ -491,7 +487,8 @@ declare global {
     editMessage(chatId: number, messageId: number, text: string): Promise<Message>;
     /** The chat partner's current online/last-seen state, or `null` for a bot or a peer that's gone. */
     getPresence(chatId: number): Promise<Presence | null>;
-    iterDialogs(options?: { chunkSize?: number; archived?: boolean }): AsyncGenerator<Dialog>;
+    /** The dialog list, main or archive, a page per request to Telegram: each chat once, newest first. */
+    iterDialogPages(options?: { archived?: boolean }): AsyncGenerator<Dialog[]>;
     /** The account's folders in the user's order, "All chats" among them. */
     getFolders(): Promise<Folder[]>;
     /** Telegram changed a folder, added or removed one, or reordered them. */
