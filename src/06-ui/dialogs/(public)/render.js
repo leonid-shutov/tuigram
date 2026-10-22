@@ -2,6 +2,7 @@
 // whose inputs changed are rebuilt. Rows of dialogs no longer listed are dropped with the map.
 /** @type {DialogsSection['render']} */
 (dialogs) => {
+  const selected = self.list.getSelectedOption()?.chatId ?? null;
   const rows = dialogs.map((dialog) => {
     const key = Option.key(dialog);
     const held = self.rows.get(dialog.chatId) ?? null;
@@ -10,4 +11,5 @@
   });
   self.rows = new Map(rows.map((row) => [row.chatId, row]));
   self.list.options = rows.map((row) => row.option);
+  if (selected !== null) self.select(selected);
 };
