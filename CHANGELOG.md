@@ -2,6 +2,8 @@
 
 ## [Unreleased]
 
+## [1.2.0] - 2026-10-25
+
 ### Added
 
 - One-line install for Linux and macOS: sets up mise and tuigram in one go.
@@ -158,6 +160,7 @@ First public release.
 
 Supersedes the `1.0.0-alpha.*` series, which is not itemized here.
 
-[unreleased]: https://github.com/leonid-shutov/tuigram/compare/v1.1.0...HEAD
+[unreleased]: https://github.com/leonid-shutov/tuigram/compare/v1.2.0...HEAD
+[1.2.0]: https://github.com/leonid-shutov/tuigram/compare/v1.1.0...v1.2.0
 [1.1.0]: https://github.com/leonid-shutov/tuigram/compare/v1.0.0...v1.1.0
 [1.0.0]: https://github.com/leonid-shutov/tuigram/releases/tag/v1.0.0
