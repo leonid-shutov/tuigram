@@ -15,7 +15,7 @@ const scroll = ScrollBox({
     flexDirection: 'column',
     gap: 1,
     paddingX: 1,
-    renderAfter: (buffer) => self.drawUnseen(buffer),
+    renderAfter: (buffer) => self.drawOutboxUnread(buffer),
   },
 
   // The track and thumb otherwise fall back to opentui's hardcoded greys, which ignore the theme.
@@ -27,5 +27,6 @@ const scroll = ScrollBox({
 // `visible: false` in the options is silently reverted once content overflows (see
 // OPENTUI_BUGS.md); assigning through the setter is what actually sticks.
 scroll.verticalScrollBar.visible = false;
+scroll.horizontalScrollBar.visible = false;
 
 scroll;

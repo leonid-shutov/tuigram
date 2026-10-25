@@ -4,5 +4,6 @@
   days: new Map(),
   selectedMessageId: null,
   spinner: { stop: () => {} },
-  unseenFrom: 0,
+  outboxUnreadFrom: 0,
+  inboxUnreadFrom: 0,
 });

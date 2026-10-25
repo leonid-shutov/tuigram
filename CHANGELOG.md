@@ -2,6 +2,17 @@
 
 ## [Unreleased]
 
+### Added
+
+- A chat opens where you left off: on the first message you haven't read, under a line across the
+  pane that says how many are new. The line stays put while you read, so you can always find where
+  the new messages began; it goes once you write in the chat or leave it. Messages that arrive
+  while the terminal is in the background get the line too.
+
+### Fixed
+
+- Reading a thread or a forum topic on another device no longer changes the group's unread count.
+
 ## [1.2.0] - 2026-10-25
 
 ### Added

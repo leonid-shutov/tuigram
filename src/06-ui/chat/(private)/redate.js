@@ -6,7 +6,7 @@
 /** @type {ChatSelf['redate']} */
 () => {
   const seen = new Set();
-  for (const { box, message } of self.views) {
+  for (const { slot, message } of self.views) {
     const key = Day.key(message.date);
     if (seen.has(key)) continue;
     seen.add(key);
@@ -17,9 +17,9 @@
     }
     const label = `── ${Day.label(message.date)} ──`;
     if (separator.plainText !== label) separator.content = label;
-    // `insertBefore` moves a child already in the scroll; skip it when it's already in place.
-    const children = self.scroll.getChildren();
-    if (children[children.indexOf(box) - 1] !== separator) self.scroll.insertBefore(separator, box);
+    // On top of the day's first slot, above the divider; `add` moves it out of the slot it was in,
+    // so skip it when it's already in place.
+    if (slot.getChildren()[0] !== separator) slot.add(separator, 0);
   }
   for (const [key, separator] of self.days) {
     if (seen.has(key)) continue;

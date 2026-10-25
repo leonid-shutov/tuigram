@@ -36,6 +36,9 @@ export type ThemeDefinition = {
   selected?: string;
   /** The unread count in the dialogs list; defaults to `accent`. */
   unread?: string;
+  /** The unread divider across the chat; defaults to `warning`, since `accent` is also the focused
+   * pane's border it would be lost against. */
+  divider?: string;
   /** Links in message text; defaults to `accentAlt`. */
   link?: string;
   /** Inline code and code blocks in message text; defaults to `warning`. */
@@ -49,6 +52,7 @@ export type ResolvedTheme = ThemePalette & {
   selfBorder: string;
   selected: string;
   unread: string;
+  divider: string;
   link: string;
   code: string;
   senderColors: string[];

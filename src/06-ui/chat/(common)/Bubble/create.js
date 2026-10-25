@@ -50,18 +50,14 @@ const SCROLL_HINT = ' hold shift to scroll ';
     focusable: true,
     bottomTitleAlignment: 'right',
 
-    // A message longer than the chat section is unreadable and impossible to select sensibly, so
-    // the bubble never outgrows the section: '100%' is the scroll viewport's inner height, which
-    // yoga re-resolves on every layout pass — it tracks a terminal resize and the message prompt
-    // growing under it with nothing to recompute. `flexShrink: 0` here, on the forward line, the
-    // reply AND on the labels keeps them at their own rows instead of being squeezed onto shared lines (a
-    // label landing on the text's first line). The picture and the text are the two children that
-    // DO shrink, in that order — see Picture.js and `text` above — so a tall photo gives up rows
-    // before the caption loses even one line, and the text only becomes the bubble's scroll
-    // window once the picture has hit its own floor. `overflow` then clips whatever the text
-    // hasn't scrolled to, inside the bubble's own border.
-    maxHeight: '100%',
-    flexShrink: 0,
+    // The bubble yields to its slot's height cap (below): `flexShrink: 1` here, but `0` on the
+    // forward line, the reply AND the labels keeps them at their own rows instead of being squeezed
+    // onto shared lines (a label landing on the text's first line). The picture and the text are
+    // the two children that DO shrink, in that order — see Picture.js and `text` above — so a tall
+    // photo gives up rows before the caption loses even one line, and the text only becomes the
+    // bubble's scroll window once the picture has hit its own floor. `overflow` then clips
+    // whatever the text hasn't scrolled to, inside the bubble's own border.
+    flexShrink: 1,
     overflow: 'hidden',
 
     children: [forwardText, reply, counter, picture, label, text, reactions],
@@ -80,8 +76,16 @@ const SCROLL_HINT = ' hold shift to scroll ';
     box.bottomTitle = text.visible && text.maxScrollY > 0 ? SCROLL_HINT : undefined;
   });
 
+  // What the scroll holds: the bubble, under its day separator when it is the day's first and the
+  // unread divider when it is the first new message. A message longer than the chat section is
+  // unreadable and impossible to select sensibly, so the slot never outgrows the section: '100%' is
+  // the scroll viewport's inner height, which yoga re-resolves on every layout pass — it tracks a
+  // terminal resize and the message prompt growing under it with nothing to recompute — and what
+  // sits over the bubble takes its rows out of the bubble's share, so they always fit together.
+  const slot = Box({ flexDirection: 'column', gap: 1, maxHeight: '100%', flexShrink: 0, children: [box] });
+
   /** @type {BubbleView} */
-  const view = { box, reply, counter, picture, label, text, reactions, message, mediumIndex: 0 };
+  const view = { slot, box, reply, counter, picture, label, text, reactions, message, mediumIndex: 0 };
   Bubble.paint(view);
   return view;
 };

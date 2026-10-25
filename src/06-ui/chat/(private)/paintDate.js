@@ -1,5 +1,5 @@
-// The selected message's day and time, so a day whose separator scrolled away under a tall bubble
-// still says when it is. Recomputed on every call, so "Today" corrects itself after midnight.
+// The selected message's day and time, so a day whose separator scrolled away still says when it
+// is. Recomputed on every call, so "Today" corrects itself after midnight.
 /** @type {ChatSelf['paintDate']} */
 () => {
   const date = self.selectedMessage?.date;

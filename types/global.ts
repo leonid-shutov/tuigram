@@ -23,6 +23,7 @@ import {
   Presence,
   Reaction,
   TypingStatus,
+  InboxUnread,
 } from './domain';
 import { KeyedList as _KeyedList, LinkedList as _LinkedList } from './collections';
 import { Paths, Source, ThemeDefinition, ResolvedTheme, ImageProtocol as _ImageProtocol, ConfigSchema } from './config';
@@ -167,7 +168,13 @@ declare global {
     /** Where the run of our messages that ends the chat, and that the other side hasn't read past
      * `readUpTo` yet, starts in `messages`, pending ones included; `messages.length` when the chat
      * ends on anything else. */
-    const unseenFrom: (messages: readonly (Message | PendingMessage)[], readUpTo: number) => number;
+    const outboxUnreadFrom: (messages: readonly (Message | PendingMessage)[], readUpTo: number) => number;
+    /** Whether any Telegram message behind `message` (an album has several) is newer than `id`. */
+    const isAfter: (message: Message, id: number) => boolean;
+    /** Where the run of new messages starts in `messages`, the divider above it: at the first message
+     * from someone else past `after`, the read mark as the chat came into view; `messages.length` for
+     * none, as for a null `after`. */
+    const inboxUnreadFrom: (messages: readonly (Message | PendingMessage)[], after: number | null) => number;
     /** Every http(s) link in `message`, once per target, in text order: its text as shown, and
      * where it goes. */
     const links: (message: Message | PendingMessage) => { label: string; url: string }[];
@@ -180,6 +187,8 @@ declare global {
     function fromMessage(message: Message, unreadCount?: number): Dialog;
     /** An unread count as shown in the dialogs list, capped at '999+'; null for none. */
     function unreadBadge(count: number): string | null;
+    /** The dialog's unread messages as a divider would mark them; null when it has none. */
+    function inboxUnread(dialog: Dialog): InboxUnread | null;
     /** The first dialog per chat id, in their order. */
     function unique(dialogs: Iterable<Dialog>): Dialog[];
     /** A picker row for the dialog: its name, its last message, and its chat id as the value. */
@@ -476,9 +485,10 @@ declare global {
   type MessengerModule = {
     tg: TelegramClient;
     dispatcher: Dispatcher;
-    /** A page of history, newest first, sized by `config.history`: the newest messages, or those
-     * below `before` (an album from below its oldest part). Empty once nothing older is left. */
-    getPage(chatId: number, options?: { before?: Message | null }): Promise<Message[]>;
+    /** A page of history, newest first: the newest messages, or those below `before` (an album from
+     * below its oldest part). Sized by `config.history` unless `limit` says (Telegram gives at most
+     * 100). Empty once nothing older is left. */
+    getPage(chatId: number, options?: { before?: Message | null; limit?: number }): Promise<Message[]>;
     /** Whether an error is a flood wait mtcute did not sleep through: one that holds every call of
      * its method until it runs out. */
     isFloodWait(error: unknown): boolean;

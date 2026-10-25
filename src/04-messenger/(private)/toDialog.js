@@ -15,14 +15,15 @@ const kindOf = (peer) => {
 };
 
 /** @type {MessengerSelf['toDialog']} */
-({ peer, lastMessage, isPinned, isArchived, unreadCount, isUnread, lastReadOutgoing, raw }) => ({
+({ peer, lastMessage, isPinned, isArchived, unreadCount, isUnread, lastReadIngoing, lastReadOutgoing, raw }) => ({
   chatId: peer.id,
   name: peer.displayName,
   lastMessage: lastMessage && self.toMessage(lastMessage),
   isPinned,
   unreadCount,
   isUnread,
-  readUpTo: lastReadOutgoing,
+  inboxReadUpTo: lastReadIngoing,
+  outboxReadUpTo: lastReadOutgoing,
   isMuted: isMutedOf(raw.notifySettings),
   isUser: peer.type === 'user' && !peer.isSelf,
   kind: kindOf(peer),

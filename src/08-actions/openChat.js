@@ -9,7 +9,8 @@ async (chatId) => {
   if (dialog === null) Crash.hard(new Error(`dialog ${chatId} is not in the store`));
   // Ahead of the store, so a cached chat renders against a cleared selection.
   ui.chat.open();
-  store.chat.open(chatId);
+  // The divider is taken now, before `readOpenChat` below reads the chat.
+  store.chat.open(chatId, Dialog.inboxUnread(dialog));
   // The stream only says when a presence changes: what it is now comes from asking.
   if (dialog.isUser) {
     messenger
@@ -31,6 +32,6 @@ async (chatId) => {
   // Left while its page was in flight: the page is cached, but the chat on screen is another one.
   if (!store.chat.isOpen(chatId)) return;
 
-  ui.chat.selectLast();
+  ui.chat.resume();
   actions.readOpenChat();
 };

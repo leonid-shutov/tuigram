@@ -10,6 +10,8 @@ async (filePath, replyTo = null) => {
     [{ type: 'document', fileId: '', fileKey: '', fileName, mimeType: 'application/octet-stream' }],
     quoted,
   );
+  // Writing to the chat answers what was new in it, as in Telegram's own clients.
+  store.chat.dismissInboxUnread(chatId);
   store.chat.append(chatId, pending);
   ui.chat.selectLast();
 

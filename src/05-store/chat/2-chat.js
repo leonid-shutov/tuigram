@@ -4,4 +4,8 @@
 // `ui.chat.render` matches bubbles to a chat's `messages` by id and identity, so two rules hold: a
 // held message is never mutated, only swapped for a new copy, and held messages never change order
 // — the window only grows at either end, loses entries, or swaps one in place.
-({ openChatId: null, chats: new Map() });
+//
+// `inboxUnread` is the open chat's divider. It belongs to the visit, not to the chat, so it lives
+// beside `openChatId`: taken when the chat comes into view and held until it is left, however its
+// messages get read meanwhile, here or on another device.
+({ openChatId: null, inboxUnread: null, chats: new Map() });

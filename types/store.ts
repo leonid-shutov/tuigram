@@ -1,4 +1,13 @@
-import { Dialog, Folder, Message, PendingMessage, LinkedDialogsHandle, Presence, TypingStatus } from './domain';
+import {
+  Dialog,
+  Folder,
+  Message,
+  PendingMessage,
+  LinkedDialogsHandle,
+  Presence,
+  TypingStatus,
+  InboxUnread,
+} from './domain';
 
 declare global {
   /** A message in a cached chat — ours before the server confirms it, or theirs. */
@@ -71,6 +80,7 @@ declare global {
     /** Whether the chat's dialog previews the message `messageId` as its last. */
     previews(chatId: number, messageId: number): boolean;
     isMuted(chatId: number): boolean;
+    /** We read the whole chat: no unread count, no unread mark, the inbox read mark at its last message. */
     markRead(chatId: number): void;
     /** Take a new message in: it becomes the dialog's last and moves the dialog up, a chat the list
      * hasn't reached gets a dialog made from it, and one no newer than the last changes nothing. */
@@ -81,9 +91,11 @@ declare global {
      * each dialog where its `isArchived` says. A chat the store already has stays as it is, but
      * for who it is: its name, kind and mute. */
     land(dialogs: Dialog[]): void;
-    setUnread(chatId: number, unreadCount: number): void;
-    /** Move the dialog's outbox read mark up to `maxReadId`; never back. */
-    setReadUpTo(chatId: number, maxReadId: number): void;
+    /** We read the chat up to `maxReadId` (here or elsewhere), leaving `unreadCount`: move the inbox
+     * read mark up to it, never back. */
+    readInbox(chatId: number, maxReadId: number, unreadCount: number): void;
+    /** The peer read our messages up to `maxReadId`: move the outbox read mark up to it, never back. */
+    readOutbox(chatId: number, maxReadId: number): void;
   };
 
   /**
@@ -132,6 +144,9 @@ declare global {
   type ChatStoreSelf = Omit<StoreEvents, 'emit'> & {
     /** The open chat, and the app's single source of truth for which chat that is. */
     openChatId: number | null;
+    /** The open chat's unread divider: where its unread messages began when it came into view,
+     * held for the whole visit however they get read meanwhile; null for no divider. */
+    inboxUnread: InboxUnread | null;
     /** The cached chats, in order of caching: the first is the next to evict. */
     chats: Map<number, CachedChat>;
     /** The open chat as cached; null before the first chat opens. */
@@ -170,8 +185,13 @@ declare global {
     holding(messageIds: number[]): number[];
     /** Cache `chatId`, empty until something lands in it, and move it to the back of the eviction line. */
     cache(chatId: number): void;
-    /** Make `chatId` the open chat, cached from now on. */
-    open(chatId: number): void;
+    /** Make `chatId` the open chat, cached from now on, with `inboxUnread` as its divider. */
+    open(chatId: number, inboxUnread: InboxUnread | null): void;
+    /** The open chat came back into view with `inboxUnread` unread: it becomes the divider unless
+     * one is held already, which stays. No-op for a chat that isn't open. */
+    holdInboxUnread(chatId: number, inboxUnread: InboxUnread | null): void;
+    /** Drop the open chat's divider, as when we write to it. No-op for a chat that isn't open. */
+    dismissInboxUnread(chatId: number): void;
     /** Lay a page, oldest first, under the chat's oldest confirmed message: only what is older than
      * it lands. Answers what landed, or null when the chat isn't cached. */
     prepend(chatId: number, older: Message[]): Message[] | null;
@@ -189,9 +209,10 @@ declare global {
    */
   type ChatStore = Omit<
     ChatStoreSelf,
-    'openChatId' | 'chats' | 'opened' | 'emitter' | 'emit' | 'getById' | 'trim' | 'evict'
+    'openChatId' | 'inboxUnread' | 'chats' | 'opened' | 'emitter' | 'emit' | 'getById' | 'trim' | 'evict'
   > & {
     readonly openChatId: number | null;
+    readonly inboxUnread: Readonly<InboxUnread> | null;
     readonly opened: { readonly messages: readonly Readonly<ChatMessage>[] } | null;
   };
 

@@ -9,9 +9,9 @@ const RUN_BG = tui.parseColor(config.theme.bg);
 // separators and grouped bubbles between the two ends, and its head stays on the viewport's first
 // row while the run's top is scrolled away. The monkey is two cells wide, so no one-cell line can sit
 // under its middle: it hangs to the left of the head, and the line turns down out of a corner.
-/** @type {ChatSelf['drawUnseen']} */
+/** @type {ChatSelf['drawOutboxUnread']} */
 (buffer) => {
-  const first = self.views.at(self.unseenFrom)?.box ?? null;
+  const first = self.views.at(self.outboxUnreadFrom)?.box ?? null;
   const last = self.views.at(self.views.length - 1)?.box ?? null;
   if (first === null || last === null) return;
   const x = last.screenX + last.width + Bubble.GUTTER - 1;

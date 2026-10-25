@@ -1,5 +1,5 @@
 /** @type {Actions['historyRead']} */
 ({ chatId, isOutbox, maxReadId, unreadCount }) => {
-  if (isOutbox) store.dialogs.setReadUpTo(chatId, maxReadId);
-  else store.dialogs.setUnread(chatId, unreadCount);
+  if (isOutbox) store.dialogs.readOutbox(chatId, maxReadId);
+  else store.dialogs.readInbox(chatId, maxReadId, unreadCount);
 };

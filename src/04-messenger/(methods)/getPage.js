@@ -4,17 +4,17 @@
 // unless nothing older is left: the next page, asked for from below this one's oldest message,
 // starts with it whole.
 /** @type {MessengerModule['getPage']} */
-async (chatId, { before = null } = {}) => {
+async (chatId, { before = null, limit } = {}) => {
   let offset = undefined;
-  let limit = config.history.firstPageSize;
+  let size = config.history.firstPageSize;
   if (before !== null) {
     const partIds = await self.albumIds(chatId, before);
     offset = { id: Math.min(...partIds), date: 0 };
-    limit = config.history.pageSize;
+    size = config.history.pageSize;
   }
 
   // the first message in the array is the most recent message in the chat
-  const history = await messenger.tg.getHistory(chatId, { offset, limit });
+  const history = await messenger.tg.getHistory(chatId, { offset, limit: limit ?? size });
   const isLastPage = history.next === undefined;
 
   /** @type {import('../../../types/domain').Message[]} */

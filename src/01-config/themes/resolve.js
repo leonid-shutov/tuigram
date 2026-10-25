@@ -8,6 +8,7 @@
     selfBorder: theme.selfBorder ?? theme.palette.border,
     selected: theme.selected ?? theme.palette.accent,
     unread: theme.unread ?? theme.palette.accent,
+    divider: theme.divider ?? theme.palette.warning,
     link: theme.link ?? theme.palette.accentAlt,
     code: theme.code ?? theme.palette.warning,
     senderColors: theme.senderColors ?? config.schema.defaults.senderColors,

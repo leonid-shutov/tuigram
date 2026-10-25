@@ -8,7 +8,9 @@ Mutation(
       else {
         const { name, kind, isUser, isContact, isMuted } = dialog;
         Object.assign(early, { name, kind, isUser, isContact, isMuted });
-        early.readUpTo = Math.max(early.readUpTo, dialog.readUpTo);
+        // Read marks only move forward, and the stream may have moved them past this page's.
+        early.inboxReadUpTo = Math.max(early.inboxReadUpTo, dialog.inboxReadUpTo);
+        early.outboxReadUpTo = Math.max(early.outboxReadUpTo, dialog.outboxReadUpTo);
       }
     }
   },

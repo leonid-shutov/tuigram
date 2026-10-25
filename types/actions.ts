@@ -24,11 +24,12 @@ declare global {
     /** Fetch the account's folders into the store and repaint. Reruns whenever Telegram changes them. */
     loadFolders(): void;
     /** Fill a cached chat, open or not, with its first page: its newest messages, the ones it
-     * opens with. */
+     * opens with, reaching back to its unread divider when Telegram gives that many at once. */
     loadFirstPage(chatId: number): Promise<void>;
     /** Cache the chats at the top of the chat list, as many as the cache holds, and fill them one
      * at a time, so opening one is instant. Stops at a flood wait. */
     preloadChats(): Promise<void>;
+    /** Fetch the open chat's next page of older history, under a spinner; reports a failure. */
     loadOlder(): Promise<void>;
     /** Fetch a message's 320px thumbnail, if it has one, and push it into its bubble. */
     loadThumb(message: Message): void;
@@ -61,7 +62,8 @@ declare global {
     openSelected(): void;
     /** Ask before opening `link`: where it goes, then open it or copy it. */
     confirmLink(link: { label: string; url: string }): void;
-    /** Show a chat and focus it; one not open yet opens, its newest page fetched unless cached. */
+    /** Show a chat and focus it; one not open yet opens on its first unread message, under the
+     * unread divider, or else its newest, with what that takes fetched unless cached. */
     openChat(chatId: number): Promise<void>;
     /** Open the picker over every chat; a pick opens that chat. */
     searchChats(): void;
@@ -89,8 +91,8 @@ declare global {
      * and on ctrl+r. */
     restart(): void;
     /** Push the open chat's messages to the pane as bubbles, with the run of ours its partner hasn't
-     * read yet. Runs on every `change` of store.chat (the messages) and store.dialogs (the read
-     * mark). */
+     * read yet and the divider above the ones we hadn't when it came into view. Runs on every
+     * `change` of store.chat (the messages, the divider) and store.dialogs (the read mark). */
     repaintChat(): void;
     /** Put the open chat's name on the pane's top border. Runs on every `change` of store.chat and
      * store.dialogs, and after a config reload. */
@@ -113,7 +115,8 @@ declare global {
     readOpenChat(): void;
     /** The window lost focus; what lands in the open chat from now on stays unread. */
     windowBlur(): void;
-    /** The window came back: read whatever landed in the open chat while it was away. */
+    /** The window came back: mark what landed in the open chat while it was away with the unread
+     * divider, then read it. */
     windowFocus(): void;
     /** Fetch the latest release, if any, into `store.update.available` and draw its notice. */
     checkUpdate(): Promise<void>;

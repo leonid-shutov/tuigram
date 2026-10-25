@@ -116,8 +116,10 @@ export type Dialog = {
   isPinned: boolean;
   unreadCount: number;
   isUnread: boolean;
+  /** The newest of the peer's messages we have read: Telegram's inbox read mark. */
+  inboxReadUpTo: number;
   /** The newest of our messages the peer has read: Telegram's outbox read mark. */
-  readUpTo: number;
+  outboxReadUpTo: number;
   isMuted: boolean | null;
   /** Whether this dialog's peer is a real, non-self user — the only kind with a presence. */
   isUser: boolean;
@@ -130,6 +132,10 @@ export type Dialog = {
   /** When the last message arrived, in ms; what a folder's unpinned chats are ordered by. */
   activity: number;
 };
+
+/** Where a chat's unread messages began when it came into view, and how many Telegram counted:
+ * what the unread divider marks. Messages from others past `after` are the unread ones. */
+export type InboxUnread = { after: number; count: number };
 
 /**
  * A Telegram chat folder: a filter over the dialogs, never a list of its own. `id` 0 is

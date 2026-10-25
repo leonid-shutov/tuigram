@@ -7,7 +7,9 @@
   name: message.chatName ?? '',
   lastMessage: message,
   unreadCount,
-  readUpTo: 0,
+  // The message that brings the chat in is the first one we know of, so the first unread.
+  inboxReadUpTo: message.id - 1,
+  outboxReadUpTo: 0,
   isPinned: false,
   isMuted: false,
   isUnread: true,
