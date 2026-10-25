@@ -18,9 +18,16 @@
   header, an album whole; you stay in the chat you were reading.
 - `d` on a message deletes it: choose for everyone or just for you where Telegram allows it, and
   messages deleted elsewhere disappear from the chat live.
-- Messages show their formatting: bold, italic, underline, strikethrough, code, quotes, spoilers
-  (dimmed), and highlighted mentions and hashtags. Links are underlined and, in a terminal with
-  hyperlinks (kitty, ghostty, WezTerm, iTerm2…), clickable.
+- Messages show their formatting: bold, italic, underline, strikethrough, code, spoilers (dimmed),
+  and highlighted mentions and hashtags. Links are underlined and, in a terminal with hyperlinks
+  (kitty, ghostty, WezTerm, iTerm2…), clickable.
+- Reactions show under a message: up to five, then `+N` for the rest, with your own filled in.
+- The chat pane's border says when someone is typing, or recording a voice message, sending a
+  photo and so on: "Anna is typing…", "3 people are typing…". It goes back to their last seen once
+  they stop.
+- The chat pane's border shows the selected message's day and time, so a message still says when it
+  was sent after its day's separator has scrolled away.
+- A spinner on the chat pane while a chat opens or older messages load.
 
 ### Changed
 
@@ -31,6 +38,12 @@
   edited and deleted messages keep landing in it while it is closed.
 - The read/unread receipt on the chat pane's border is gone. Your messages the other side hasn't seen
   yet get a 🙈 bar beside them instead, which shortens as they read and goes once they've read it all.
+- Startup shows "Connecting to Telegram…" straight away, and an account that has signed in before
+  goes straight to its chats while its session is checked in the background.
+- Messages one person sends within five minutes of each other sit closer together, as one group.
+- Cached thumbnails and media that haven't been used for a week are deleted at startup, so the cache
+  no longer grows forever.
+- The link confirmation keeps the address on one line, its host in bold.
 
 ## [1.1.0] - 2026-10-10
 
@@ -49,7 +62,7 @@
   for brew installs; never on a git checkout). A notice appears above the key hint bar when one is found:
   `alt+u` runs the upgrade and exits so you can restart into it, `alt+shift+u` dismisses it for the rest
   of the session. `tuigram upgrade` runs the same upgrade from the command line. Off with
-  `"updateCheck": false` in `config.json` or `TUIGRAM_UPDATE=0`.
+  `"updateCheck": false` in `config.json`.
 - Install from the Homebrew tap: `brew install leonid-shutov/tap/tuigram`. Every release bumps the formula
   right after it lands on npm; prereleases stay off Homebrew.
 - `gg` and `G` jump to the ends: the first or last chat in the list, the oldest loaded or newest message
