@@ -86,6 +86,7 @@ const SCROLL_HINT = ' hold shift to scroll ';
 
   /** @type {BubbleView} */
   const view = { slot, box, reply, counter, picture, label, text, reactions, message, mediumIndex: 0 };
+  box.renderAfter = (buffer) => Bubble.drawScrollbar(view, buffer);
   Bubble.paint(view);
   return view;
 };

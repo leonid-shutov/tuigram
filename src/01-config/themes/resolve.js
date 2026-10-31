@@ -11,6 +11,7 @@
     divider: theme.divider ?? theme.palette.warning,
     link: theme.link ?? theme.palette.accentAlt,
     code: theme.code ?? theme.palette.warning,
+    thumb: theme.thumb ?? theme.palette.fg,
     senderColors: theme.senderColors ?? config.schema.defaults.senderColors,
   };
 };

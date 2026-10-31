@@ -45,6 +45,9 @@ export type ThemeDefinition = {
   link?: string;
   /** Inline code and code blocks in message text; defaults to `warning`. */
   code?: string;
+  /** The scrollbar thumb on a cut-off message's border; defaults to `fg`, the one color no theme
+   * shares with a border, selected or not. */
+  thumb?: string;
   senderColors?: string[];
 };
 
@@ -57,6 +60,7 @@ export type ResolvedTheme = ThemePalette & {
   divider: string;
   link: string;
   code: string;
+  thumb: string;
   senderColors: string[];
 };
 

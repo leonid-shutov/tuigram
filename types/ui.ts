@@ -124,6 +124,8 @@ declare global {
     const update: (view: BubbleView, message: ChatMessage) => void;
     /** Flip an album by `step` media, wrapping around. No-op with fewer than two. */
     const flipAlbum: (view: BubbleView, step: number) => void;
+    /** Draw the scrollbar on the right border of a bubble whose text the height cap cut off. */
+    const drawScrollbar: (view: BubbleView, buffer: _opentui.OptimizedBuffer) => void;
     /** Cells our bubbles in the outbox-unread run keep clear on their right for its bar. */
     const GUTTER: number;
     /** Bubble size in cells, or null when the medium has no drawable image. */
