@@ -77,7 +77,7 @@ export TUIGRAM_API_HASH=0123456789abcdef0123456789abcdef
 | `?`                               | list the focused pane's keys, searchable; picking one runs it                          |
 | `alt+k`                           | the same, and works while typing                                                       |
 | `j` / `k` / `↑` / `↓`             | move through chats and messages                                                        |
-| `J` / `K` / `Shift+↑` / `Shift+↓` | scroll a message too tall for the pane (its border reads "hold shift to scroll")       |
+| `J` / `K` / `Shift+↑` / `Shift+↓` | scroll a message too tall for the pane (its border reads "shift+↓/↑ scroll")           |
 | `gg` / `G`                        | jump to the first / last chat, or oldest / newest message                              |
 | `h` / `l` / `←` / `→`             | previous / next folder in the chat list; previous / next picture in an album           |
 | `H` / `L`                         | narrow / widen the chat list                                                           |

@@ -3,6 +3,7 @@ const TRACK = config.theme.borderChars?.vertical ?? tui.BorderChars[config.theme
 const THUMB_FG = tui.parseColor(config.theme.thumb);
 const TRACK_FG = tui.parseColor(config.theme.muted);
 const BG = tui.parseColor(config.theme.bg);
+const HINT = ' shift+↓/↑ scroll ';
 
 /** @param {import('@opentui/core').TextRenderable} text */
 const thumbOf = ({ height, scrollHeight, scrollY, maxScrollY }) => {
@@ -27,5 +28,8 @@ const thumbOf = ({ height, scrollHeight, scrollY, maxScrollY }) => {
     const onThumb = row >= start && row < end;
     if (box.focused) buffer.drawText(onThumb ? THUMB : TRACK, x, y, onThumb ? THUMB_FG : TRACK_FG, BG);
     else if (onThumb) buffer.drawText(THUMB, x, y, box.borderColor, BG);
+  }
+  if (box.focused && HINT.length + 3 <= box.width) {
+    buffer.drawText(HINT, x - 1 - HINT.length, box.screenY + box.height - 1, TRACK_FG, BG);
   }
 };

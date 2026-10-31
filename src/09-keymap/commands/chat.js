@@ -44,7 +44,7 @@
     priority: 'essential',
     run: () => actions.deleteSelected(),
   },
-  // Off the bar: the bubble's own border says "hold shift to scroll" exactly when there is more to see.
+  // Off the bar: the selected bubble's own border says "shift+↓/↑ scroll" exactly when there is more to see.
   'chat.scrollDown': { title: 'Scroll message down', hint: false, run: () => ui.chat.scrollMessage(1) },
   'chat.scrollUp': { title: 'Scroll message up', hint: false, run: () => ui.chat.scrollMessage(-1) },
 });

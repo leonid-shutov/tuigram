@@ -1,5 +1,3 @@
-const SCROLL_HINT = ' hold shift to scroll ';
-
 // Every bubble gets the same nodes up front, hidden until `paint` gives them something to draw (a
 // hidden child takes no rows), so flipping an album or editing a caption only ever repaints —
 // nothing is rebuilt. The picture exists only when some medium is drawable, sized once by the
@@ -48,7 +46,6 @@ const SCROLL_HINT = ' hold shift to scroll ';
     alignSelf: sender.isSelf ? 'flex-end' : 'flex-start',
     focusedBorderColor: config.theme.selected,
     focusable: true,
-    bottomTitleAlignment: 'right',
 
     // The bubble yields to its slot's height cap (below): `flexShrink: 1` here, but `0` on the
     // forward line, the reply AND the labels keeps them at their own rows instead of being squeezed
@@ -69,11 +66,6 @@ const SCROLL_HINT = ' hold shift to scroll ';
       titleColor: Sender.color(String(sender.id)),
       minWidth: name.length + 6,
     }),
-  });
-
-  text.on('line-info-change', () => {
-    // A hidden text (a bare photo) still reports a line it cannot show.
-    box.bottomTitle = text.visible && text.maxScrollY > 0 ? SCROLL_HINT : undefined;
   });
 
   // What the scroll holds: the bubble, under its day separator when it is the day's first and the
