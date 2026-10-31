@@ -20,6 +20,11 @@
     hotReload: true,
     validate: (value) => config.schema.defaults.imageProtocols.some((protocol) => protocol === value),
   },
+  receipt: {
+    default: 'monkey',
+    hotReload: true,
+    validate: (value) => config.schema.defaults.receipts.some((receipt) => receipt === value),
+  },
   proxy: {
     default: undefined,
     hotReload: false, // read once at boot; changing it needs a restart regardless

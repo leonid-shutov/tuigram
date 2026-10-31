@@ -108,7 +108,8 @@ Cyrillic layout without switching back — `о` moves down, `пп` is `gg`, and 
 - Message formatting, with links that are clickable in terminals that support hyperlinks
 - Reactions, typing indicators, and the selected message's date and time
 - Read receipts that only speak up when there's news: a 🙈 bar beside your messages the other side
-  hasn't seen yet, which shortens as they read and goes once they've read it all
+  hasn't seen yet, which shortens as they read and goes once they've read it all (or a plain ✓, if
+  monkeys aren't your thing)
 - Inline photo and video thumbnails — the stripped thumbnail travels inside the message and draws
   instantly, then an 800px version downloads in the background; albums flip with `h` / `l`
 - Rich previews for ~18 media types, in the chat list and in the message pane
@@ -131,6 +132,7 @@ Optional, and read from `$XDG_CONFIG_HOME/tuigram/config.json`:
   "imageProtocol": "auto",
   "dialogEmoji": true,
   "hints": true,
+  "receipt": "monkey",
   "proxy": "socks5://user:pass@host:port",
   "updateCheck": true
 }
@@ -142,6 +144,7 @@ Optional, and read from `$XDG_CONFIG_HOME/tuigram/config.json`:
 | `imageProtocol` | `auto`      | `auto`, `kitty`, `sixel`, `blocks`, `off`                                                                                                                                                      |
 | `dialogEmoji`   | `true`      | `true`, `false` — turn off on fonts with no emoji coverage                                                                                                                                     |
 | `hints`         | `true`      | `true`, `false` — set to false to hide the key hint bar and reclaim its row                                                                                                                    |
+| `receipt`       | `monkey`    | `monkey`, `tick` — what heads the bar beside your messages the other side hasn't seen; `tick` is a plain ✓                                                                                     |
 | `proxy`         | _(none)_    | a proxy URL — `socks5://`, `socks4://`, `http://`/`https://`, or a `t.me/proxy?...` MTProxy link; connects directly if unset                                                                   |
 | `updateCheck`   | `true`      | `true`, `false` — check registry.npmjs.org (npm/mise) or the tap's formula (brew) at startup; skipped when `proxy` is set                                                                      |
 

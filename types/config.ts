@@ -1,6 +1,8 @@
 /** Rendering protocol for chat thumbnails. 'off' is ours, not OpenTUI's: draw no images at all. */
 export type ImageProtocol = 'auto' | 'kitty' | 'sixel' | 'blocks' | 'off';
 
+export type Receipt = 'monkey' | 'tick';
+
 export type ThemePalette = {
   bg: string;
   surface: string;
@@ -82,6 +84,8 @@ export type Source = {
   imageProtocol?: ImageProtocol;
   /** The key hint bar along the bottom edge. Defaults to true; set to false to reclaim the row. */
   hints?: boolean;
+  /** Defaults to 'monkey'. */
+  receipt?: Receipt;
   /** Proxy URL to connect through, e.g. `socks5://user:pass@host:port`,
    * `http://host:port`, or a `t.me/proxy?...` MTProxy link. Unset connects directly. */
   proxy?: string;
@@ -103,6 +107,7 @@ export type ConfigSchema = {
   dialogEmoji: ConfigSchemaField<boolean>;
   hints: ConfigSchemaField<boolean>;
   imageProtocol: ConfigSchemaField<ImageProtocol>;
+  receipt: ConfigSchemaField<Receipt>;
   proxy: ConfigSchemaField<string | undefined>;
   updateCheck: ConfigSchemaField<boolean>;
 };

@@ -26,7 +26,15 @@ import {
   InboxUnread,
 } from './domain';
 import { KeyedList as _KeyedList, LinkedList as _LinkedList } from './collections';
-import { Paths, Source, ThemeDefinition, ResolvedTheme, ImageProtocol as _ImageProtocol, ConfigSchema } from './config';
+import {
+  Paths,
+  Source,
+  ThemeDefinition,
+  ResolvedTheme,
+  ImageProtocol as _ImageProtocol,
+  Receipt as _Receipt,
+  ConfigSchema,
+} from './config';
 
 import * as _timers from 'node:timers';
 import * as _events from 'node:events';
@@ -43,6 +51,7 @@ import { Result as _Result } from 'metautil';
 
 declare global {
   type ImageProtocol = _ImageProtocol;
+  type Receipt = _Receipt;
   /** Global because `Media.isFile` narrows to it and `8-actions` passes it around. */
   type FileMedia = _FileMedia;
   type MessagePromptEventMap = {
@@ -75,6 +84,7 @@ declare global {
     imageProtocol: ImageProtocol;
     /** Whether the key hint bar occupies the bottom row. */
     hints: boolean;
+    receipt: Receipt;
   };
 
   const config: ConfigSelf & {
@@ -113,7 +123,7 @@ declare global {
     };
     /** What config.json's keys mean, their defaults, and how config.json gets loaded/validated. */
     schema: {
-      defaults: { senderColors: string[]; imageProtocols: ImageProtocol[] };
+      defaults: { senderColors: string[]; imageProtocols: ImageProtocol[]; receipts: Receipt[] };
       fields: ConfigSchema;
       /** Narrows an arbitrary config.json key to one `fields` actually has an entry for. */
       isSchemaKey(key: string): key is keyof ConfigSchema;

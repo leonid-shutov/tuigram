@@ -8,6 +8,11 @@
   pane that says how many are new. The line stays put while you read, so you can always find where
   the new messages began; it goes once you write in the chat or leave it. Messages that arrive
   while the terminal is in the background get the line too.
+- `"receipt": "tick"` in `config.json` swaps the 🙈 on the unseen bar for a plain ✓.
+
+### Changed
+
+- The 🙈 on the unseen bar now sits on top of the line instead of hanging off a corner.
 
 ### Fixed
 
