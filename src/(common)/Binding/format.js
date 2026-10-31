@@ -1,8 +1,10 @@
 // Passing any alias switches formatting off the written form, so the modifiers have to be spelled
-// out too. All-ASCII on purpose: arrows and ⏎ are ambiguous-width and would mis-measure the bar.
+// out too. Arrows are drawn as arrows, so a reader who doesn't know vim sees the keys they'd reach
+// for. They are ambiguous-width, but only a terminal drawing those two cells wide would mis-measure
+// the bar, and that one already breaks every border; `⏎` stays `enter`, since it is wide in some.
 const FORMAT = {
   separator: '', // `gg`, not `g g`
-  keyNameAliases: { escape: 'esc' }, // `return` already formats as `enter`
+  keyNameAliases: { escape: 'esc', up: '↑', down: '↓', left: '←', right: '→' }, // `return` already formats as `enter`
   modifierAliases: { meta: 'alt' },
 };
 

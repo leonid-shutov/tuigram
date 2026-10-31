@@ -598,7 +598,8 @@ declare global {
   type AvailableCommand = { name: string; command: Command; bindings: KeymapActiveBinding[] };
 
   namespace Binding {
-    /** The binding to put in front of a reader: the unmodified one, else whatever came first. */
+    /** The binding to put in front of a reader who doesn't know vim: an arrow or named key over a
+     * letter, the unmodified over the modified, else whatever came first. */
     const plainest: (bindings: readonly KeymapActiveBinding[]) => KeymapActiveBinding | undefined;
     /** A binding as the bar and the keys palette print it: `gg`, `esc`, `alt+/`. */
     const format: (binding: KeymapActiveBinding) => string;
