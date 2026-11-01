@@ -71,6 +71,8 @@ declare global {
     searchChats(): void;
     /** Open the picker on what the focused pane can do; picking a command runs it there. */
     showKeys(): void;
+    /** Open a menu of the message commands that apply to the focused message; a pick runs it there. */
+    showActions(): void;
     /** Open the picker over the folders; a pick shows that folder. */
     pickFolder(): void;
     /** Open the picker over the emoji catalog for the highlighted chat; a pick sets its glyph. */

@@ -4,10 +4,10 @@
 // `marker` substring over the top in whatever colour `colorFor` picks.
 //
 // That means reaching past the public API into undocumented internals (`_options`,
-// `scrollOffset`, `maxVisibleItems`, `linesPerItem`, `refreshFrameBuffer`) — checked against
-// opentui 0.5.11. This is the one spot to check if a future opentui upgrade makes markers draw
-// in the wrong place, the wrong colour, or not at all; the check below turns a silent mismatch
-// into a startup crash with a clear cause instead.
+// `_showSelectionIndicator`, `scrollOffset`, `maxVisibleItems`, `linesPerItem`,
+// `refreshFrameBuffer`) — checked against opentui 0.5.11. This is the one spot to check if a
+// future opentui upgrade makes markers draw in the wrong place, the wrong colour, or not at all;
+// the check below turns a silent mismatch into a startup crash with a clear cause instead.
 /** @typedef {import('@opentui/core').SelectOption & { marker: string }} MarkerOption */
 
 Object.assign(Component(tui.SelectRenderable), {
@@ -16,7 +16,14 @@ Object.assign(Component(tui.SelectRenderable), {
    * @param {(option: MarkerOption) => import('@opentui/core').RGBA} colorFor
    */
   paintMarker: (component, colorFor) => {
-    const REQUIRED = ['_options', 'scrollOffset', 'maxVisibleItems', 'linesPerItem', 'refreshFrameBuffer'];
+    const REQUIRED = [
+      '_options',
+      '_showSelectionIndicator',
+      'scrollOffset',
+      'maxVisibleItems',
+      'linesPerItem',
+      'refreshFrameBuffer',
+    ];
     /** @type {any} */
     const select = component;
     const missing = REQUIRED.filter((key) => select[key] === undefined);
@@ -35,10 +42,11 @@ Object.assign(Component(tui.SelectRenderable), {
       for (const [index, option] of visible.entries()) {
         const y = index * select.linesPerItem;
         if (option.marker === '' || y + select.linesPerItem - 1 >= select.height) continue;
-        // Select starts text at x = 1; the name is padded out to end one cell short of the right
-        // edge. The marker is always the trailing part of `name`, so its column falls out of the
-        // two widths.
-        const x = 1 + Cells.width(option.name) - Cells.width(option.marker);
+        // Select starts text at x = 1, after the two-cell `▶ ` when it draws one; the name is padded
+        // out to end one cell short of the right edge. The marker is always the trailing part of
+        // `name`, so its column falls out of the two widths.
+        const indicator = select._showSelectionIndicator ? 2 : 0;
+        const x = 1 + indicator + Cells.width(option.name) - Cells.width(option.marker);
         select.frameBuffer.drawText(option.marker, x, y, colorFor(option));
       }
     };

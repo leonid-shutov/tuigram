@@ -53,15 +53,19 @@ const group = (config) => Keymap.extras.createBindingLookup(config).bindings;
     'chat.last': 'shift+g',
     'chat.albumNext': ['l', 'right'],
     'chat.albumPrevious': ['h', 'left'],
-    'chat.open': 'return',
-    'chat.copy': ['y', 'c'],
-    'chat.view': 'v',
-    'chat.edit': 'e',
-    'chat.delete': 'd',
-    'chat.reply': 'r',
-    'chat.forward': 'f',
+    'chat.actions': 'space',
     'chat.scrollDown': ['shift+j', 'shift+down'],
     'chat.scrollUp': ['shift+k', 'shift+up'],
+  }),
+
+  message: group({
+    'message.open': 'return',
+    'message.copy': ['y', 'c'],
+    'message.view': 'v',
+    'message.edit': 'e',
+    'message.delete': 'd',
+    'message.reply': 'r',
+    'message.forward': 'f',
   }),
 
   prompt: group({

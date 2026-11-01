@@ -197,6 +197,10 @@ declare global {
     /** Every http(s) link in `message`, once per target, in text order: its text as shown, and
      * where it goes. */
     const links: (message: Message | PendingMessage) => { label: string; url: string }[];
+    /** Whether opening `message` does anything: a medium for the system's viewer, or a link. */
+    const isOpenable: (message: Message | PendingMessage) => boolean;
+    /** Whether `message` is ours and confirmed, so its text can be edited. */
+    const isEditable: (message: Message | PendingMessage) => boolean;
     const awaitsQuote: (
       message: Message | PendingMessage,
     ) => message is Message & { replyTo: NonNullable<Message['replyTo']> & { id: number } };
@@ -242,6 +246,8 @@ declare global {
     function isImage(media: Media | null): media is ImageMedia;
     /** Whether the medium carries something downloadable. Contacts, polls and dice do not. */
     function isFile(media: Media): media is FileMedia;
+    /** Whether the medium is a file for the system's viewer: any but a sticker. */
+    function isOpenable(media: Media): media is FileMedia;
     /** File extension to give a downloaded medium the sender left unnamed. */
     const extension: (mimeType: string) => string;
     /** One-line label for a medium with no caption of its own — 📷 Photo, 🎬 GIF, etc. */
@@ -618,14 +624,23 @@ declare global {
     const plainest: (bindings: readonly KeymapActiveBinding[]) => KeymapActiveBinding | undefined;
     /** A binding as the bar and the keys palette print it: `gg`, `esc`, `alt+/`. */
     const format: (binding: KeymapActiveBinding) => string;
+    /** The plainest of `bindings`, formatted; '' when there are none. */
+    const keys: (bindings: readonly KeymapActiveBinding[]) => string;
   }
 
   /** Commands as they are written: keyed by the name the bindings point at. */
   type Commands = Record<string, Command>;
 
+  /** A command on the selected message; `appliesTo` says whether it does anything for `message`,
+   * which is what the actions menu lists it by. */
+  type MessageCommand = Command & { appliesTo(message: Message | PendingMessage): boolean };
+  type MessageCommands = Record<string, MessageCommand>;
+
   type KeymapModule = {
     engine: KeymapEngine;
-    commands: Record<'app' | 'dialogs' | 'folders' | 'chat' | 'prompt' | 'picker' | 'choice' | 'filePicker', Commands>;
+    commands: Record<'app' | 'dialogs' | 'folders' | 'chat' | 'prompt' | 'picker' | 'choice' | 'filePicker', Commands> & {
+      message: MessageCommands;
+    };
     /** Bindings by the layer that installs them; the seam a `keys` block in config.json would feed. */
     bindings: Record<
       | 'global'
@@ -633,6 +648,7 @@ declare global {
       | 'dialogs'
       | 'folders'
       | 'chat'
+      | 'message'
       | 'prompt'
       | 'picker'
       | 'choice'

@@ -4,7 +4,7 @@
   if (message === null) return;
   // An album opens the medium on screen.
   const medium = ui.chat.selectedMedium;
-  if (medium !== null && !message.pending && Media.isFile(medium) && medium.type !== 'sticker') {
+  if (medium !== null && !message.pending && Media.isOpenable(medium)) {
     return void actions.openMedia(medium);
   }
   const url = Link.only(message.text);
@@ -15,7 +15,7 @@
   if (links.length === 0) return;
   if (links.length === 1) return void actions.confirmLink(links[0]);
   ui.choice.open({
-    title: ` ${keymap.commands.chat['chat.open'].title} `,
+    title: ` ${keymap.commands.message['message.open'].title} `,
     message: Message.preview(message) ?? '',
     pickHint: 'Open',
     options: links.map(({ label, url }) => ({ name: url.includes(label) ? url : `${label} → ${url}`, value: url })),

@@ -28,8 +28,8 @@ void keymap.engine.registerLayer({
 void keymap.engine.registerLayer({
   target: ui.chat.component,
   targetMode: 'focus-within',
-  commands: named(commands.chat),
-  bindings: [...bindings.chat, ...bindings.panes],
+  commands: [...named(commands.chat), ...named(commands.message)],
+  bindings: [...bindings.chat, ...bindings.message, ...bindings.panes],
 });
 
 void keymap.engine.registerLayer({
@@ -51,6 +51,14 @@ void keymap.engine.registerLayer({
   targetMode: 'focus-within',
   commands: named(commands.choice),
   bindings: bindings.choice,
+});
+
+const claimed = new Set(bindings.choice.map(({ key }) => key));
+void keymap.engine.registerLayer({
+  target: ui.choice.component,
+  targetMode: 'focus-within',
+  commands: Object.keys(commands.message).map((name) => ({ name, run: () => ui.choice.pickValue(name) })),
+  bindings: bindings.message.filter(({ key }) => !claimed.has(key)),
 });
 
 void keymap.engine.registerLayer({

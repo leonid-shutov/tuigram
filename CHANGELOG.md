@@ -16,9 +16,13 @@
   `tuigram logout` forgets it.
 - `v` opens the selected message in `$VISUAL` / `$EDITOR`, read-only, to read a long one or copy a
   part of it; tuigram comes back when the editor closes.
+- `space` on a message opens a menu of what you can do with it — only what applies to that message,
+  each with its key beside it. Pick one with `j` / `k` and `Enter`, or press its key right there.
 
 ### Changed
 
+- `y` on a message with no text, like a photo without a caption, says "no text" instead of copying
+  nothing.
 - The 🙈 on the unseen bar now sits on top of the line instead of hanging off a corner.
 - The emoji a chat is given at random comes from a larger set, so most chats show a different one
   once, after this update.

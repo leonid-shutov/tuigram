@@ -2,12 +2,6 @@
 // already prints them on the pane borders.
 const TAIL = ['app.search', 'app.cycleNext', 'app.help'];
 
-/** @param {AvailableCommand} entry */
-const keysOf = ({ bindings }) => {
-  const binding = Binding.plainest(bindings);
-  return binding === undefined ? '' : Binding.format(binding);
-};
-
 /** @type {KeymapModule['hints']} */
 (section) => {
   const available = keymap.available(section);
@@ -28,9 +22,13 @@ const keysOf = ({ bindings }) => {
     const priority = command.priority ?? 'normal';
     const partner = command.pair && byName.get(command.pair.with);
     if (command.pair && partner) {
-      hints.push({ keys: `${keysOf(entry)}/${keysOf(partner)}`, label: command.pair.hint, priority });
+      hints.push({
+        keys: `${Binding.keys(entry.bindings)}/${Binding.keys(partner.bindings)}`,
+        label: command.pair.hint,
+        priority,
+      });
     } else {
-      hints.push({ keys: keysOf(entry), label: command.hint ?? command.title, priority });
+      hints.push({ keys: Binding.keys(entry.bindings), label: command.hint ?? command.title, priority });
     }
   }
   return hints;

@@ -6,7 +6,7 @@
   if (!Message.isConfirmed(message)) return;
   const dialogs = store.dialogs.all();
   ui.picker.open({
-    title: ` ${keymap.commands.chat['chat.forward'].title} `,
+    title: ` ${keymap.commands.message['message.forward'].title} `,
     placeholder: 'Forward to…',
     pickHint: 'Forward',
     items: dialogs.map(Dialog.toPickerItem),

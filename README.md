@@ -84,6 +84,7 @@ export TUIGRAM_API_HASH=0123456789abcdef0123456789abcdef
 | `f`                               | in the chat list: pick a folder from a searchable list                                 |
 | `e`                               | in the chat list: pick the chat's emoji from a searchable list                         |
 | `Enter`                           | open the selected chat, open the selected message's media or link, or send the message |
+| `space`                           | a menu of what you can do with the selected message; each action's key works in it too |
 | `y` / `c`                         | copy the selected message's text                                                       |
 | `v`                               | read the selected message in `$VISUAL` / `$EDITOR`, read-only                          |
 | `r`                               | reply to the selected message                                                          |

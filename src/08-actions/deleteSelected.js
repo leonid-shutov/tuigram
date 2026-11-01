@@ -13,7 +13,7 @@
     me: deleteScopes.length === 1 ? 'Delete' : 'Delete for me',
   };
   ui.choice.open({
-    title: ` ${keymap.commands.chat['chat.delete'].title} `,
+    title: ` ${keymap.commands.message['message.delete'].title} `,
     message: description,
     pickHint: 'Delete',
     options: deleteScopes.map((scope) => ({ name: names[scope], value: scope })),

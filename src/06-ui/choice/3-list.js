@@ -1,4 +1,4 @@
-Select({
+const choiceList = Select({
   id: 'choiceList',
   options: [],
   marginX: 1,
@@ -12,3 +12,9 @@ Select({
   showScrollIndicator: false,
   showSelectionIndicator: true,
 });
+
+// An option's keys sit at the end of its row, dimmed, so the row still reads by its name first.
+const KEYS_COLOR = tui.parseColor(config.theme.muted);
+Select.paintMarker(choiceList, () => KEYS_COLOR);
+
+choiceList;

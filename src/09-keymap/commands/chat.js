@@ -28,22 +28,11 @@
     pair: { with: 'chat.albumNext', hint: 'Album' },
     run: () => ui.chat.flipSelectedAlbum(-1),
   },
-  'chat.open': { title: 'Open media or link', hint: 'Open', priority: 'essential', run: () => actions.openSelected() },
-  'chat.copy': { title: 'Copy message text', hint: 'Copy', priority: 'essential', run: () => actions.copySelected() },
-  'chat.view': { title: 'View message in editor', hint: false, run: () => actions.viewSelected() },
-  'chat.reply': { title: 'Reply to message', hint: 'Reply', priority: 'essential', run: () => actions.replySelected() },
-  'chat.forward': {
-    title: 'Forward message',
-    hint: 'Forward',
+  'chat.actions': {
+    title: 'Message actions',
+    hint: 'Actions',
     priority: 'essential',
-    run: () => actions.forwardSelected(),
-  },
-  'chat.edit': { title: 'Edit message', hint: 'Edit', priority: 'essential', run: () => actions.editSelected() },
-  'chat.delete': {
-    title: 'Delete message',
-    hint: 'Delete',
-    priority: 'essential',
-    run: () => actions.deleteSelected(),
+    run: () => actions.showActions(),
   },
   // Off the bar: the selected bubble's own border says "shift+↓/↑ scroll" exactly when there is more to see.
   'chat.scrollDown': { title: 'Scroll message down', hint: false, run: () => ui.chat.scrollMessage(1) },

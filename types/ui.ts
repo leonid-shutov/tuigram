@@ -365,6 +365,8 @@ declare global {
     moveUp(): void;
     /** Hand the highlighted option to the open request. */
     pick(): void;
+    /** Highlight the option holding `value` and pick it; nothing when no option holds it. */
+    pickValue(value: unknown): void;
     /** What the hint bar calls a pick: the open request's `pickHint`, else 'Choose'. */
     readonly pickHint: string;
     close(): void;
@@ -376,7 +378,8 @@ declare global {
     title: string;
     message: string;
     body?: string | _opentui.StyledText;
-    options: { name: string; value: T }[];
+    /** `keys` is what picks the option besides moving to it, shown dimmed in a column after the names. */
+    options: { name: string; value: T; keys?: string }[];
     /** What the hint bar calls a pick; 'Choose' when omitted. */
     pickHint?: string;
     onPick(value: T): void;
