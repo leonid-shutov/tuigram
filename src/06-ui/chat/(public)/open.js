@@ -2,6 +2,7 @@
 // them as it opens the chat; what goes here is the pane's own state.
 /** @type {ChatSection['open']} */
 () => {
+  self.readUpTo = 0;
   self.render([], { outboxUnreadFrom: 0, inboxUnreadFrom: 0, inboxUnreadCount: 0 });
   self.spinner.stop();
   self.component.clearTitlePart('status');

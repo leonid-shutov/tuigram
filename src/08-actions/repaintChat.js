@@ -8,7 +8,7 @@
   const outboxUnreadFrom =
     dialog === null ? messages.length : Message.outboxUnreadFrom(messages, dialog.outboxReadUpTo);
   const inboxUnreadFrom = Message.inboxUnreadFrom(messages, inboxUnread?.after ?? null);
-  const landed = messages.slice(inboxUnreadFrom).filter(({ sender }) => !sender.isSelf).length;
+  const landed = inboxUnread === null ? 0 : Message.inboxUnreadCount(messages, inboxUnread.after);
   const inboxUnreadCount = Math.max(inboxUnread?.count ?? 0, landed);
   ui.chat.render(messages, { outboxUnreadFrom, inboxUnreadFrom, inboxUnreadCount });
 };

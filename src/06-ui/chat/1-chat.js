@@ -6,4 +6,5 @@
   spinner: { stop: () => {} },
   outboxUnreadFrom: 0,
   inboxUnreadFrom: 0,
+  readUpTo: 0,
 });

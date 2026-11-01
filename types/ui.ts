@@ -180,8 +180,8 @@ declare global {
 
   type ChatSection = Section & {
     /** The bordered pane around the messages. Its top border carries the label and the open chat's
-     * name on the left and the partner's presence on the right; its bottom border the status and
-     * the selected message's date. */
+     * name on the left and the partner's presence on the right; its bottom border the status, the
+     * selected message's date and how many new messages are left below the cursor. */
     component: PanelRenderable;
     /** The messages alone — everything the cursor and the scroll position are about. */
     scroll: _opentui.ScrollBoxRenderable;
@@ -252,6 +252,12 @@ declare global {
       /** Put the divider in the slot of the bubble at `inboxUnreadFrom`, above the bubble, saying
        * `count` new; or take it out when there is no such bubble. */
       placeDivider(count: number): void;
+      /** The newest message id the cursor has reached this visit, album parts included; 0 before it
+       * has reached any. Only grows until `open` resets it. */
+      readUpTo: number;
+      /** Draw how many messages from `inboxUnreadFrom` on are someone else's and past `readUpTo`
+       * on the bottom border's right, as `Message.inboxUnreadCount` counts them; blank for none. */
+      paintUnreadLeft(): void;
       /** Derived, recomputed on every read: the cursor's position in `views`, -1 when unset. */
       readonly selectedIndex: number;
       /** Give every day one separator, on top of its earliest bubble's slot, and drop the rest. */

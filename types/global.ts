@@ -185,6 +185,9 @@ declare global {
      * from someone else past `after`, the read mark as the chat came into view; `messages.length` for
      * none, as for a null `after`. */
     const inboxUnreadFrom: (messages: readonly (Message | PendingMessage)[], after: number | null) => number;
+    /** How many Telegram messages from someone else in `messages` are past `after`, each part of an
+     * album counted, as Telegram counts unread. */
+    const inboxUnreadCount: (messages: readonly (Message | PendingMessage)[], after: number) => number;
     /** Every http(s) link in `message`, once per target, in text order: its text as shown, and
      * where it goes. */
     const links: (message: Message | PendingMessage) => { label: string; url: string }[];
