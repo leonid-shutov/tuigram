@@ -11,10 +11,15 @@
 - While you read through new messages, the chat's bottom border counts how many are still below
   you (`↓ 12 new`). Scrolling back up to re-read doesn't bring the count back.
 - `"receipt": "tick"` in `config.json` swaps the 🙈 on the unseen bar for a plain ✓.
+- `e` in the chat list picks the chat's emoji from a searchable list, in place of the one it was
+  given at random; the first entry goes back to that one. The choice is kept on this machine, and
+  `tuigram logout` forgets it.
 
 ### Changed
 
 - The 🙈 on the unseen bar now sits on top of the line instead of hanging off a corner.
+- The emoji a chat is given at random comes from a larger set, so most chats show a different one
+  once, after this update.
 
 ### Fixed
 

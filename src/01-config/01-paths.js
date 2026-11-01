@@ -29,5 +29,7 @@ node.fs.mkdirSync(cacheDir, { recursive: true, mode: 0o755 });
   credentials: node.path.join(configDir, 'credentials.json'),
   // better-sqlite3 also creates `-wal` / `-shm` siblings next to this file.
   session: node.path.join(dataDir, 'session.db'),
+  // The glyphs set by hand, by chat id: they belong to the account, like the session.
+  emojis: node.path.join(dataDir, 'emojis.json'),
   log: process.env.TUIGRAM_LOG || node.path.join(stateDir, 'tuigram.log'),
 });

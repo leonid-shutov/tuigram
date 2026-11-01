@@ -20,13 +20,13 @@ const layoutName = ({ name, width, marker, isMuted }) => {
 };
 
 /** @type {typeof Option.from} */
-({ chatId, name, lastMessage, unreadCount = 0, isUnread = false, isMuted = false }) => {
+({ chatId, name, lastMessage, unreadCount = 0, isUnread = false, isMuted = false }, glyph) => {
   // 3-component.js, minus borders and left/right gaps. Everything below is in cells, not UTF-16
   // units, so a wide emoji or CJK name neither runs into the gap nor ends a cell early.
   const width = screen.size.dialogsWidth - 4;
   // `mtcute`'s Dialog.isMuted can be null (unknown), which reads the same as false here.
   const muted = Boolean(isMuted);
-  const gutter = config.dialogEmoji ? `${Emoji.fromHash(chatId)} ` : '';
+  const gutter = glyph === null ? '' : `${glyph} `;
   const indent = ' '.repeat(Cells.width(gutter));
   const nameWidth = width - indent.length;
 

@@ -75,6 +75,7 @@ export type Paths = {
   uiState: string;
   credentials: string;
   session: string;
+  emojis: string;
   log: string;
 };
 

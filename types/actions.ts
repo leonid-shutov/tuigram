@@ -71,6 +71,8 @@ declare global {
     showKeys(): void;
     /** Open the picker over the folders; a pick shows that folder. */
     pickFolder(): void;
+    /** Open the picker over the emoji catalog for the highlighted chat; a pick sets its glyph. */
+    pickEmoji(): void;
     /** Show a folder in the dialogs pane and focus it. */
     openFolder(folderId: number): void;
     /** Show the folder `step` away from the current one, wrapping around. */

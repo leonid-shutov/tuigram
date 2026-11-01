@@ -23,5 +23,6 @@
     run: () => actions.resizeDialogs(2),
   },
   'dialogs.narrow': { title: 'Narrow chat list', hint: 'Narrow', run: () => actions.resizeDialogs(-2) },
+  'dialogs.emoji': { title: 'Set chat emoji', hint: 'Emoji', run: () => actions.pickEmoji() },
   'dialogs.open': { title: 'Open chat', hint: 'Open', priority: 'obvious', run: () => ui.dialogs.open() },
 });

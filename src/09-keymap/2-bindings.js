@@ -36,6 +36,7 @@ const group = (config) => Keymap.extras.createBindingLookup(config).bindings;
     'dialogs.open': 'return',
     'dialogs.widen': 'shift+l',
     'dialogs.narrow': 'shift+h',
+    'dialogs.emoji': 'e',
   }),
 
   // Their own layer, enabled only once the account has folders to move between.

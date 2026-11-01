@@ -141,6 +141,12 @@ declare global {
       definitions: Record<string, ThemeDefinition>;
       resolve: (source: Source) => ResolvedTheme;
     };
+    /** The glyphs set by hand, by chat id, read once at boot from emojis.json; a chat missing here
+     * shows its hashed one. Changed only through `setEmoji`. */
+    emojis: Map<number, string>;
+    /** Set a chat's glyph, or with null go back to the hashed one, and save emojis.json. The caller
+     * repaints. */
+    setEmoji(chatId: number, glyph: string | null): Promise<string>;
     /** Proxy URL to connect through, read once at boot; unset connects directly. */
     proxy: string | undefined;
     /** Whether to check registry.npmjs.org / the tap formula for a newer release, once a day at
@@ -222,9 +228,13 @@ declare global {
   }
 
   namespace Emoji {
-    /** Peer glyphs. Single-codepoint, 2 cells wide — see the file header before editing. */
-    const pool: string[];
+    /** Every glyph a chat can show — see the file header before editing. `auto` marks the ones a
+     * chat can get on its own. */
+    const catalog: { glyph: string; name: string; auto?: true }[];
+    /** The chat's own `auto` glyph, stable for its id whatever the catalog's order. */
     function fromHash(chatId: number): string;
+    /** The chat's glyph: the one set by hand, else the hashed one. */
+    function of(chatId: number, assigned: string | null): string;
   }
 
   namespace Media {

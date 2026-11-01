@@ -1,3 +1,6 @@
-// Same glyph and config flag as dialogs/(common)/Option/from.js.
+// Same glyph and config flag as dialogs/(public)/render.js.
 /** @type {ChatSection['paintName']} */
-(chatId, name) => self.component.setTitlePart('name', config.dialogEmoji ? `${Emoji.fromHash(chatId)} ${name}` : name);
+(chatId, name) => {
+  const glyph = config.dialogEmoji ? `${Emoji.of(chatId, config.emojis.get(chatId) ?? null)} ` : '';
+  self.component.setTitlePart('name', `${glyph}${name}`);
+};

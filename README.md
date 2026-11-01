@@ -82,6 +82,7 @@ export TUIGRAM_API_HASH=0123456789abcdef0123456789abcdef
 | `h` / `l` / `←` / `→`             | previous / next folder in the chat list; previous / next picture in an album           |
 | `H` / `L`                         | narrow / widen the chat list                                                           |
 | `f`                               | in the chat list: pick a folder from a searchable list                                 |
+| `e`                               | in the chat list: pick the chat's emoji from a searchable list                         |
 | `Enter`                           | open the selected chat, open the selected message's media or link, or send the message |
 | `y` / `c`                         | copy the selected message's text                                                       |
 | `r`                               | reply to the selected message                                                          |
@@ -117,7 +118,7 @@ Cyrillic layout without switching back — `о` moves down, `пп` is `gg`, and 
 - Telegram chat folders
 - Sending text and files; replying to, forwarding, copying, editing and deleting messages
 - Desktop notifications; muted chats stay quiet
-- Per-sender name colors in groups, and a stable per-chat emoji glyph
+- Per-sender name colors in groups, and a stable per-chat emoji glyph you can change (`e`)
 - Endless upward history paging
 - 15 themes that paint their own background, so they look the same on any terminal
 - A check for a newer release at startup, with a one-key upgrade (`alt+u`)
@@ -160,6 +161,7 @@ is logged to `tuigram.log` (see Files below) so a typo doesn't go unnoticed.
 | Settings        | `$XDG_CONFIG_HOME/tuigram/config.json` (default `~/.config`)                                  |
 | API credentials | `$XDG_CONFIG_HOME/tuigram/credentials.json` — mode `0600`                                     |
 | Session         | `$XDG_DATA_HOME/tuigram/session.db` (default `~/.local/share`) — mode `0600`                  |
+| Chat emojis     | `$XDG_DATA_HOME/tuigram/emojis.json` — the ones you picked; `logout` deletes it               |
 | Log             | `$XDG_STATE_HOME/tuigram/tuigram.log` (default `~/.local/state`), override with `TUIGRAM_LOG` |
 | Cache           | `$XDG_CACHE_HOME/tuigram` (default `~/.cache`) — thumbnails and opened media, safe to delete  |
 

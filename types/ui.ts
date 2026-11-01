@@ -51,10 +51,11 @@ declare global {
   };
 
   namespace Option {
-    /** A dialog as one row of the dialogs list, padded to the panel width. */
-    function from(dialog: Dialog): _DialogOption;
+    /** A dialog as one row of the dialogs list, padded to the panel width, behind `glyph` unless
+     * it is null. */
+    function from(dialog: Dialog, glyph: string | null): _DialogOption;
     /** Everything `from` reads but the chat id, joined: an unchanged key means an unchanged row. */
-    function key(dialog: Dialog): string;
+    function key(dialog: Dialog, glyph: string | null): string;
   }
 
   // ── 6-ui/dialogs ──────────────────────────────────────────────────────────────────────
@@ -71,6 +72,8 @@ declare global {
     open(): void;
     render(dialogs: Dialog[]): void;
     select(chatId: number): void;
+    /** The highlighted chat; null while the list is empty. */
+    readonly selectedChatId: number | null;
     /** Widen (or, negative, narrow) the pane by `delta` cells within the screen's bounds; false when already at the limit. */
     resize(delta: number): boolean;
     /** Name the shown folder in the top border. */
