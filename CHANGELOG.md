@@ -30,6 +30,8 @@
 ### Fixed
 
 - Reading a thread or a forum topic on another device no longer changes the group's unread count.
+- The search line in chat search and in "Forward message" stays inside its box; at some terminal
+  widths it ran over the right border.
 
 ## [1.2.0] - 2026-10-25
 

@@ -58,7 +58,13 @@ Component(
         showSelectionIndicator: true,
       });
 
-      this.add(this.input);
+      // opentui lays a Textarea out up to 2 cells wider than its parent when the parent's edges
+      // fall between cells, as they do for a box placed by percentage like the picker; it ran over
+      // the right border. The slot clips it back. See docs/OPENTUI_BUGS.md.
+      const slot = new tui.BoxRenderable(ctx, { height: 1, flexShrink: 0, overflow: 'hidden' });
+      slot.add(this.input);
+
+      this.add(slot);
       this.add(this.list);
     }
 

@@ -179,6 +179,81 @@ keeps the native pointer valid at the time of the call.
 
 ---
 
+## Bug: a `Textarea` comes out wider than its parent when the parent sits between cells
+
+Found against `@opentui/core@0.5.17`. A `width: '100%'` Textarea should be exactly as wide as
+its parent. When the parent's edges land on fractional columns, which is what happens to any box
+placed by percentage, it comes out up to 2 cells wider and runs over the parent's right border.
+
+The picker (chat search, "Forward message") is placed with `left: '20%'` and `width: '60%'`. At
+99 columns its query line ran over the right border and one cell past it, while the result list
+under it fit exactly.
+
+### Repro
+
+```js
+const { renderer } = await createTestRenderer({ width: 99, height: 30 });
+const box = new BoxRenderable(renderer, {
+  position: 'absolute',
+  left: '20%',
+  width: '60%',
+  height: 10,
+  flexDirection: 'column',
+  borderStyle: 'single',
+});
+const input = new TextareaRenderable(renderer, { width: '100%', height: 1 });
+const list = new SelectRenderable(renderer, { flexGrow: 1, options: [] });
+box.add(input);
+box.add(list);
+renderer.root.add(box);
+// after a frame: compare input.width with list.width
+```
+
+```
+terminal width | box content | list | input
+            97 |          57 |   57 |    57
+            99 |          57 |   57 |    59   <- 2 cells too wide
+           100 |          58 |   58 |    58
+           101 |          59 |   59 |    59
+           103 |          59 |   59 |    61   <- 2 cells too wide
+```
+
+### Cause
+
+Yoga rounds a node that has a measure function (a "text" node) differently from other nodes:
+its left edge is floored and its right edge is ceiled, so text is never clipped. Plain boxes and
+`Select` round both edges to the nearest cell. opentui's Textarea registers a measure function
+(`grep -n "setMeasureFunc" index.node.js`), so it gets the text rounding even with an explicit
+width. At 99 columns the box's content runs from 20.8 to 78.2: the list rounds to 21–78 (57
+cells), the input to 20–79 (59 cells).
+
+opentui then takes the node's position from Yoga's rounded _relative_ `left`, which is still 0
+inside its parent, and adds the parent's screen x (`updateFromLayout`,
+`grep -n "  updateFromLayout() {" chunk-node-kc1sqq2a.js`). So the input starts at the same
+column as the list, and both extra cells spill out on the right.
+
+Removing the measure function (`yogaNode.unsetMeasureFunc()`) makes the input fit exactly,
+which confirms it's the rounding.
+
+### Workaround
+
+`src/(common)/(components)/SearchList.js` wraps the input in a 1-row box with
+`overflow: 'hidden'`, which clips the paint back to the parent. The input still thinks it has
+the 2 extra cells, so a query that fills the whole line puts the cursor under the border. That
+is rare enough for a search line. This is applied.
+
+The clean alternative is to give any box that holds a Textarea whole-cell geometry, computed on
+resize, instead of percentages. Prefer that where long input is normal, such as a path field.
+
+### Suggested upstream fix
+
+A width the caller set explicitly (points or percent) doesn't need text rounding: the text is
+laid out into that width, not measured to choose it. opentui could leave the node as a plain
+node when the width is fixed, or clamp a measured child's laid-out width to its parent's content
+width in `updateFromLayout`.
+
+---
+
 ## Sharp edge: renderable defaults are hardcoded for a dark terminal
 
 Not a bug, but the reason a partially-themed app silently reverts to dark. 0.5.x ships a whole
