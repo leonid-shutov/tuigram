@@ -316,6 +316,8 @@ declare global {
     /** Run `cmd` in the foreground (inherited stdio) and resolve its exit code; rejects only if
      * the process itself couldn't be spawned. */
     const run: (cmd: string, args: string[]) => Promise<number | null>;
+    /** Open `path` in $VISUAL/$EDITOR (vi, notepad on Windows) in the foreground, via `run`. */
+    const edit: (path: string) => Promise<number | null>;
     /** Call `handler` whenever the process wakes after being frozen: machine suspend, SIGSTOP. */
     const onWake: (handler: () => void) => void;
   }

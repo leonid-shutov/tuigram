@@ -48,6 +48,8 @@ declare global {
     messagesDeleted(event: DeleteEvent): void;
     /** Copy the focused message's text to the system clipboard via OSC 52. */
     copySelected(): void;
+    /** Suspend the TUI and show the focused message's text, read-only, in $VISUAL/$EDITOR/vi. */
+    viewSelected(): Promise<void>;
     /** Push a new text to the server for an already-sent message. */
     sendEdit(messageId: number, text: string): Promise<void>;
     /** Seed the message box with the focused message's text, when it is ours and editable. */

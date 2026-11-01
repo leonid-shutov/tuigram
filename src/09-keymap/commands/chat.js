@@ -30,6 +30,7 @@
   },
   'chat.open': { title: 'Open media or link', hint: 'Open', priority: 'essential', run: () => actions.openSelected() },
   'chat.copy': { title: 'Copy message text', hint: 'Copy', priority: 'essential', run: () => actions.copySelected() },
+  'chat.view': { title: 'View message in editor', hint: false, run: () => actions.viewSelected() },
   'chat.reply': { title: 'Reply to message', hint: 'Reply', priority: 'essential', run: () => actions.replySelected() },
   'chat.forward': {
     title: 'Forward message',

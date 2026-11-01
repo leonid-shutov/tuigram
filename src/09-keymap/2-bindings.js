@@ -55,6 +55,7 @@ const group = (config) => Keymap.extras.createBindingLookup(config).bindings;
     'chat.albumPrevious': ['h', 'left'],
     'chat.open': 'return',
     'chat.copy': ['y', 'c'],
+    'chat.view': 'v',
     'chat.edit': 'e',
     'chat.delete': 'd',
     'chat.reply': 'r',

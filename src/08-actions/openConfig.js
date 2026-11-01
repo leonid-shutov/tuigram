@@ -1,13 +1,6 @@
 /** @type {(actual: unknown, expected: unknown) => void} */
 const deepStrictEqual = (actual, expected) => node.assert.deepStrictEqual(actual, expected);
 
-/** @param {string} cmd @param {string[]} args */
-const spawnEditor = (cmd, args) => {
-  const { promise, resolve, reject } = Promise.withResolvers();
-  node.child_process.spawn(cmd, args, { stdio: 'inherit' }).on('exit', resolve).on('error', reject);
-  return promise;
-};
-
 /** @type {Actions['openConfig']} */
 async () => {
   const { settings, settingsSeed } = config.paths;
@@ -17,10 +10,8 @@ async () => {
   const seed = seeding ? config.schema.resolveDefaults() : null;
   if (seeding) Result.from(() => node.fs.writeFileSync(settingsSeed, `${JSON.stringify(seed, null, 2)}\n`));
 
-  const fallbackEditor = process.platform === 'win32' ? 'notepad' : 'vi';
-  const [cmd, ...args] = (process.env.VISUAL || process.env.EDITOR || fallbackEditor).split(' ');
   screen.renderer.suspend();
-  const ran = await Result.fromPromise(spawnEditor(cmd, [...args, target]));
+  const ran = await Result.fromPromise(OS.edit(target));
 
   // Only promote the seed to the real file if the editor actually changed it — quitting
   // without saving (or resaving it untouched) leaves it discarded instead of silently

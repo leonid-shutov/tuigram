@@ -14,6 +14,8 @@
 - `e` in the chat list picks the chat's emoji from a searchable list, in place of the one it was
   given at random; the first entry goes back to that one. The choice is kept on this machine, and
   `tuigram logout` forgets it.
+- `v` opens the selected message in `$VISUAL` / `$EDITOR`, read-only, to read a long one or copy a
+  part of it; tuigram comes back when the editor closes.
 
 ### Changed
 

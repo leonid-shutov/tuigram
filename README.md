@@ -85,6 +85,7 @@ export TUIGRAM_API_HASH=0123456789abcdef0123456789abcdef
 | `e`                               | in the chat list: pick the chat's emoji from a searchable list                         |
 | `Enter`                           | open the selected chat, open the selected message's media or link, or send the message |
 | `y` / `c`                         | copy the selected message's text                                                       |
+| `v`                               | read the selected message in `$VISUAL` / `$EDITOR`, read-only                          |
 | `r`                               | reply to the selected message                                                          |
 | `f`                               | in the messages: forward the selected message to a chat you pick                       |
 | `e`                               | edit the selected message, if it's yours                                               |
