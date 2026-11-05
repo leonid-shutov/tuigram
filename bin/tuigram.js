@@ -6,13 +6,13 @@ const path = require('path');
 const { spawnSync } = require('child_process');
 const { appendFileSync, mkdirSync, realpathSync, writeFileSync } = require('fs');
 const channel = require('./channel');
+const { createContext, RESTART } = require('./context');
+const { createWorld } = require('./world');
 const pkg = require('../package.json');
 
 const RELAUNCH = 'TUIGRAM_RELAUNCHED';
 // FFI is experimental, and Node says so on stderr before the renderer has the screen.
 const NODE_FLAGS = ['--experimental-ffi', '--disable-warning=ExperimentalWarning'];
-// The app exits with this to be started again from scratch (src/08-actions/restart.js).
-const RESTART = 75;
 const RESTARTED = 'TUIGRAM_RESTARTED';
 
 const args = process.argv.slice(2);
@@ -162,26 +162,8 @@ process.on('uncaughtException', (error) => bootCrash('uncaught', error));
 
 (async () => {
   const uncommonjs = require('@leonid-shutov/uncommonjs');
-  const tui = await import('@opentui/core');
-  // uncommonjs's `npm` global only carries top-level package names, so the keymap's subpath
-  // exports have to come in through the sandbox the way `tui` does.
-  const Keymap = {
-    host: await import('@opentui/keymap/opentui'),
-    extras: await import('@opentui/keymap/extras'),
-  };
   const rootDir = path.resolve(__dirname, '..');
-  const context = {
-    console: mockConsole,
-    tui,
-    Keymap,
-    process,
-    AbortController,
-    crashReport,
-    Channel: channel,
-    packageVersion: pkg.version,
-    __restartExitCode: RESTART,
-  };
-  // mtcute's CommonJS bundles print an ESM deprecation notice on first require unless this is set.
-  globalThis._MTCUTE_CJS_DEPRECATION_WARNED = true;
+  const world = await createWorld();
+  const context = await createContext({ world, console: mockConsole, process, crashReport });
   await uncommonjs.loadTree(context, { rootDir });
 })();

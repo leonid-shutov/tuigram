@@ -374,6 +374,17 @@ declare global {
   /** Injected by `bin/tuigram.js`: the exit code that makes it start the app again. */
   const __restartExitCode: number;
 
+  /**
+   * Injected by `bin/tuigram.js` (`bin/world.js`) or the tests (`test/world.js`); see
+   * docs/decisions/0002.
+   */
+  const world: {
+    terminal: { createRenderer: typeof _opentui.createCliRenderer };
+    telegram: { Client: typeof TelegramClient };
+    spawn: typeof _child_process.spawn;
+    https: { get: typeof _https.get };
+  };
+
   /** A generic never-rejecting HTTPS GET, with no knowledge of what it's fetching — used by
    * src/(common)/Update/'s own `(common)/Source/` to reach npm's registry and the homebrew
    * tap, but not tied to either. */
@@ -766,10 +777,8 @@ declare global {
     const fs: typeof _fs;
     const os: typeof _os;
     const path: typeof _path;
-    const child_process: typeof _child_process;
     const url: typeof _url;
     const assert: typeof _assert;
-    const https: typeof _https;
     const buffer: typeof _buffer;
   }
 }

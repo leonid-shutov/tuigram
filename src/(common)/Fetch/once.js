@@ -17,7 +17,7 @@ const TIMEOUT_MS = 5000;
     resolve(value);
   };
 
-  const request = node.https.get(url, { headers, timeout: TIMEOUT_MS }, (response) => {
+  const request = world.https.get(url, { headers, timeout: TIMEOUT_MS }, (response) => {
     const status = response.statusCode ?? 0;
 
     if (status >= 300 && status < 400) {

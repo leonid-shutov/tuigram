@@ -113,6 +113,7 @@ module.exports = [
         Channel: true,
         packageVersion: true,
         __restartExitCode: true,
+        world: true,
         URL: true,
         screen: true,
         auth: true,
@@ -126,8 +127,8 @@ module.exports = [
     },
   },
   {
-    // bin/ and scripts/ are plain CommonJS; prettier formats the repo at 120.
-    files: ['bin/**/*.js', 'scripts/**/*.js'],
+    // bin/, scripts/, test/: plain CommonJS; prettier formats the repo at 120.
+    files: ['bin/**/*.js', 'scripts/**/*.js', 'test/**/*.js'],
     rules: {
       'max-len': ['error', { code: 120, ignoreUrls: true }],
     },

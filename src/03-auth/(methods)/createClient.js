@@ -1,4 +1,4 @@
-const { TelegramClient, proxyTransportFromUrl } = npm['@mtcute/node'];
+const { proxyTransportFromUrl } = npm['@mtcute/node'];
 
 // Reads config.credentials at call time: 5-signIn.js builds a second client from the key the
 // user enters when Telegram refuses the shipped one.
@@ -28,5 +28,5 @@ const { TelegramClient, proxyTransportFromUrl } = npm['@mtcute/node'];
     }
   }
 
-  return new TelegramClient(options);
+  return new world.telegram.Client(options);
 };

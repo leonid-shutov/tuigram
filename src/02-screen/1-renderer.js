@@ -1,5 +1,5 @@
-tui
-  .createCliRenderer({
+world.terminal
+  .createRenderer({
     exitOnCtrlC: true,
     openConsoleOnError: false,
     onDestroy: () => Crash.exit(null, 0),

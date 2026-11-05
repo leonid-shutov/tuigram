@@ -144,8 +144,10 @@ changes, discards it instead. See `docs/CONFIG_VERSIONING.md` Scenario 1.
   user to paste their `config.json` directly) rather than reading a stamped number.
 - A `config.json` that needs no migration is never rewritten — editing it by hand and never
   touching `ctrl+e` again means the file never changes out from under the user.
-- No test suite exists in this repo to pin this behavior down automatically; regressions here are
-  currently only caught by manual verification (see `docs/CONFIG_VERSIONING.md`).
+- No test pins this behavior down yet, so regressions here are only caught by manual
+  verification (see `docs/CONFIG_VERSIONING.md`). The integration suite can cover it: a test can
+  start the app on a `config.json` of its own, by pointing `XDG_CONFIG_HOME` at it through
+  `boot()`'s `env`. See `docs/TESTING.md`.
 
 ## References
 
