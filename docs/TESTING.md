@@ -76,18 +76,20 @@ works.
 `createTelegram()` resolves to a fake account signed in as "Me" (user id 1). Build what the app
 should find on startup before calling `boot`:
 
-| Call                                            | Effect                                                                 |
-| ----------------------------------------------- | ---------------------------------------------------------------------- |
-| `await telegram.user({ firstName, lastName })`  | Someone the account knows. Resolves to their user id.                  |
-| `telegram.message(userId, text)`                | A message already in the chat with them, from them. No update is sent. |
-| `telegram.message(userId, text, { out: true })` | The same, sent by the account.                                         |
+| Call                                            | Effect                                                                                                      |
+| ----------------------------------------------- | ----------------------------------------------------------------------------------------------------------- |
+| `await telegram.user({ firstName, lastName })`  | Someone the account knows. Resolves to their user id.                                                       |
+| `telegram.message(userId, text)`                | A message already in the chat with them, from them. No update is sent.                                      |
+| `telegram.message(userId, text, { out: true })` | The same, sent by the account.                                                                              |
+| `telegram.read(userId)`                         | Marks the chat read up to its newest message, as if read on another device. Messages are unread until then. |
 
 While the app runs:
 
-| Call                             | Effect                                                                |
-| -------------------------------- | --------------------------------------------------------------------- |
-| `telegram.receive(userId, text)` | A message from them arriving now, pushed the way Telegram pushes one. |
-| `telegram.unanswered`            | The methods the app called that the fake has no answer for.           |
+| Call                             | Effect                                                                                 |
+| -------------------------------- | -------------------------------------------------------------------------------------- |
+| `telegram.receive(userId, text)` | A message from them arriving now, pushed the way Telegram pushes one.                  |
+| `telegram.unreadCount(userId)`   | The chat's unread count as Telegram has it: it drops when the app marks the chat read. |
+| `telegram.unanswered`            | The methods the app called that the fake has no answer for.                            |
 
 The fake doesn't record the calls the app makes, on purpose: see "Asserting" below.
 
@@ -107,6 +109,9 @@ The handle it resolves to:
 | ----------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `await app.waitForText(text)`       | Resolves to the frame once it contains `text`. Throws after 3 s, with the last frame and the log.                                                             |
 | `await app.waitForFrame(predicate)` | The same, for any condition on the frame.                                                                                                                     |
+| `await app.waitFor(condition)`      | Waits for something that isn't on screen, such as `telegram.unreadCount(ann) === 0`.                                                                          |
+| `await app.focused()`               | The text in the focused element. In a chat, that's the selected message, as written (not as wrapped on screen).                                               |
+| `await app.selectedChat()`          | The chat list's selected row, its first line as shown: emoji, name, unread count. Match the name with `/\bAnn\b/`.                                            |
 | `await app.frame()`                 | The screen now, as text.                                                                                                                                      |
 | `app.press(key, modifiers)`         | One key: a character (`'j'`), or a name from opentui's `KeyCodes` (`'RETURN'`, `'ESCAPE'`, `'TAB'`, `'ARROW_UP'`, …). `modifiers` is `{ ctrl, shift, meta }`. |
 | `await app.type(text)`              | Types `text`, one key at a time.                                                                                                                              |
@@ -143,6 +148,27 @@ request for Bob's with Bob's messages.
 
 `frame.indexOf(...)` comparisons have to allow for text appearing in more than one place. The
 open chat's name is in its title on the first line, before anything in the chat list.
+
+## Reading the selection
+
+A selection is shown by color, which a text frame doesn't keep, so `app.focused()` and
+`app.selectedChat()` read it from opentui's tree of elements instead, the way a web test asks
+the DOM what has focus rather than looking at pixels:
+
+- **In a chat, the selected message is the focused bubble.** The app gives the selected bubble
+  opentui's focus, and opentui draws a focused element in its focus color. `app.focused()` takes
+  the renderer's focused element and joins the text of its visible text elements. The chat pane
+  has to have focus: while it doesn't, no bubble is selected, on screen or here.
+- **In the chat list, the selected row is the list's selected option.** `app.selectedChat()`
+  finds the list by the id the app gives it, `dialogsList`, and returns the selected option's
+  first line. If the id ever changes, it fails saying so.
+
+What this leaves out is the drawing: that the focused bubble's border and the selected row's
+background really are drawn in a distinct color. That is opentui's job, and every built-in theme
+draws both distinctly. Reading the drawn cells' colors instead was tried and dropped: 12 of the
+15 built-in themes have no `selected` color of their own and fall back to the accent color,
+which the focused chat pane's border uses too, and reading cells needs every wide character's
+width to keep columns straight.
 
 ## Teaching the fake a new method
 

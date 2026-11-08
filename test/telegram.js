@@ -34,6 +34,8 @@ const createTelegram = async () => {
   const users = new Map([[SELF_ID, self]]);
   // Each chat's messages, oldest first; a chat is here once it has one.
   const chats = new Map();
+  // Each chat's read position: the id of the newest message the account has read in it.
+  const readUpTo = new Map();
   const unanswered = [];
   let callCount = 0;
   let nextUserId = 100;
@@ -45,6 +47,13 @@ const createTelegram = async () => {
   const allUsers = () => [...users.values()];
   const historyOf = (userId) => chats.get(userId) ?? [];
   const lastOf = (userId) => historyOf(userId).at(-1);
+  const unreadIn = (userId) =>
+    historyOf(userId).filter((message) => !message.out && message.id > (readUpTo.get(userId) ?? 0)).length;
+  // A `maxId` of 0 reads the whole chat, as on Telegram.
+  const markRead = (userId, maxId = 0) => {
+    const newest = lastOf(userId)?.id ?? 0;
+    readUpTo.set(userId, maxId === 0 ? newest : maxId);
+  };
 
   const addMessage = (userId, text, { out = false } = {}) => {
     const message = {
@@ -65,9 +74,9 @@ const createTelegram = async () => {
     _: 'dialog',
     peer: peerUser(userId),
     topMessage: lastOf(userId).id,
-    readInboxMaxId: 0,
+    readInboxMaxId: readUpTo.get(userId) ?? 0,
     readOutboxMaxId: 0,
-    unreadCount: historyOf(userId).filter((message) => !message.out).length,
+    unreadCount: unreadIn(userId),
     unreadMentionsCount: 0,
     unreadReactionsCount: 0,
     notifySettings: { _: 'peerNotifySettings' },
@@ -103,7 +112,10 @@ const createTelegram = async () => {
       const below = offsetId === 0 ? history : history.filter((message) => message.id < offsetId);
       return { _: 'messages.messages', messages: below.toReversed().slice(0, limit), chats: [], users: allUsers() };
     },
-    'messages.readHistory': () => ({ _: 'messages.affectedMessages', pts: client.getNextPts(), ptsCount: 1 }),
+    'messages.readHistory': ({ peer, maxId }) => {
+      markRead(peer.userId, maxId);
+      return { _: 'messages.affectedMessages', pts: client.getNextPts(), ptsCount: 1 };
+    },
   };
   // Replaces the stub's own `call`, under which a method with no answer hangs instead of failing.
   client.call = async (request) => {
@@ -132,6 +144,12 @@ const createTelegram = async () => {
     },
 
     message: (userId, text, options) => void addMessage(userId, text, options),
+
+    // Marks the chat read up to its newest message, as if read on another device.
+    read: (userId) => markRead(userId),
+
+    // The chat's unread count as Telegram has it: what the app has marked read, it has told Telegram.
+    unreadCount: (userId) => unreadIn(userId),
 
     receive: (userId, text) => {
       const message = addMessage(userId, text);

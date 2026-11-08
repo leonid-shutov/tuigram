@@ -13,6 +13,14 @@ const ROOT = path.resolve(__dirname, '..');
 const WAIT_MS = 3000;
 const POLL_MS = 10;
 
+// The text shown under `node` in opentui's tree of elements, in order: its own when it is a text
+// element, then its children's. Hidden elements show nothing.
+const textIn = (node) => {
+  if (node.visible === false) return [];
+  const own = typeof node.plainText === 'string' && node.plainText !== '' ? [node.plainText] : [];
+  return [...own, ...node.getChildren().flatMap(textIn)];
+};
+
 /** An object that inherits from `proto`, with `props` as its own read-only properties. */
 const inherit = (proto, props) =>
   Object.create(proto, Object.fromEntries(Object.entries(props).map(([key, value]) => [key, { value }])));
@@ -63,6 +71,18 @@ const boot = async ({ telegram, width = 80, height = 24, env = {} }) => {
     return terminal.setup.captureCharFrame();
   };
 
+  // Renders until `check(frame)` holds, so the app keeps running as it would on screen; throws
+  // with the last frame and the log after a few seconds.
+  const until = async (check, what) => {
+    const deadline = Date.now() + WAIT_MS;
+    for (;;) {
+      const current = await frame();
+      if (check(current)) return current;
+      if (Date.now() > deadline) throw new Error(`${what}:\n${current}\nlog:\n${logs.join('\n')}`);
+      await sleep(POLL_MS);
+    }
+  };
+
   const app = {
     telegram,
     spawned,
@@ -71,17 +91,27 @@ const boot = async ({ telegram, width = 80, height = 24, env = {} }) => {
     sandbox: context,
     frame,
 
-    waitForFrame: async (predicate) => {
-      const deadline = Date.now() + WAIT_MS;
-      for (;;) {
-        const current = await frame();
-        if (predicate(current)) return current;
-        if (Date.now() > deadline) throw new Error(`frame never matched:\n${current}\nlog:\n${logs.join('\n')}`);
-        await sleep(POLL_MS);
-      }
+    waitForFrame: (predicate) => until(predicate, 'frame never matched'),
+    waitForText: (text) => until((current) => current.includes(text), `frame never showed ${JSON.stringify(text)}`),
+    // For what isn't on screen, such as the fake Telegram's state.
+    waitFor: async (condition) => {
+      await until(() => condition(), 'condition never held');
     },
 
-    waitForText: (text) => app.waitForFrame((current) => current.includes(text)),
+    // Selections, read from opentui's tree of elements (docs/TESTING.md, "Reading the selection").
+    // The text in the focused element; in a chat, the selected message as written.
+    focused: async () => {
+      await terminal.setup.renderOnce();
+      const element = terminal.setup.renderer.currentFocusedRenderable;
+      return element === null ? null : textIn(element).join('\n');
+    },
+    // The selected chat's row in the chat list, its first line as shown: emoji, name, unread count.
+    selectedChat: async () => {
+      await terminal.setup.renderOnce();
+      const list = terminal.setup.renderer.root.findDescendantById('dialogsList');
+      if (list === undefined) throw new Error('no chat list: the app no longer has an element with id "dialogsList"');
+      return list.getSelectedOption()?.name ?? null;
+    },
 
     press: (key, modifiers) => terminal.setup.mockInput.pressKey(key, modifiers),
     type: (text) => terminal.setup.mockInput.typeText(text),
