@@ -1,19 +1,16 @@
 #!/usr/bin/env node
 'use strict';
 
-const os = require('os');
 const path = require('path');
 const { spawnSync } = require('child_process');
-const { appendFileSync, mkdirSync, realpathSync, writeFileSync } = require('fs');
+const { realpathSync } = require('fs');
 const channel = require('./channel');
-const { createContext, RESTART } = require('./context');
-const { createWorld } = require('./world');
+const { RESTART, RESTARTED } = require('./context');
 const pkg = require('../package.json');
 
 const RELAUNCH = 'TUIGRAM_RELAUNCHED';
 // FFI is experimental, and Node says so on stderr before the renderer has the screen.
 const NODE_FLAGS = ['--experimental-ffi', '--disable-warning=ExperimentalWarning'];
-const RESTARTED = 'TUIGRAM_RESTARTED';
 
 const args = process.argv.slice(2);
 
@@ -106,64 +103,6 @@ if (process.env[RELAUNCH] !== '1') {
 
 // Past this point we have FFI, so the app can actually boot. Nothing below must run in the
 // pre-relaunch parent: it truncates the log and loads opentui.
+const { run } = require('./app');
 
-// The renderer owns the terminal, so `console` has to go to a file. XDG resolution is
-// duplicated here (see src/01-config/mechanics/computePaths.js) because this runs before the app.
-const stateHome = process.env.XDG_STATE_HOME || path.join(os.homedir(), '.local', 'state');
-const LOG_FILE = process.env.TUIGRAM_LOG || path.join(stateHome, 'tuigram', 'tuigram.log');
-
-mkdirSync(path.dirname(LOG_FILE), { recursive: true, mode: 0o700 });
-// Truncate on startup, but keep one session's log across restarts.
-if (process.env[RESTARTED] !== '1') writeFileSync(LOG_FILE, '', { mode: 0o600 });
-
-const formatArgs = (args) =>
-  args.map((arg) => (typeof arg === 'object' ? JSON.stringify(arg, null, 2) : String(arg))).join(' ');
-
-const writeLog = (...args) => {
-  const line = `${formatArgs(args)}\n`;
-  appendFileSync(LOG_FILE, line);
-};
-
-const mockConsole = {
-  log: (...args) => writeLog(...args),
-  error: (...args) => writeLog(...args),
-};
-
-const ISSUES_URL = pkg.bugs.url;
-
-// Injected into the VM context below so src/(common)/Crash/hard.js can print the identical
-// report for a runtime crash — this runs before that VM exists, so it can't import from there.
-const crashReport = (label, detail) => {
-  mockConsole.log(label, detail);
-  process.stderr.write(
-    [
-      '',
-      `tuigram: ${label}`,
-      '',
-      detail
-        .split('\n')
-        .map((line) => `  ${line}`)
-        .join('\n'),
-      '',
-      `  log:    ${LOG_FILE}`,
-      `  report: ${ISSUES_URL}`,
-      '',
-    ].join('\n'),
-  );
-};
-
-const bootCrash = (label, error) => {
-  crashReport(label, error?.stack ?? String(error));
-  process.exit(1);
-};
-
-process.on('unhandledRejection', (reason) => bootCrash('unhandled', reason));
-process.on('uncaughtException', (error) => bootCrash('uncaught', error));
-
-(async () => {
-  const uncommonjs = require('@leonid-shutov/uncommonjs');
-  const rootDir = path.resolve(__dirname, '..');
-  const world = await createWorld();
-  const context = await createContext({ world, console: mockConsole, process, crashReport });
-  await uncommonjs.loadTree(context, { rootDir });
-})();
+void run();

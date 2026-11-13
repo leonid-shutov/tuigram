@@ -1,7 +1,6 @@
 'use strict';
 
 const { EventEmitter } = require('node:events');
-const { TelegramClient } = require('../bin/mtcute.js');
 
 // A program that starts and exits 0 on the next turn, whatever it was asked to run.
 const finishedChild = () => {
@@ -34,15 +33,7 @@ const createTestWorld = async ({ telegram, width, height }) => {
         return terminal.setup.renderer;
       },
     },
-    telegram: {
-      // src/ passes the options for a real connection (key, session file, proxy); a client on
-      // the fake needs none of them.
-      Client: class extends TelegramClient {
-        constructor() {
-          super({ client: telegram.client });
-        }
-      },
-    },
+    telegram: telegram.facet,
     spawn: (cmd, args) => {
       // Copied out of the sandbox's realm (docs/TESTING.md, Gotchas).
       spawned.push({ cmd, args: [...args] });

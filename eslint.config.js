@@ -127,8 +127,8 @@ module.exports = [
     },
   },
   {
-    // bin/, scripts/, test/: plain CommonJS; prettier formats the repo at 120.
-    files: ['bin/**/*.js', 'scripts/**/*.js', 'test/**/*.js'],
+    // Plain CommonJS outside src/; prettier formats the repo at 120.
+    files: ['{bin,demo,scripts,test}/**/*.js'],
     rules: {
       'max-len': ['error', { code: 120, ignoreUrls: true }],
     },

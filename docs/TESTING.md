@@ -19,14 +19,16 @@ opentui's renderer talks to its native backend through `node:ffi`, so plain `nod
 
 ## What's where
 
-| File               | What it is                                                                                                            |
-| ------------------ | --------------------------------------------------------------------------------------------------------------------- |
-| `bin/world.js`     | The real world: opentui's renderer, mtcute's `TelegramClient`, `child_process.spawn`, `https.get`.                    |
-| `bin/context.js`   | The sandbox's context, built the same way for the app and the tests.                                                  |
-| `test/world.js`    | The test world, same shape: the headless renderer, a client on the fake Telegram, and recorders for spawns and HTTPS. |
-| `test/telegram.js` | The fake Telegram account: users, chats, and the server's answers.                                                    |
-| `test/app.js`      | `boot()`: the app in a test world, and the handle a test drives it with.                                              |
-| `test/*.test.js`   | The tests.                                                                                                            |
+| File               | What it is                                                                                                   |
+| ------------------ | ------------------------------------------------------------------------------------------------------------ |
+| `bin/world.js`     | The real world: opentui's renderer, mtcute's `TelegramClient`, `child_process.spawn`, `https.get`.           |
+| `bin/context.js`   | The sandbox's context, built the same way for the app and the tests.                                         |
+| `bin/app.js`       | `run(overrides)`: the app in this process, with its log and crash report. `bin/tuigram.js` and the demo.     |
+| `test/world.js`    | The test world, same shape: the headless renderer, the fake Telegram, and recorders for spawns and HTTPS.    |
+| `test/telegram.js` | The fake Telegram account: users, chats, and the server's answers. `telegram.facet` is a world's `telegram`. |
+| `test/app.js`      | `boot()`: the app in a test world, and the handle a test drives it with.                                     |
+| `test/*.test.js`   | The tests.                                                                                                   |
+| `demo/`            | `npm run demo`: the real app in your terminal on a made-up account, for the README screenshot.               |
 
 ## A test
 
@@ -73,29 +75,38 @@ opens follows from the order the messages were added in, so say so on the line t
 
 ## Setting up the account: `createTelegram()`
 
-`createTelegram()` resolves to a fake account signed in as "Me" (user id 1). Build what the app
-should find on startup before calling `boot`:
+`createTelegram()` resolves to a fake account signed in as "Me" (user id 1);
+`createTelegram({ name })` names it otherwise. Build what the app should find on startup before
+calling `boot`. A chat id is the other person's user id for a private chat, `telegram.self` for
+Saved Messages, and what `group()` resolves to for a group:
 
 | Call                                            | Effect                                                                                                      |
 | ----------------------------------------------- | ----------------------------------------------------------------------------------------------------------- |
 | `await telegram.user({ firstName, lastName })`  | Someone the account knows. Resolves to their user id.                                                       |
-| `telegram.message(userId, text)`                | A message already in the chat with them, from them. No update is sent.                                      |
-| `telegram.message(userId, text, { out: true })` | The same, sent by the account.                                                                              |
-| `telegram.read(userId)`                         | Marks the chat read up to its newest message, as if read on another device. Messages are unread until then. |
+| `await telegram.group({ title })`               | A basic group. Resolves to its chat id. Anyone can post in it.                                              |
+| `telegram.message(chatId, text)`                | A message already in the chat, from the other person. No update is sent.                                    |
+| `telegram.message(chatId, text, { out: true })` | The same, sent by the account.                                                                              |
+| `telegram.message(chatId, text, { from })`      | The same, from user `from`: a group's messages need one.                                                    |
+| `telegram.message(chatId, text, { date })`      | The same, sent at `date` (Unix seconds) rather than now.                                                    |
+| `telegram.message(chatId, text, { photo })`     | The same, with a photo: `{ width, height, thumb }`, its size as sent and the bytes of its 320px JPEG.       |
+| `telegram.read(chatId)`                         | Marks the chat read up to its newest message, as if read on another device. Messages are unread until then. |
+| `telegram.seen(chatId)`                         | The other side has read everything in the chat so far. Until then, the account's messages are unread.       |
+| `telegram.pin(chatId)`, `telegram.mute(chatId)` | Pins the chat to the top of the list; mutes it for good.                                                    |
 
 While the app runs:
 
 | Call                             | Effect                                                                                                                                                                                                                                                                      |
 | -------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `telegram.receive(userId, text)` | A message from them arriving now, pushed the way Telegram pushes one.                                                                                                                                                                                                       |
-| `telegram.history(userId)`       | The chat as Telegram has it, oldest first, as `{ text, out, replyTo, forwardedFrom }`: whether the account sent it, the text of the message it replies to, and the first name of whoever's message it is a forward of. A message the app sent is here once Telegram has it. |
-| `telegram.deleted(userId)`       | The chat's deleted messages, in the order they went, as `{ text, forEveryone }`: whether they went for the other side too.                                                                                                                                                  |
-| `telegram.unreadCount(userId)`   | The chat's unread count as Telegram has it: it drops when the app marks the chat read.                                                                                                                                                                                      |
+| `telegram.receive(chatId, text)` | A message from them arriving now, pushed the way Telegram pushes one. In a group, pass `{ from }`.                                                                                                                                                                          |
+| `telegram.history(chatId)`       | The chat as Telegram has it, oldest first, as `{ text, out, replyTo, forwardedFrom }`: whether the account sent it, the text of the message it replies to, and the first name of whoever's message it is a forward of. A message the app sent is here once Telegram has it. |
+| `telegram.deleted(chatId)`       | The chat's deleted messages, in the order they went, as `{ text, forEveryone }`: whether they went for the other side too.                                                                                                                                                  |
+| `telegram.unreadCount(chatId)`   | The chat's unread count as Telegram has it: it drops when the app marks the chat read.                                                                                                                                                                                      |
 | `telegram.unanswered`            | The methods the app called that the fake has no answer for.                                                                                                                                                                                                                 |
 
 The fake doesn't record the calls the app makes, on purpose: see "Asserting" below.
 
-Chats are private chats only, for now: no groups, channels, media or folders.
+Chats are private chats and basic groups only, for now: no channels, folders or media beyond a
+photo's thumbnail.
 
 ## Driving the app: `boot()`
 
