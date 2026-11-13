@@ -55,7 +55,8 @@ const createTelegram = async () => {
     readUpTo.set(userId, maxId === 0 ? newest : maxId);
   };
 
-  const addMessage = (userId, text, { out = false } = {}) => {
+  // `replyTo` is the id of the message it replies to, in the same chat.
+  const addMessage = (userId, text, { out = false, replyTo = null } = {}) => {
     const message = {
       _: 'message',
       id: client.getNextMessageId(),
@@ -64,6 +65,7 @@ const createTelegram = async () => {
       fromId: peerUser(out ? SELF_ID : userId),
       date: client.getNextDate(),
       message: text,
+      replyTo: replyTo === null ? undefined : { _: 'messageReplyHeader', replyToMsgId: replyTo },
     };
     if (chats.has(userId)) chats.get(userId).push(message);
     else chats.set(userId, [message]);
@@ -112,6 +114,19 @@ const createTelegram = async () => {
       const below = offsetId === 0 ? history : history.filter((message) => message.id < offsetId);
       return { _: 'messages.messages', messages: below.toReversed().slice(0, limit), chats: [], users: allUsers() };
     },
+    // In a private chat Telegram confirms a sent message with this short update, which mtcute
+    // rebuilds the message from.
+    'messages.sendMessage': ({ peer, message, replyTo }) => {
+      const sent = addMessage(peer.userId, message, { out: true, replyTo: replyTo?.replyToMsgId ?? null });
+      return {
+        _: 'updateShortSentMessage',
+        out: true,
+        id: sent.id,
+        date: sent.date,
+        pts: client.getNextPts(),
+        ptsCount: 1,
+      };
+    },
     'messages.readHistory': ({ peer, maxId }) => {
       markRead(peer.userId, maxId);
       return { _: 'messages.affectedMessages', pts: client.getNextPts(), ptsCount: 1 };
@@ -144,6 +159,18 @@ const createTelegram = async () => {
     },
 
     message: (userId, text, options) => void addMessage(userId, text, options),
+
+    // The chat as Telegram has it, oldest first: each message's text, whether the account sent it,
+    // and the text of the message it replies to.
+    history: (userId) => {
+      const history = historyOf(userId);
+      const textOf = (id) => history.find((message) => message.id === id)?.message ?? null;
+      return history.map(({ message, out, replyTo }) => ({
+        text: message,
+        out,
+        replyTo: replyTo === undefined ? null : textOf(replyTo.replyToMsgId),
+      }));
+    },
 
     // Marks the chat read up to its newest message, as if read on another device.
     read: (userId) => markRead(userId),

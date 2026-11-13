@@ -85,11 +85,12 @@ should find on startup before calling `boot`:
 
 While the app runs:
 
-| Call                             | Effect                                                                                 |
-| -------------------------------- | -------------------------------------------------------------------------------------- |
-| `telegram.receive(userId, text)` | A message from them arriving now, pushed the way Telegram pushes one.                  |
-| `telegram.unreadCount(userId)`   | The chat's unread count as Telegram has it: it drops when the app marks the chat read. |
-| `telegram.unanswered`            | The methods the app called that the fake has no answer for.                            |
+| Call                             | Effect                                                                                                                                                                                               |
+| -------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `telegram.receive(userId, text)` | A message from them arriving now, pushed the way Telegram pushes one.                                                                                                                                |
+| `telegram.history(userId)`       | The chat as Telegram has it, oldest first, as `{ text, out, replyTo }`: whether the account sent it, and the text of the message it replies to. A message the app sent is here once Telegram has it. |
+| `telegram.unreadCount(userId)`   | The chat's unread count as Telegram has it: it drops when the app marks the chat read.                                                                                                               |
+| `telegram.unanswered`            | The methods the app called that the fake has no answer for.                                                                                                                                          |
 
 The fake doesn't record the calls the app makes, on purpose: see "Asserting" below.
 
