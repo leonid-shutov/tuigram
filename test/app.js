@@ -28,7 +28,7 @@ const inherit = (proto, props) =>
 /** The whole app in a test world (docs/TESTING.md). */
 const boot = async ({ telegram, width = 80, height = 24, env = {} }) => {
   const home = await fsp.mkdtemp(path.join(os.tmpdir(), 'tuigram-test-'));
-  const removeHome = () => fsp.rm(home, { recursive: true, force: true });
+  const removeHome = () => fsp.rm(home, { recursive: true, force: true, maxRetries: 5 });
   const { world, terminal, spawned, fetched } = await createTestWorld({ telegram, width, height });
 
   const logs = [];

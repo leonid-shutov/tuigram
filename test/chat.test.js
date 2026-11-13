@@ -6,6 +6,8 @@ const { setTimeout: sleep } = require('node:timers/promises');
 const { createTelegram } = require('./telegram.js');
 const { boot } = require('./app.js');
 
+const NOTIFIER = { darwin: 'osascript', win32: 'powershell' }[process.platform] ?? 'notify-send';
+
 describe('chat', () => {
   let telegram;
   let ann;
@@ -120,7 +122,12 @@ describe('chat', () => {
       telegram.receive(bob, 'still on?');
       await app.waitForText('still on?');
 
-      assert.deepStrictEqual(app.spawned, [{ cmd: 'notify-send', args: ['--app-name=tuigram', 'Bob', 'still on?'] }]);
+      assert.deepStrictEqual(
+        app.spawned.map(({ cmd }) => cmd),
+        [NOTIFIER],
+      );
+      const args = app.spawned[0].args.join(' ');
+      assert.ok(args.includes('Bob') && args.includes('still on?'), args);
     });
   });
 });
