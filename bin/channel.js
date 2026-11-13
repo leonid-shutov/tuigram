@@ -38,14 +38,32 @@ const isPacmanOwned = () => {
   }
 };
 
+/** @param {string} rootDir @returns {string | null} */
+const npmPrefix = (rootDir) => {
+  const normalized = rootDir.replaceAll('\\', '/');
+  if (normalized.endsWith(NPM_SUFFIX)) return rootDir.slice(0, -NPM_SUFFIX.length);
+  const winMatch = process.platform === 'win32' && normalized.endsWith(WIN_NPM_SUFFIX);
+  if (winMatch) return rootDir.slice(0, -WIN_NPM_SUFFIX.length);
+  return null;
+};
+
+// install.sh npm-installs into a prefix of its own (~/.local/lib/tuigram) with a private Node, so
+// by path alone it is indistinguishable from npm's global layout -- its receipt is what tells them
+// apart. It matters: an npm upgrade would run whichever npm is on PATH, against whichever Node,
+// and better_sqlite3.node is ABI-bound to the Node that fetched it.
+const INSTALLER = 'https://raw.githubusercontent.com/leonid-shutov/tuigram/master/install.sh';
+const SCRIPT_RECEIPT = 'install.json';
+
 // git checked before Cellar/global/mise/aur: an `npm link`ed checkout sits under lib/node_modules
-// as a symlink and would otherwise match npm.
-/** @param {string} rootDir @returns {'git' | 'brew' | 'npm' | 'mise' | 'aur' | 'unknown'} */
+// as a symlink and would otherwise match npm. script before npm, whose GLOBAL shape it shares.
+/** @param {string} rootDir @returns {'git' | 'brew' | 'npm' | 'mise' | 'aur' | 'script' | 'unknown'} */
 const detectUncached = (rootDir) => {
   if (existsSync(path.join(rootDir, '.git'))) return 'git';
   const normalized = rootDir.replaceAll('\\', '/');
   if (CELLAR.test(normalized)) return 'brew';
   if (rootDir === AUR_ROOT && isPacmanOwned()) return 'aur';
+  const prefix = npmPrefix(rootDir);
+  if (prefix !== null && existsSync(path.join(prefix, SCRIPT_RECEIPT))) return 'script';
   if (GLOBAL.test(normalized)) return 'npm';
   if (process.platform === 'win32' && WIN_GLOBAL.test(normalized)) return 'npm';
   if (MISE.test(normalized)) return 'mise';
@@ -55,7 +73,7 @@ const detectUncached = (rootDir) => {
 /** @type {{ rootDir: string; kind: ReturnType<typeof detectUncached> } | null} */
 let cached = null;
 
-/** @param {string} rootDir @returns {'git' | 'brew' | 'npm' | 'mise' | 'aur' | 'unknown'} */
+/** @param {string} rootDir @returns {'git' | 'brew' | 'npm' | 'mise' | 'aur' | 'script' | 'unknown'} */
 const detect = (rootDir) => {
   if (cached === null || cached.rootDir !== rootDir) cached = { rootDir, kind: detectUncached(rootDir) };
   return cached.kind;
@@ -67,15 +85,6 @@ const brewBinary = (rootDir) => {
   const [prefix] = rootDir.split('/Cellar/');
   const binary = path.join(prefix, 'bin', 'brew');
   return existsSync(binary) ? binary : 'brew';
-};
-
-/** @param {string} rootDir @returns {string | null} */
-const npmPrefix = (rootDir) => {
-  const normalized = rootDir.replaceAll('\\', '/');
-  if (normalized.endsWith(NPM_SUFFIX)) return rootDir.slice(0, -NPM_SUFFIX.length);
-  const winMatch = process.platform === 'win32' && normalized.endsWith(WIN_NPM_SUFFIX);
-  if (winMatch) return rootDir.slice(0, -WIN_NPM_SUFFIX.length);
-  return null;
 };
 
 // An empty `steps` means there is nothing this process can run itself -- `manualCommand` is the
@@ -131,6 +140,25 @@ const aurPlan = () => ({
   steps: [],
 });
 
+// Upgrading is re-running the installer: it picks the Node the new release's engines.node asks
+// for, so unlike npm a Node bump never blocks it. --install-dir pins it to the install that is
+// actually running; it finds the launcher's directory in that install's receipt itself. No
+// prefix to check: the directory is the user's own, and `sudo` in front of `curl | bash` would be
+// the wrong advice anyway -- if it can't be written, the installer itself says so.
+/** @param {string} rootDir @param {string} version @returns {Plan | null} */
+const scriptPlan = (rootDir, version) => {
+  const prefix = npmPrefix(rootDir);
+  if (prefix === null) return null;
+  const pin = version === 'latest' ? [] : ['--version', version];
+  // pipefail: a failed download must fail the step, not hand bash an empty script that exits 0.
+  const script = 'set -o pipefail; curl -fsSL "$0" | bash -s -- --no-modify-path --install-dir "$@"';
+  return {
+    prefix: null,
+    manualCommand: null,
+    steps: [{ cmd: 'bash', args: ['-c', script, INSTALLER, prefix, ...pin] }],
+  };
+};
+
 /** @param {string} rootDir @param {string} version @returns {Plan | null} */
 const upgradePlan = (rootDir, version) => {
   const kind = detect(rootDir);
@@ -138,6 +166,7 @@ const upgradePlan = (rootDir, version) => {
   if (kind === 'brew') return brewPlan(rootDir);
   if (kind === 'mise') return misePlan();
   if (kind === 'aur') return aurPlan();
+  if (kind === 'script') return scriptPlan(rootDir, version);
   return null;
 };
 

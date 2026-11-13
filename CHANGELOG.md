@@ -18,6 +18,11 @@
   part of it; tuigram comes back when the editor closes.
 - `space` on a message opens a menu of what you can do with it — only what applies to that message,
   each with its key beside it. Pick one with `j` / `k` and `Enter`, or press its key right there.
+- An installer that needs nothing but `curl`, on Linux and macOS:
+  `curl -fsSL https://raw.githubusercontent.com/leonid-shutov/tuigram/master/install.sh | bash`.
+  It brings its own Node.js, kept apart from any other, in `~/.local/lib/tuigram`. `tuigram upgrade`
+  and the in-app update both work on it, and they update that Node.js too when a release needs a
+  newer one.
 
 ### Changed
 

@@ -17,3 +17,35 @@ jobs:
       - run: npm ci
       - run: npm run lint
       - run: npm run types
+
+  # install.sh is served straight from master, so it is tested here rather than at release time:
+  # a fresh install, then a second run over it (what `tuigram upgrade` does), on each platform it
+  # supports. /bin/bash on purpose: on macOS that is bash 3.2, the one curl | bash users get.
+  installer:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, ubuntu-24.04-arm, macos-latest]
+    runs-on: ${{ matrix.os }}
+    env:
+      TUIGRAM_INSTALL_DIR: ${{ runner.temp }}/tuigram
+      TUIGRAM_BIN_DIR: ${{ runner.temp }}/bin
+    steps:
+      - uses: actions/checkout@v7
+      - if: runner.os == 'Linux'
+        run: shellcheck install.sh
+      - name: Install, then install again in place
+        run: |
+          # The latest release can predate MIN_VERSION (the first that knows the `script` channel);
+          # this job is about the script's mechanics, not that floor.
+          sed "s/^MIN_VERSION=.*/MIN_VERSION='0.0.0'/" install.sh > "$RUNNER_TEMP/install.sh"
+          /bin/bash "$RUNNER_TEMP/install.sh" --no-modify-path
+          /bin/bash "$RUNNER_TEMP/install.sh" --no-modify-path
+      - name: Check the install
+        run: |
+          "$TUIGRAM_BIN_DIR/tuigram" --version
+          # no .lock or .tmp.* left behind (an `if`, since set -e ignores a `!`-negated command)
+          if ls -A "$TUIGRAM_INSTALL_DIR" | grep '^\.'; then echo 'left behind ^'; exit 1; fi
+          root="$(cd "$TUIGRAM_INSTALL_DIR/lib/node_modules/tuigram" && pwd -P)"
+          kind="$(node -p 'require("./bin/channel").detect(process.argv[1])' "$root")"
+          [ "$kind" = script ] || { echo "detected as $kind, not script"; exit 1; }

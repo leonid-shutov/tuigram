@@ -675,14 +675,14 @@ declare global {
 
   // ── (common)/Update ───────────────────────────────────────────────────────────────────
   /** 'git' and 'unknown' both mean "never check" — a checkout, or a shape check() doesn't know. */
-  type UpdateChannel = 'brew' | 'npm' | 'mise' | 'aur' | 'git' | 'unknown';
+  type UpdateChannel = 'brew' | 'npm' | 'mise' | 'aur' | 'script' | 'git' | 'unknown';
   type UpdateRelease = { version: string; minNode: string | null };
   /** What `actions.upgrade()` runs, in order (empty for a channel — currently only aur — that has
    * nothing this process can run itself, e.g. because only the user's AUR helper should touch
-   * pacman's files); the prefix to check for write access first (`null` for brew and aur, which
-   * own their own permissions); and the channel-appropriate command to show the user, either
+   * pacman's files); the prefix to check for write access first (`null` for brew, aur and script,
+   * which own their own permissions); and the channel-appropriate command to show the user, either
    * because that prefix isn't writable, or unconditionally when `steps` is empty (`null` only
-   * when, as for brew, it never needs to be shown either way). */
+   * when, as for brew and script, it never needs to be shown either way). */
   type UpgradePlan = {
     steps: { cmd: string; args: string[] }[];
     prefix: string | null;
@@ -708,6 +708,7 @@ declare global {
     const brew: () => Promise<UpdateRelease | null>;
     const mise: () => Promise<UpdateRelease | null>;
     const aur: () => Promise<UpdateRelease | null>;
+    const script: () => Promise<UpdateRelease | null>;
   }
 
   // ── the sandbox ───────────────────────────────────────────────────────────────────────

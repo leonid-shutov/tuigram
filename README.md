@@ -6,14 +6,18 @@ A lightweight, terminal-based Telegram client written in **Node.js** with Vim-fl
 
 ## Install
 
-The quickest way, on Linux or macOS. It installs [mise](https://mise.jdx.dev), then tuigram
-with it:
+The quickest way, on Linux or macOS:
 
 ```sh
-curl -fsSL https://mise.run/$(basename "$SHELL") | sh && ~/.local/bin/mise use -g node@26 npm:tuigram
+curl -fsSL https://raw.githubusercontent.com/leonid-shutov/tuigram/master/install.sh | bash
 ```
 
-Then open a new terminal.
+It needs nothing installed beforehand. tuigram and a Node.js of its own (kept apart from any
+other Node.js on your machine) go in `~/.local/lib/tuigram`, and the `tuigram` command in
+`~/.local/bin`, which is added to your shell's `PATH` if it isn't there yet. Then open a new
+terminal. `tuigram upgrade` updates both later. To remove it:
+`rm -rf ~/.local/lib/tuigram ~/.local/bin/tuigram` (your session and settings are elsewhere, see
+[Files](#files)). Run it with `bash -s -- --help` for the options.
 
 or with Homebrew:
 
@@ -149,7 +153,7 @@ Optional, and read from `$XDG_CONFIG_HOME/tuigram/config.json`:
 | `hints`         | `true`      | `true`, `false` — set to false to hide the key hint bar and reclaim its row                                                                                                                    |
 | `receipt`       | `monkey`    | `monkey`, `tick` — what heads the bar beside your messages the other side hasn't seen; `tick` is a plain ✓                                                                                     |
 | `proxy`         | _(none)_    | a proxy URL — `socks5://`, `socks4://`, `http://`/`https://`, or a `t.me/proxy?...` MTProxy link; connects directly if unset                                                                   |
-| `updateCheck`   | `true`      | `true`, `false` — check registry.npmjs.org (npm/mise) or the tap's formula (brew) at startup; skipped when `proxy` is set                                                                      |
+| `updateCheck`   | `true`      | `true`, `false` — check registry.npmjs.org (installer/npm/mise) or the tap's formula (brew) at startup; skipped when `proxy` is set                                                            |
 
 `daylight` is the light theme. `ascii-terminal` draws its borders out of `+`, `-` and `|` for fonts
 without box-drawing glyphs. Unknown keys and invalid values are ignored — each falls back to its
