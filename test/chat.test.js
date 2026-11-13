@@ -6,11 +6,6 @@ const { setTimeout: sleep } = require('node:timers/promises');
 const { createTelegram } = require('./telegram.js');
 const { boot } = require('./app.js');
 
-const openFirstChat = async (app) => {
-  await app.waitForText('Ann');
-  app.press('RETURN');
-};
-
 describe('chat', () => {
   let telegram;
   let ann;
@@ -31,7 +26,7 @@ describe('chat', () => {
       telegram.message(ann, 'hey!');
       telegram.message(ann, 'see you at 5');
       app = await boot({ telegram });
-      await openFirstChat(app);
+      await app.openFirstChat({ selected: 'hey!' });
     });
 
     it('shows its history, read and unread', async () => {
@@ -61,8 +56,7 @@ describe('chat', () => {
       for (let i = 1; i <= 100; i++) telegram.message(ann, `message ${i}`);
       telegram.read(ann);
       app = await boot({ telegram });
-      await openFirstChat(app);
-      await app.waitForText('message 100');
+      await app.openFirstChat({ selected: 'message 100' });
     });
 
     it('opens at the newest message', async () => {
@@ -112,8 +106,7 @@ describe('chat', () => {
       telegram.message(ann, 'hey!');
       telegram.message(ann, 'see you at 5');
       app = await boot({ telegram });
-      await openFirstChat(app);
-      await app.waitForText('hey!');
+      await app.openFirstChat({ selected: 'hey!' });
     });
 
     it('shows a message arriving in it, without a notification', async () => {

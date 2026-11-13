@@ -22,9 +22,7 @@ describe('sending', () => {
     telegram.message(ann, 'see you at 5');
     telegram.read(ann);
     app = await boot({ telegram });
-    await app.waitForText('Ann');
-    app.press('RETURN');
-    await app.waitForText('see you at 5');
+    await app.openFirstChat({ selected: 'see you at 5' });
   });
 
   afterEach(async () => {
@@ -38,7 +36,12 @@ describe('sending', () => {
     await app.type('on my way');
     app.press('RETURN');
 
-    assert.deepStrictEqual(await sentToAnn('on my way'), { text: 'on my way', out: true, replyTo: null });
+    assert.deepStrictEqual(await sentToAnn('on my way'), {
+      text: 'on my way',
+      out: true,
+      replyTo: null,
+      forwardedFrom: null,
+    });
     const frame = await app.waitForText('on my way');
     assert.ok(frame.includes('Type a message...'), frame);
   });
@@ -49,7 +52,12 @@ describe('sending', () => {
     await app.type('on my way');
     app.press('RETURN');
 
-    assert.deepStrictEqual(await sentToAnn('on my way'), { text: 'on my way', out: true, replyTo: 'hey!' });
+    assert.deepStrictEqual(await sentToAnn('on my way'), {
+      text: 'on my way',
+      out: true,
+      replyTo: 'hey!',
+      forwardedFrom: null,
+    });
     app.press('2', { meta: true });
     const sent = await app.focused();
     assert.ok(sent.includes('hey!'), sent);

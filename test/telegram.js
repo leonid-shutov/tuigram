@@ -36,6 +36,8 @@ const createTelegram = async () => {
   const chats = new Map();
   // Each chat's read position: the id of the newest message the account has read in it.
   const readUpTo = new Map();
+  // Each chat's deleted messages, in the order they went: `{ message, forEveryone }`.
+  const deletions = new Map();
   const unanswered = [];
   let callCount = 0;
   let nextUserId = 100;
@@ -43,6 +45,8 @@ const createTelegram = async () => {
   // Signed in, or mtcute drops every update (docs/MTCUTE_BUGS.md).
   await client.prepare();
   await client.storage.self.store({ userId: SELF_ID, isBot: false, isPremium: false, usernames: [] });
+  // Known to the stub too, so an update about the account's own message can name its sender.
+  await client.registerPeers(self);
 
   const allUsers = () => [...users.values()];
   const historyOf = (userId) => chats.get(userId) ?? [];
@@ -56,7 +60,8 @@ const createTelegram = async () => {
   };
 
   // `replyTo` is the id of the message it replies to, in the same chat.
-  const addMessage = (userId, text, { out = false, replyTo = null } = {}) => {
+  // `forwardedFrom` is the original's header, when it is a forwarded copy.
+  const addMessage = (userId, text, { out = false, replyTo = null, forwardedFrom = null } = {}) => {
     const message = {
       _: 'message',
       id: client.getNextMessageId(),
@@ -66,6 +71,7 @@ const createTelegram = async () => {
       date: client.getNextDate(),
       message: text,
       replyTo: replyTo === null ? undefined : { _: 'messageReplyHeader', replyToMsgId: replyTo },
+      fwdFrom: forwardedFrom ?? undefined,
     };
     if (chats.has(userId)) chats.get(userId).push(message);
     else chats.set(userId, [message]);
@@ -99,7 +105,9 @@ const createTelegram = async () => {
     'messages.getDialogFilters': () => ({ _: 'messages.dialogFilters', filters: [] }),
     // Every dialog fits on the first page, so any later page (one with an offset) is empty.
     'messages.getDialogs': ({ offsetId }) => {
-      const page = offsetId === 0 ? [...chats.keys()].toSorted((a, b) => lastOf(b).id - lastOf(a).id) : [];
+      // A chat whose every message was deleted drops out of the list, as on Telegram.
+      const listed = [...chats.keys()].filter((userId) => historyOf(userId).length > 0);
+      const page = offsetId === 0 ? listed.toSorted((a, b) => lastOf(b).id - lastOf(a).id) : [];
       return {
         _: 'messages.dialogs',
         dialogs: page.map(dialogOf),
@@ -126,6 +134,41 @@ const createTelegram = async () => {
         pts: client.getNextPts(),
         ptsCount: 1,
       };
+    },
+    'messages.editMessage': ({ peer, id, message: text }) => {
+      const edited = historyOf(peer.userId).find((message) => message.id === id);
+      edited.message = text;
+      edited.editDate = client.getNextDate();
+      const update = { _: 'updateEditMessage', message: edited, pts: client.getNextPts(), ptsCount: 1 };
+      return client.createStubUpdates({ updates: [update], peers: [peer.userId, SELF_ID] });
+    },
+    // No chat in the request: in private chats a message id is unique to the account. `revoke`
+    // deletes it for the other side too.
+    'messages.deleteMessages': ({ id: ids, revoke }) => {
+      for (const [userId, history] of chats) {
+        const gone = history.filter((message) => ids.includes(message.id));
+        if (gone.length === 0) continue;
+        chats.set(
+          userId,
+          history.filter((message) => !ids.includes(message.id)),
+        );
+        const log = deletions.get(userId) ?? [];
+        deletions.set(userId, [...log, ...gone.map((message) => ({ message, forEveryone: Boolean(revoke) }))]);
+      }
+      return { _: 'messages.affectedMessages', pts: client.getNextPts(0, ids.length), ptsCount: ids.length };
+    },
+    // Telegram answers with a new message in the target chat for each one forwarded, carrying the
+    // original's sender and date, unless `dropAuthor` asks for a plain copy.
+    'messages.forwardMessages': ({ fromPeer, toPeer, id: ids, dropAuthor }) => {
+      const originals = historyOf(fromPeer.userId).filter((message) => ids.includes(message.id));
+      const updates = originals.map((original) => {
+        const header = { _: 'messageFwdHeader', fromId: original.fromId, date: original.date };
+        const forwardedFrom = dropAuthor ? null : header;
+        const message = addMessage(toPeer.userId, original.message, { out: true, forwardedFrom });
+        return { _: 'updateNewMessage', message, pts: client.getNextPts(), ptsCount: 1 };
+      });
+      const senders = originals.map((original) => original.fromId.userId);
+      return client.createStubUpdates({ updates, peers: [toPeer.userId, SELF_ID, ...senders] });
     },
     'messages.readHistory': ({ peer, maxId }) => {
       markRead(peer.userId, maxId);
@@ -160,15 +203,20 @@ const createTelegram = async () => {
 
     message: (userId, text, options) => void addMessage(userId, text, options),
 
+    // The chat's deleted messages, in the order they went, and whether for the other side too.
+    deleted: (userId) =>
+      (deletions.get(userId) ?? []).map(({ message, forEveryone }) => ({ text: message.message, forEveryone })),
+
     // The chat as Telegram has it, oldest first: each message's text, whether the account sent it,
-    // and the text of the message it replies to.
+    // the text of the message it replies to, and whose message it is a forward of.
     history: (userId) => {
       const history = historyOf(userId);
       const textOf = (id) => history.find((message) => message.id === id)?.message ?? null;
-      return history.map(({ message, out, replyTo }) => ({
+      return history.map(({ message, out, replyTo, fwdFrom }) => ({
         text: message,
         out,
         replyTo: replyTo === undefined ? null : textOf(replyTo.replyToMsgId),
+        forwardedFrom: fwdFrom === undefined ? null : users.get(fwdFrom.fromId.userId).firstName,
       }));
     },
 

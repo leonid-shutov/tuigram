@@ -71,13 +71,13 @@ const boot = async ({ telegram, width = 80, height = 24, env = {} }) => {
     return terminal.setup.captureCharFrame();
   };
 
-  // Renders until `check(frame)` holds, so the app keeps running as it would on screen; throws
+  // Renders until `check(frame)` holds (it may be async), so the app keeps running as it would on screen; throws
   // with the last frame and the log after a few seconds.
   const until = async (check, what) => {
     const deadline = Date.now() + WAIT_MS;
     for (;;) {
       const current = await frame();
-      if (check(current)) return current;
+      if (await check(current)) return current;
       if (Date.now() > deadline) throw new Error(`${what}:\n${current}\nlog:\n${logs.join('\n')}`);
       await sleep(POLL_MS);
     }
@@ -93,7 +93,7 @@ const boot = async ({ telegram, width = 80, height = 24, env = {} }) => {
 
     waitForFrame: (predicate) => until(predicate, 'frame never matched'),
     waitForText: (text) => until((current) => current.includes(text), `frame never showed ${JSON.stringify(text)}`),
-    // For what isn't on screen, such as the fake Telegram's state.
+    // For what the frame doesn't show, such as the fake Telegram's state or `app.focused()`.
     waitFor: async (condition) => {
       await until(() => condition(), 'condition never held');
     },
@@ -104,6 +104,26 @@ const boot = async ({ telegram, width = 80, height = 24, env = {} }) => {
       await terminal.setup.renderOnce();
       const element = terminal.setup.renderer.currentFocusedRenderable;
       return element === null ? null : textIn(element).join('\n');
+    },
+    // Until the focused element shows `text`: in a chat, until that message is the selected one.
+    waitForFocused: (text) =>
+      until(
+        async () => {
+          const focused = await app.focused();
+          return focused === text;
+        },
+        `focus never reached ${JSON.stringify(text)}`,
+      ),
+    // Opens the first chat in the chat list with Enter, once the list has one, and waits until
+    // `selected` is the selected message: the chat itself is open, not just its preview on screen.
+    // Which message that is depends on the chat: its first unread one, or else its newest.
+    openFirstChat: async ({ selected }) => {
+      await until(async () => {
+        const row = await app.selectedChat();
+        return row !== null;
+      }, 'the chat list never showed a chat');
+      app.press('RETURN');
+      await app.waitForFocused(selected);
     },
     // The selected chat's row in the chat list, its first line as shown: emoji, name, unread count.
     selectedChat: async () => {

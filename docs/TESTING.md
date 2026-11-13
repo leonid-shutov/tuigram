@@ -51,15 +51,13 @@ it('notifies about a message arriving in another chat', async () => {
   const bob = await telegram.user({ firstName: 'Bob' });
   telegram.message(bob, 'lunch tomorrow?');
   telegram.message(ann, 'hey!');
-  telegram.message(ann, 'see you at 5'); // the newest: Ann's chat is first, and selected
+  telegram.message(ann, 'see you at 5'); // the newest message: Ann's chat is first in the list
 
-  // 2. The app, started on it.
+  // 2. The app, started on it, with Ann's chat open at its first unread message.
   app = await boot({ telegram });
+  await app.openFirstChat({ selected: 'hey!' });
 
-  // 3. What the user does, and what Telegram pushes.
-  await app.waitForText('Ann');
-  app.press('RETURN');
-  await app.waitForText('hey!'); // only in the open chat: the list shows each chat's last message
+  // 3. What Telegram pushes, or what the user does.
   telegram.receive(bob, 'still on?');
 
   // 4. What they see, and what happened outside the app.
@@ -69,7 +67,9 @@ it('notifies about a message arriving in another chat', async () => {
 ```
 
 `test/chat.test.js` sets up the account in a `beforeEach` for a whole `describe`; either way
-works.
+works. Write the setup out in each `beforeEach`, call by call, rather than through a helper that
+takes the messages as data: one test's setup should read on its own. Which chat `openFirstChat`
+opens follows from the order the messages were added in, so say so on the line that decides it.
 
 ## Setting up the account: `createTelegram()`
 
@@ -85,12 +85,13 @@ should find on startup before calling `boot`:
 
 While the app runs:
 
-| Call                             | Effect                                                                                                                                                                                               |
-| -------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `telegram.receive(userId, text)` | A message from them arriving now, pushed the way Telegram pushes one.                                                                                                                                |
-| `telegram.history(userId)`       | The chat as Telegram has it, oldest first, as `{ text, out, replyTo }`: whether the account sent it, and the text of the message it replies to. A message the app sent is here once Telegram has it. |
-| `telegram.unreadCount(userId)`   | The chat's unread count as Telegram has it: it drops when the app marks the chat read.                                                                                                               |
-| `telegram.unanswered`            | The methods the app called that the fake has no answer for.                                                                                                                                          |
+| Call                             | Effect                                                                                                                                                                                                                                                                      |
+| -------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `telegram.receive(userId, text)` | A message from them arriving now, pushed the way Telegram pushes one.                                                                                                                                                                                                       |
+| `telegram.history(userId)`       | The chat as Telegram has it, oldest first, as `{ text, out, replyTo, forwardedFrom }`: whether the account sent it, the text of the message it replies to, and the first name of whoever's message it is a forward of. A message the app sent is here once Telegram has it. |
+| `telegram.deleted(userId)`       | The chat's deleted messages, in the order they went, as `{ text, forEveryone }`: whether they went for the other side too.                                                                                                                                                  |
+| `telegram.unreadCount(userId)`   | The chat's unread count as Telegram has it: it drops when the app marks the chat read.                                                                                                                                                                                      |
+| `telegram.unanswered`            | The methods the app called that the fake has no answer for.                                                                                                                                                                                                                 |
 
 The fake doesn't record the calls the app makes, on purpose: see "Asserting" below.
 
@@ -106,21 +107,23 @@ loaded. It rejects, with everything the app logged, if the app exits or crashes 
 
 The handle it resolves to:
 
-| Member                              | What it does                                                                                                                                                  |
-| ----------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `await app.waitForText(text)`       | Resolves to the frame once it contains `text`. Throws after 3 s, with the last frame and the log.                                                             |
-| `await app.waitForFrame(predicate)` | The same, for any condition on the frame.                                                                                                                     |
-| `await app.waitFor(condition)`      | Waits for something that isn't on screen, such as `telegram.unreadCount(ann) === 0`.                                                                          |
-| `await app.focused()`               | The text in the focused element. In a chat, that's the selected message, as written (not as wrapped on screen).                                               |
-| `await app.selectedChat()`          | The chat list's selected row, its first line as shown: emoji, name, unread count. Match the name with `/\bAnn\b/`.                                            |
-| `await app.frame()`                 | The screen now, as text.                                                                                                                                      |
-| `app.press(key, modifiers)`         | One key: a character (`'j'`), or a name from opentui's `KeyCodes` (`'RETURN'`, `'ESCAPE'`, `'TAB'`, `'ARROW_UP'`, …). `modifiers` is `{ ctrl, shift, meta }`. |
-| `await app.type(text)`              | Types `text`, one key at a time.                                                                                                                              |
-| `app.spawned`                       | The programs the app started, as `{ cmd, args }`. None of them ran.                                                                                           |
-| `app.fetched`                       | The URLs it requested. Every request failed, as with no network.                                                                                              |
-| `app.logs`                          | What the app logged, wrote to stderr, or reported as a crash.                                                                                                 |
-| `app.sandbox`                       | The app's globals (`store`, `ui`, `actions`, …). Prefer what's on screen.                                                                                     |
-| `await app.stop()`                  | Quits the way the app does (`Crash.exit`), waits for it, deletes its home.                                                                                    |
+| Member                                  | What it does                                                                                                                                                                                                 |
+| --------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `await app.waitForText(text)`           | Resolves to the frame once it contains `text`. Throws after 3 s, with the last frame and the log.                                                                                                            |
+| `await app.waitForFrame(predicate)`     | The same, for any condition on the frame.                                                                                                                                                                    |
+| `await app.waitFor(condition)`          | Waits for something that isn't on screen, such as `telegram.unreadCount(ann) === 0`.                                                                                                                         |
+| `await app.focused()`                   | The text in the focused element. In a chat, that's the selected message, as written (not as wrapped on screen).                                                                                              |
+| `await app.waitForFocused(text)`        | Waits until the focused element shows `text`: in a chat, until that message is the selected one.                                                                                                             |
+| `await app.openFirstChat({ selected })` | Opens the first chat in the chat list with Enter and waits until `selected` is the selected message: the chat's first unread message, or else its newest. The first chat is the one with the newest message. |
+| `await app.selectedChat()`              | The chat list's selected row, its first line as shown: emoji, name, unread count. Match the name with `/\bAnn\b/`.                                                                                           |
+| `await app.frame()`                     | The screen now, as text.                                                                                                                                                                                     |
+| `app.press(key, modifiers)`             | One key: a character (`'j'`), or a name from opentui's `KeyCodes` (`'RETURN'`, `'ESCAPE'`, `'TAB'`, `'ARROW_UP'`, …). `modifiers` is `{ ctrl, shift, meta }`.                                                |
+| `await app.type(text)`                  | Types `text`, one key at a time.                                                                                                                                                                             |
+| `app.spawned`                           | The programs the app started, as `{ cmd, args }`. None of them ran.                                                                                                                                          |
+| `app.fetched`                           | The URLs it requested. Every request failed, as with no network.                                                                                                                                             |
+| `app.logs`                              | What the app logged, wrote to stderr, or reported as a crash.                                                                                                                                                |
+| `app.sandbox`                           | The app's globals (`store`, `ui`, `actions`, …). Prefer what's on screen.                                                                                                                                    |
+| `await app.stop()`                      | Quits the way the app does (`Crash.exit`), waits for it, deletes its home.                                                                                                                                   |
 
 Always `stop()` the app, in an `afterEach`, so its renderer and Telegram client are closed and
 its home is deleted.
@@ -200,6 +203,11 @@ When the app starts calling a Telegram method the fake does not know, the call f
 - **`process.exit` doesn't stop the app's code.** In a test it ends the app, so `stop()` and
   `boot()` notice, but unlike the real one it returns, and whatever follows the call still runs.
   Don't look at the app after it has exited.
+- **Text on screen can be in more than one place.** A chat's last message is also its preview in
+  the chat list, so `waitForText` on it can return before the chat itself has loaded, and keys
+  pressed next go to an empty chat. To open a chat, use `app.openFirstChat({ selected })`, which
+  waits for the message to be the selected one; after that, `app.waitForFocused(text)` does the
+  same for any message.
 - **Nothing is spawned.** A test that opens a file, a link or the editor sees the command in
   `app.spawned`, and the program "exits" with 0 on the next turn.
 - **The headless renderer is not a real terminal.** A few timing problems only show up in a real
