@@ -18,6 +18,8 @@
   part of it; tuigram comes back when the editor closes.
 - `space` on a message opens a menu of what you can do with it — only what applies to that message,
   each with its key beside it. Pick one with `j` / `k` and `Enter`, or press its key right there.
+- A message too long for the pane shows a scrollbar on its right border: how much there is and
+  where you are in it.
 - An installer that needs nothing but `curl`, on Linux and macOS:
   `curl -fsSL https://raw.githubusercontent.com/leonid-shutov/tuigram/master/install.sh | bash`.
   It brings its own Node.js, kept apart from any other, in `~/.local/lib/tuigram`. `tuigram upgrade`
@@ -31,6 +33,12 @@
 - The 🙈 on the unseen bar now sits on top of the line instead of hanging off a corner.
 - The emoji a chat is given at random comes from a larger set, so most chats show a different one
   once, after this update.
+- Key hints show arrows (`↑` `↓` `←` `→`) where a command has them, rather than the vim letter, so
+  they read without knowing vim. `j` / `k` / `h` / `l` work as before.
+- A message too tall for the pane says "shift+↓/↑ scroll" on its border only while it is selected,
+  in place of "hold shift to scroll" on every such message.
+- Moving back to a long message you scrolled through keeps your place in it instead of jumping to
+  its first line.
 
 ### Fixed
 
