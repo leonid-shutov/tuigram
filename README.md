@@ -14,12 +14,9 @@ The quickest way, on Linux or macOS:
 curl -fsSL https://raw.githubusercontent.com/leonid-shutov/tuigram/master/install.sh | bash
 ```
 
-It needs nothing installed beforehand. tuigram and a Node.js of its own (kept apart from any
-other Node.js on your machine) go in `~/.local/lib/tuigram`, and the `tuigram` command in
-`~/.local/bin`, which is added to your shell's `PATH` if it isn't there yet. Then open a new
-terminal. `tuigram upgrade` updates both later. To remove it:
-`rm -rf ~/.local/lib/tuigram ~/.local/bin/tuigram` (your session and settings are elsewhere, see
-[Files](#files)). Run it with `bash -s -- --help` for the options.
+It needs nothing preinstalled: it brings its own Node.js into `~/.local/lib/tuigram` and puts
+`tuigram` in `~/.local/bin`. Open a new terminal afterwards. `tuigram upgrade` updates it;
+`rm -rf ~/.local/lib/tuigram ~/.local/bin/tuigram` removes it.
 
 or with Homebrew:
 
