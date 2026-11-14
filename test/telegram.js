@@ -23,13 +23,15 @@ const chatIdOf = (inputPeer) => {
   return inputPeer.userId;
 };
 
-const tlUser = ({ id, firstName, lastName, self = false }) => ({
+// `online` is online for the next hour; otherwise no status, which mtcute reads as long ago.
+const tlUser = ({ id, firstName, lastName, self = false, online = false }) => ({
   _: 'user',
   id,
   self,
   accessHash: Long.fromNumber(id),
   firstName,
   lastName,
+  status: online ? { _: 'userStatusOnline', expires: Math.floor(Date.now() / 1000) + 3600 } : undefined,
 });
 
 const tlGroup = ({ id, title, date }) => ({
@@ -94,7 +96,9 @@ const createTelegram = async ({ name = 'Me' } = {}) => {
   const unanswered = [];
   let callCount = 0;
   let nextUserId = 100;
-  let nextGroupId = 100;
+  // Apart from the users': mtcute caches peers by raw id, so a group would shadow the user with
+  // its number, and that private chat would open onto the group (docs/MTCUTE_BUGS.md).
+  let nextGroupId = 100_000;
   let nextPhotoId = 100;
 
   // Signed in, or mtcute drops every update (docs/MTCUTE_BUGS.md).
@@ -276,8 +280,8 @@ const createTelegram = async ({ name = 'Me' } = {}) => {
     /** The chat with yourself: Saved Messages. */
     self: SELF_ID,
 
-    user: async ({ firstName, lastName }) => {
-      const user = tlUser({ id: nextUserId++, firstName, lastName });
+    user: async ({ firstName, lastName, online = false }) => {
+      const user = tlUser({ id: nextUserId++, firstName, lastName, online });
       users.set(user.id, user);
       await client.registerPeers(user);
       return user.id;
@@ -322,9 +326,21 @@ const createTelegram = async ({ name = 'Me' } = {}) => {
     // The chat's unread count as Telegram has it: what the app has marked read, it has told Telegram.
     unreadCount: (chatId) => unreadIn(chatId),
 
-    receive: (chatId, text, { from = chatId } = {}) => {
-      const message = addMessage(chatId, text, { from });
+    // `photo` attaches one, as for `message`.
+    receive: (chatId, text, { from = chatId, photo = null } = {}) => {
+      const message = addMessage(chatId, text, { from, photo });
       const update = { _: 'updateNewMessage', message, pts: client.getNextPts(), ptsCount: 1 };
+      const peers = [...new Set([chatId, from])];
+      client.onServerUpdate.emit(client.createStubUpdates({ updates: [update], peers }));
+    },
+
+    // `from` starts typing in the chat; their next message, or a quiet spell, ends it.
+    typing: (chatId, { from = chatId } = {}) => {
+      const action = { _: 'sendMessageTypingAction' };
+      const update =
+        chatId > 0
+          ? { _: 'updateUserTyping', userId: from, action }
+          : { _: 'updateChatUserTyping', chatId: -chatId, fromId: peerUser(from), action };
       const peers = [...new Set([chatId, from])];
       client.onServerUpdate.emit(client.createStubUpdates({ updates: [update], peers }));
     },

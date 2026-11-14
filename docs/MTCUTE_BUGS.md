@@ -150,6 +150,37 @@ responders resolve as microtasks, that loop never yields to the event loop, so n
 Return after yielding a `messages.dialogs` response, or a page shorter than the requested
 `limit`; break if `offsetId`/`offsetPeer` did not advance.
 
+## Bug: the peer cache is keyed by raw id, so a basic group shadows the user with the same number
+
+`PeersService.store()` (`core/highlevel/storage/service/peers.js`,
+`grep -n "_cache.set(peer.id" peers.js`) caches what it stores under the TL object's own `id`,
+which is unmarked: user 103 and basic group 103 (marked `-103`) both land at key `103`.
+`getById()` looks up the **marked** id, so `resolvePeer(103)` hits whichever of the two was
+stored last. Store the group second and the user resolves to `inputPeerChat 103`: opening the
+private chat fetches the group's history, and sending in it would post to the group. Lookups by
+the marked group id (`-103`) miss the cache and read storage, which is keyed correctly, so only
+the user side breaks. Channels are cached the same way (raw id, looked up as `-100…`).
+
+On real Telegram this needs a user and a basic group (or channel) with the same raw id in one
+account's peers: rare, but nothing rules it out. In the fake it is the default, since users and
+groups were both numbered from 100: the demo's Mom (user 103) opened onto Book Club (group 103).
+
+```js
+const t = await createTelegram();
+const user = await t.user({ firstName: 'A' }); // 100
+await t.group({ title: 'G' }); // 100, marked -100
+await new t.facet.Client().resolvePeer(user); // { _: 'inputPeerChat', chatId: 100 }
+```
+
+### Workaround
+
+The fake numbers groups from a range users never reach (`nextGroupId` in test/telegram.js). The
+app has none: it resolves through `resolvePeer` like any client.
+
+### Suggested upstream fix
+
+Key the cache by `dto.id` (the marked id), the same key storage and `getById()` use.
+
 ## Checked, and fine
 
 - `new TelegramClient({ client: stub })` (the `client` option of `TelegramClientOptions`) puts

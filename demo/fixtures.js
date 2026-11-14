@@ -11,8 +11,8 @@ const people = {
   odry: 'Odry Fenn',
   miru: 'Miru Tassek',
   jarn: 'Jarn Belko',
-  halva: 'Halva Dorn',
-  brem: 'Brem Ostal',
+  sis: 'Sis',
+  hanna: 'Hanna',
   landlord: 'Landlord',
   dentist: 'Dental Clinic',
   quen: 'Quen',
@@ -28,24 +28,25 @@ const people = {
   uve: 'Uve Grellan',
 };
 
-// The sender `me` is the account itself; `photo` attaches demo/photo.jpg (1280x853 as sent).
+// The sender `me` is the account itself. A third element attaches a photo by its name in
+// demo/account.js: 'chart' (demo/photo.jpg) or 'aquarium' (demo/aquarium.jpg).
 // tuigram's list preview is the last message's text verbatim, so each chat ends on its joke.
 //
 // The order is the chat list's, top to bottom: the first chat is the newest (or pinned).
 // `with` names the other side of a private chat ('me': Saved Messages); a group has a `title`
 // instead. `emoji` is the chat's glyph as if picked with `e`; without one the app assigns its own.
 // `unread` is how many of the last lines the account hasn't read; the other side has read all of
-// the account's own.
+// the account's own. `yesterday` is how many of the first lines were sent the day before.
 const chats = [
   {
     title: 'Dev Team',
-    emoji: '📊',
+    emoji: '💻',
     pinned: true,
     lines: [
       ['zelka', 'are you seriously reading this in a terminal'],
       ['me', 'it has vim keys and fifteen themes'],
       ['trest', 'he says that like it is a personality'],
-      ['zelka', 'fine. here is the q3 chart, let us watch it try', 'photo'],
+      ['zelka', 'fine. here is the q3 chart, let us watch it try', 'chart'],
       [
         'me',
         'the stripped thumbnail drew before you finished sending it, and the 320px one ' +
@@ -57,7 +58,17 @@ const chats = [
     ],
   },
   {
+    with: 'hanna',
+    emoji: '💕',
+    lines: [
+      ['hanna', 'it kept coming back to the glass', 'aquarium'],
+      ['me', 'how close did it get?'],
+      ['hanna', 'close enough to see it breathing'],
+    ],
+  },
+  {
     with: 'vaneli',
+    emoji: '☕',
     lines: [
       ['vaneli', 'are we still on for tomorrow?'],
       ['me', 'yes. 10am'],
@@ -68,18 +79,18 @@ const chats = [
   },
   {
     with: 'mom',
-    emoji: '🐞',
+    emoji: '👩',
     unread: 1,
     lines: [
       ['mom', 'why is your screen always black'],
       ['me', 'it is a terminal, mom'],
       ['mom', 'it looks like the computer is broken'],
-      ['mom', 'call me when you fix it ❤'],
+      ['mom', 'call me when you fix it ❤️'],
     ],
   },
   {
     title: 'Design Guild',
-    emoji: '📗',
+    emoji: '🎨',
     unread: 2,
     lines: [
       ['odry', 'new mockups are in the drive'],
@@ -90,8 +101,29 @@ const chats = [
     ],
   },
   {
+    title: 'Family',
+    emoji: '🏠',
+    unread: 1,
+    yesterday: 6,
+    lines: [
+      ['mom', 'dinner on sunday?'],
+      ['dad', 'i will make the lasagna'],
+      ['sis', 'i can bring dessert'],
+      ['mom', 'perfect. 6pm'],
+      ['dad', 'has anyone seen the spare garage key'],
+      ['mom', 'blue drawer, where it always is'],
+      ['mom', 'good luck today sweetie ❤️'],
+      ['sis', 'thanks. so nervous'],
+      ['sis', 'guess who passed her driving test 🚗'],
+      ['mom', '🎉🎉🎉'],
+      ['dad', 'proud of you 👍'],
+      ['me', 'i am reading this from a terminal btw'],
+      ['dad', 'nobody asked'],
+    ],
+  },
+  {
     with: 'jarn',
-    emoji: '🌹',
+    emoji: '👀',
     unread: 2,
     lines: [
       ['jarn', 'lol did you see that'],
@@ -100,7 +132,7 @@ const chats = [
   },
   {
     with: 'zelka',
-    emoji: '🍬',
+    emoji: '🙄',
     lines: [
       ['zelka', 'screenshot the client for the readme already'],
       ['me', 'i am mocking the data first'],
@@ -109,7 +141,7 @@ const chats = [
   },
   {
     with: 'bot',
-    emoji: '🐝',
+    emoji: '🤖',
     unread: 3,
     muted: true,
     lines: [
@@ -120,7 +152,7 @@ const chats = [
   },
   {
     title: 'Book Club',
-    emoji: '🍸',
+    emoji: '📚',
     unread: 3,
     lines: [
       ['nissa', 'did anyone actually finish it'],
@@ -130,7 +162,7 @@ const chats = [
   },
   {
     with: 'me',
-    emoji: '🏉',
+    emoji: '📌',
     lines: [
       ['me', 'https://opentui.dev'],
       ['me', 'bump the homebrew formula after tagging'],
@@ -139,7 +171,7 @@ const chats = [
   },
   {
     with: 'trest',
-    emoji: '💺',
+    emoji: '🤓',
     lines: [
       ['trest', 'did you rebind о and л as well'],
       ['me', 'cyrillic layout. i am not switching back and forth to scroll'],
@@ -147,18 +179,8 @@ const chats = [
     ],
   },
   {
-    title: 'Wedding Sept 20',
-    emoji: '🍷',
-    lines: [
-      ['halva', 'final headcount by friday. chicken or fish'],
-      ['brem', 'put me down for fish'],
-      ['me', 'i am reading this from a terminal btw'],
-      ['brem', 'nobody asked'],
-    ],
-  },
-  {
     with: 'dentist',
-    emoji: '🎺',
+    emoji: '🦷',
     unread: 1,
     lines: [
       ['dentist', 'reminder: tuesday at 14:00'],
@@ -167,7 +189,7 @@ const chats = [
   },
   {
     with: 'quen',
-    emoji: '🚐',
+    emoji: '📷',
     lines: [
       ['quen', 'send me that photo'],
       ['me', 'which one'],
@@ -176,7 +198,7 @@ const chats = [
   },
   {
     title: 'Class of 2016',
-    emoji: '🔱',
+    emoji: '🎓',
     unread: 3,
     lines: [
       ['orla', 'ten years already. reunion?'],
@@ -186,7 +208,7 @@ const chats = [
   },
   {
     with: 'landlord',
-    emoji: '🎃',
+    emoji: '🔑',
     muted: true,
     lines: [
       ['landlord', 'the plumber comes tuesday between 9 and 12'],
@@ -196,7 +218,7 @@ const chats = [
   },
   {
     title: 'Staircase B',
-    emoji: '🌲',
+    emoji: '🏢',
     unread: 3,
     muted: true,
     lines: [
@@ -207,7 +229,7 @@ const chats = [
   },
   {
     with: 'dad',
-    emoji: '🍖',
+    emoji: '🧔',
     lines: [
       ['dad', 'your mother says your computer is broken'],
       ['me', 'it is not broken'],
@@ -216,7 +238,7 @@ const chats = [
   },
   {
     with: 'trainer',
-    emoji: '🐟',
+    emoji: '💪',
     unread: 2,
     muted: true,
     lines: [
@@ -226,7 +248,7 @@ const chats = [
   },
   {
     with: 'courier',
-    emoji: '🍙',
+    emoji: '📦',
     unread: 1,
     lines: [
       ['courier', 'left at your door'],
@@ -235,4 +257,7 @@ const chats = [
   },
 ];
 
-module.exports = { people, chats };
+// Who shows as online rather than "last seen": the people the account is talking to right now.
+const online = ['hanna'];
+
+module.exports = { people, chats, online };

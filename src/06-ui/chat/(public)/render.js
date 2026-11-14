@@ -66,5 +66,4 @@ const reconcile = (messages, { outboxUnreadFrom, inboxUnreadFrom, inboxUnreadCou
   }
 
   self.paintDate();
-  self.paintUnreadLeft();
 };

@@ -44,6 +44,12 @@ describe('chat', () => {
       assert.strictEqual(await app.focused(), 'hey!');
     });
 
+    it('points to no news below when it is all on screen', async () => {
+      const frame = await app.waitForText('see you at 5');
+
+      assert.doesNotMatch(frame, /↓ \d+ new/);
+    });
+
     it('marks the chat read, in the chat list and on Telegram', async () => {
       await app.waitFor(() => telegram.unreadCount(ann) === 0);
 
@@ -94,6 +100,28 @@ describe('chat', () => {
       app.press('G');
 
       assert.strictEqual(await app.focused(), 'message 100');
+    });
+  });
+
+  describe('longer than a page, opened on unread messages', () => {
+    beforeEach(async () => {
+      telegram = await createTelegram();
+      ann = await telegram.user({ firstName: 'Ann' });
+      for (let i = 1; i <= 40; i++) telegram.message(ann, `message ${i}`);
+      telegram.read(ann);
+      for (let i = 41; i <= 100; i++) telegram.message(ann, `message ${i}`);
+      app = await boot({ telegram });
+      await app.openFirstChat({ selected: 'message 41' });
+    });
+
+    it('points to the news below the screen, and drops it once it is all read', async () => {
+      const frame = await app.waitForFrame((current) => /↓ \d+ new/.test(current));
+      const below = Number(/↓ (\d+) new/.exec(frame)[1]);
+      assert.ok(below > 0 && below < 59, `${below} of the 59 past the cursor are below the screen`);
+
+      app.press('G');
+
+      await app.waitForFrame((current) => current.includes('message 100') && !/↓ \d+ new/.test(current));
     });
   });
 

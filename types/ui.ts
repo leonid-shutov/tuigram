@@ -258,8 +258,9 @@ declare global {
       /** The newest message id the cursor has reached this visit, album parts included; 0 before it
        * has reached any. Only grows until `open` resets it. */
       readUpTo: number;
-      /** Draw how many messages from `inboxUnreadFrom` on are someone else's and past `readUpTo`
-       * on the bottom border's right, as `Message.inboxUnreadCount` counts them; blank for none. */
+      /** Draw how many messages from `inboxUnreadFrom` on are someone else's, past `readUpTo` and
+       * not fully on screen, on the bottom border's right, as `Message.inboxUnreadCount` counts
+       * them; blank for none. Needs settled layout: run after layout, every frame. */
       paintUnreadLeft(): void;
       /** Derived, recomputed on every read: the cursor's position in `views`, -1 when unset. */
       readonly selectedIndex: number;
