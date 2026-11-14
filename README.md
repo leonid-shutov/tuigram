@@ -1,6 +1,8 @@
 # 📟 tuigram — Telegram Terminal UI Client
 
-A lightweight, terminal-based Telegram client written in **Node.js** with Vim-flavored navigation.
+A lightweight Telegram client for the terminal, built on
+[OpenTUI](https://github.com/anomalyco/opentui) and [mtcute](https://github.com/mtcute/mtcute),
+with Vim-flavored navigation.
 
 ![tuigram in a terminal: a photo in a chat, family messages arriving with desktop notifications, a jump to the family chat with ctrl+p, and a reply sent](docs/demo.gif)
 
