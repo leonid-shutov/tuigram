@@ -1,0 +1,47 @@
+name: Bug report
+description: Something in tuigram doesn't work as it should
+labels: [bug]
+body:
+  - type: textarea
+    id: what
+    attributes:
+      label: What happened
+      description: What you did, what you expected, and what you saw instead. A screenshot helps for anything on screen.
+    validations:
+      required: true
+  - type: input
+    id: version
+    attributes:
+      label: Version
+      description: The output of `tuigram --version`
+      placeholder: 1.5.1
+    validations:
+      required: true
+  - type: dropdown
+    id: install
+    attributes:
+      label: Installed with
+      options:
+        - install script (curl | bash)
+        - Homebrew
+        - mise
+        - npm
+        - a git checkout
+        - something else
+    validations:
+      required: true
+  - type: input
+    id: system
+    attributes:
+      label: OS and terminal
+      placeholder: macOS 26, Ghostty 1.2
+    validations:
+      required: true
+  - type: textarea
+    id: log
+    attributes:
+      label: Log
+      description: >-
+        The relevant part of `~/.local/state/tuigram/tuigram.log` (or `$TUIGRAM_LOG`). Read it for
+        anything private before you paste it.
+      render: text
