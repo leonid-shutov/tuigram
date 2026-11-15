@@ -12,9 +12,7 @@ Check them at https://my.telegram.org.`;
     CONNECTION_API_ID_INVALID: badCredentials,
     PHONE_NUMBER_INVALID: Locale.t('That phone number is not a valid Telegram account.'),
     PHONE_NUMBER_BANNED: Locale.t('That phone number is banned from Telegram.'),
-    AUTH_KEY_UNREGISTERED: Locale.t(
-      'The stored session is no longer valid. Run `tuigram logout` and sign in again.',
-    ),
+    AUTH_KEY_UNREGISTERED: Locale.t('The stored session is no longer valid. Run `tuigram logout` and sign in again.'),
   };
   return messages[error?.text] ?? error?.message ?? String(error);
 };

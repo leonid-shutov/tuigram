@@ -9,9 +9,7 @@
   const isPrivate = !message.isGroup && store.dialogs.find(message.chatId)?.isUser === true;
   /** @type {Record<DeleteScope, string>} */
   const names = {
-    everyone: isPrivate
-      ? Locale.t('Delete for me and %s', message.chatName)
-      : Locale.t('Delete for everyone'),
+    everyone: isPrivate ? Locale.t('Delete for me and %s', message.chatName) : Locale.t('Delete for everyone'),
     me: deleteScopes.length === 1 ? Locale.t('Delete') : Locale.t('Delete for me'),
   };
   ui.choice.open({

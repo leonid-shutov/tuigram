@@ -21,8 +21,7 @@
     /** @param {string} name */
     onPick: (name) => {
       navigation.select('chat');
-      if (ui.chat.selectedMessage?.id !== message.id)
-        return void ui.chat.flashStatus(Locale.t('message is gone'));
+      if (ui.chat.selectedMessage?.id !== message.id) return void ui.chat.flashStatus(Locale.t('message is gone'));
       keymap.commands.message[name].run();
     },
   });

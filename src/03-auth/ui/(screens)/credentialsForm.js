@@ -16,8 +16,7 @@ const instructions = () => [
 ];
 
 /** @returns {string} */
-const invalidKey = () =>
-  Locale.t('That api_id / api_hash did not work — check them and try again.');
+const invalidKey = () => Locale.t('That api_id / api_hash did not work — check them and try again.');
 
 /** @param {string} placeholder */
 const Field = (placeholder) =>
