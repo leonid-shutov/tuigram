@@ -2,6 +2,10 @@
 
 ## [Unreleased]
 
+### Changed
+
+- tuigram starts in about half the time and with about a quarter of the memory it took before.
+
 ## [1.4.0] - 2026-11-15
 
 ### Changed

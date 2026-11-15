@@ -73,7 +73,7 @@ declare global {
     '@mtcute/dispatcher': typeof import('@mtcute/dispatcher');
     '@opentui/keymap': typeof import('@opentui/keymap');
     metautil: typeof import('metautil');
-    'string-width': typeof import('string-width');
+    'string-width': typeof import('string-width').default;
   };
   /** The subset of `config` that reload.js recomputes in place; see [[config.reload]] below. */
   type ConfigSelf = {
