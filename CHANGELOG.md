@@ -2,6 +2,8 @@
 
 ## [Unreleased]
 
+## [1.5.0] - 2026-11-15
+
 ### Changed
 
 - The update notice's keys are now `shift+u` to upgrade and `shift+x` to dismiss, from the chat
@@ -231,7 +233,8 @@ First public release.
 
 Supersedes the `1.0.0-alpha.*` series, which is not itemized here.
 
-[unreleased]: https://github.com/leonid-shutov/tuigram/compare/v1.4.1...HEAD
+[unreleased]: https://github.com/leonid-shutov/tuigram/compare/v1.5.0...HEAD
+[1.5.0]: https://github.com/leonid-shutov/tuigram/compare/v1.4.1...v1.5.0
 [1.4.1]: https://github.com/leonid-shutov/tuigram/compare/v1.4.0...v1.4.1
 [1.4.0]: https://github.com/leonid-shutov/tuigram/compare/v1.3.0...v1.4.0
 [1.3.0]: https://github.com/leonid-shutov/tuigram/compare/v1.2.0...v1.3.0
