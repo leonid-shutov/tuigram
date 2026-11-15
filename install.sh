@@ -337,12 +337,12 @@ main() {
         exit 0
         ;;
       -v | --version)
-        [ $# -ge 2 ] && [ -n "$2" ] || die '--version needs a version, e.g. --version 1.3.0'
+        [ -n "${2-}" ] || die '--version needs a version, e.g. --version 1.3.0'
         requested=${2#v}
         shift 2
         ;;
       --install-dir)
-        [ $# -ge 2 ] && [ -n "$2" ] || die '--install-dir needs a directory'
+        [ -n "${2-}" ] || die '--install-dir needs a directory'
         install_dir=$2
         shift 2
         ;;

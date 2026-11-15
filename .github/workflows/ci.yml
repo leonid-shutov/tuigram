@@ -27,10 +27,12 @@ jobs:
       matrix:
         os: [ubuntu-latest, ubuntu-24.04-arm, macos-latest]
     runs-on: ${{ matrix.os }}
-    env:
-      TUIGRAM_INSTALL_DIR: ${{ runner.temp }}/tuigram
-      TUIGRAM_BIN_DIR: ${{ runner.temp }}/bin
     steps:
+      # The runner context does not exist at job level, so these can't live in a job `env:`.
+      - name: Point the installer at the runner's temp dir
+        run: |
+          echo "TUIGRAM_INSTALL_DIR=$RUNNER_TEMP/tuigram" >> "$GITHUB_ENV"
+          echo "TUIGRAM_BIN_DIR=$RUNNER_TEMP/bin" >> "$GITHUB_ENV"
       - uses: actions/checkout@v7
       - if: runner.os == 'Linux'
         run: shellcheck install.sh
