@@ -1,11 +1,13 @@
-const MAX_WIDTH = 140;
-const MAX_HEIGHT = 48;
+// The app box never grows past `maxWidth`/`maxHeight` (a 0 lifts the cap and follows the
+// terminal); the wrapper centers whatever is left, so a capped app sits in the middle of a
+// wider terminal. Read once at boot, like the rest of the layout — changing the keys needs a
+// restart, same as resizing the terminal itself does.
 const DIALOGS_RATIO = 0.34;
 const DIALOGS_MIN = 22;
 const DIALOGS_DEFAULT_MAX = 34;
 
-const width = Math.min(screen.renderer.width, MAX_WIDTH);
-const height = Math.min(screen.renderer.height, MAX_HEIGHT);
+const width = config.maxWidth === 0 ? screen.renderer.width : Math.min(screen.renderer.width, config.maxWidth);
+const height = config.maxHeight === 0 ? screen.renderer.height : Math.min(screen.renderer.height, config.maxHeight);
 
 const dialogsMax = Math.floor(width / 2);
 const dialogsMin = Math.min(DIALOGS_MIN, dialogsMax);

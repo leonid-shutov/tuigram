@@ -85,6 +85,9 @@ declare global {
     /** Whether the key hint bar occupies the bottom row. */
     hints: boolean;
     receipt: Receipt;
+    /** App box caps, in cells; a 0 lifts the cap and follows the terminal. */
+    maxWidth: number;
+    maxHeight: number;
   };
 
   const config: ConfigSelf & {
@@ -649,7 +652,10 @@ declare global {
 
   type KeymapModule = {
     engine: KeymapEngine;
-    commands: Record<'app' | 'dialogs' | 'folders' | 'chat' | 'prompt' | 'picker' | 'choice' | 'filePicker', Commands> & {
+    commands: Record<
+      'app' | 'dialogs' | 'folders' | 'chat' | 'prompt' | 'picker' | 'choice' | 'filePicker',
+      Commands
+    > & {
       message: MessageCommands;
     };
     /** Bindings by the layer that installs them; the seam a `keys` block in config.json would feed. */

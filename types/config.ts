@@ -91,6 +91,9 @@ export type Source = {
   hints?: boolean;
   /** Defaults to 'monkey'. */
   receipt?: Receipt;
+  /** App box caps, in cells. Defaults to 140x48; a 0 lifts the cap and follows the terminal. */
+  maxWidth?: number;
+  maxHeight?: number;
   /** Proxy URL to connect through, e.g. `socks5://user:pass@host:port`,
    * `http://host:port`, or a `t.me/proxy?...` MTProxy link. Unset connects directly. */
   proxy?: string;
@@ -113,6 +116,8 @@ export type ConfigSchema = {
   hints: ConfigSchemaField<boolean>;
   imageProtocol: ConfigSchemaField<ImageProtocol>;
   receipt: ConfigSchemaField<Receipt>;
+  maxWidth: ConfigSchemaField<number>;
+  maxHeight: ConfigSchemaField<number>;
   proxy: ConfigSchemaField<string | undefined>;
   updateCheck: ConfigSchemaField<boolean>;
 };

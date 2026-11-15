@@ -30,6 +30,16 @@
     hotReload: false, // read once at boot; changing it needs a restart regardless
     validate: (value) => typeof value === 'string' && value.trim() !== '',
   },
+  maxWidth: {
+    default: 140,
+    hotReload: false, // the layout is built once at boot; changing it needs a restart
+    validate: (value) => typeof value === 'number' && Number.isSafeInteger(value) && value >= 0,
+  },
+  maxHeight: {
+    default: 48,
+    hotReload: false, // the layout is built once at boot; changing it needs a restart
+    validate: (value) => typeof value === 'number' && Number.isSafeInteger(value) && value >= 0,
+  },
   updateCheck: {
     default: true,
     hotReload: false, // the check runs once at startup; flipping it later has nothing left to do

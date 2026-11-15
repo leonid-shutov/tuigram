@@ -2,6 +2,12 @@
 
 ## [Unreleased]
 
+### Added
+
+- `maxWidth` / `maxHeight` in `config.json` (defaults `140` / `48`): the app box never
+  grows past them, centered in a larger terminal. A `0` lifts the cap and the app follows
+  the terminal size. Read once at boot, so changing them needs a restart.
+
 ## [1.4.1] - 2026-11-15
 
 ### Changed

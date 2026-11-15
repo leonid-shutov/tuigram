@@ -139,6 +139,8 @@ Optional, and read from `$XDG_CONFIG_HOME/tuigram/config.json`:
   "dialogEmoji": true,
   "hints": true,
   "receipt": "tick",
+  "maxWidth": 140,
+  "maxHeight": 48,
   "proxy": "socks5://user:pass@host:port",
   "updateCheck": true
 }
@@ -151,6 +153,8 @@ Optional, and read from `$XDG_CONFIG_HOME/tuigram/config.json`:
 | `dialogEmoji`   | `true`      | `true`, `false` — turn off on fonts with no emoji coverage                                                                                                                                     |
 | `hints`         | `true`      | `true`, `false` — set to false to hide the key hint bar and reclaim its row                                                                                                                    |
 | `receipt`       | `tick`      | `tick`, `monkey` — what heads the bar beside your messages the other side hasn't seen; `tick` is a plain ✓, `monkey` a 🙈                                                                      |
+| `maxWidth`      | `140`       | app box width cap, in cells — `0` lifts the cap and follows the terminal; needs a restart                                                                                                      |
+| `maxHeight`     | `48`        | app box height cap, in cells — `0` lifts the cap and follows the terminal; needs a restart                                                                                                     |
 | `proxy`         | _(none)_    | a proxy URL — `socks5://`, `socks4://`, `http://`/`https://`, or a `t.me/proxy?...` MTProxy link; connects directly if unset                                                                   |
 | `updateCheck`   | `true`      | `true`, `false` — check registry.npmjs.org (installer/npm/mise) or the tap's formula (brew) at startup; skipped when `proxy` is set                                                            |
 
