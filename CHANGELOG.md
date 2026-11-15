@@ -10,6 +10,8 @@
 
 ### Added
 
+- `!` expands or dismisses the error on screen from the chat list or the messages, so errors can be
+  read on macOS too. `alt+e` still works, including while typing.
 - The README says how to make the `alt+` keys work in macOS terminals.
 
 ## [1.4.1] - 2026-11-15

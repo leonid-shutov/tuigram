@@ -16,6 +16,6 @@ Box({
   title: ' Error ',
   titleColor: config.theme.danger,
   bottomTitleAlignment: 'right',
-  bottomTitle: ' alt+e details ',
+  bottomTitle: ' ! details ',
   children: [self.notice, self.detail],
 });

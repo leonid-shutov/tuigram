@@ -98,7 +98,8 @@ export TUIGRAM_API_HASH=0123456789abcdef0123456789abcdef
 | `Shift+Enter`                     | start a new line in the message box                                                    |
 | `Esc`                             | leave the message box; cancel a reply or an edit; close the search                     |
 | `ctrl+e`                          | edit `config.json` in `$VISUAL` / `$EDITOR`; changes apply when the editor closes      |
-| `alt+e`                           | expand the error on screen, or dismiss it                                              |
+| `!`                               | expand the error on screen, or dismiss it (not while typing)                           |
+| `alt+e`                           | the same, and works while typing                                                       |
 | `ctrl+r`                          | restart and reconnect (happens on its own after the machine wakes from sleep)          |
 | `shift+u`                         | upgrade tuigram, once a newer release is available (not while typing)                  |
 | `shift+x`                         | dismiss that update notice (not while typing)                                          |
@@ -106,7 +107,7 @@ export TUIGRAM_API_HASH=0123456789abcdef0123456789abcdef
 
 On macOS, the `alt+` keys need the terminal to send Option as Alt; out of the box, Option+letter
 types a character instead (Option+U starts an umlaut), and the app never sees the key. `shift+u`,
-`?` and the other keys without Alt work either way. To turn it on:
+`!`, `?` and the other keys without Alt work either way. To turn it on:
 
 - Terminal: Settings → Profiles → Keyboard → "Use Option as Meta key"
 - iTerm2: Settings → Profiles → Keys → Left Option key → "Esc+"

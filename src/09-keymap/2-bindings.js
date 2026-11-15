@@ -24,6 +24,7 @@ const group = (config) => Keymap.extras.createBindingLookup(config).bindings;
     'app.focusPrompt': '3',
     'app.search': '/',
     'app.help': '?',
+    'app.errors': '!',
     'app.upgrade': 'shift+u',
     'app.dismissUpdate': 'shift+x',
   }),
