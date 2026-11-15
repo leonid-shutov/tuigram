@@ -21,7 +21,8 @@ const describe = (presence) => {
   return BUCKET_LABEL[presence.status];
 };
 
-/** What each status has someone doing, as Telegram's own clients word it. */
+/** What each status has someone doing, as Telegram's own clients word it.
+ * @type {Record<import('../../../../types/domain').TypingStatus, Locale.Label>} */
 const DOING = {
   typing: 'typing',
   record_video: 'recording a video',

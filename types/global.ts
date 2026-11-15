@@ -617,15 +617,15 @@ declare global {
 
   /** One named app action. `title` is what the pane labels and, later, a help screen read. */
   type Command = {
-    title: string;
+    title: Locale.Label;
     /** A bar-sized label for the hint bar, which falls back to `title` when a command omits it;
      * `false` keeps the command off the bar, though the keys palette still lists it. */
-    hint?: string | false;
+    hint?: Locale.Label | false;
     /** Which hints the bar keeps when it runs out of width; `'normal'` when omitted. */
     priority?: HintPriority;
     /** Folds the named partner into this command's hint, e.g. `j/k Move`. Set on the leading command
      * only; the partner keeps its own hint for when this one has no active binding. */
-    pair?: { with: string; hint: string };
+    pair?: { with: string; hint: Locale.Label };
     run(): void;
   };
 
@@ -651,11 +651,19 @@ declare global {
   /** tuigram's own chrome in the configured language. Message text from Telegram itself is
    * never translated. */
   namespace Locale {
-    /** Bahasa Melayu string table, keyed by the English label. */
-    const ms: Record<string, string>;
+    /** Bahasa Melayu string table, keyed by the English label. The one list of labels:
+     * `Label` is read from its keys. */
+    const ms: typeof import('../src/(common)/Locale/ms.json');
+    /** Every English label tuigram can show. Passing anything else to `t` is a type error,
+     * so a label can't exist without its Malay entry. */
+    type Label = keyof typeof ms;
+    /** One argument per `%s` in `S`. */
+    type Args<S extends string, A extends unknown[] = []> = S extends `${string}%s${infer Rest}`
+      ? Args<Rest, [...A, unknown]>
+      : A;
     /** `label` in the configured language (`ms` when set, else unchanged English). Extra
-     * args fill each `%s` in turn. Unknown labels fall back to English. */
-    const t: (label: string, ...args: unknown[]) => string;
+     * args fill each `%s` in turn, one per `%s`. */
+    const t: <L extends Label>(label: L, ...args: Args<L>) => string;
   }
 
   /** Commands as they are written: keyed by the name the bindings point at. */
