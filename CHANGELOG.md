@@ -2,6 +2,13 @@
 
 ## [Unreleased]
 
+### Added
+
+- Linux system packages: `.deb` (Debian/Ubuntu), `.rpm` (Fedora/RHEL) and a portable
+  AppImage, all with their own Node.js bundled, built on every release and attached to
+  the GitHub Release. The AUR package is live again (`yay -S tuigram`), with CI bumping
+  it on every release.
+
 ## [1.4.1] - 2026-11-15
 
 ### Changed

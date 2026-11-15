@@ -1,0 +1,36 @@
+name: release-linux
+
+on:
+  push:
+    tags: ['v*']
+
+permissions:
+  contents: write # uploads .deb/.rpm/.AppImage to the GitHub Release
+
+jobs:
+  assets:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - runner: ubuntu-24.04
+            arch: x64
+          - runner: ubuntu-24.04-arm
+            arch: arm64
+    runs-on: ${{ matrix.runner }}
+    steps:
+      - uses: actions/checkout@v7
+      - name: Build .deb, .rpm and .AppImage
+        run: |
+          version="${GITHUB_REF_NAME#v}"
+          mkdir -p dist
+          sudo apt-get update -q
+          sudo apt-get install -y -q dpkg-dev rpm file curl ca-certificates zsync
+          ./packaging/linux/build.sh --version "$version" --arch "${{ matrix.arch }}" --format deb --out dist
+          ./packaging/linux/build.sh --version "$version" --arch "${{ matrix.arch }}" --format rpm --out dist
+          ./packaging/linux/build.sh --version "$version" --arch "${{ matrix.arch }}" --format appimage --out dist
+          ls -la dist
+      - name: Upload to the GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: dist/*

@@ -67,8 +67,8 @@ if (args[0] === 'upgrade') {
     process.exit(1);
   } else {
     const installPlan = channel.upgradePlan(rootDir, 'latest');
-    // Empty steps (aur): nothing here can run itself, and an empty loop would silently exit 0
-    // having done nothing.
+    // Empty steps (aur/system/appimage): nothing here can run itself, and an empty loop would
+    // silently exit 0 having done nothing.
     if (installPlan.steps.length === 0) {
       process.stderr.write(`tuigram: ${installPlan.manualCommand}\n`);
       process.exit(1);
