@@ -2,6 +2,11 @@
 
 ## [Unreleased]
 
+### Changed
+
+- The bar beside your messages the other side hasn't seen is now headed by a plain ✓ instead of
+  the 🙈. `"receipt": "monkey"` in `config.json` brings the monkey back.
+
 ## [1.3.0] - 2026-11-14
 
 ### Added

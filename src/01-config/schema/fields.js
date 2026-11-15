@@ -21,7 +21,7 @@
     validate: (value) => config.schema.defaults.imageProtocols.some((protocol) => protocol === value),
   },
   receipt: {
-    default: 'monkey',
+    default: 'tick',
     hotReload: true,
     validate: (value) => config.schema.defaults.receipts.some((receipt) => receipt === value),
   },
