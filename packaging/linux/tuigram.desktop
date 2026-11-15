@@ -1,0 +1,9 @@
+[Desktop Entry]
+Name=tuigram
+Comment=Telegram Terminal UI client
+Exec=tuigram
+Icon=tuigram
+Terminal=true
+Type=Application
+Categories=Network;InstantMessaging;
+Keywords=telegram;tui;terminal;chat;

@@ -38,6 +38,16 @@ const isPacmanOwned = () => {
   }
 };
 
+// .deb/.rpm bundles live outside any npm prefix on purpose (/usr/lib/tuigram/app), so they never
+// match GLOBAL/MISE above: upgrading them through npm would fight dpkg/rpm for the same files.
+// An AppImage is the same situation -- it mounts read-only -- detected through the env var the
+// AppImage runtime always sets rather than through its mount path, which changes every launch.
+const SYSTEM_ROOTS = ['/usr/lib/tuigram/app', '/opt/tuigram/app'];
+const isSystemRoot = (rootDir) => {
+  const normalized = rootDir.replaceAll('\\', '/');
+  return SYSTEM_ROOTS.some((root) => normalized === root || normalized.startsWith(`${root}/`));
+};
+
 /** @param {string} rootDir @returns {string | null} */
 const npmPrefix = (rootDir) => {
   const normalized = rootDir.replaceAll('\\', '/');
@@ -56,12 +66,19 @@ const SCRIPT_RECEIPT = 'install.json';
 
 // git checked before Cellar/global/mise/aur: an `npm link`ed checkout sits under lib/node_modules
 // as a symlink and would otherwise match npm. script before npm, whose GLOBAL shape it shares.
-/** @param {string} rootDir @returns {'git' | 'brew' | 'npm' | 'mise' | 'aur' | 'script' | 'unknown'} */
+// system/appimage after aur: their roots never match the npm shapes above, and APPIMAGE is only
+// set inside the runtime, so ordering against the npm shapes does not matter -- but they must
+// come before the GLOBAL check only in the sense that GLOBAL must never claim them, which their
+// roots already guarantee.
+/** @typedef {'git' | 'brew' | 'npm' | 'mise' | 'aur' | 'system' | 'appimage' | 'script' | 'unknown'} Kind */
+/** @param {string} rootDir @returns {Kind} */
 const detectUncached = (rootDir) => {
   if (existsSync(path.join(rootDir, '.git'))) return 'git';
   const normalized = rootDir.replaceAll('\\', '/');
   if (CELLAR.test(normalized)) return 'brew';
   if (rootDir === AUR_ROOT && isPacmanOwned()) return 'aur';
+  if (typeof process.env.APPIMAGE === 'string' && process.env.APPIMAGE !== '') return 'appimage';
+  if (isSystemRoot(rootDir)) return 'system';
   const prefix = npmPrefix(rootDir);
   if (prefix !== null && existsSync(path.join(prefix, SCRIPT_RECEIPT))) return 'script';
   if (GLOBAL.test(normalized)) return 'npm';
@@ -73,7 +90,7 @@ const detectUncached = (rootDir) => {
 /** @type {{ rootDir: string; kind: ReturnType<typeof detectUncached> } | null} */
 let cached = null;
 
-/** @param {string} rootDir @returns {'git' | 'brew' | 'npm' | 'mise' | 'aur' | 'script' | 'unknown'} */
+/** @param {string} rootDir @returns {Kind} */
 const detect = (rootDir) => {
   if (cached === null || cached.rootDir !== rootDir) cached = { rootDir, kind: detectUncached(rootDir) };
   return cached.kind;
@@ -89,7 +106,7 @@ const brewBinary = (rootDir) => {
 
 // An empty `steps` means there is nothing this process can run itself -- `manualCommand` is the
 // only thing to show, unconditionally (unlike brew's `null`, which relies on `writable()` always
-// being true for a null prefix). Right now only the aur plan is shaped this way.
+// being true for a null prefix). The aur/system/appimage plans are shaped this way.
 /** @typedef {{ prefix: string | null; manualCommand: string | null; steps: { cmd: string; args: string[] }[] }} Plan */
 
 // npm on a machine with several Node versions on PATH (mise, nvm, asdf) has several global
@@ -133,10 +150,26 @@ const misePlan = () => ({
 
 // pacman's package is the source of truth here, and only an AUR helper knows which one the user
 // prefers (yay, paru, ...) and has the sudo prompt for it -- there is nothing to run in-process.
+// .deb/.rpm (`system`) and AppImages are the same shape: the package manager (or a fresh download
+// for AppImage) owns the files, so there is nothing to run in-process either.
 /** @returns {Plan} */
 const aurPlan = () => ({
   prefix: null,
   manualCommand: 'update tuigram with your AUR helper, e.g. yay -Syu tuigram',
+  steps: [],
+});
+
+/** @returns {Plan} */
+const systemPlan = () => ({
+  prefix: null,
+  manualCommand: 'update tuigram with your package manager, e.g. sudo apt upgrade tuigram or sudo dnf upgrade tuigram',
+  steps: [],
+});
+
+/** @returns {Plan} */
+const appimagePlan = () => ({
+  prefix: null,
+  manualCommand: 'download the latest tuigram AppImage from https://github.com/leonid-shutov/tuigram/releases',
   steps: [],
 });
 
@@ -166,6 +199,8 @@ const upgradePlan = (rootDir, version) => {
   if (kind === 'brew') return brewPlan(rootDir);
   if (kind === 'mise') return misePlan();
   if (kind === 'aur') return aurPlan();
+  if (kind === 'system') return systemPlan();
+  if (kind === 'appimage') return appimagePlan();
   if (kind === 'script') return scriptPlan(rootDir, version);
   return null;
 };

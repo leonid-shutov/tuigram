@@ -30,13 +30,34 @@ or if you already use mise, which installs Node.js 26 alongside it:
 mise use -g node@26 npm:tuigram
 ```
 
-<!-- AUR package pending: registration on aur.archlinux.org is temporarily closed.
+or on Debian/Ubuntu, from the GitHub releases:
+
+```sh
+sudo dpkg -i tuigram_1.4.1_amd64.deb
+```
+
+or on Fedora/RHEL, from the GitHub releases:
+
+```sh
+sudo dnf install tuigram-1.4.1.x86_64.rpm
+```
+
+or as a portable AppImage, from the GitHub releases:
+
+```sh
+chmod +x tuigram-1.4.1-x86_64.AppImage
+./tuigram-1.4.1-x86_64.AppImage
+```
+
+The `.deb`, `.rpm` and AppImage all ship their own Node.js under `/usr/lib/tuigram`
+(or inside the AppImage), so they need no system-wide Node. Replace the version and
+arch above with the latest release's file names.
+
 or on Arch, from the [AUR](https://aur.archlinux.org/packages/tuigram):
 
 ```sh
 yay -S tuigram
 ```
--->
 
 or from npm, which needs a Node.js 26.4 or newer of your own:
 
@@ -152,7 +173,7 @@ Optional, and read from `$XDG_CONFIG_HOME/tuigram/config.json`:
 | `hints`         | `true`      | `true`, `false` — set to false to hide the key hint bar and reclaim its row                                                                                                                    |
 | `receipt`       | `tick`      | `tick`, `monkey` — what heads the bar beside your messages the other side hasn't seen; `tick` is a plain ✓, `monkey` a 🙈                                                                      |
 | `proxy`         | _(none)_    | a proxy URL — `socks5://`, `socks4://`, `http://`/`https://`, or a `t.me/proxy?...` MTProxy link; connects directly if unset                                                                   |
-| `updateCheck`   | `true`      | `true`, `false` — check registry.npmjs.org (installer/npm/mise) or the tap's formula (brew) at startup; skipped when `proxy` is set                                                            |
+| `updateCheck`   | `true`      | `true`, `false` — check registry.npmjs.org (installer/npm/mise) or the tap's formula (brew), the AUR RPC (aur), or the npm registry (deb/rpm/AppImage) at startup; skipped when `proxy` is set |
 
 `daylight` is the light theme. `ascii-terminal` draws its borders out of `+`, `-` and `|` for fonts
 without box-drawing glyphs. Unknown keys and invalid values are ignored — each falls back to its

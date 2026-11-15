@@ -649,7 +649,10 @@ declare global {
 
   type KeymapModule = {
     engine: KeymapEngine;
-    commands: Record<'app' | 'dialogs' | 'folders' | 'chat' | 'prompt' | 'picker' | 'choice' | 'filePicker', Commands> & {
+    commands: Record<
+      'app' | 'dialogs' | 'folders' | 'chat' | 'prompt' | 'picker' | 'choice' | 'filePicker',
+      Commands
+    > & {
       message: MessageCommands;
     };
     /** Bindings by the layer that installs them; the seam a `keys` block in config.json would feed. */
@@ -675,11 +678,11 @@ declare global {
 
   // ── (common)/Update ───────────────────────────────────────────────────────────────────
   /** 'git' and 'unknown' both mean "never check" — a checkout, or a shape check() doesn't know. */
-  type UpdateChannel = 'brew' | 'npm' | 'mise' | 'aur' | 'script' | 'git' | 'unknown';
+  type UpdateChannel = 'brew' | 'npm' | 'mise' | 'aur' | 'system' | 'appimage' | 'script' | 'git' | 'unknown';
   type UpdateRelease = { version: string; minNode: string | null };
-  /** What `actions.upgrade()` runs, in order (empty for a channel — currently only aur — that has
-   * nothing this process can run itself, e.g. because only the user's AUR helper should touch
-   * pacman's files); the prefix to check for write access first (`null` for brew, aur and script,
+  /** What `actions.upgrade()` runs, in order (empty for a channel — aur, system and appimage —
+   * that has nothing this process can run itself, e.g. because only the user's package manager
+   * should touch those files); the prefix to check for write access first (`null` for brew, aur,
    * which own their own permissions); and the channel-appropriate command to show the user, either
    * because that prefix isn't writable, or unconditionally when `steps` is empty (`null` only
    * when, as for brew and script, it never needs to be shown either way). */
@@ -708,6 +711,8 @@ declare global {
     const brew: () => Promise<UpdateRelease | null>;
     const mise: () => Promise<UpdateRelease | null>;
     const aur: () => Promise<UpdateRelease | null>;
+    const system: () => Promise<UpdateRelease | null>;
+    const appimage: () => Promise<UpdateRelease | null>;
     const script: () => Promise<UpdateRelease | null>;
   }
 
