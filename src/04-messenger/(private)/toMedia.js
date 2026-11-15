@@ -97,7 +97,7 @@ const photoInfo = (media) => ({
       return { type, title: media.title };
     case 'todo':
       return { type, title: media.title.text };
-    // location, live_location, story, paid and webpage carry nothing beyond their type
+    // location, live_location, story, paid, webpage and widget carry nothing beyond their type
     default:
       return { type };
   }

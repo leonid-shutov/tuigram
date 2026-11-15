@@ -57,6 +57,9 @@ const withTime = (text, duration) => (duration > 0 ? `${text} ${time(duration)}`
       return '💰 Paid media';
     case 'todo':
       return `✅ ${clip(media.title)}`;
+    // a bot's HTML app: nothing a terminal can run
+    case 'widget':
+      return '🧩 Widget';
     // a link preview always carries its URL in the message text
     case 'webpage':
       return '';

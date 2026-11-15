@@ -46,7 +46,7 @@ export type Media =
   | { type: 'game' | 'invoice' | 'venue'; title: string }
   | { type: 'todo'; title: string }
   | { type: 'call'; isVideo: boolean; duration: number; reason: 'missed' | 'busy' | 'disconnect' | null }
-  | { type: 'location' | 'live_location' | 'story' | 'paid' | 'webpage' | 'unknown' };
+  | { type: 'location' | 'live_location' | 'story' | 'paid' | 'webpage' | 'widget' | 'unknown' };
 
 /** Every variant of `Media` that carries something downloadable — what `openMedia` can act on. */
 export type FileMedia = Extract<Media, MediaFile>;
