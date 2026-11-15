@@ -10,7 +10,7 @@ const isPrintable = (event) =>
     const masked = Text({ content: ' ', fg: config.theme.fg });
 
     const handle = self.mount({
-      title: 'Sign in to Telegram',
+      title: Locale.t('Sign in to Telegram'),
       children: [
         Text({ content: label, fg: config.theme.fg }),
         Box({ width: 32, height: 1, backgroundColor: config.theme.surface, children: [masked] }),

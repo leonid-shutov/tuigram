@@ -4,27 +4,27 @@
   const message = ui.chat.selectedMessage;
   if (!Message.isConfirmed(message)) return;
   const { deleteScopes } = message;
-  if (deleteScopes.length === 0) return void ui.chat.flashStatus('cannot delete this');
+  if (deleteScopes.length === 0) return void ui.chat.flashStatus(Locale.t('cannot delete this'));
   const description = Message.preview(message) ?? '';
   const isPrivate = !message.isGroup && store.dialogs.find(message.chatId)?.isUser === true;
   /** @type {Record<DeleteScope, string>} */
   const names = {
-    everyone: isPrivate ? `Delete for me and ${message.chatName}` : 'Delete for everyone',
-    me: deleteScopes.length === 1 ? 'Delete' : 'Delete for me',
+    everyone: isPrivate ? Locale.t('Delete for me and %s', message.chatName) : Locale.t('Delete for everyone'),
+    me: deleteScopes.length === 1 ? Locale.t('Delete') : Locale.t('Delete for me'),
   };
   ui.choice.open({
-    title: ` ${keymap.commands.message['message.delete'].title} `,
+    title: ` ${Locale.t(keymap.commands.message['message.delete'].title)} `,
     message: description,
-    pickHint: 'Delete',
+    pickHint: Locale.t('Delete'),
     options: deleteScopes.map((scope) => ({ name: names[scope], value: scope })),
     /** @param {DeleteScope} scope */
     onPick: async (scope) => {
       navigation.select('chat');
       const deleted = await Result.fromPromise(messenger.deleteMessage(message.chatId, message, scope));
-      if (!deleted.ok) return void ui.errors.report('Could not delete the message.', deleted.error);
+      if (!deleted.ok) return void ui.errors.report(Locale.t('Could not delete the message.'), deleted.error);
       // mtcute does not dispatch the updates of our own delete, so the drop happens here.
       actions.dropMessages(message.chatId, [message.id]);
-      ui.chat.flashStatus('deleted');
+      ui.chat.flashStatus(Locale.t('deleted'));
     },
   });
   navigation.select('choice');

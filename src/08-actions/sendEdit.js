@@ -4,12 +4,12 @@ async (messageId, text) => {
   if (chatId === null) return;
   const current = store.chat.findConfirmed(chatId, messageId);
   if (current === null || current.text === text) return;
-  if (text.trim() === '') return void ui.chat.flashStatus('cannot be empty');
+  if (text.trim() === '') return void ui.chat.flashStatus(Locale.t('cannot be empty'));
 
   ui.chat.setStatus('editing…');
   const edited = await Result.fromPromise(messenger.editMessage(chatId, messageId, text));
   ui.chat.clearStatus();
-  if (!edited.ok) return void ui.errors.report('Could not edit the message.', edited.error);
+  if (!edited.ok) return void ui.errors.report(Locale.t('Could not edit the message.'), edited.error);
 
   // Telegram answers with one album part, and a thumbnail may have landed while the edit was in
   // flight: the media stay the ones cached now, and so do the parts and the reactions, which may be

@@ -3,6 +3,9 @@ export type ImageProtocol = 'auto' | 'kitty' | 'sixel' | 'blocks' | 'off';
 
 export type Receipt = 'monkey' | 'tick';
 
+/** Interface language: 'en' (default) or 'ms' (Bahasa Melayu). */
+export type Language = 'en' | 'ms';
+
 export type ThemePalette = {
   bg: string;
   surface: string;
@@ -91,6 +94,8 @@ export type Source = {
   hints?: boolean;
   /** Defaults to 'monkey'. */
   receipt?: Receipt;
+  /** Interface language. Defaults to 'en'; 'ms' is Bahasa Melayu. */
+  language?: Language;
   /** Proxy URL to connect through, e.g. `socks5://user:pass@host:port`,
    * `http://host:port`, or a `t.me/proxy?...` MTProxy link. Unset connects directly. */
   proxy?: string;
@@ -113,6 +118,7 @@ export type ConfigSchema = {
   hints: ConfigSchemaField<boolean>;
   imageProtocol: ConfigSchemaField<ImageProtocol>;
   receipt: ConfigSchemaField<Receipt>;
+  language: ConfigSchemaField<Language>;
   proxy: ConfigSchemaField<string | undefined>;
   updateCheck: ConfigSchemaField<boolean>;
 };

@@ -54,6 +54,7 @@ module.exports = [
         // Update common
         Update: true,
         Source: true,
+        Locale: true,
 
         // config common
         source: true,

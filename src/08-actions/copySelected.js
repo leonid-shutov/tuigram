@@ -2,11 +2,11 @@
 () => {
   const message = ui.chat.selectedMessage;
   if (message === null) return;
-  if (message.text === '') return void ui.chat.flashStatus('no text');
+  if (message.text === '') return void ui.chat.flashStatus(Locale.t('no text'));
   if (!screen.renderer.isOsc52Supported()) {
-    ui.chat.flashStatus('clipboard unsupported');
+    ui.chat.flashStatus(Locale.t('clipboard unsupported'));
     return;
   }
   screen.renderer.copyToClipboardOSC52(message.text);
-  ui.chat.flashStatus('copied');
+  ui.chat.flashStatus(Locale.t('copied'));
 };

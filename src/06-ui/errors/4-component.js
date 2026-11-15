@@ -13,9 +13,9 @@ Box({
   borderStyle: config.theme.borderStyle,
   customBorderChars: config.theme.borderChars,
   borderColor: config.theme.danger,
-  title: ' Error ',
+  title: Locale.t(' Error '),
   titleColor: config.theme.danger,
   bottomTitleAlignment: 'right',
-  bottomTitle: ' ! details ',
+  bottomTitle: Locale.t(' ! details '),
   children: [self.notice, self.detail],
 });

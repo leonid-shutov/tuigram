@@ -24,11 +24,15 @@ const TAIL = ['app.search', 'app.cycleNext', 'app.help'];
     if (command.pair && partner) {
       hints.push({
         keys: `${Binding.keys(entry.bindings)}/${Binding.keys(partner.bindings)}`,
-        label: command.pair.hint,
+        label: Locale.t(command.pair.hint),
         priority,
       });
     } else {
-      hints.push({ keys: Binding.keys(entry.bindings), label: command.hint ?? command.title, priority });
+      hints.push({
+        keys: Binding.keys(entry.bindings),
+        label: Locale.t(command.hint ?? command.title),
+        priority,
+      });
     }
   }
   return hints;

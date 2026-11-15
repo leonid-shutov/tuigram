@@ -14,7 +14,7 @@ async (text, replyTo = null) => {
   const sent = await Result.fromPromise(messenger.sendMessage(chatId, text, replyTo ?? undefined));
   if (!sent.ok) {
     store.chat.drop(chatId, pending.id);
-    ui.errors.report('Could not send the message.', sent.error);
+    ui.errors.report(Locale.t('Could not send the message.'), sent.error);
   } else {
     // In a private chat or a basic group Telegram answers with a short update, which mtcute
     // rebuilds without the reply header: the pending copy's quote is the one that knows.

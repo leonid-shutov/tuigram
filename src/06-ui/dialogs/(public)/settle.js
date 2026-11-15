@@ -4,7 +4,7 @@
   self.loading = false;
   self.spinner.stop();
   if (error !== undefined) {
-    self.component.setTitlePart('status', 'couldn’t load chats');
-    ui.errors.report('Could not load your chats.', error);
+    self.component.setTitlePart('status', Locale.t('couldn’t load chats'));
+    ui.errors.report(Locale.t('Could not load your chats.'), error);
   } else self.component.clearTitlePart('status');
 };

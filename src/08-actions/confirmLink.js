@@ -23,9 +23,9 @@
     onPick: (choice) => {
       navigation.select('chat');
       if (choice === 'open') return void OS.open(url);
-      if (!screen.renderer.isOsc52Supported()) return void ui.chat.flashStatus('clipboard unsupported');
+      if (!screen.renderer.isOsc52Supported()) return void ui.chat.flashStatus(Locale.t('clipboard unsupported'));
       screen.renderer.copyToClipboardOSC52(url);
-      ui.chat.flashStatus('link copied');
+      ui.chat.flashStatus(Locale.t('link copied'));
     },
   });
   navigation.select('choice');

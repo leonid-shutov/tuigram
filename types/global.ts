@@ -33,6 +33,7 @@ import {
   ResolvedTheme,
   ImageProtocol as _ImageProtocol,
   Receipt as _Receipt,
+  Language as _Language,
   ConfigSchema,
 } from './config';
 
@@ -52,6 +53,7 @@ import { Result as _Result } from 'metautil';
 declare global {
   type ImageProtocol = _ImageProtocol;
   type Receipt = _Receipt;
+  type Language = _Language;
   /** Global because `Media.isFile` narrows to it and `8-actions` passes it around. */
   type FileMedia = _FileMedia;
   type MessagePromptEventMap = {
@@ -85,6 +87,8 @@ declare global {
     /** Whether the key hint bar occupies the bottom row. */
     hints: boolean;
     receipt: Receipt;
+    /** Interface language: 'en' (English) or 'ms' (Bahasa Melayu). */
+    language: Language;
   };
 
   const config: ConfigSelf & {
@@ -123,7 +127,12 @@ declare global {
     };
     /** What config.json's keys mean, their defaults, and how config.json gets loaded/validated. */
     schema: {
-      defaults: { senderColors: string[]; imageProtocols: ImageProtocol[]; receipts: Receipt[] };
+      defaults: {
+        senderColors: string[];
+        imageProtocols: ImageProtocol[];
+        receipts: Receipt[];
+        languages: Language[];
+      };
       fields: ConfigSchema;
       /** Narrows an arbitrary config.json key to one `fields` actually has an entry for. */
       isSchemaKey(key: string): key is keyof ConfigSchema;
@@ -608,15 +617,15 @@ declare global {
 
   /** One named app action. `title` is what the pane labels and, later, a help screen read. */
   type Command = {
-    title: string;
+    title: Locale.Label;
     /** A bar-sized label for the hint bar, which falls back to `title` when a command omits it;
      * `false` keeps the command off the bar, though the keys palette still lists it. */
-    hint?: string | false;
+    hint?: Locale.Label | false;
     /** Which hints the bar keeps when it runs out of width; `'normal'` when omitted. */
     priority?: HintPriority;
     /** Folds the named partner into this command's hint, e.g. `j/k Move`. Set on the leading command
      * only; the partner keeps its own hint for when this one has no active binding. */
-    pair?: { with: string; hint: string };
+    pair?: { with: string; hint: Locale.Label };
     run(): void;
   };
 
@@ -639,6 +648,24 @@ declare global {
     const keys: (bindings: readonly KeymapActiveBinding[]) => string;
   }
 
+  /** tuigram's own chrome in the configured language. Message text from Telegram itself is
+   * never translated. */
+  namespace Locale {
+    /** Bahasa Melayu string table, keyed by the English label. The one list of labels:
+     * `Label` is read from its keys. */
+    const ms: typeof import('../src/(common)/Locale/ms.json');
+    /** Every English label tuigram can show. Passing anything else to `t` is a type error,
+     * so a label can't exist without its Malay entry. */
+    type Label = keyof typeof ms;
+    /** One argument per `%s` in `S`. */
+    type Args<S extends string, A extends unknown[] = []> = S extends `${string}%s${infer Rest}`
+      ? Args<Rest, [...A, unknown]>
+      : A;
+    /** `label` in the configured language (`ms` when set, else unchanged English). Extra
+     * args fill each `%s` in turn, one per `%s`. */
+    const t: <L extends Label>(label: L, ...args: Args<L>) => string;
+  }
+
   /** Commands as they are written: keyed by the name the bindings point at. */
   type Commands = Record<string, Command>;
 
@@ -649,7 +676,10 @@ declare global {
 
   type KeymapModule = {
     engine: KeymapEngine;
-    commands: Record<'app' | 'dialogs' | 'folders' | 'chat' | 'prompt' | 'picker' | 'choice' | 'filePicker', Commands> & {
+    commands: Record<
+      'app' | 'dialogs' | 'folders' | 'chat' | 'prompt' | 'picker' | 'choice' | 'filePicker',
+      Commands
+    > & {
       message: MessageCommands;
     };
     /** Bindings by the layer that installs them; the seam a `keys` block in config.json would feed. */

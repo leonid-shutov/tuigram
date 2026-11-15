@@ -5,5 +5,5 @@
 () => {
   const below = [...self.views].slice(self.inboxUnreadFrom).map(({ message }) => message);
   const left = Message.inboxUnreadCount(below, self.readUpTo);
-  self.component.setTitlePart('unreadLeft', left === 0 ? '' : `↓ ${left} new`);
+  self.component.setTitlePart('unreadLeft', left === 0 ? '' : `↓ ${left} ${Locale.t('new')}`);
 };

@@ -13,18 +13,24 @@ const { ErrorCorrectionLevel } = npm['@opentui/qrcode'];
     code = QRCode({
       content: '',
       errorCorrectionLevel: ErrorCorrectionLevel.L,
-      fallbackContent: 'Resize terminal to see QR code',
+      fallbackContent: Locale.t('Resize terminal to see QR code'),
       fallbackColor: config.theme.muted,
     });
     link = Text({ content: '', fg: config.theme.muted, wrapMode: 'char' });
 
     handle = self.mount({
-      title: 'Sign in to Telegram',
+      title: Locale.t('Sign in to Telegram'),
       children: [
-        Text({ content: 'Telegram → Settings → Devices → Link Desktop Device', fg: config.theme.fg }),
+        Text({
+          content: Locale.t('Telegram → Settings → Devices → Link Desktop Device'),
+          fg: config.theme.fg,
+        }),
         code,
         link,
-        Text({ content: 'p: sign in with a phone number instead   Ctrl-C: quit', fg: config.theme.muted }),
+        Text({
+          content: Locale.t('p: sign in with a phone number instead   Ctrl-C: quit'),
+          fg: config.theme.muted,
+        }),
       ],
     });
 
