@@ -16,6 +16,6 @@ Box({
   title: Locale.t(' Error '),
   titleColor: config.theme.danger,
   bottomTitleAlignment: 'right',
-  bottomTitle: Locale.t(' alt+e details '),
+  bottomTitle: Locale.t(' ! details '),
   children: [self.notice, self.detail],
 });

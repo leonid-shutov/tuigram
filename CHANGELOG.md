@@ -8,6 +8,26 @@
   bar, the `?` key list, pickers, sign-in screens, status flashes and the update notice.
   Message text from Telegram itself stays untranslated; unknown values fall back to English.
 
+## [1.5.1] - 2026-11-15
+
+### Changed
+
+- tuigram uses about 40 MB less memory once you've been switching between chats for a while.
+
+## [1.5.0] - 2026-11-15
+
+### Changed
+
+- The update notice's keys are now `shift+u` to upgrade and `shift+x` to dismiss, from the chat
+  list or the messages, in place of `alt+u` and `alt+shift+u`. Those never reached tuigram on most
+  macOS terminals, or under a window manager such as AeroSpace that keeps Option+letter for itself.
+
+### Added
+
+- `!` expands or dismisses the error on screen from the chat list or the messages, so errors can be
+  read on macOS too. `alt+e` still works, including while typing.
+- The README says how to make the `alt+` keys work in macOS terminals.
+
 ## [1.4.1] - 2026-11-15
 
 ### Changed
@@ -225,7 +245,9 @@ First public release.
 
 Supersedes the `1.0.0-alpha.*` series, which is not itemized here.
 
-[unreleased]: https://github.com/leonid-shutov/tuigram/compare/v1.4.1...HEAD
+[unreleased]: https://github.com/leonid-shutov/tuigram/compare/v1.5.1...HEAD
+[1.5.1]: https://github.com/leonid-shutov/tuigram/compare/v1.5.0...v1.5.1
+[1.5.0]: https://github.com/leonid-shutov/tuigram/compare/v1.4.1...v1.5.0
 [1.4.1]: https://github.com/leonid-shutov/tuigram/compare/v1.4.0...v1.4.1
 [1.4.0]: https://github.com/leonid-shutov/tuigram/compare/v1.3.0...v1.4.0
 [1.3.0]: https://github.com/leonid-shutov/tuigram/compare/v1.2.0...v1.3.0

@@ -14,8 +14,6 @@ const group = (config) => Keymap.extras.createBindingLookup(config).bindings;
     'app.openConfig': 'ctrl+e',
     'app.restart': 'ctrl+r',
     'app.errors': 'alt+e',
-    'app.upgrade': 'alt+u',
-    'app.dismissUpdate': 'alt+shift+u',
   }),
 
   // The unmodified pane jumps. Installed only in the panes that are not a text field, which is
@@ -26,6 +24,9 @@ const group = (config) => Keymap.extras.createBindingLookup(config).bindings;
     'app.focusPrompt': '3',
     'app.search': '/',
     'app.help': '?',
+    'app.errors': '!',
+    'app.upgrade': 'shift+u',
+    'app.dismissUpdate': 'shift+x',
   }),
 
   dialogs: group({

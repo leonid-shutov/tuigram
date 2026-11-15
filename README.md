@@ -98,11 +98,25 @@ export TUIGRAM_API_HASH=0123456789abcdef0123456789abcdef
 | `Shift+Enter`                     | start a new line in the message box                                                    |
 | `Esc`                             | leave the message box; cancel a reply or an edit; close the search                     |
 | `ctrl+e`                          | edit `config.json` in `$VISUAL` / `$EDITOR`; changes apply when the editor closes      |
-| `alt+e`                           | expand the error on screen, or dismiss it                                              |
+| `!`                               | expand the error on screen, or dismiss it (not while typing)                           |
+| `alt+e`                           | the same, and works while typing                                                       |
 | `ctrl+r`                          | restart and reconnect (happens on its own after the machine wakes from sleep)          |
-| `alt+u`                           | upgrade tuigram, once a newer release is available                                     |
-| `alt+shift+u`                     | dismiss that update notice                                                             |
+| `shift+u`                         | upgrade tuigram, once a newer release is available (not while typing)                  |
+| `shift+x`                         | dismiss that update notice (not while typing)                                          |
 | `ctrl+c`                          | quit                                                                                   |
+
+On macOS, the `alt+` keys need the terminal to send Option as Alt; out of the box, Option+letter
+types a character instead (Option+U starts an umlaut), and the app never sees the key. `shift+u`,
+`!`, `?` and the other keys without Alt work either way. To turn it on:
+
+- Terminal: Settings → Profiles → Keyboard → "Use Option as Meta key"
+- iTerm2: Settings → Profiles → Keys → Left Option key → "Esc+"
+- Ghostty: `macos-option-as-alt = true` (already the default on U.S. layouts)
+- kitty: `macos_option_as_alt yes`
+- Alacritty: `option_as_alt = "Both"` under `[window]`
+
+A window manager that binds Option+letter itself, as AeroSpace does out of the box, takes those
+keys before the terminal sees them, whatever it is set to.
 
 Every binding is matched on the Latin key it sits on, so the whole keymap keeps working on a
 Cyrillic layout without switching back — `о` moves down, `пп` is `gg`, and so on.
@@ -126,7 +140,7 @@ Cyrillic layout without switching back — `о` moves down, `пп` is `gg`, and 
 - Per-sender name colors in groups, and a stable per-chat emoji glyph you can change (`e`)
 - Endless upward history paging
 - 15 themes that paint their own background, so they look the same on any terminal
-- A check for a newer release at startup, with a one-key upgrade (`alt+u`)
+- A check for a newer release at startup, with a one-key upgrade (`shift+u`)
 
 ## Configuration
 
