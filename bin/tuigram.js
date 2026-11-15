@@ -12,7 +12,7 @@ const pkg = require('../package.json');
 
 const RELAUNCH = 'TUIGRAM_RELAUNCHED';
 // FFI is experimental, and Node says so on stderr before the renderer has the screen.
-const NODE_FLAGS = ['--experimental-ffi', '--disable-warning=ExperimentalWarning'];
+const NODE_FLAGS = ['--experimental-ffi', '--disable-warning=ExperimentalWarning', '--optimize-for-size'];
 const RESTARTED = 'TUIGRAM_RESTARTED';
 
 const args = process.argv.slice(2);

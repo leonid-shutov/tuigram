@@ -2,6 +2,10 @@
 
 ## [Unreleased]
 
+### Changed
+
+- tuigram uses about 40 MB less memory once you've been switching between chats for a while.
+
 ## [1.5.0] - 2026-11-15
 
 ### Changed
