@@ -17,6 +17,7 @@ jobs:
       - run: npm ci
       - run: npm run lint
       - run: npm run types
+      - run: npm test
 
   # install.sh is served straight from master, so it is tested here rather than at release time:
   # a fresh install, then a second run over it (what `tuigram upgrade` does), on each platform it
