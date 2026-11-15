@@ -140,6 +140,7 @@ Cyrillic layout without switching back — `о` moves down, `пп` is `gg`, and 
 - Per-sender name colors in groups, and a stable per-chat emoji glyph you can change (`e`)
 - Endless upward history paging
 - 15 themes that paint their own background, so they look the same on any terminal
+- An English or Bahasa Melayu interface (`language`); message text itself is never translated
 - A check for a newer release at startup, with a one-key upgrade (`shift+u`)
 
 ## Configuration
@@ -166,7 +167,7 @@ Optional, and read from `$XDG_CONFIG_HOME/tuigram/config.json`:
 | `dialogEmoji`   | `true`      | `true`, `false` — turn off on fonts with no emoji coverage                                                                                                                                     |
 | `hints`         | `true`      | `true`, `false` — set to false to hide the key hint bar and reclaim its row                                                                                                                    |
 | `receipt`       | `tick`      | `tick`, `monkey` — what heads the bar beside your messages the other side hasn't seen; `tick` is a plain ✓, `monkey` a 🙈                                                                      |
-| `language`      | `en`        | `en`, `ms` — the interface language; `ms` is Bahasa Melayu (see Bahasa Melayu below)                                                                                                           |
+| `language`      | `en`        | `en`, `ms` — the interface language; `ms` is Bahasa Melayu                                                                                                                                     |
 | `proxy`         | _(none)_    | a proxy URL — `socks5://`, `socks4://`, `http://`/`https://`, or a `t.me/proxy?...` MTProxy link; connects directly if unset                                                                   |
 | `updateCheck`   | `true`      | `true`, `false` — check registry.npmjs.org (installer/npm/mise) or the tap's formula (brew) at startup; skipped when `proxy` is set                                                            |
 
@@ -197,22 +198,6 @@ tuigram upgrade    # check for and install a newer release
 tuigram --help
 tuigram --version
 ```
-
-## Bahasa Melayu
-
-tuigram boleh digunakan dalam Bahasa Melayu. Tetapkan `"language": "ms"` dalam
-`config.json` (lihat Configuration di atas), atau buka `config.json` dengan `ctrl+e`
-dan tambah baris tersebut. Bar kekunci, senarai kekunci (`?`), carian, skrin log
-masuk, dan notis kemas kini akan dipaparkan dalam Bahasa Melayu; mesej Telegram
-sendiri tidak diterjemahkan.
-
-```json
-{
-  "language": "ms"
-}
-```
-
-Nilai yang tidak dikenali kembali kepada Bahasa Inggeris.
 
 ## Development
 
