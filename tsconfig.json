@@ -5,7 +5,7 @@
     "module": "esnext",
     "moduleResolution": "bundler",
     "strict": true,
-    "baseUrl": ".",
+    "types": ["node"],
     "preserveWatchOutput": true,
     "allowJs": true,
     "checkJs": true,

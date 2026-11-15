@@ -1,7 +1,10 @@
 // Telegram api_ids are positive integers; anything else is not a key.
 const API_ID = /^[1-9]\d*$/u;
 
-/** @type {(value: unknown) => value is string} */
+/**
+ * @param {unknown} value
+ * @returns {value is string}
+ */
 const filled = (value) => typeof value === 'string' && value.trim() !== '';
 
 // Each source hands over both halves or nothing: an id from one key and a hash from another

@@ -37,7 +37,7 @@ declare global {
    */
   type Section = {
     focus(): void;
-    blur?(): void;
+    blur(): void;
     setLabel(label: string): void;
   };
 
