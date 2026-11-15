@@ -2,6 +2,16 @@
 
 ## [Unreleased]
 
+### Changed
+
+- The update notice's keys are now `shift+u` to upgrade and `shift+x` to dismiss, from the chat
+  list or the messages, in place of `alt+u` and `alt+shift+u`. Those never reached tuigram on most
+  macOS terminals, or under a window manager such as AeroSpace that keeps Option+letter for itself.
+
+### Added
+
+- The README says how to make the `alt+` keys work in macOS terminals.
+
 ## [1.4.1] - 2026-11-15
 
 ### Changed

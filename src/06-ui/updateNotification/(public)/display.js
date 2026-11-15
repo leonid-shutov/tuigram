@@ -22,7 +22,7 @@ const UPDATE_GAP = '  ';
     return;
   }
 
-  // Empty steps (aur) means there is nothing `alt+u` could run at all -- only pacman's own
+  // Empty steps (aur) means there is nothing `shift+u` could run at all -- only pacman's own
   // helper should touch those files. Show the command unconditionally, not just when unwritable.
   if (plan.steps.length === 0) {
     show(`${release.version} available — ${plan.manualCommand}`);
@@ -37,12 +37,12 @@ const UPDATE_GAP = '  ';
   }
 
   self.text.content = new tui.StyledText([
-    tui.fg(config.theme.warning)('New version is available! Upgrade to get new features!'),
+    tui.fg(config.theme.warning)(`tuigram ${release.version} is available`),
     tui.fg(config.theme.muted)(UPDATE_GAP),
-    tui.fg(config.theme.accent)('alt+u'),
+    tui.fg(config.theme.accent)('shift+u'),
     tui.fg(config.theme.muted)(' upgrade'),
     tui.fg(config.theme.muted)(UPDATE_GAP),
-    tui.fg(config.theme.accent)('alt+shift+u'),
+    tui.fg(config.theme.accent)('shift+x'),
     tui.fg(config.theme.muted)(' dismiss'),
   ]);
   self.component.visible = true;
