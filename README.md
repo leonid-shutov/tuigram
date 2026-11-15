@@ -204,7 +204,10 @@ tuigram --version
 ```sh
 npm install
 npm run dev
-npm run lint
-npm run types
-npm run fmt
+npm test
 ```
+
+A git checkout has no Telegram app key, so the first run asks for your own (see
+[Using your own API key](#using-your-own-api-key)). [CONTRIBUTING.md](CONTRIBUTING.md) has the
+rest: the checks CI runs, how the tests work, and
+[how the code is laid out](docs/ARCHITECTURE.md).
