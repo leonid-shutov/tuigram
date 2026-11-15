@@ -37,7 +37,8 @@
   },
   "scripts": {
     "dev": "node bin/tuigram.js",
-    "fmt": "prettier --write src/",
+    "fmt": "prettier --write .",
+    "fmt:check": "prettier --check .",
     "lint": "eslint .",
     "types": "tsc -p tsconfig.json",
     "test": "node --experimental-ffi --disable-warning=ExperimentalWarning --test \"test/**/*.test.js\"",

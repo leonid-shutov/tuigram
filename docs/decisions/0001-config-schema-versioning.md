@@ -18,7 +18,7 @@ exactly the shape the previous version produced. That approach was caught during
 any of this shipped — see below.
 
 That assumption doesn't hold here. redux-persist and electron-store only ever read a `version`
-back from a file *they themselves last wrote* — the number is trustworthy because nothing else
+back from a file _they themselves last wrote_ — the number is trustworthy because nothing else
 touches the file. `config.json` is different: a user can write a file matching the current docs
 at any time and simply not include `version`, because the README never shows it (it's described
 as automatic). That file isn't old — it's current, just unstamped. Replaying every migration
@@ -70,7 +70,7 @@ No library surveyed was an obvious drop-in replacement for the ~30 lines this AD
 the most mainstream one has an open, maintainer-acknowledged bug in exactly the area this ADR is
 about — which is itself evidence this problem is easy to get wrong even for well-used libraries.
 Notably, every one of them — including `zod-migrate`, `verzod`, and Compose's own `version:` key —
-still keeps *some* stored or supplied version identifier around, even the ones that don't trust it
+still keeps _some_ stored or supplied version identifier around, even the ones that don't trust it
 for parsing. tuigram goes one step further, below: once migrations don't need it, it drops the
 field entirely rather than keeping an inert one.
 
@@ -83,7 +83,7 @@ field entirely rather than keeping an inert one.
    part of the design was already correct and is unchanged.
 3. Every migration must follow Fowler's expand/contract discipline: check for its own old-shape
    marker before transforming, and return the input unchanged (same object reference) when that
-   marker isn't present. This is what makes replaying the whole list safe against a file in *any*
+   marker isn't present. This is what makes replaying the whole list safe against a file in _any_
    actual shape — genuinely old files still get migrated (their marker is really there), and
    current files that merely look old are left alone (the marker never matches).
 4. The migrations list starts empty. There is nothing to migrate from yet.
@@ -94,7 +94,7 @@ The original draft of this decision still kept a `version` field in `config.json
 `migrate()` and stamped on every file, purely for bookkeeping — the idea being it's harmless and
 maybe useful for support later. It isn't harmless: once migrations are self-gating and structural
 (points 1–3 above), a version number plays no role in deciding what runs. It becomes pure
-decoration — except it wasn't quite inert. Every file missing it (which was *every* hand-written
+decoration — except it wasn't quite inert. Every file missing it (which was _every_ hand-written
 file, since the README never showed it) got treated as "changed" and silently rewritten to disk on
 first boot, reformatted, just to add a number nothing reads. That's a real, user-visible side
 effect (a file the user didn't touch shows up as modified in their dotfiles repo) in exchange for
@@ -125,7 +125,7 @@ mistake that caused the corruption in `docs/CONFIG_VERSIONING.md`'s Scenario 4.
 (`src/08-actions/openConfig.js`), same as today.
 
 A cheaper way to get the discoverability this idea was after, without the downside: have
-`openConfig.js` seed the editor buffer with the *current resolved* values when no file exists yet,
+`openConfig.js` seed the editor buffer with the _current resolved_ values when no file exists yet,
 so the user sees what's editable immediately — but only persist that if they actually save, and
 only that one time, never re-written on every boot.
 

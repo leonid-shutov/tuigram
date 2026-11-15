@@ -102,7 +102,7 @@ but it's worth seeing why that would go wrong if one were added back later:
 ```
 
 A user who never saw the old `imageProtocol` key — they installed after this shipped and copied
-the *current* docs — writes exactly the new shape:
+the _current_ docs — writes exactly the new shape:
 
 ```json
 // config.json, as written by the user, correct per current docs
@@ -126,7 +126,7 @@ just reads it (`undefined`, since this file never had that key) and overwrites t
 The user's `kitty` setting is gone, silently, on the very first launch that includes this
 migration.
 
-**What tuigram actually does**: the real migration checks for its own precondition — the *old*
+**What tuigram actually does**: the real migration checks for its own precondition — the _old_
 key's presence — before transforming anything, and needs no version signal to decide whether to
 run at all:
 

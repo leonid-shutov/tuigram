@@ -15,6 +15,7 @@ jobs:
           node-version: '26'
           cache: npm
       - run: npm ci
+      - run: npm run fmt:check
       - run: npm run lint
       - run: npm run types
       - run: npm test
