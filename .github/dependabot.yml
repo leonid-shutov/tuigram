@@ -5,8 +5,14 @@ updates:
     schedule:
       interval: weekly
     groups:
+      opentui:
+        patterns: ['@opentui/*']
+      mtcute:
+        patterns: ['@mtcute/*']
       npm:
         patterns: ['*']
+        exclude-patterns: ['@opentui/*', '@mtcute/*']
+        update-types: [minor, patch]
   - package-ecosystem: github-actions
     directory: /
     schedule:
