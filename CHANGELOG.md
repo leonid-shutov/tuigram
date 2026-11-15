@@ -2,6 +2,8 @@
 
 ## [Unreleased]
 
+## [1.4.1] - 2026-11-15
+
 ### Changed
 
 - tuigram starts in about half the time and with about a quarter of the memory it took before.
@@ -217,7 +219,8 @@ First public release.
 
 Supersedes the `1.0.0-alpha.*` series, which is not itemized here.
 
-[unreleased]: https://github.com/leonid-shutov/tuigram/compare/v1.4.0...HEAD
+[unreleased]: https://github.com/leonid-shutov/tuigram/compare/v1.4.1...HEAD
+[1.4.1]: https://github.com/leonid-shutov/tuigram/compare/v1.4.0...v1.4.1
 [1.4.0]: https://github.com/leonid-shutov/tuigram/compare/v1.3.0...v1.4.0
 [1.3.0]: https://github.com/leonid-shutov/tuigram/compare/v1.2.0...v1.3.0
 [1.2.0]: https://github.com/leonid-shutov/tuigram/compare/v1.1.0...v1.2.0
