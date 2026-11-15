@@ -9,9 +9,9 @@
     return { name: `${glyph} ${name}${suffix}`, description: '', value };
   };
   ui.picker.open({
-    title: ` ${keymap.commands.dialogs['dialogs.emoji'].title} `,
-    placeholder: 'Search emoji…',
-    pickHint: 'Set',
+    title: ` ${Locale.t(keymap.commands.dialogs['dialogs.emoji'].title)} `,
+    placeholder: Locale.t('Search emoji…'),
+    pickHint: Locale.t('Set'),
     items: [
       item(Emoji.fromHash(chatId), 'default', ''),
       ...Emoji.catalog.map(({ glyph, name }) => item(glyph, name, glyph)),
@@ -22,7 +22,7 @@
       actions.repaintDialogs();
       actions.repaintChatTitle();
       navigation.select('dialogs');
-      void saved.catch((error) => ui.errors.report('Could not save the chat emoji.', error));
+      void saved.catch((error) => ui.errors.report(Locale.t('Could not save the chat emoji.'), error));
     },
   });
   navigation.select('picker');

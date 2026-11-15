@@ -15,9 +15,9 @@
   if (links.length === 0) return;
   if (links.length === 1) return void actions.confirmLink(links[0]);
   ui.choice.open({
-    title: ` ${keymap.commands.message['message.open'].title} `,
+    title: ` ${Locale.t(keymap.commands.message['message.open'].title)} `,
     message: Message.preview(message) ?? '',
-    pickHint: 'Open',
+    pickHint: Locale.t('Open'),
     options: links.map(({ label, url }) => ({ name: url.includes(label) ? url : `${label} → ${url}`, value: url })),
     /** @param {string} picked */
     onPick: (picked) => {

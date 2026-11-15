@@ -13,7 +13,7 @@
     });
 
     const handle = self.mount({
-      title: 'Sign in to Telegram',
+      title: Locale.t('Sign in to Telegram'),
       children: [Text({ content: label, fg: config.theme.fg }), input, Text({ content: hint, fg: config.theme.muted })],
     });
 

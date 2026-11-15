@@ -33,6 +33,7 @@ import {
   ResolvedTheme,
   ImageProtocol as _ImageProtocol,
   Receipt as _Receipt,
+  Language as _Language,
   ConfigSchema,
 } from './config';
 
@@ -52,6 +53,7 @@ import { Result as _Result } from 'metautil';
 declare global {
   type ImageProtocol = _ImageProtocol;
   type Receipt = _Receipt;
+  type Language = _Language;
   /** Global because `Media.isFile` narrows to it and `8-actions` passes it around. */
   type FileMedia = _FileMedia;
   type MessagePromptEventMap = {
@@ -85,6 +87,8 @@ declare global {
     /** Whether the key hint bar occupies the bottom row. */
     hints: boolean;
     receipt: Receipt;
+    /** Interface language: 'en' (English) or 'ms' (Bahasa Melayu). */
+    language: Language;
   };
 
   const config: ConfigSelf & {
@@ -123,7 +127,12 @@ declare global {
     };
     /** What config.json's keys mean, their defaults, and how config.json gets loaded/validated. */
     schema: {
-      defaults: { senderColors: string[]; imageProtocols: ImageProtocol[]; receipts: Receipt[] };
+      defaults: {
+        senderColors: string[];
+        imageProtocols: ImageProtocol[];
+        receipts: Receipt[];
+        languages: Language[];
+      };
       fields: ConfigSchema;
       /** Narrows an arbitrary config.json key to one `fields` actually has an entry for. */
       isSchemaKey(key: string): key is keyof ConfigSchema;
@@ -639,6 +648,16 @@ declare global {
     const keys: (bindings: readonly KeymapActiveBinding[]) => string;
   }
 
+  /** tuigram's own chrome in the configured language. Message text from Telegram itself is
+   * never translated. */
+  namespace Locale {
+    /** Bahasa Melayu string table, keyed by the English label. */
+    const ms: Record<string, string>;
+    /** `label` in the configured language (`ms` when set, else unchanged English). Extra
+     * args fill each `%s` in turn. Unknown labels fall back to English. */
+    const t: (label: string, ...args: unknown[]) => string;
+  }
+
   /** Commands as they are written: keyed by the name the bindings point at. */
   type Commands = Record<string, Command>;
 
@@ -649,7 +668,10 @@ declare global {
 
   type KeymapModule = {
     engine: KeymapEngine;
-    commands: Record<'app' | 'dialogs' | 'folders' | 'chat' | 'prompt' | 'picker' | 'choice' | 'filePicker', Commands> & {
+    commands: Record<
+      'app' | 'dialogs' | 'folders' | 'chat' | 'prompt' | 'picker' | 'choice' | 'filePicker',
+      Commands
+    > & {
       message: MessageCommands;
     };
     /** Bindings by the layer that installs them; the seam a `keys` block in config.json would feed. */

@@ -21,7 +21,7 @@ async () => {
   const paged = await Result.fromPromise(messenger.getPage(chatId, { before: oldest }));
   spinner.stop();
   loadingMore = false;
-  if (!paged.ok) return void ui.errors.report('Could not load older messages.', paged.error);
+  if (!paged.ok) return void ui.errors.report(Locale.t('Could not load older messages.'), paged.error);
 
   const page = paged.unwrap();
   if (page.length === 0) return void firstMessageIds.set(chatId, oldest.id);

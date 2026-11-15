@@ -33,5 +33,5 @@ async () => {
   actions.repaintChatTitle();
   actions.repaintHints();
   screen.renderer.resume();
-  if (!ran.ok) ui.errors.report('Could not open the editor.', ran.error);
+  if (!ran.ok) ui.errors.report(Locale.t('Could not open the editor.'), ran.error);
 };

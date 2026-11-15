@@ -6,16 +6,16 @@
   if (!Message.isConfirmed(message)) return;
   const dialogs = store.dialogs.all();
   ui.picker.open({
-    title: ` ${keymap.commands.message['message.forward'].title} `,
-    placeholder: 'Forward to…',
-    pickHint: 'Forward',
+    title: ` ${Locale.t(keymap.commands.message['message.forward'].title)} `,
+    placeholder: Locale.t('Forward to…'),
+    pickHint: Locale.t('Forward'),
     items: dialogs.map(Dialog.toPickerItem),
     /** @param {number} toChatId */
     onPick: async (toChatId) => {
       navigation.select('chat');
       const sent = await Result.fromPromise(messenger.forwardMessage(message.chatId, message, toChatId));
       if (!sent.ok) {
-        ui.errors.report('Could not forward the message.', sent.error);
+        ui.errors.report(Locale.t('Could not forward the message.'), sent.error);
         return;
       }
       // The same path as a message from the stream: it dedupes against the update that follows,

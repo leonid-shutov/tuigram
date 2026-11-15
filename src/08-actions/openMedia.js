@@ -17,8 +17,8 @@ async (media) => {
     const download = messenger.downloadMedia(media.fileId).then((bytes) => Cache.write(file, bytes));
     const downloaded = await Result.fromPromise(download);
     ui.chat.clearStatus();
-    if (!downloaded.ok) return void ui.errors.report('Could not open the media.', downloaded.error);
+    if (!downloaded.ok) return void ui.errors.report(Locale.t('Could not open the media.'), downloaded.error);
   }
   const opened = Result.from(() => OS.open(file));
-  if (!opened.ok) ui.errors.report('Could not open the media.', opened.error);
+  if (!opened.ok) ui.errors.report(Locale.t('Could not open the media.'), opened.error);
 };

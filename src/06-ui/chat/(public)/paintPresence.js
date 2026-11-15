@@ -1,22 +1,22 @@
 /** Static wording for mtcute's coarse last-seen buckets — everything but the exact-offline case,
  * which is the only one that needs real date math. */
 const BUCKET_LABEL = {
-  recently: 'last seen recently',
-  within_week: 'last seen within a week',
-  within_month: 'last seen within a month',
-  long_time_ago: 'last seen a long time ago',
+  recently: Locale.t('last seen recently'),
+  within_week: Locale.t('last seen within a week'),
+  within_month: Locale.t('last seen within a month'),
+  long_time_ago: Locale.t('last seen a long time ago'),
 };
 
 /** @param {import('../../../../types/domain').Presence} presence */
 const describe = (presence) => {
-  if (presence.status === 'online') return 'online';
+  if (presence.status === 'online') return Locale.t('online');
   if (presence.status === 'offline') {
-    if (presence.lastOnline === null) return 'offline';
+    if (presence.lastOnline === null) return Locale.t('offline');
     const seenToday = presence.lastOnline.toDateString() === new Date().toDateString();
     const when = seenToday
       ? presence.lastOnline.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
       : presence.lastOnline.toLocaleDateString();
-    return `last seen ${when}`;
+    return Locale.t('last seen %s', when);
   }
   return BUCKET_LABEL[presence.status];
 };
@@ -44,10 +44,12 @@ const DOING = {
  * @param {import('../../../../types/domain').Typist[]} typists */
 const describeTyping = ([first, second, ...rest]) => {
   if (second === undefined)
-    return first.name === null ? `${DOING[first.status]}…` : `${first.name} is ${DOING[first.status]}…`;
+    return first.name === null
+      ? `${Locale.t(DOING[first.status])}…`
+      : Locale.t('%s is %s…', first.name, Locale.t(DOING[first.status]));
   if (rest.length === 0 && first.name !== null && second.name !== null)
-    return `${first.name} and ${second.name} are typing…`;
-  return `${2 + rest.length} people are typing…`;
+    return Locale.t('%s and %s are typing…', first.name, second.name);
+  return Locale.t('%s people are typing…', 2 + rest.length);
 };
 
 /** @type {ChatSection['paintPresence']} */

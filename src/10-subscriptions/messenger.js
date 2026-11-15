@@ -1,5 +1,5 @@
 messenger.dispatcher.onError((error) => {
-  ui.errors.report('Something went wrong.', error);
+  ui.errors.report(Locale.t('Something went wrong.'), error);
   return true;
 });
 

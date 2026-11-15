@@ -2,6 +2,12 @@
 
 ## [Unreleased]
 
+### Added
+
+- Bahasa Melayu interface: `"language": "ms"` in `config.json` translates the key hint
+  bar, the `?` key list, pickers, sign-in screens, status flashes and the update notice.
+  Message text from Telegram itself stays untranslated; unknown values fall back to English.
+
 ## [1.4.1] - 2026-11-15
 
 ### Changed

@@ -25,6 +25,11 @@
     hotReload: true,
     validate: (value) => config.schema.defaults.receipts.some((receipt) => receipt === value),
   },
+  language: {
+    default: 'en',
+    hotReload: true,
+    validate: (value) => config.schema.defaults.languages.some((language) => language === value),
+  },
   proxy: {
     default: undefined,
     hotReload: false, // read once at boot; changing it needs a restart regardless
