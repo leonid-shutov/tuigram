@@ -14,12 +14,19 @@ let exiting = false;
   };
 
   if (typeof auth !== 'undefined') Result.from(() => auth.ui.dispose());
+  /** @type {Promise<unknown>[]} */
+  const closing = [];
+  // opentui restores the terminal after `destroy` returns; exiting before `closed` settles (it
+  // does within a second, or rejects) would leave it raw and on the alternate screen.
   if (typeof screen !== 'undefined' && screen.renderer !== undefined) {
     Result.from(() => screen.renderer.destroy());
+    closing.push(Result.fromPromise(screen.renderer.closed));
   }
 
   // auth.client only exists from 03-auth/3-client.js on — `logout` with no session file
   // (2-notSignedIn.js) exits before that.
-  if (typeof auth === 'undefined' || auth.client === undefined) return void done();
-  Result.fromPromise(auth.client.destroy()).then(done);
+  if (typeof auth !== 'undefined' && auth.client !== undefined) {
+    closing.push(Result.fromPromise(auth.client.destroy()));
+  }
+  Promise.all(closing).then(done);
 };

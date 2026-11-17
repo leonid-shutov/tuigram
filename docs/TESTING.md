@@ -202,7 +202,8 @@ When the app starts calling a Telegram method the fake does not know, the call f
   `assert.deepEqual`. `test/world.js` already copies what it records.
 - **`process.exit` doesn't stop the app's code.** In a test it ends the app, so `stop()` and
   `boot()` notice, but unlike the real one it returns, and whatever follows the call still runs.
-  Don't look at the app after it has exited.
+  Don't look at the app after it has exited. It does run the app's `exit` listeners first, as the
+  real one does: that is where `Crash.hard` writes its report, so a crash still shows in the log.
 - **Text on screen can be in more than one place.** A chat's last message is also its preview in
   the chat list, so `waitForText` on it can return before the chat itself has loaded, and keys
   pressed next go to an empty chat. To open a chat, use `app.openFirstChat({ selected })`, which

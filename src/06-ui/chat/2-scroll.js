@@ -5,6 +5,9 @@ const scroll = ScrollBox({
   stickyScroll: true,
   stickyStart: 'bottom',
   focusable: true,
+  // On the box, not `contentOptions`: since opentui 0.8 the content is a facade that takes layout
+  // options only, and drops a hook given there without a word.
+  renderAfter: (buffer) => self.drawOutboxUnread(buffer),
 
   // No vertical padding, and that is what makes Bubble's `maxHeight: '100%'` honest: a percentage
   // resolves to the viewport's inner height, but the content box counts an over-tall child as at
@@ -15,7 +18,6 @@ const scroll = ScrollBox({
     flexDirection: 'column',
     gap: 1,
     paddingX: 1,
-    renderAfter: (buffer) => self.drawOutboxUnread(buffer),
   },
 
   // The track and thumb otherwise fall back to opentui's hardcoded greys, which ignore the theme.

@@ -159,7 +159,7 @@ declare global {
   const Text: ComponentFactory<_opentui.TextOptions, _opentui.TextRenderable>;
   const Textarea: ComponentFactory<_opentui.TextareaOptions, _opentui.TextareaRenderable>;
   const ScrollBox: ComponentFactory<_opentui.ScrollBoxOptions, _opentui.ScrollBoxRenderable> & {
-    preserveScroll(component: _opentui.ScrollBoxRenderable, mutate: () => void): void;
+    preserveScroll(component: _opentui.ScrollBoxRenderable, anchor: _opentui.Renderable, mutate: () => void): void;
     scrollToBottom(component: _opentui.ScrollBoxRenderable): void;
     /** Scroll `child` fully into view, top-pinned when it is as tall as the viewport. */
     reveal(component: _opentui.ScrollBoxRenderable, child: _opentui.Renderable): void;

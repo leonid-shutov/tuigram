@@ -10,7 +10,7 @@ async () => {
   const seed = seeding ? config.schema.resolveDefaults() : null;
   if (seeding) Result.from(() => node.fs.writeFileSync(settingsSeed, `${JSON.stringify(seed, null, 2)}\n`));
 
-  screen.renderer.suspend();
+  await screen.renderer.suspend();
   const ran = await Result.fromPromise(OS.edit(target));
 
   // Only promote the seed to the real file if the editor actually changed it — quitting
@@ -32,6 +32,6 @@ async () => {
   actions.repaintDialogs();
   actions.repaintChatTitle();
   actions.repaintHints();
-  screen.renderer.resume();
+  await screen.renderer.resume();
   if (!ran.ok) ui.errors.report(Locale.t('Could not open the editor.'), ran.error);
 };

@@ -3,11 +3,11 @@ const RUN_END = config.theme.borderChars ? RUN_LINE : '╵';
 const RUN_FG = tui.parseColor(config.theme.muted);
 const RUN_BG = tui.parseColor(config.theme.bg);
 
-// Drawn before the bubbles paint but after they are laid out, inside the viewport's scissor, so the
-// bar scrolls and clips with them; nothing else paints in the gutter. One bar spans the gaps, day
-// separators and grouped bubbles between the two ends, and its head stays on the viewport's first
-// row while the run's top is scrolled away. The monkey is two cells wide, so its right half sits over
-// the line.
+// Drawn after the bubbles are laid out, clipped to the viewport, so the bar scrolls and clips with
+// them; nothing else paints in the gutter, so painting after them changes nothing. One bar spans
+// the gaps, day separators and grouped bubbles between the two ends, and its head stays on the
+// viewport's first row while the run's top is scrolled away. The monkey is two cells wide, so its
+// right half sits over the line.
 /** @type {ChatSelf['drawOutboxUnread']} */
 (buffer) => {
   const first = self.views.at(self.outboxUnreadFrom)?.box ?? null;
@@ -15,10 +15,13 @@ const RUN_BG = tui.parseColor(config.theme.bg);
   if (first === null || last === null) return;
   const x = last.screenX + last.width + Bubble.GUTTER - 1;
   const bottom = last.screenY + last.height - 1;
-  const head = Math.max(first.screenY, self.scroll.viewport.screenY);
+  const { viewport } = self.scroll;
+  const head = Math.max(first.screenY, viewport.screenY);
   if (head > bottom) return;
+  buffer.pushScissorRect(viewport.screenX, viewport.screenY, viewport.width, viewport.height);
   for (let y = head + 1; y < bottom; y++) buffer.drawText(RUN_LINE, x, y, RUN_FG, RUN_BG);
   if (bottom > head) buffer.drawText(RUN_END, x, bottom, RUN_FG, RUN_BG);
   if (config.receipt === 'tick') buffer.drawText('✓', x, head, RUN_FG, RUN_BG);
   else buffer.drawText('🙈', x - 1, head, RUN_FG, RUN_BG);
+  buffer.popScissorRect();
 };

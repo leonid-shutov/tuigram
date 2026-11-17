@@ -8,9 +8,9 @@ async () => {
   const file = node.path.join(dir, `message-${message.id}.txt`);
   node.fs.writeFileSync(file, message.text.endsWith('\n') ? message.text : `${message.text}\n`, { mode: 0o444 });
 
-  screen.renderer.suspend();
+  await screen.renderer.suspend();
   const ran = await Result.fromPromise(OS.edit(file));
   Result.from(() => node.fs.rmSync(dir, { recursive: true, force: true }));
-  screen.renderer.resume();
+  await screen.renderer.resume();
   if (!ran.ok) ui.errors.report(Locale.t('Could not open the editor.'), ran.error);
 };

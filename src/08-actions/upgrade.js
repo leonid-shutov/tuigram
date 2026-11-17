@@ -29,7 +29,7 @@ async () => {
     return;
   }
 
-  screen.renderer.suspend();
+  await screen.renderer.suspend();
   process.stderr.write(`\ntuigram: updating ${packageVersion} -> ${release.version}\n\n`);
 
   /** @type {Result<number | null>} */
@@ -46,7 +46,7 @@ async () => {
 
   actions.repaintDialogs();
   actions.repaintHints();
-  screen.renderer.resume();
+  await screen.renderer.resume();
   ui.errors.report(
     ran.ok ? `Update failed (exit ${ran.unwrap()}).` : 'Update failed.',
     ran.ok ? new Error(`exit ${ran.unwrap()}`) : ran.error,

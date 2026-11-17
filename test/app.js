@@ -36,6 +36,9 @@ const boot = async ({ telegram, width = 80, height = 24, env = {} }) => {
   const console = { log, error: log, warn: log, info: log, debug: log };
 
   const { promise: exited, resolve: exit } = Promise.withResolvers();
+  // The app's `exit` listeners run when it exits, as the real process runs them: Crash.hard writes
+  // its report from one. Its other listeners (uncaught errors) are left to the test runner.
+  const exitListeners = [];
   // Not Object.assign: `process.stderr` is a getter with no setter, and assigning it throws.
   const testProcess = inherit(process, {
     env: {
@@ -49,8 +52,15 @@ const boot = async ({ telegram, width = 80, height = 24, env = {} }) => {
       ...env,
     },
     argv: [process.execPath, path.join(ROOT, 'bin', 'tuigram.js')],
-    exit: (code = 0) => exit(code),
-    on: () => testProcess,
+    exit: (code = 0) => {
+      for (const listener of exitListeners.splice(0)) listener(code);
+      exit(code);
+    },
+    on: (event, listener) => {
+      if (event === 'exit') exitListeners.push(listener);
+      return testProcess;
+    },
+    once: (event, listener) => testProcess.on(event, listener),
     removeAllListeners: () => testProcess,
     stderr: { write: (chunk) => void logs.push(String(chunk)) },
   });

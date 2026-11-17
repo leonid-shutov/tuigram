@@ -10,13 +10,14 @@ const SPINNER_INTERVAL_MS = 120;
 
 // A box whose edge titles are built from named parts. Each edge has a left and a right group, each
 // listing its parts in order; they are joined, and the last gives way first when the edge runs out
-// of room. A lone group is the edge's title, drawn by opentui with the box's colour and focus. With
-// both groups showing, the left one is the title and the right one, which opentui has no slot for,
-// is drawn here in the same colour; it gives way, whole, before the left one does. A centre group
-// is drawn here too, on the edge's middle cell, whole or not at all: it never pushes the side
-// titles aside, it just skips the frame when it would touch one. An edge with
-// parts owns its title: a direct `title` / `bottomTitle` write or alignment is overwritten next
-// frame. A flash shows over a part for a while, and a spinner until it's stopped; writes to the
+// of room. A lone group is the edge's title, in the box's colour and focus, where opentui puts a
+// title. With both groups showing, the left one is the title and the right one gives way, whole,
+// before the left one does. A centre group goes on the edge's middle cell, whole or not at all: it
+// never pushes the side titles aside, it just skips the frame when it would touch one. All of it is
+// drawn here, composed against the width of the frame being painted: since opentui 0.6 a box's own
+// title is native state that a setter stages for a later frame, so it can't follow this frame's
+// width. An edge with parts should get no `title` / `bottomTitle` of its own; it would show under
+// these. A flash shows over a part for a while, and a spinner until it's stopped; writes to the
 // part meanwhile land underneath them, and are what shows once they're over.
 Component(
   class PanelRenderable extends tui.BoxRenderable {
@@ -139,26 +140,28 @@ Component(
       return shown.length === 0 ? undefined : ` ${shown.join(SEPARATOR)} `;
     }
 
-    // Composed against the width of this very frame. The fields, not the setters: a setter
-    // requests a render, and this already is one.
+    // Composed against the width of this very frame, and drawn over the border opentui paints.
     /** @param {import('@opentui/core').OptimizedBuffer} buffer */
     renderSelf(buffer) {
+      super.renderSelf(buffer);
       const top = this.titleParts.top && this.composeEdge(this.titleParts.top);
       const bottom = this.titleParts.bottom && this.composeEdge(this.titleParts.bottom);
-      if (top) {
-        this._title = top.title;
-        this._titleAlignment = top.alignment;
+      if (top) this.drawEdge(buffer, top, this.screenY);
+      if (bottom) this.drawEdge(buffer, bottom, this.screenY + this.height - 1);
+    }
+
+    /**
+     * @param {import('@opentui/core').OptimizedBuffer} buffer
+     * @param {ComposedEdge} edge
+     * @param {number} y
+     */
+    drawEdge(buffer, edge, y) {
+      if (edge.title !== undefined) {
+        if (edge.alignment === 'left') this.drawTitle(buffer, edge.title, INSET, y);
+        else this.drawRight(buffer, edge.title, y);
       }
-      if (bottom) {
-        this._bottomTitle = bottom.title;
-        this._bottomTitleAlignment = bottom.alignment;
-      }
-      super.renderSelf(buffer);
-      const bottomY = this._screenY + this.height - 1;
-      if (top?.right) this.drawRight(buffer, top.right, this._screenY);
-      if (bottom?.right) this.drawRight(buffer, bottom.right, bottomY);
-      if (top) this.drawCenter(buffer, top, this._screenY);
-      if (bottom) this.drawCenter(buffer, bottom, bottomY);
+      if (edge.right) this.drawRight(buffer, edge.right, y);
+      this.drawCenter(buffer, edge, y);
     }
 
     destroySelf() {
@@ -217,10 +220,10 @@ Component(
      * @param {number} y
      */
     drawTitle(buffer, title, x, y) {
-      const focused = this._focusable && (this._focused || this._hasFocusedDescendant);
+      const focused = this._focusable && (this._focused || this.hasFocusedDescendant);
       const fg = this._titleColor ?? (focused ? this._focusedBorderColor : this._borderColor);
       // On a transparent background a space would leave the border under it showing.
-      buffer.drawText(title, this._screenX + x, y, fg, tui.parseColor(config.theme.bg));
+      buffer.drawText(title, this.screenX + x, y, fg, tui.parseColor(config.theme.bg));
     }
   },
 );

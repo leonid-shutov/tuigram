@@ -6,7 +6,7 @@
 // Only the outbox-unread run makes room for the bar, and it is always the chat's end: a bubble
 // resized there can't move a view scrolled up, and sticky scroll keeps a view at the bottom pinned.
 // Older history landing never changes the run, so inside `preserveScroll` the gutter writes are
-// no-ops; the divider it may move up is laid out in there too, and counts toward the height kept.
+// no-ops; the divider it may move up is laid out in there too, and the anchor holds the view through it.
 // The divider and the day separators move between slots, so they go where they belong before the
 // bubbles gone are destroyed: one of their slots may still hold them, and they would go with it.
 /** @param {readonly ChatMessage[]} messages @param {ChatMarks} marks */
@@ -48,11 +48,12 @@ const reconcile = (messages, { outboxUnreadFrom, inboxUnreadFrom, inboxUnreadCou
   const { selectedIndex } = self;
   self.outboxUnreadFrom = marks.outboxUnreadFrom;
   self.inboxUnreadFrom = marks.inboxUnreadFrom;
-  // Older history landed above what was on screen: keep the view where it was. `redate` runs
-  // inside, so the separators it adds count toward the height preserveScroll anchors by.
-  const head = self.views.at(0)?.message ?? null;
-  const prepended = head !== null && messages.findIndex(({ id }) => id === head.id) > 0;
-  if (prepended) ScrollBox.preserveScroll(self.scroll, () => reconcile(messages, marks));
+  // Older history landed above what was on screen: keep the view where it was. The old head's
+  // bubble is held through it, and is the anchor rather than its slot: `redate` moves the day
+  // separator from that slot up to the new head, and the divider may move too.
+  const head = self.views.at(0) ?? null;
+  const prepended = head !== null && messages.findIndex(({ id }) => id === head.message.id) > 0;
+  if (prepended) ScrollBox.preserveScroll(self.scroll, head.box, () => reconcile(messages, marks));
   else reconcile(messages, marks);
 
   // The message under the cursor went away (a failed send dropped, or a pending one swapped for
