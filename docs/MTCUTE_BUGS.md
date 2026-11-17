@@ -1,10 +1,63 @@
 # mtcute bugs and sharp edges
 
-Findings against `@mtcute/test@0.32.7` and `@mtcute/core@0.32.7`/`@mtcute/node@0.32.7`, turned
-up while running the whole app headless on mtcute's `StubTelegramClient` (a fake Telegram behind
-a real `TelegramClient`, for integration tests). tuigram itself is on 0.32.5; `@mtcute/test`
-0.32.7 wants `@mtcute/core ^0.32.7`, so the two have to move together. Paths are relative to
-`node_modules/@mtcute/`; each one comes with the grep that finds it again.
+tuigram is on `@mtcute/core`, `@mtcute/node` and `@mtcute/test` 0.32.8. `@mtcute/test` wants a
+matching `@mtcute/core`, so they have to move together. The first section was found in the real
+app. The rest turned up while running the whole app headless on mtcute's `StubTelegramClient` (a
+fake Telegram behind a real `TelegramClient`, for integration tests), against 0.32.7. Paths are
+relative to `node_modules/@mtcute/`; each one comes with the grep that finds it again.
+
+## Bug: a min channel poisons the peer cache, and every later call is `CHANNEL_INVALID`
+
+Seen on 0.29.7, reproduced live on 0.32.5, and the code is unchanged in 0.32.8. A channel you are
+a member of starts failing with `CHANNEL_INVALID` on every call that names it by id (older
+history pages, `readHistory`, sending, downloads, forwarding), and stays broken until tuigram
+restarts. The first call after the trigger still succeeds, and the stored peer row looks fine
+again a moment later, which is what makes it hard to pin down:
+
+```
+RpcError (400 CHANNEL_INVALID): Telegram API error 400: CHANNEL_INVALID
+    at messages.forwardMessages
+    at async Module.forwardMessagesById (…/@mtcute/core/highlevel/methods/messages/forward-messages.cjs:39:15)
+    at async Object.forwardMessage (src/04-messenger/(methods)/forwardMessage.js:4:16)
+```
+
+The trigger is a `min: true` copy of the channel: Telegram sends one inside a forward or a reply
+in some other chat, with a limited access hash that only works through that message. Three
+things in `PeersService` (`core/highlevel/storage/service/peers.cjs`) then combine:
+
+1. **The min copy overwrites the good row.** For a min peer over a full one, `store()` builds a
+   merged `newComplete` but writes `dto`, the min access hash with `isMin` set, to the database
+   (`grep -n "await this._peers.store(dto)" peers.cjs`). Its lookup of the existing peer also
+   uses the bare id (`grep -n "getCompleteById(peer.id)" peers.cjs`), while channel rows are
+   stored under the marked `-100…` id, so for channels that lookup usually misses.
+2. **The min hash gets cached under the marked id.** The next `resolvePeer` misses in `getById`
+   (the row is min), falls back to `getCompleteById(peerId, true)`
+   (`grep -n getCompleteById core/highlevel/methods/users/resolve-peer.cjs`), and that caches
+   `getInputPeer(minDto)` under the marked id. The username or `channels.getChannels` fallback
+   makes this one call work.
+3. **The full channel never replaces the bad entry.** When the full channel arrives again,
+   `store()` fixes the database row but keys the cache by the bare `peer.id`
+   (`grep -n "_cache.set(peer.id" peers.cjs`), so the marked-id entry stays. It goes only when
+   the 100-entry LRU evicts it, or on restart. The same bare id in `_refs.deleteByPeer(peer.id)`
+   means a channel's message refs were never deleted either.
+
+A session collects these quickly: one had 54 channel rows flagged `isMin` in `session.db`.
+
+### Workaround
+
+Restarting tuigram clears the cache, until the next min copy of that channel arrives. Inside
+tuigram, passing the dialog's stored `inputPeer` instead of a numeric chat id would skip
+`resolvePeer` and its cache altogether, but every messenger method takes a chat id today.
+
+### Fix
+
+Drafted, not yet pushed or sent upstream: branch `fix/min-peer-cache` in the
+[leonid-shutov/mtcute](https://github.com/leonid-shutov/mtcute) fork, with the full write-up and
+a live repro script in its `PR_DESCRIPTION.md`. In short: when a min peer arrives over a full one,
+keep the full access hash and store the merged `complete` with `isMin` off; key the cache,
+pending writes and refs by the marked id (`dto.id`); record `isMin` on cache entries so `getById`
+never returns a min hash from the cache. It adds 7 tests that fail on mtcute `master` and pass
+with the fix.
 
 ## Bug: `@mtcute/test` cannot be imported outside vitest
 
