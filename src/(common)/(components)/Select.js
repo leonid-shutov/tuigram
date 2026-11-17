@@ -4,7 +4,7 @@
 // visible row's trailing `marker` substring over the top in whatever colour `colorFor` picks.
 //
 // The hook reads three private fields (`scrollOffset`, `maxVisibleItems`, `linesPerItem`) to know
-// which rows are on screen — checked against opentui 0.8.4. This is the one spot to check if a
+// which rows are on screen — checked against opentui 0.9.2. This is the one spot to check if a
 // future opentui upgrade makes markers draw in the wrong place, the wrong colour, or not at all;
 // the check below turns a silent mismatch into a startup crash with a clear cause instead.
 /** @typedef {import('@opentui/core').SelectOption & { marker: string }} MarkerOption */

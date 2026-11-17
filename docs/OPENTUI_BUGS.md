@@ -1,9 +1,9 @@
 # OpenTUI bugs and sharp edges
 
 Findings against `@opentui/core@0.5.10`, turned up while making tuigram adapt to the terminal's
-own colors. Rechecked against 0.8.4 on 2026-11-16: the three bugs are fixed upstream (see the end),
-and both sharp edges still hold, defaults included. The "Checked, and fine" notes were not
-rechecked.
+own colors. Rechecked against 0.8.4 on 2026-11-16 and again against 0.9.2 on 2026-11-17: the three
+bugs are fixed upstream (see the end), and both sharp edges still hold, defaults included. The
+"Checked, and fine" notes were not rechecked.
 
 ## Sharp edge: renderable defaults are hardcoded for a dark terminal
 
