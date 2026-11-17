@@ -89,3 +89,31 @@ describe('chat list', () => {
     assert.ok(frame.indexOf('Bob') < frame.indexOf('Ann'), frame);
   });
 });
+
+describe('chat list, with a symbol in a name', () => {
+  let telegram;
+  let app;
+
+  beforeEach(async () => {
+    telegram = await createTelegram();
+    const mom = await telegram.user({ firstName: 'Mom ❤' });
+    telegram.message(mom, 'call me');
+    telegram.message(mom, 'when you can');
+    telegram.message(mom, 'love you');
+    app = await boot({ telegram });
+    await app.waitForText('Mom');
+  });
+
+  afterEach(async () => {
+    await app?.stop();
+    assert.deepStrictEqual(telegram.unanswered, []);
+  });
+
+  // The unread count is repainted in its own colour where the app works out it is, so a name the
+  // app measures wider or narrower than the terminal draws it shows the count twice.
+  it('shows the unread count once', async () => {
+    const row = (await app.frame()).split('\n').find((line) => line.includes('Mom ❤'));
+
+    assert.match(row, /Mom ❤ +3 │/);
+  });
+});
