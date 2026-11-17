@@ -64,16 +64,21 @@ const knownAccount = async () => {
   return account.ok && account.unwrap() !== null;
 };
 
+// Stands in for the phone, code and password prompts where there is no screen to ask on.
+const noPrompt = () => Promise.reject(new Error('the stored session needs a fresh sign-in'));
+
 // Checks a known account's session with Telegram while the rest of the app loads and paints:
 // mtcute's start() returns at its first getMe when the session is good. Anything else — revoked,
-// key not accepted, start() wanting a fresh sign-in (with no QR handler, phone or password it
-// throws) — forgets the account and starts over, so the next run takes the blocking path below
-// with its screens and recovery. If the account cannot be forgotten, that next run would land
-// here again, so it ends in auth.fail instead of a restart loop.
+// key not accepted, a 2FA password asked for — forgets the account and starts over, so the next run
+// takes the blocking path below with its screens and recovery. The prompts must reject for that:
+// @mtcute/node's start() fills in any phone, code or password left out with a `node:readline`
+// prompt on stdin, which would print over the renderer and wait forever on a terminal opentui
+// owns. If the account cannot be forgotten, that next run would land here again, so it ends in
+// auth.fail instead of a restart loop.
 // Either way the returned promise never settles: nothing waiting on the session may run.
 /** @returns {Promise<void>} */
 const confirm = () =>
-  self.client.start({}).then(
+  self.client.start({ phone: noPrompt, code: noPrompt, password: noPrompt }).then(
     () => self.secureSession(),
     async (error) => {
       console.log(`[auth] stored session not accepted: ${Explain.line(error)}`);

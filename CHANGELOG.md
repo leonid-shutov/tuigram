@@ -18,6 +18,9 @@
 ### Fixed
 
 - `Enter` in the message box with no chat open no longer throws away what was typed.
+- A saved session Telegram no longer accepts (signed out elsewhere, or now asking for the 2FA
+  password) brings up the sign-in screens again. tuigram used to print `phone >` over the screen
+  and stop responding, filling it with stray characters as the mouse moved.
 
 ## [1.5.1] - 2026-11-15
 
