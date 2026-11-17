@@ -9,7 +9,11 @@
     "cli",
     "vim",
     "mtcute",
-    "opentui"
+    "opentui",
+    "telegram-client",
+    "chat",
+    "kitty",
+    "sixel"
   ],
   "author": "Leonid Shutov <leonid.shutov@hey.com>",
   "license": "MIT",
