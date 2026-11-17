@@ -32,6 +32,16 @@ void keymap.engine.registerLayer({
   bindings: [...bindings.chat, ...bindings.message, ...bindings.panes],
 });
 
+for (const target of [ui.dialogs.component, ui.chat.component]) {
+  void keymap.engine.registerLayer({
+    target,
+    targetMode: 'focus-within',
+    enabled: () => store.chat.openChatId !== null,
+    commands: named(commands.openChat),
+    bindings: bindings.openChat,
+  });
+}
+
 void keymap.engine.registerLayer({
   target: ui.messagePrompt.component,
   targetMode: 'focus-within',

@@ -40,6 +40,11 @@ const group = (config) => Keymap.extras.createBindingLookup(config).bindings;
     'dialogs.emoji': 'e',
   }),
 
+  // Their own layers, in the chat list and the messages, enabled only while a chat is open.
+  openChat: group({
+    'openChat.close': 'escape',
+  }),
+
   // Their own layer, enabled only once the account has folders to move between.
   folders: group({
     'folders.next': ['l', 'right'],

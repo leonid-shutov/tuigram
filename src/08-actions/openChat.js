@@ -4,13 +4,15 @@ async (chatId) => {
   navigation.select('chat');
   if (store.chat.isOpen(chatId)) return;
 
-  ui.messagePrompt.reset();
+  ui.messagePrompt.swap(store.chat.openChatId, chatId);
   const dialog = store.dialogs.find(chatId);
   if (dialog === null) Crash.hard(new Error(`dialog ${chatId} is not in the store`));
   // Ahead of the store, so a cached chat renders against a cleared selection.
   ui.chat.open();
   // The divider is taken now, before `readOpenChat` below reads the chat.
   store.chat.open(chatId, Dialog.inboxUnread(dialog));
+  // Focus moved before the chat was open, and Esc closes only an open one.
+  actions.repaintHints();
   // The stream only says when a presence changes: what it is now comes from asking.
   if (dialog.isUser) {
     messenger

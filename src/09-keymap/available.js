@@ -1,7 +1,7 @@
 /** @type {Record<SectionName, (keyof KeymapModule['commands'])[]>} */
 const GROUPS = {
-  dialogs: ['dialogs', 'folders'],
-  chat: ['chat', 'message'],
+  dialogs: ['dialogs', 'folders', 'openChat'],
+  chat: ['chat', 'message', 'openChat'],
   messagePrompt: ['prompt'],
   picker: ['picker'],
   choice: ['choice'],

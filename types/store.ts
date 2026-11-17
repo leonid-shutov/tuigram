@@ -187,6 +187,8 @@ declare global {
     cache(chatId: number): void;
     /** Make `chatId` the open chat, cached from now on, with `inboxUnread` as its divider. */
     open(chatId: number, inboxUnread: InboxUnread | null): void;
+    /** Leave the open chat with none in its place, its divider gone with the visit. No-op with none open. */
+    close(): void;
     /** The open chat came back into view with `inboxUnread` unread: it becomes the divider unless
      * one is held already, which stays. No-op for a chat that isn't open. */
     holdInboxUnread(chatId: number, inboxUnread: InboxUnread | null): void;

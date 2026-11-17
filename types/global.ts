@@ -677,7 +677,7 @@ declare global {
   type KeymapModule = {
     engine: KeymapEngine;
     commands: Record<
-      'app' | 'dialogs' | 'folders' | 'chat' | 'prompt' | 'picker' | 'choice' | 'filePicker',
+      'app' | 'dialogs' | 'folders' | 'openChat' | 'chat' | 'prompt' | 'picker' | 'choice' | 'filePicker',
       Commands
     > & {
       message: MessageCommands;
@@ -688,6 +688,7 @@ declare global {
       | 'panes'
       | 'dialogs'
       | 'folders'
+      | 'openChat'
       | 'chat'
       | 'message'
       | 'prompt'

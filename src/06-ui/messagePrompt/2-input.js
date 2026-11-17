@@ -2,7 +2,7 @@ Textarea({
   width: '100%',
   height: 'auto',
   maxHeight: 10,
-  placeholder: Locale.t('Type a message...'),
+  placeholder: Locale.t('Open a chat to write'),
   placeholderColor: config.theme.muted,
   backgroundColor: config.theme.bg,
   focusedBackgroundColor: config.theme.surface,

@@ -6,4 +6,5 @@
   self.render([], { outboxUnreadFrom: 0, inboxUnreadFrom: 0, inboxUnreadCount: 0 });
   self.spinner.stop();
   self.component.clearTitlePart('status');
+  self.empty.visible = false;
 };

@@ -96,7 +96,7 @@ export TUIGRAM_API_HASH=0123456789abcdef0123456789abcdef
 | `d`                               | delete the selected message, for everyone or just for you                              |
 | `ctrl+o`                          | attach a file from the message box                                                     |
 | `Shift+Enter`                     | start a new line in the message box                                                    |
-| `Esc`                             | leave the message box; cancel a reply or an edit; close the search                     |
+| `Esc`                             | leave the message box; cancel a reply or an edit; close the search or the open chat    |
 | `ctrl+e`                          | edit `config.json` in `$VISUAL` / `$EDITOR`; changes apply when the editor closes      |
 | `!`                               | expand the error on screen, or dismiss it (not while typing)                           |
 | `alt+e`                           | the same, and works while typing                                                       |

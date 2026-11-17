@@ -201,6 +201,9 @@ declare global {
     /** Start over on another chat: drop the last chat's bubbles, forget the cursor and clear the
      * status. Its bubbles and border come with the repaints of the freshly opened store. */
     open(): void;
+    /** Leave the pane empty, saying no chat is open: no name, no status, no spinner. The bubbles
+     * go with the repaint of the closed store. */
+    close(): void;
     /** Make the bubbles match the open chat: one per message, in order, reusing each bubble whose
      * id is still held, with the 🙈 bar and the unread divider where `marks` put them. */
     render(messages: readonly ChatMessage[], marks: ChatMarks): void;
@@ -252,6 +255,8 @@ declare global {
       /** The rule across the section above the first new bubble, counting the new ones; out of the
        * scroll while there are none. */
       divider: _opentui.BoxRenderable;
+      /** "No chat open", over the empty pane; shown from `close` until `open`. */
+      empty: _opentui.BoxRenderable;
       /** Put the divider in the slot of the bubble at `inboxUnreadFrom`, above the bubble, saying
        * `count` new; or take it out when there is no such bubble. */
       placeDivider(count: number): void;
@@ -288,8 +293,9 @@ declare global {
     reply(messageId: number, quote: Omit<NonNullable<Message['replyTo']>, 'id'>): void;
     /** Leave reply mode, returning the id it replied to, or null outside it. */
     takeReply(): number | null;
-    /** Leave edit and reply mode, as when another chat opens. */
-    reset(): void;
+    /** Put the box's text away as `leaving`'s draft and bring back `entering`'s, `null` standing for
+     * no chat open. A reply or an edit belongs to the chat being left, so it is dropped first. */
+    swap(leaving: number | null, entering: number | null): void;
     /** Leave reply mode, else edit mode, else the box. */
     exit(): void;
   };
@@ -304,6 +310,11 @@ declare global {
       draft: string;
       /** Leave edit mode and restore the draft, without reporting any intent. */
       clearEdit(): void;
+      /** Each chat's unsent text, by chat id; `null` for the box with no chat open. Only text that
+       * isn't empty is kept. */
+      drafts: Map<number | null, string>;
+      /** Leave edit and reply mode. */
+      reset(): void;
       /** The line over the input: the message being answered or edited; `null` hides it. */
       quote: _opentui.TextRenderable;
       /** The border-joined line between the quote and the input, shown with the quote. */

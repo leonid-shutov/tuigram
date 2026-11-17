@@ -1,6 +1,13 @@
 /** @type {Commands} */
 ({
-  'prompt.send': { title: 'Send', priority: 'obvious', run: () => ui.messagePrompt.send() },
+  // With no chat open there is nowhere to send to, and the text stays in the box.
+  'prompt.send': {
+    title: 'Send',
+    priority: 'obvious',
+    run: () => {
+      if (store.chat.openChatId !== null) ui.messagePrompt.send();
+    },
+  },
   'prompt.exit': {
     title: 'Leave the message box',
     hint: 'Leave',
@@ -11,6 +18,8 @@
     title: 'Attach a file',
     hint: 'Attach',
     priority: 'essential',
-    run: () => navigation.select('filePicker'),
+    run: () => {
+      if (store.chat.openChatId !== null) navigation.select('filePicker');
+    },
   },
 });

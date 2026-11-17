@@ -7,6 +7,17 @@
 - Bahasa Melayu interface: `"language": "ms"` in `config.json` translates the key hint
   bar, the `?` key list, pickers, sign-in screens, status flashes and the update notice.
   Message text from Telegram itself stays untranslated; unknown values fall back to English.
+- `Esc` in the messages or the chat list closes the open chat, so new messages in it stay
+  unread and notify again. The chat list's cursor stays on it: `Enter` opens it back up.
+
+### Changed
+
+- Unsent text stays with its chat: it is put away when you open another chat or close this
+  one, and comes back when you return. It is kept only until tuigram quits.
+
+### Fixed
+
+- `Enter` in the message box with no chat open no longer throws away what was typed.
 
 ## [1.5.1] - 2026-11-15
 

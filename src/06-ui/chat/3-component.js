@@ -12,5 +12,5 @@ Panel({
     top: { left: ['label', 'name'], right: ['presence'] },
     bottom: { left: ['status'], center: ['date'], right: ['unreadLeft'] },
   },
-  children: [self.scroll],
+  children: [self.scroll, self.empty],
 });

@@ -67,6 +67,8 @@ declare global {
     /** Show a chat and focus it; one not open yet opens on its first unread message, under the
      * unread divider, or else its newest, with what that takes fetched unless cached. */
     openChat(chatId: number): Promise<void>;
+    /** Close the open chat and focus the chat list, its cursor still on the chat. No-op with none open. */
+    closeChat(): void;
     /** Open the picker over every chat; a pick opens that chat. */
     searchChats(): void;
     /** Open the picker on what the focused pane can do; picking a command runs it there. */

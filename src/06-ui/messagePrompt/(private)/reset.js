@@ -1,4 +1,4 @@
-/** @type {MessagePromptSection['reset']} */
+/** @type {MessagePromptSelf['reset']} */
 () => {
   if (self.editing !== null) self.clearEdit();
   if (self.replyingTo !== null) self.takeReply();
