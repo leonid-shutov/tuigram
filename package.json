@@ -52,7 +52,7 @@
     "@opentui/keymap": "^0.9.2",
     "@opentui/qrcode": "^0.9.2",
     "metautil": "6.0.0-alpha.0",
-    "string-width": "^7.2.0"
+    "string-width": "^9.0.0"
   },
   "devDependencies": {
     "@mtcute/test": "^0.32.8",
