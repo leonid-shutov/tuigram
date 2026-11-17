@@ -1,4 +1,4 @@
-const scroll = ScrollBox({
+ScrollBox({
   flexGrow: 1,
   scrollY: true,
   scrollX: false,
@@ -20,15 +20,7 @@ const scroll = ScrollBox({
     paddingX: 1,
   },
 
-  // The track and thumb otherwise fall back to opentui's hardcoded greys, which ignore the theme.
-  scrollbarOptions: {
-    trackOptions: { backgroundColor: config.theme.bg, foregroundColor: config.theme.border },
-  },
+  // No bar: a tall bubble draws its own (Bubble.drawScrollbar). With `scrollX: false` there is no
+  // horizontal one either.
+  verticalScrollbarOptions: { visible: false },
 });
-
-// `visible: false` in the options is silently reverted once content overflows (see
-// OPENTUI_BUGS.md); assigning through the setter is what actually sticks.
-scroll.verticalScrollBar.visible = false;
-scroll.horizontalScrollBar.visible = false;
-
-scroll;
