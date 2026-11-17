@@ -1,10 +1,6 @@
-world.terminal
-  .createRenderer({
-    exitOnCtrlC: true,
-    openConsoleOnError: false,
-    onDestroy: () => Crash.exit(null, 0),
-  })
-  .then((renderer) => {
-    renderer.setBackgroundColor(config.theme.bg);
-    return renderer;
-  });
+world.terminal.createRenderer({
+  exitOnCtrlC: true,
+  openConsoleOnError: false,
+  backgroundColor: config.theme.bg,
+  onDestroy: () => Crash.exit(null, 0),
+});
