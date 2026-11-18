@@ -1,11 +1,13 @@
 'use strict';
 
 const path = require('node:path');
+const { pathToFileURL } = require('node:url');
 const { Long, NodePlatform } = require('../bin/mtcute.js');
 const { NodeCryptoProvider } = require('@mtcute/node/utils.js');
 
-// Imported by file: the package entry point only loads under vitest (docs/MTCUTE_BUGS.md).
-const STUB = path.resolve(__dirname, '..', 'node_modules', '@mtcute', 'test', 'client.js');
+// Imported by file: the package entry point only loads under vitest (docs/MTCUTE_BUGS.md). As a
+// file:// URL, since import() reads a Windows path's drive letter (`D:`) as a URL scheme.
+const STUB = pathToFileURL(path.resolve(__dirname, '..', 'node_modules', '@mtcute', 'test', 'client.js')).href;
 
 const SELF_ID = 1;
 const MAX_CALLS = 2000;
