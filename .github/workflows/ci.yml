@@ -20,6 +20,26 @@ jobs:
       - run: npm run types
       - run: npm test
 
+  # Windows isn't supported yet: this is the first check that node:ffi, opentui's native library
+  # and better-sqlite3's prebuilt addon load there at all. Only the tests -- fmt, lint and types
+  # don't depend on the OS, and the job above already runs them.
+  windows:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [windows-latest, windows-11-arm]
+    runs-on: ${{ matrix.os }}
+    steps:
+      # The runner checks out with CRLF endings by default; keep the files byte-identical to Linux.
+      - run: git config --global core.autocrlf false
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version: '26'
+          cache: npm
+      - run: npm ci
+      - run: npm test
+
   # install.sh is served straight from master, so it is tested here rather than at release time:
   # a fresh install, then a second run over it (what `tuigram upgrade` does), on each platform it
   # supports. /bin/bash on purpose: on macOS that is bash 3.2, the one curl | bash users get.
