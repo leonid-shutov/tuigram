@@ -130,4 +130,32 @@ describe('chat', () => {
       assert.ok(args.includes('Bob') && args.includes('still on?'), args);
     });
   });
+
+  // Telegram's way of saying "online, with no end": bots and hidden presence get it.
+  describe('with Ann online until 2038', () => {
+    const ONLINE_UNTIL_2038 = { _: 'userStatusOnline', expires: 2 ** 31 - 1 };
+    const warnings = [];
+    const onWarning = (warning) => warnings.push(warning.name);
+
+    beforeEach(async () => {
+      warnings.length = 0;
+      process.on('warning', onWarning);
+      telegram = await createTelegram();
+      ann = await telegram.user({ firstName: 'Ann', status: ONLINE_UNTIL_2038 });
+      telegram.message(ann, 'hey!');
+      app = await boot({ telegram });
+      await app.openFirstChat({ selected: 'hey!' });
+    });
+
+    afterEach(() => process.off('warning', onWarning));
+
+    it('keeps her online, without a timer warning over the screen', async () => {
+      await app.waitForText('online');
+      await sleep(100);
+
+      const frame = await app.frame();
+      assert.ok(frame.includes('online') && !frame.includes('last seen'), frame);
+      assert.ok(!warnings.includes('TimeoutOverflowWarning'), warnings.join(', '));
+    });
+  });
 });

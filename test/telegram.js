@@ -11,13 +11,14 @@ const SELF_ID = 1;
 const MAX_CALLS = 2000;
 
 const peerUser = (userId) => ({ _: 'peerUser', userId });
-const tlUser = ({ id, firstName, lastName, self = false }) => ({
+const tlUser = ({ id, firstName, lastName, self = false, status }) => ({
   _: 'user',
   id,
   self,
   accessHash: Long.fromNumber(id),
   firstName,
   lastName,
+  status,
 });
 
 /** A fake Telegram account, faked at the wire under the real client (docs/TESTING.md). */
@@ -194,8 +195,9 @@ const createTelegram = async () => {
     client,
     unanswered,
 
-    user: async ({ firstName, lastName }) => {
-      const user = tlUser({ id: nextUserId++, firstName, lastName });
+    // `status` is a raw TL `UserStatus`, such as `{ _: 'userStatusOnline', expires }`.
+    user: async ({ firstName, lastName, status }) => {
+      const user = tlUser({ id: nextUserId++, firstName, lastName, status });
       users.set(user.id, user);
       await client.registerPeers(user);
       return user.id;

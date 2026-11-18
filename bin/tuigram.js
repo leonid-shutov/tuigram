@@ -11,8 +11,8 @@ const { createWorld } = require('./world');
 const pkg = require('../package.json');
 
 const RELAUNCH = 'TUIGRAM_RELAUNCHED';
-// FFI is experimental, and Node says so on stderr before the renderer has the screen.
-const NODE_FLAGS = ['--experimental-ffi', '--disable-warning=ExperimentalWarning', '--optimize-for-size'];
+// Node writes its warnings to stderr, over the renderer's screen: they go to the log instead (below).
+const NODE_FLAGS = ['--experimental-ffi', '--no-warnings', '--optimize-for-size'];
 const RESTARTED = 'TUIGRAM_RESTARTED';
 
 const args = process.argv.slice(2);
@@ -157,6 +157,7 @@ const bootCrash = (label, error) => {
   process.exit(1);
 };
 
+process.on('warning', (warning) => mockConsole.log('warning', warning.stack ?? String(warning)));
 process.on('unhandledRejection', (reason) => bootCrash('unhandled', reason));
 process.on('uncaughtException', (error) => bootCrash('uncaught', error));
 
