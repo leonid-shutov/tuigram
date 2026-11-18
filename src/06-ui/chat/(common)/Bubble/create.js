@@ -2,6 +2,11 @@
 // hidden child takes no rows), so flipping an album or editing a caption only ever repaints —
 // nothing is rebuilt. The picture exists only when some medium is drawable, sized once by the
 // album size.
+//
+// A bubble never grows past MAX_WIDTH cells, so a long message wraps at a readable width however
+// wide the terminal is; a narrower chat section still squeezes it below that.
+const MAX_WIDTH = 100;
+
 /** @type {typeof Bubble.create} */
 (message) => {
   const { sender, isGroup, forwardedFrom } = message;
@@ -44,6 +49,7 @@
     borderColor: sender.isSelf ? config.theme.selfBorder : config.theme.border,
     paddingX: 1,
     alignSelf: sender.isSelf ? 'flex-end' : 'flex-start',
+    maxWidth: MAX_WIDTH,
     focusedBorderColor: config.theme.selected,
     focusable: true,
 

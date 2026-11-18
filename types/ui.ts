@@ -18,8 +18,10 @@ declare global {
   type ScreenModule = {
     renderer: _opentui.CliRenderer;
     wrapper: _opentui.BoxRenderable;
-    /** `dialogsWidth` is the dialogs pane's current width, changed by `ui.dialogs.resize`, within `dialogsMin..dialogsMax`. */
-    size: { width: number; height: number; dialogsWidth: number; dialogsMin: number; dialogsMax: number };
+    /** The dialogs pane's current width in cells, changed by `ui.dialogs.resize` within `dialogsBounds`. */
+    size: { dialogsWidth: number };
+    /** The widths the dialogs pane may take on the terminal as it is now; read at resize time. */
+    dialogsBounds: { min: number; max: number };
     /** The startup placeholder; `destroy()` is idempotent. */
     splash: _opentui.TextRenderable;
     /** True in a terminal known to draw `◖` / `◗` as round ends; read at paint time. */
@@ -27,8 +29,8 @@ declare global {
   };
 
   type ScreenSelf = ScreenModule & {
-    /** The share of the screen the dialogs pane was last left at, read from disk; null when none is saved. */
-    savedDialogsRatio: number | null;
+    /** The width in cells the dialogs pane was last left at, read from disk; null when none is saved. */
+    savedDialogsWidth: number | null;
   };
 
   /**

@@ -1,10 +1,11 @@
 Box({
   id: 'choice',
   position: 'absolute',
+  alignSelf: 'center',
   top: '25%',
-  left: '30%',
   width: '40%',
   minWidth: 36,
+  maxWidth: 56,
   zIndex: 1000,
   visible: false,
   flexDirection: 'column',

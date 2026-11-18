@@ -1,21 +1,16 @@
-const MAX_WIDTH = 140;
-const MAX_HEIGHT = 48;
+// The app fills the terminal, whatever its size: what keeps a wide one readable is each part's own
+// cap (a bubble's width, a pop-up's size), not a box around the whole app. The dialogs pane is
+// kept in cells, so the extra room of a wide terminal goes to the chat, not the list.
 const DIALOGS_RATIO = 0.34;
-const DIALOGS_MIN = 22;
 const DIALOGS_DEFAULT_MAX = 34;
 
-const width = Math.min(screen.renderer.width, MAX_WIDTH);
-const height = Math.min(screen.renderer.height, MAX_HEIGHT);
+const { min, max } = self.dialogsBounds;
+const clamp = (/** @type {number} */ cells) => Math.min(Math.max(cells, min), max);
 
-const dialogsMax = Math.floor(width / 2);
-const dialogsMin = Math.min(DIALOGS_MIN, dialogsMax);
-const defaultMax = Math.min(DIALOGS_DEFAULT_MAX, dialogsMax);
-const clamp = (/** @type {number} */ cells) => Math.min(Math.max(cells, dialogsMin), dialogsMax);
-
-const saved = self.savedDialogsRatio;
+const saved = self.savedDialogsWidth;
 const dialogsWidth =
   saved === null
-    ? Math.min(Math.max(Math.round(width * DIALOGS_RATIO), DIALOGS_MIN), defaultMax)
-    : clamp(Math.round(width * saved));
+    ? clamp(Math.min(Math.max(Math.round(screen.renderer.width * DIALOGS_RATIO), min), DIALOGS_DEFAULT_MAX))
+    : clamp(saved);
 
-({ width, height, dialogsWidth, dialogsMin, dialogsMax });
+({ dialogsWidth });

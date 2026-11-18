@@ -5,7 +5,7 @@ const RANK = { essential: 0, normal: 1, obvious: 2 };
 
 /** @type {HintsSection['render']} */
 (entries) => {
-  const budget = screen.size.width - 2;
+  const budget = screen.renderer.width - 2;
 
   // Most important first, so the keys nobody would guess sit leftmost and a narrow bar cuts from the
   // right. The sort is stable: within a level, hints keep their declared order. A hint that does not

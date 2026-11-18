@@ -1,10 +1,12 @@
 Box({
   id: 'filePicker',
   position: 'absolute',
+  alignSelf: 'center',
   top: '15%',
-  left: '20%',
   width: '60%',
+  maxWidth: 84,
   height: '55%',
+  maxHeight: 26,
   zIndex: 1000,
   visible: false,
   flexDirection: 'column',

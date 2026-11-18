@@ -12,6 +12,12 @@
 
 ### Changed
 
+- The app fills the terminal instead of a centered box of at most 140×48, and follows it
+  when the window is resized. A message bubble is at most 100 columns wide, so long text
+  still wraps at a readable width; the chat pickers and choice dialogs stop growing past
+  their old size. The chat list keeps its width in columns, so a wider terminal goes to the
+  chat; a chat list you resized before starts at its default width once. Thanks to
+  @9M2PJU for raising it.
 - Unsent text stays with its chat: it is put away when you open another chat or close this
   one, and comes back when you return. It is kept only until tuigram quits.
 

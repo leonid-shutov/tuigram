@@ -4,14 +4,15 @@ const SAVE_DELAY_MS = 500;
 let saveTimer = null;
 
 const save = () => {
-  const dialogsRatio = Math.round((screen.size.dialogsWidth / screen.size.width) * 10000) / 10000;
-  void Cache.write(config.paths.uiState, node.buffer.Buffer.from(JSON.stringify({ dialogsRatio }))).catch(() => null);
+  const { dialogsWidth } = screen.size;
+  void Cache.write(config.paths.uiState, node.buffer.Buffer.from(JSON.stringify({ dialogsWidth }))).catch(() => null);
 };
 
 /** @type {DialogsSection['resize']} */
 (delta) => {
-  const { dialogsWidth, dialogsMin, dialogsMax } = screen.size;
-  const next = Math.min(Math.max(dialogsWidth + delta, dialogsMin), dialogsMax);
+  const { dialogsWidth } = screen.size;
+  const { min, max } = screen.dialogsBounds;
+  const next = Math.min(Math.max(dialogsWidth + delta, min), max);
   if (next === dialogsWidth) return false;
   screen.size.dialogsWidth = next;
   self.component.width = next;

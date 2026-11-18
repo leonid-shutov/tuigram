@@ -3,10 +3,8 @@ screen.splash.destroy();
 screen.wrapper.add(
   Box({
     id: 'app',
-    width: screen.size.width,
-    height: screen.size.height,
-    maxWidth: '100%',
-    maxHeight: '100%',
+    width: '100%',
+    height: '100%',
     flexDirection: 'column',
     children: [
       Box({
