@@ -2,6 +2,12 @@
 
 ## [Unreleased]
 
+### Fixed
+
+- On Windows, `shift+u` upgrades an npm install instead of failing to start npm, and
+  `tuigram upgrade` works when the npm folder's path has a space in it, as it does under a
+  user name like `John Smith`.
+
 ## [1.6.0] - 2026-11-18
 
 ### Added

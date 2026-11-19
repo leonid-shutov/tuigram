@@ -89,8 +89,18 @@ const brewBinary = (rootDir) => {
 
 // An empty `steps` means there is nothing this process can run itself -- `manualCommand` is the
 // only thing to show, unconditionally (unlike brew's `null`, which relies on `writable()` always
-// being true for a null prefix). Right now only the aur plan is shaped this way.
+// being true for a null prefix). The aur plan always is, and npm's on a Windows Node without npm-cli.js.
 /** @typedef {{ prefix: string | null; manualCommand: string | null; steps: { cmd: string; args: string[] }[] }} Plan */
+
+// On Windows `npm` is npm.cmd, a batch file only cmd.exe can start, and Node hands a shell its
+// args unquoted (DEP0190), so a prefix with a space in it would break. npm.cmd only runs
+// npm-cli.js, which Node's Windows builds keep next to node.exe -- running that directly needs no
+// shell, and it is the npm of the Node that runs tuigram, whose ABI better-sqlite3's addon needs.
+const npmCommand = () => {
+  if (process.platform !== 'win32') return { cmd: 'npm', args: [] };
+  const npmCli = path.join(path.dirname(process.execPath), 'node_modules', 'npm', 'bin', 'npm-cli.js');
+  return existsSync(npmCli) ? { cmd: process.execPath, args: [npmCli] } : null;
+};
 
 // npm on a machine with several Node versions on PATH (mise, nvm, asdf) has several global
 // prefixes; --prefix pins the upgrade to the installation that is actually running, and an
@@ -99,10 +109,16 @@ const brewBinary = (rootDir) => {
 const npmPlan = (rootDir, version) => {
   const prefix = npmPrefix(rootDir);
   if (prefix === null) return null;
+  const npm = npmCommand();
+  // npm 11 only warns about install scripts missing from its allow-list, but is moving to skipping
+  // them -- and without better-sqlite3's, there is no addon and tuigram dies at its first login.
+  // Same flag as install.sh; an npm that predates it warns about an unknown option and goes on.
+  const args = ['install', '--global', `--prefix=${prefix}`, '--allow-scripts=better-sqlite3', `tuigram@${version}`];
   return {
     prefix,
     manualCommand: `npm i -g tuigram@${version}`,
-    steps: [{ cmd: 'npm', args: ['install', '--global', `--prefix=${prefix}`, `tuigram@${version}`] }],
+    // No npm-cli.js beside node.exe: an unusual Windows setup, left to the manual command.
+    steps: npm === null ? [] : [{ cmd: npm.cmd, args: [...npm.args, ...args] }],
   };
 };
 
