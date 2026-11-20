@@ -2,6 +2,8 @@
 
 ## [Unreleased]
 
+## [1.7.0] - 2026-11-20
+
 ### Added
 
 - A Windows installer, the PowerShell twin of `install.sh`:
@@ -289,7 +291,8 @@ First public release.
 
 Supersedes the `1.0.0-alpha.*` series, which is not itemized here.
 
-[unreleased]: https://github.com/leonid-shutov/tuigram/compare/v1.6.1...HEAD
+[unreleased]: https://github.com/leonid-shutov/tuigram/compare/v1.7.0...HEAD
+[1.7.0]: https://github.com/leonid-shutov/tuigram/compare/v1.6.1...v1.7.0
 [1.6.1]: https://github.com/leonid-shutov/tuigram/compare/v1.6.0...v1.6.1
 [1.6.0]: https://github.com/leonid-shutov/tuigram/compare/v1.5.1...v1.6.0
 [1.5.1]: https://github.com/leonid-shutov/tuigram/compare/v1.5.0...v1.5.1
