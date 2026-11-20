@@ -2,6 +2,14 @@
 
 ## [Unreleased]
 
+### Added
+
+- A Windows installer, the PowerShell twin of `install.sh`:
+  `irm https://raw.githubusercontent.com/leonid-shutov/tuigram/master/install.ps1 | iex`. It
+  needs no admin rights and nothing preinstalled: it brings its own Node.js into
+  `%LOCALAPPDATA%\Programs\tuigram` and adds it to your PATH. `tuigram upgrade` and `shift+u`
+  update it in place, and `-Uninstall` removes it.
+
 ## [1.6.1] - 2026-11-20
 
 ### Fixed

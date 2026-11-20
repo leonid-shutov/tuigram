@@ -73,3 +73,78 @@ jobs:
           root="$(cd "$TUIGRAM_INSTALL_DIR/lib/node_modules/tuigram" && pwd -P)"
           kind="$(node -p 'require("./bin/channel").detect(process.argv[1])' "$root")"
           [ "$kind" = script ] || { echo "detected as $kind, not script"; exit 1; }
+
+  # install.ps1, under Windows PowerShell 5.1 (`shell: powershell`): the one every Windows has. The
+  # folder has a space, an apostrophe and a Cyrillic letter, the three things most likely to break
+  # the launcher (cmd reads it in the OEM code page) and the in-app upgrade's quoting.
+  windows-installer:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [windows-latest, windows-11-arm]
+    runs-on: ${{ matrix.os }}
+    defaults:
+      run:
+        shell: powershell
+    steps:
+      - uses: actions/checkout@v7
+      - if: matrix.os == 'windows-latest'
+        name: Lint
+        shell: pwsh
+        run: |
+          Install-Module PSScriptAnalyzer -Force -Scope CurrentUser
+          $found = Invoke-ScriptAnalyzer -Path install.ps1 -Severity Error
+          if ($found) { $found | Format-List; exit 1 }
+          # 5.1 reads a saved .ps1 without a BOM in the ANSI code page.
+          if (Select-String -Path install.ps1 -Pattern '[^\x00-\x7F]') { 'install.ps1 must be ASCII'; exit 1 }
+      - name: Install with irm | iex, then again in place
+        run: |
+          $dir = Join-Path $env:RUNNER_TEMP ("tui gram's " + [char]0x0416)
+          # The latest release can predate MIN_VERSION (the first whose channel.js runs this file
+          # to upgrade); this job is about the script's mechanics, not that floor.
+          $script = (Get-Content -Raw install.ps1) -replace '\$MinVersion = ''[^'']*''', '$$MinVersion = ''0.0.0'''
+          if (-not $script.Contains("`$MinVersion = '0.0.0'")) { 'MinVersion not replaced'; exit 1 }
+          [IO.File]::WriteAllText("$env:RUNNER_TEMP\install.ps1", $script)
+          $env:TUIGRAM_INSTALL_DIR = $dir
+          $script | Invoke-Expression
+          if ($LASTEXITCODE -ne 0) { exit 1 }
+          & ([scriptblock]::Create($script)) -NoModifyPath
+          if ($LASTEXITCODE -ne 0) { exit 1 }
+      - name: Check the install
+        run: |
+          $dir = Join-Path $env:RUNNER_TEMP ("tui gram's " + [char]0x0416)
+          $version = & "$dir\bin\tuigram.cmd" --version
+          if ($LASTEXITCODE -ne 0) { exit 1 }
+          "launcher reports $version"
+          $left = @(Get-ChildItem -Force -LiteralPath $dir | Where-Object { $_.Name.StartsWith('.') })
+          if ($left.Count -gt 0) { $left; 'left behind ^'; exit 1 }
+          if (-not [Environment]::GetEnvironmentVariable('Path', 'User').Contains("$dir\bin")) { 'not on PATH'; exit 1 }
+          $node = (Get-ChildItem -LiteralPath $dir -Directory -Filter 'node-v*' | Select-Object -First 1).FullName
+          $kind = & "$node\node.exe" -p "require('./bin/channel').detect(process.argv[1])" "$dir\node_modules\tuigram"
+          if ($kind -ne 'script') { "detected as $kind, not script"; exit 1 }
+      - name: Upgrade the way the app does
+        run: |
+          $dir = Join-Path $env:RUNNER_TEMP ("tui gram's " + [char]0x0416)
+          $node = (Get-ChildItem -LiteralPath $dir -Directory -Filter 'node-v*' | Select-Object -First 1).FullName
+          $plan = "JSON.stringify(require('./bin/channel').upgradePlan(process.argv[1], 'latest').steps[0])"
+          $step = & "$node\node.exe" -p $plan "$dir\node_modules\tuigram" | ConvertFrom-Json
+          # The plan's own command, with only the download swapped for this checkout's install.ps1:
+          # the one on master is what installed users get, not what this commit changes.
+          $command = [Text.Encoding]::Unicode.GetString([Convert]::FromBase64String($step.args[-1]))
+          $url = "Invoke-RestMethod -UseBasicParsing 'https://raw.githubusercontent.com/leonid-shutov/tuigram/master/install.ps1'"
+          if (-not $command.Contains($url)) { "no download in: $command"; exit 1 }
+          $command = $command.Replace($url, "Get-Content -Raw '$env:RUNNER_TEMP\install.ps1'")
+          $encoded = [Convert]::ToBase64String([Text.Encoding]::Unicode.GetBytes($command))
+          $arguments = @($step.args[0..($step.args.Count - 2)]) + $encoded
+          & $step.cmd @arguments
+          if ($LASTEXITCODE -ne 0) { "upgrade exited $LASTEXITCODE"; exit 1 }
+          & "$dir\bin\tuigram.cmd" --version
+          if ($LASTEXITCODE -ne 0) { exit 1 }
+      - name: Uninstall
+        run: |
+          $dir = Join-Path $env:RUNNER_TEMP ("tui gram's " + [char]0x0416)
+          $env:TUIGRAM_INSTALL_DIR = $dir
+          & ([scriptblock]::Create((Get-Content -Raw "$env:RUNNER_TEMP\install.ps1"))) -Uninstall
+          if ($LASTEXITCODE -ne 0) { exit 1 }
+          if (Test-Path -LiteralPath $dir) { 'still there'; exit 1 }
+          if ([Environment]::GetEnvironmentVariable('Path', 'User').Contains("$dir\bin")) { 'still on PATH'; exit 1 }

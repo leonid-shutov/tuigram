@@ -52,6 +52,9 @@ const npmPrefix = (rootDir) => {
 // apart. It matters: an npm upgrade would run whichever npm is on PATH, against whichever Node,
 // and better_sqlite3.node is ABI-bound to the Node that fetched it.
 const INSTALLER = 'https://raw.githubusercontent.com/leonid-shutov/tuigram/master/install.sh';
+// install.ps1, its Windows twin, lays the install out the same way (<dir>\node_modules\tuigram
+// beside the receipt), so detection is the same; only the upgrade command differs.
+const WIN_INSTALLER = 'https://raw.githubusercontent.com/leonid-shutov/tuigram/master/install.ps1';
 const SCRIPT_RECEIPT = 'install.json';
 
 // git checked before Cellar/global/mise/aur: an `npm link`ed checkout sits under lib/node_modules
@@ -161,10 +164,47 @@ const aurPlan = () => ({
 // actually running; it finds the launcher's directory in that install's receipt itself. No
 // prefix to check: the directory is the user's own, and `sudo` in front of `curl | bash` would be
 // the wrong advice anyway -- if it can't be written, the installer itself says so.
+// A PowerShell string literal: inside single quotes, a doubled quote is the only escape.
+/** @param {string} text */
+const psQuote = (text) => `'${text.replaceAll(/'/gu, '$&$&')}'`;
+
+// The same re-run through Windows PowerShell 5.1, which every Windows 10 and 11 has (pwsh is
+// optional), by its full path so a PATH without System32 on it still works. -EncodedCommand
+// takes the command as base64 UTF-16, so no path (a space, an apostrophe, Cyrillic) can break
+// it on the way through CreateProcess's quoting. TLS 1.2 is added before the download, since an
+// old .NET default can't reach GitHub. install.ps1 sets $LASTEXITCODE to say how it went, since
+// under `irm | iex` it must never call `exit`, which would close the user's PowerShell window.
+/** @param {string} prefix @param {string} version @returns {Plan} */
+const windowsScriptPlan = (prefix, version) => {
+  const pin = version === 'latest' ? '' : ` -Version ${psQuote(version)}`;
+  const command = [
+    // A failed download must end it with exit 1, not run on to `exit $LASTEXITCODE` with a 0.
+    `$ErrorActionPreference = 'Stop'`,
+    '[Net.ServicePointManager]::SecurityProtocol = [Net.ServicePointManager]::SecurityProtocol -bor 3072',
+    `$installer = Invoke-RestMethod -UseBasicParsing ${psQuote(WIN_INSTALLER)}`,
+    `& ([scriptblock]::Create($installer)) -InstallDir ${psQuote(prefix)} -NoModifyPath${pin}`,
+    'exit $LASTEXITCODE',
+  ].join('; ');
+  const systemRoot = process.env.SystemRoot ?? 'C:\\Windows';
+  const powershell = path.join(systemRoot, 'System32', 'WindowsPowerShell', 'v1.0', 'powershell.exe');
+  const encoded = Buffer.from(command, 'utf16le').toString('base64');
+  return {
+    prefix: null,
+    manualCommand: null,
+    steps: [
+      {
+        cmd: powershell,
+        args: ['-NoProfile', '-NonInteractive', '-ExecutionPolicy', 'Bypass', '-EncodedCommand', encoded],
+      },
+    ],
+  };
+};
+
 /** @param {string} rootDir @param {string} version @returns {Plan | null} */
 const scriptPlan = (rootDir, version) => {
   const prefix = npmPrefix(rootDir);
   if (prefix === null) return null;
+  if (process.platform === 'win32') return windowsScriptPlan(prefix, version);
   const pin = version === 'latest' ? [] : ['--version', version];
   // pipefail: a failed download must fail the step, not hand bash an empty script that exits 0.
   const script = 'set -o pipefail; curl -fsSL "$0" | bash -s -- --no-modify-path --install-dir "$@"';

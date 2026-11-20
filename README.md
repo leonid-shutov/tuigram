@@ -18,6 +18,20 @@ It needs nothing preinstalled: it brings its own Node.js into `~/.local/lib/tuig
 `tuigram` in `~/.local/bin`. Open a new terminal afterwards. `tuigram upgrade` updates it;
 `rm -rf ~/.local/lib/tuigram ~/.local/bin/tuigram` removes it.
 
+On Windows, in PowerShell:
+
+```powershell
+irm https://raw.githubusercontent.com/leonid-shutov/tuigram/master/install.ps1 | iex
+```
+
+The same, without admin rights: its own Node.js and `tuigram` go into
+`%LOCALAPPDATA%\Programs\tuigram`, which is added to your PATH. `tuigram upgrade` updates it, and
+this removes it, keeping your sign-in and settings:
+
+```powershell
+& ([scriptblock]::Create((irm https://raw.githubusercontent.com/leonid-shutov/tuigram/master/install.ps1))) -Uninstall
+```
+
 or with Homebrew:
 
 ```sh
