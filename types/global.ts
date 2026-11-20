@@ -383,6 +383,15 @@ declare global {
   /** Injected by `bin/tuigram.js`: the exit code that makes it start the app again. */
   const __restartExitCode: number;
 
+  /** Injected by `bin/tuigram.js`: the exit code that makes it run the upgrade written to
+   * `__upgradeFile`, after the app is gone. */
+  const __upgradeExitCode: number;
+
+  /** Injected by `bin/tuigram.js`: where to write `{ from, to }` versions before exiting with
+   * `__upgradeExitCode`, or `null` when the `bin/tuigram.js` that started the app predates the
+   * handoff (or there is none, as in the tests), and the app upgrades itself. */
+  const __upgradeFile: string | null;
+
   /**
    * Injected by `bin/tuigram.js` (`bin/world.js`) or the tests (`test/world.js`); see
    * docs/decisions/0002.

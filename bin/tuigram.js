@@ -4,9 +4,10 @@
 const os = require('os');
 const path = require('path');
 const { spawnSync } = require('child_process');
-const { appendFileSync, mkdirSync, realpathSync, writeFileSync } = require('fs');
+const { appendFileSync, mkdirSync, readFileSync, realpathSync, rmSync, writeFileSync } = require('fs');
 const channel = require('./channel');
-const { createContext, RESTART } = require('./context');
+const { createContext, RESTART, UPGRADE, UPGRADE_FILE } = require('./context');
+const { upgrade } = require('./upgrade');
 const { createWorld } = require('./world');
 const pkg = require('../package.json');
 
@@ -16,6 +17,10 @@ const NODE_FLAGS = ['--experimental-ffi', '--no-warnings', '--optimize-for-size'
 const RESTARTED = 'TUIGRAM_RESTARTED';
 
 const args = process.argv.slice(2);
+
+// XDG resolution is duplicated here (see src/01-config/mechanics/computePaths.js) because this
+// runs before the app.
+const stateHome = process.env.XDG_STATE_HOME || path.join(os.homedir(), '.local', 'state');
 
 if (args.includes('--help') || args.includes('-h')) {
   process.stdout.write(
@@ -45,6 +50,8 @@ if (args.includes('--version') || args.includes('-v')) {
   process.exit(0);
 }
 
+const rootDir = realpathSync(path.resolve(__dirname, '..'));
+
 // This never boots the renderer or the sandbox, so it runs here rather than through
 // src/(common)/Update/ (which loads after 02-screen and 03-auth, so a subcommand routed
 // through it would need working FFI, a working opentui and a valid session — exactly the states
@@ -52,32 +59,49 @@ if (args.includes('--version') || args.includes('-v')) {
 // already idempotent, so this is a plain detect-channel-and-spawn, reusing channel.upgradePlan
 // (the same recipe src/(common)/Update/upgradePlan.js drives in-app) instead of its own copy.
 if (args[0] === 'upgrade') {
-  const rootDir = realpathSync(path.resolve(__dirname, '..'));
-  const run = (cmd, cmdArgs) => spawnSync(cmd, cmdArgs, { stdio: 'inherit' }).status ?? 1;
-  const kind = channel.detect(rootDir);
-
-  if (kind === 'git') {
+  if (channel.detect(rootDir) === 'git') {
     process.stderr.write('tuigram: this is a git checkout, not an installed copy — nothing to upgrade\n');
     process.exit(1);
-  } else if (kind === 'unknown') {
-    process.stderr.write('tuigram: could not tell how this copy was installed\n');
-    process.exit(1);
-  } else {
-    const installPlan = channel.upgradePlan(rootDir, 'latest');
-    // Empty steps (aur): nothing here can run itself, and an empty loop would silently exit 0
-    // having done nothing.
-    if (installPlan.steps.length === 0) {
-      process.stderr.write(`tuigram: ${installPlan.manualCommand}\n`);
-      process.exit(1);
-    }
-    let status = 0;
-    for (const step of installPlan.steps) {
-      status = run(step.cmd, step.args);
-      if (status !== 0) break;
-    }
-    process.exit(status);
   }
+  process.exit(upgrade(rootDir, 'latest'));
 }
+
+// What the app wrote before exiting with UPGRADE, or `null` when the file is missing or isn't
+// what src/08-actions/upgrade.js writes. The version ends up in `npm install tuigram@<version>`,
+// where anything but a plain version (a URL, `npm:other-package`) would install something else.
+const VERSION = /^\d+\.\d+\.\d+(?:-[0-9A-Za-z.-]+)?$/u;
+/** @param {string} file @returns {{ from: string; to: string } | null} */
+const readUpgrade = (file) => {
+  try {
+    const { from, to } = JSON.parse(readFileSync(file, 'utf8'));
+    return typeof from === 'string' && VERSION.test(to) ? { from, to } : null;
+  } catch {
+    return null;
+  }
+};
+
+// The app has exited, so nothing holds its files; run the upgrade it asked for. No starting it
+// again afterwards: brew and mise install each version in its own folder (brew deletes the old
+// one), and the installer may switch Node -- this process would start a path that is gone, or
+// the new code on the old Node, whose ABI better_sqlite3.node no longer matches.
+/** @param {string} file @returns {number} */
+const runUpgrade = (file) => {
+  const requested = readUpgrade(file);
+  // Gone before the upgrade starts, so a ctrl+c that kills this process too leaves nothing behind.
+  rmSync(file, { force: true });
+  if (requested === null) {
+    process.stderr.write('tuigram: the update did not start; run `tuigram upgrade`\n');
+    return 1;
+  }
+  process.stderr.write(`\ntuigram: updating ${requested.from} -> ${requested.to}\n\n`);
+  const status = upgrade(rootDir, requested.to);
+  process.stderr.write(
+    status === 0
+      ? `tuigram: updated to ${requested.to}; start tuigram again\n`
+      : `tuigram: the update failed (exit ${status}); to try again, run \`tuigram upgrade\`\n`,
+  );
+  return status;
+};
 
 // opentui talks to its Zig backend through node:ffi, which Node only exposes behind
 // --experimental-ffi. An installed `tuigram` cannot ask the user to type that, so re-exec
@@ -85,18 +109,26 @@ if (args[0] === 'upgrade') {
 // error also names --allow-ffi, but that is a permission-model flag: passing it without
 // --permission is fatal on Node >= 24, and node:ffi does not need it otherwise.)
 // The parent stays around even when the flag is already there: it starts the app again whenever
-// it exits with RESTART.
+// it exits with RESTART, and runs the upgrade when it exits with UPGRADE.
 if (process.env[RELAUNCH] !== '1') {
   const missing = NODE_FLAGS.filter((flag) => !process.execArgv.includes(flag));
   const argv = [...process.execArgv, ...missing, __filename, ...args];
-  let env = { ...process.env, [RELAUNCH]: '1' };
+  // Per process, so two open copies don't read each other's; in the state dir, which only this
+  // user can write, and not the shared temp dir (see VERSION above).
+  const upgradeFile = path.join(stateHome, 'tuigram', `upgrade-${process.pid}.json`);
+  const exit = (code) => {
+    rmSync(upgradeFile, { force: true });
+    process.exit(code);
+  };
+  let env = { ...process.env, [RELAUNCH]: '1', [UPGRADE_FILE]: upgradeFile };
   for (;;) {
     const { status, error } = spawnSync(process.execPath, argv, { stdio: 'inherit', env });
     if (error) {
       process.stderr.write(`tuigram: ${error.message}\n`);
-      process.exit(1);
+      exit(1);
     }
-    if (status !== RESTART) process.exit(status ?? 0);
+    if (status === UPGRADE) exit(runUpgrade(upgradeFile));
+    if (status !== RESTART) exit(status ?? 0);
     env = { ...env, [RESTARTED]: '1' };
   }
 }
@@ -104,9 +136,7 @@ if (process.env[RELAUNCH] !== '1') {
 // Past this point we have FFI, so the app can actually boot. Nothing below must run in the
 // pre-relaunch parent: it truncates the log and loads opentui.
 
-// The renderer owns the terminal, so `console` has to go to a file. XDG resolution is
-// duplicated here (see src/01-config/mechanics/computePaths.js) because this runs before the app.
-const stateHome = process.env.XDG_STATE_HOME || path.join(os.homedir(), '.local', 'state');
+// The renderer owns the terminal, so `console` has to go to a file.
 const LOG_FILE = process.env.TUIGRAM_LOG || path.join(stateHome, 'tuigram', 'tuigram.log');
 
 mkdirSync(path.dirname(LOG_FILE), { recursive: true, mode: 0o700 });

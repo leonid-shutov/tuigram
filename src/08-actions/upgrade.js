@@ -29,6 +29,23 @@ async () => {
     return;
   }
 
+  // bin/tuigram.js runs it once this process is gone, so nothing holds the files it replaces.
+  // Unless it can't (__upgradeFile is null): then it is one from before it could, started this
+  // copy after it was upgraded under it, and this process does it itself as before.
+  if (__upgradeFile !== null) {
+    const request = JSON.stringify({ from: packageVersion, to: release.version });
+    const written = Result.from(() => {
+      node.fs.mkdirSync(node.path.dirname(__upgradeFile), { recursive: true, mode: 0o700 });
+      node.fs.writeFileSync(__upgradeFile, request, { mode: 0o600 });
+    });
+    if (written.ok) {
+      console.log(`[update] handing ${release.version} to bin/tuigram.js`);
+      Crash.exit(null, __upgradeExitCode);
+      return;
+    }
+    console.log('[update] could not hand the upgrade over; running it here', written.error);
+  }
+
   await screen.renderer.suspend();
   process.stderr.write(`\ntuigram: updating ${packageVersion} -> ${release.version}\n\n`);
 

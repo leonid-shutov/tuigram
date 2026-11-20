@@ -114,6 +114,8 @@ module.exports = [
         Channel: true,
         packageVersion: true,
         __restartExitCode: true,
+        __upgradeExitCode: true,
+        __upgradeFile: true,
         world: true,
         URL: true,
         screen: true,

@@ -7,6 +7,12 @@
 - On Windows, `shift+u` upgrades an npm install instead of failing to start npm, and
   `tuigram upgrade` works when the npm folder's path has a space in it, as it does under a
   user name like `John Smith`.
+- On Windows, an upgrade with `shift+u` no longer leaves the old copy behind in npm's folder
+  (`node_modules\.tuigram-…`). tuigram now closes first and then upgrades, so nothing it has
+  open stands in the way. A failed upgrade ends at the terminal with the installer's error,
+  instead of returning to the app. Upgrading to this version still leaves one behind, since the
+  version being replaced does the upgrade; delete `node_modules\.tuigram-*` once tuigram is
+  closed.
 
 ## [1.6.0] - 2026-11-18
 
