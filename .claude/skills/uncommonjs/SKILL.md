@@ -83,7 +83,7 @@ In tuigram, `bin/tuigram.js` builds the sandbox with `createContext` from `bin/c
 | `book/book.js`    | named after its directory, so it merges _into_ `app.book` instead of nesting             |
 | `book/create.js`  | `app.book.create`                                                                        |
 | `book/tags.json`  | data, parsed: `app.book.tags`                                                            |
-| `03-auth/`        | a numbered prefix sets load order and is stripped from the key: `app.auth`               |
+| `3-auth/`         | a numbered prefix sets load order and is stripped from the key: `app.auth`               |
 | `(common)/`       | loaded first, into the **parent** scope: its members are globals there                   |
 | `(getters)/`      | each file is `() => value` and becomes a computed property, evaluated on every read      |
 | `(anythingElse)/` | grouping only, fully transparent: files _and_ subdirectories load as if it weren't there |
@@ -98,8 +98,8 @@ Files other than `.js` and `.json` are skipped. A `.json` file is keyed like a `
 
 Within a directory: `(common)/` first, then the other directories, then the files, each group
 in name order. Names compare with numbers as numbers (`2-` before `10-`), the way VS Code's
-explorer lists them. That's why tuigram's layers are `01-config/` … `10-subscriptions/`, and
-why `src/start.js` runs after all of them.
+explorer lists them, so prefixes need no padding: tuigram's layers run from `1-config/` to
+`10-subscriptions/`, and `src/start.js` runs after all of them.
 
 Order only matters for code that runs while loading: a file's top-level code, or a value
 computed on its last line. A function that reads a sibling when called works whatever the
@@ -180,6 +180,6 @@ src/
 
 - A new global — a `(common)/` member or a top-level layer — goes into the `globals` of
   `eslint.config.js` and is declared in `types/global.ts`, like the existing ones.
-- Reach a layer by its unprefixed name: `messenger`, never `app['04-messenger']`.
+- Reach a layer by its unprefixed name: `messenger`, never `app['4-messenger']`.
 - Shared code goes in `(common)/`; a group folder like `(components)/` or `(utils)/` only
   organizes it.

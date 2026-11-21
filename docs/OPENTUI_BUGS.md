@@ -67,7 +67,7 @@ are fixed there, and tuigram's workaround for each is gone.
   explicit `visible`, so the chat's ScrollBox now just passes it in `verticalScrollbarOptions`.
   With `scrollX: false` the horizontal bar no longer shows while content is short, either.
 - **`createCliRenderer({ backgroundColor })` was never read** (0.5.10: only `setBackgroundColor`
-  wrote it). `src/02-screen/1-renderer.js` passes the option now instead of calling the setter.
+  wrote it). `src/2-screen/1-renderer.js` passes the option now instead of calling the setter.
 - **A `Textarea` came out up to 2 cells wider than a parent placed by percentage** (0.5.17: Yoga's
   text rounding for measured nodes). `SearchList` wrapped its input in a clipping 1-row box; the
   input and the list under it now come out the same width at every terminal width tried (80,

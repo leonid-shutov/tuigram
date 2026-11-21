@@ -1,5 +1,5 @@
 // Not named GAP: tsc treats every non-module .js file's top-level bindings as one shared global
-// scope, and src/06-ui/hints/(public)/render.js already declares its own GAP.
+// scope, and src/6-ui/hints/(public)/render.js already declares its own GAP.
 const UPDATE_GAP = '  ';
 
 /** @type {UpdateSection['display']} */

@@ -39,7 +39,7 @@ declare global {
     : never;
 
   /**
-   * Wrap a chat store mutator (visible only under src/05-store/chat): look its chat up by id, do
+   * Wrap a chat store mutator (visible only under src/5-store/chat): look its chat up by id, do
    * nothing and answer null when it isn't cached, and emit `change` as `Mutation` does.
    */
   const ChatMutation: <A extends any[], R>(
@@ -55,7 +55,7 @@ declare global {
     : never;
 
   /**
-   * Wrap a dialogs store mutator (visible only under src/05-store/dialogs): look its dialog up by
+   * Wrap a dialogs store mutator (visible only under src/5-store/dialogs): look its dialog up by
    * chat id in the main list or the archive, do nothing when there is none, and emit `change` as
    * `Mutation` does.
    */
@@ -132,7 +132,7 @@ declare global {
   };
 
   /** One chat as store.chat caches it: its messages, oldest first and whole at the newest end (see
-   * src/05-store/chat/2-chat.js). Its outbox read mark is its dialog's; its partner's presence is
+   * src/5-store/chat/2-chat.js). Its outbox read mark is its dialog's; its partner's presence is
    * store.peers'. */
   type CachedChat = { messages: ChatMessage[] };
 
@@ -206,7 +206,7 @@ declare global {
 
   /**
    * The chat store as the rest of the app sees it: read-only but for its mutators, so a cached
-   * message can only be swapped through one (see src/05-store/chat/2-chat.js), and every mutator
+   * message can only be swapped through one (see src/5-store/chat/2-chat.js), and every mutator
    * emits `change` for the open chat.
    */
   type ChatStore = Omit<
@@ -250,7 +250,7 @@ declare global {
   type WindowStore = { focused: boolean };
 
   /** The release the last check found, or null once dismissed/upgraded; see
-   * src/(common)/Update and src/05-store/update.js. */
+   * src/(common)/Update and src/5-store/update.js. */
   type UpdateStore = { available: UpdateRelease | null };
 
   namespace store {

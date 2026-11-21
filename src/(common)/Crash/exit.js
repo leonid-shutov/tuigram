@@ -1,5 +1,5 @@
 // The graceful counterpart to hard.js, and the app's only clean-shutdown path. It lives here
-// rather than in 03-auth (where it began, as auth.exit) because 08-actions/upgrade.js needs it
+// rather than in 3-auth (where it began, as auth.exit) because 8-actions/upgrade.js needs it
 // too, and reaching back into the auth layer for a lifecycle primitive is backwards.
 let exiting = false;
 
@@ -23,7 +23,7 @@ let exiting = false;
     closing.push(Result.fromPromise(screen.renderer.closed));
   }
 
-  // auth.client only exists from 03-auth/3-client.js on — `logout` with no session file
+  // auth.client only exists from 3-auth/3-client.js on — `logout` with no session file
   // (2-notSignedIn.js) exits before that.
   if (typeof auth !== 'undefined' && auth.client !== undefined) {
     closing.push(Result.fromPromise(auth.client.destroy()));

@@ -18,7 +18,7 @@ const RESTARTED = 'TUIGRAM_RESTARTED';
 
 const args = process.argv.slice(2);
 
-// XDG resolution is duplicated here (see src/01-config/mechanics/computePaths.js) because this
+// XDG resolution is duplicated here (see src/1-config/mechanics/computePaths.js) because this
 // runs before the app.
 const stateHome = process.env.XDG_STATE_HOME || path.join(os.homedir(), '.local', 'state');
 
@@ -53,7 +53,7 @@ if (args.includes('--version') || args.includes('-v')) {
 const rootDir = realpathSync(path.resolve(__dirname, '..'));
 
 // This never boots the renderer or the sandbox, so it runs here rather than through
-// src/(common)/Update/ (which loads after 02-screen and 03-auth, so a subcommand routed
+// src/(common)/Update/ (which loads after 2-screen and 3-auth, so a subcommand routed
 // through it would need working FFI, a working opentui and a valid session — exactly the states
 // where someone most needs to upgrade). No version check either: both upgrade commands are
 // already idempotent, so this is a plain detect-channel-and-spawn, reusing channel.upgradePlan
@@ -67,7 +67,7 @@ if (args[0] === 'upgrade') {
 }
 
 // What the app wrote before exiting with UPGRADE, or `null` when the file is missing or isn't
-// what src/08-actions/upgrade.js writes. The version ends up in `npm install tuigram@<version>`,
+// what src/8-actions/upgrade.js writes. The version ends up in `npm install tuigram@<version>`,
 // where anything but a plain version (a URL, `npm:other-package`) would install something else.
 const VERSION = /^\d+\.\d+\.\d+(?:-[0-9A-Za-z.-]+)?$/u;
 /** @param {string} file @returns {{ from: string; to: string } | null} */

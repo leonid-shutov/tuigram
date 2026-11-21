@@ -1,4 +1,4 @@
-// The glyphs set by hand (08-actions/pickEmoji.js), by chat id. emojis.json is the app's own, but a
+// The glyphs set by hand (8-actions/pickEmoji.js), by chat id. emojis.json is the app's own, but a
 // hand edit can leave anything in it: an entry that isn't a chat id with a catalog glyph is dropped,
 // and a missing or unreadable file is no emojis at all.
 /** @type {Map<number, string>} */

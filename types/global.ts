@@ -100,7 +100,7 @@ declare global {
       source: 'env' | 'file' | 'shipped' | undefined;
     };
     cli: { command: string | null; args: string[] };
-    /** Hardcoded, not config.json fields: see src/01-config/11-history.js. */
+    /** Hardcoded, not config.json fields: see src/1-config/11-history.js. */
     history: {
       /** Messages a chat opens with, and what a cached chat is trimmed back to once left. */
       firstPageSize: number;
@@ -110,7 +110,7 @@ declare global {
        * start, then the ones opened most recently. */
       maxCachedChats: number;
     };
-    /** Hardcoded, not a config.json field: see src/01-config/12-cache.js. */
+    /** Hardcoded, not a config.json field: see src/1-config/12-cache.js. */
     cache: {
       /** A cached file no hit has touched for this long is deleted at the next start. */
       maxAgeMs: number;
@@ -781,7 +781,7 @@ declare global {
   }
 
   /** Visible only within src/(common)/Update/ at runtime (its own `(common)/` subdir), same as
-   * `Binding` above is scoped to src/09-keymap/ — see the loader's Common-dir rule. */
+   * `Binding` above is scoped to src/9-keymap/ — see the loader's Common-dir rule. */
   namespace Source {
     const npm: () => Promise<UpdateRelease | null>;
     const brew: () => Promise<UpdateRelease | null>;

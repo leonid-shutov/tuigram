@@ -16,7 +16,7 @@ solve the same problem with testcontainers and localstack: the real code runs ag
 Two properties of the codebase shape what that can look like here:
 
 - **Loading is running.** uncommonjs's `loadTree` loads `src/` layer by layer, and each file is
-  an expression that runs as it loads: `02-screen` takes the terminal, `03-auth` signs in,
+  an expression that runs as it loads: `2-screen` takes the terminal, `3-auth` signs in,
   `start.js` loads the dialogs. There is no "build the app, then start it": the only way to
   get a working app is to load the whole tree.
 - **The outside world comes in through one object.** `bin/tuigram.js` hands `loadTree` a
@@ -26,12 +26,12 @@ Two properties of the codebase shape what that can look like here:
 When this was decided, four things in `src/` reached outside the process through those globals,
 where a test could not intercept them:
 
-| Where                                                                                                                 | What it does                                           |
-| --------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------ |
-| `02-screen/1-renderer.js`: `tui.createCliRenderer`                                                                    | takes over the terminal                                |
-| `03-auth/(methods)/createClient.js`: `new TelegramClient`                                                             | connects to Telegram                                   |
-| `(common)/OS/(common)/spawnDetached.js`, `(common)/OS/run.js`, `08-actions/openConfig.js`: `node.child_process.spawn` | runs `notify-send`, `xdg-open`, `$EDITOR`, the upgrade |
-| `(common)/Fetch/once.js`: `node.https.get`                                                                            | the update check                                       |
+| Where                                                                                                                | What it does                                           |
+| -------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------ |
+| `2-screen/1-renderer.js`: `tui.createCliRenderer`                                                                    | takes over the terminal                                |
+| `3-auth/(methods)/createClient.js`: `new TelegramClient`                                                             | connects to Telegram                                   |
+| `(common)/OS/(common)/spawnDetached.js`, `(common)/OS/run.js`, `8-actions/openConfig.js`: `node.child_process.spawn` | runs `notify-send`, `xdg-open`, `$EDITOR`, the upgrade |
+| `(common)/Fetch/once.js`: `node.https.get`                                                                           | the update check                                       |
 
 A test that booted the app as it was would pop real desktop notifications and make real
 HTTPS requests, and could not run without a Telegram account.
@@ -41,7 +41,7 @@ HTTPS requests, and could not run without a Telegram account.
 - **Mock mtcute and opentui calls.** Rejected for the reason above: it tests the mock.
 - **A fake `messenger`, at the level of tuigram's own domain objects.** A hand-written
   `messenger` returning `Message` and `Dialog` objects directly makes scenarios easy to write,
-  but it skips `04-messenger` itself: the `to*` mappers, album grouping, and paging, which is
+  but it skips `4-messenger` itself: the `to*` mappers, album grouping, and paging, which is
   where Telegram's behaviour has bitten before (the min-peer cache poisoning, albums split
   across pages). It is also a fake of an interface tuigram owns, so it drifts from the real one
   with nothing to notice.

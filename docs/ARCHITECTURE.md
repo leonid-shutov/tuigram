@@ -25,7 +25,7 @@ and a fake Telegram), so the code under `src/` cannot tell the two apart. See
 **A file's last expression is its export.** No `module.exports`, no `export`.
 
 ```js
-// src/08-actions/openChat.js — a function
+// src/8-actions/openChat.js — a function
 /** @type {Actions['openChat']} */
 async (chatId) => {
   ui.dialogs.select(chatId);
@@ -60,7 +60,7 @@ module, so don't use one.
 | -------------- | ------------------------------------------------------------------------------------------- |
 | `chat/`        | a module, `ui.chat`                                                                         |
 | `chat/chat.js` | named after its directory, so it merges _into_ `chat` instead of nesting as `chat.chat`     |
-| `06-ui/`       | a numeric prefix sets the load order and is stripped: `ui`                                  |
+| `6-ui/`        | a numeric prefix sets the load order and is stripped: `ui`                                  |
 | `(common)/`    | loaded first, into the **parent**, and visible to every sibling                             |
 | `(getters)/`   | each file is `() => value` and becomes a property computed on every read                    |
 | `(anything)/`  | grouping only — `(methods)`, `(public)`, `(private)` and the rest are there for readability |
@@ -72,19 +72,19 @@ call any other at runtime; the order matters only for code that runs while the t
 
 | Layer              | Job                                                                                        |
 | ------------------ | ------------------------------------------------------------------------------------------ |
-| `01-config`        | paths, credentials, `config.json` and its schema, themes                                   |
-| `02-screen`        | the renderer and the app's frame                                                           |
-| `03-auth`          | the Telegram client and signing in (QR, phone and code, 2FA)                               |
-| `04-messenger`     | everything that talks to Telegram, wrapped around mtcute                                   |
-| `05-store`         | app state — dialogs, the open chat, folders, peers — each store emitting `change`          |
-| `06-ui`            | the panes and pickers, built on opentui; they draw what they're given and emit events      |
-| `07-navigation`    | which pane has focus                                                                       |
-| `08-actions`       | one file per thing the app does; the only layer that ties messenger, store and ui together |
-| `09-keymap`        | key bindings, commands and the hint bar                                                    |
+| `1-config`         | paths, credentials, `config.json` and its schema, themes                                   |
+| `2-screen`         | the renderer and the app's frame                                                           |
+| `3-auth`           | the Telegram client and signing in (QR, phone and code, 2FA)                               |
+| `4-messenger`      | everything that talks to Telegram, wrapped around mtcute                                   |
+| `5-store`          | app state — dialogs, the open chat, folders, peers — each store emitting `change`          |
+| `6-ui`             | the panes and pickers, built on opentui; they draw what they're given and emit events      |
+| `7-navigation`     | which pane has focus                                                                       |
+| `8-actions`        | one file per thing the app does; the only layer that ties messenger, store and ui together |
+| `9-keymap`         | key bindings, commands and the hint bar                                                    |
 | `10-subscriptions` | the wiring: Telegram updates, store changes and ui events, each sent to an action          |
 | `(common)`         | domain helpers (`Message`, `Dialog`, …), data structures, `Crash`, `Result`                |
 
-A typical feature is: a command in `09-keymap` calls an action in `08-actions`, which calls the
+A typical feature is: a command in `9-keymap` calls an action in `8-actions`, which calls the
 messenger and updates a store; the store emits `change`, and `10-subscriptions/store.js` runs the
 repaint actions that read it. Stores emit a bare `change` and repaints must be idempotent and
 cheap when nothing changed — see [ADR 0002](decisions/0002-coarse-store-events.md).
@@ -110,8 +110,8 @@ disappears. Catch where the app hands control to them, and use:
 - **Load order sorts as strings**, so `10-` would sort before `2-`. Zero-pad the prefixes
   (`01-` … `10-`), as the layers are.
 - **Subdirectories load before files** in the same directory.
-- **`(common)/` reaches only its own subtree.** A helper in `06-ui/(common)/` is not visible in
-  `08-actions`; put it in `src/(common)/` if both need it.
+- **`(common)/` reaches only its own subtree.** A helper in `6-ui/(common)/` is not visible in
+  `8-actions`; put it in `src/(common)/` if both need it.
 - **`instanceof` fails for objects made outside the sandbox** (anything from Node or the world).
   Check their shape instead.
 - **opentui has quirks** that are easy to mistake for bugs in tuigram; the known ones are in

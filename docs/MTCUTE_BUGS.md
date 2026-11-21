@@ -18,7 +18,7 @@ again a moment later, which is what makes it hard to pin down:
 RpcError (400 CHANNEL_INVALID): Telegram API error 400: CHANNEL_INVALID
     at messages.forwardMessages
     at async Module.forwardMessagesById (…/@mtcute/core/highlevel/methods/messages/forward-messages.cjs:39:15)
-    at async Object.forwardMessage (src/04-messenger/(methods)/forwardMessage.js:4:16)
+    at async Object.forwardMessage (src/4-messenger/(methods)/forwardMessage.js:4:16)
 ```
 
 The trigger is a `min: true` copy of the channel: Telegram sends one inside a forward or a reply

@@ -1,6 +1,6 @@
 // Reconcile the bubbles with the store's window by message id. A bubble whose id is still held is
 // kept — its picture stays decoded, its album page and its text's scroll survive — and redrawn
-// only when the store swapped in a new copy of the message (see 05-store/chat/2-chat.js for the
+// only when the store swapped in a new copy of the message (see 5-store/chat/2-chat.js for the
 // two rules this relies on). Since held messages never change order, walking the window from the
 // newest end and inserting each new bubble above the one after it lays everything out in place.
 // Only the outbox-unread run makes room for the bar, and it is always the chat's end: a bubble

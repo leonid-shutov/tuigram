@@ -1,5 +1,5 @@
 // `openChatId` is the app's one record of which chat is open. The store stays synchronous, and
-// every await stays in 08-actions.
+// every await stays in 8-actions.
 //
 // `ui.chat.render` matches bubbles to a chat's `messages` by id and identity, so two rules hold: a
 // held message is never mutated, only swapped for a new copy, and held messages never change order

@@ -122,7 +122,7 @@ own migration just to update a value nobody actually asked for — the same "abs
 mistake that caused the corruption in `docs/CONFIG_VERSIONING.md`'s Scenario 4.
 
 `config.json` stays absent until the user's editor actually creates it via `ctrl+e`
-(`src/08-actions/openConfig.js`), same as today.
+(`src/8-actions/openConfig.js`), same as today.
 
 A cheaper way to get the discoverability this idea was after, without the downside: have
 `openConfig.js` seed the editor buffer with the _current resolved_ values when no file exists yet,

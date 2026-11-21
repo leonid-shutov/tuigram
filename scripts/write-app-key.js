@@ -10,7 +10,7 @@ const path = require('path');
 const { writeFileSync } = require('fs');
 
 const FRAGMENT = 9;
-// Telegram api_ids are positive integers; mirrors API_ID in src/01-config/02-credentials.js.
+// Telegram api_ids are positive integers; mirrors API_ID in src/1-config/2-credentials.js.
 const API_ID = /^[1-9]\d*$/u;
 const TARGET = path.resolve(__dirname, '..', 'app-key.json');
 
