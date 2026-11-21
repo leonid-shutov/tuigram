@@ -87,7 +87,7 @@ declare global {
     /** Whether the key hint bar occupies the bottom row. */
     hints: boolean;
     receipt: Receipt;
-    /** Interface language: 'en' (English) or 'ms' (Bahasa Melayu). */
+    /** Interface language; see `Language`. */
     language: Language;
   };
 
@@ -626,15 +626,15 @@ declare global {
 
   /** One named app action. `title` is what the pane labels and, later, a help screen read. */
   type Command = {
-    title: Locale.Label;
+    title: Locale.TextLabel;
     /** A bar-sized label for the hint bar, which falls back to `title` when a command omits it;
      * `false` keeps the command off the bar, though the keys palette still lists it. */
-    hint?: Locale.Label | false;
+    hint?: Locale.TextLabel | false;
     /** Which hints the bar keeps when it runs out of width; `'normal'` when omitted. */
     priority?: HintPriority;
     /** Folds the named partner into this command's hint, e.g. `j/k Move`. Set on the leading command
      * only; the partner keeps its own hint for when this one has no active binding. */
-    pair?: { with: string; hint: Locale.Label };
+    pair?: { with: string; hint: Locale.TextLabel };
     run(): void;
   };
 
@@ -663,16 +663,55 @@ declare global {
     /** Bahasa Melayu string table, keyed by the English label. The one list of labels:
      * `Label` is read from its keys. */
     const ms: typeof import('../src/(common)/Locale/ms.json');
-    /** Every English label tuigram can show. Passing anything else to `t` is a type error,
-     * so a label can't exist without its Malay entry. */
+    /** Every English label tuigram can show. Passing anything else to `t` or `plural` is a
+     * type error, so a label can't exist without its Malay entry. */
     type Label = keyof typeof ms;
+    /** The labels that count something: `%d` stands for the count, and each table gives them
+     * one wording per plural category instead of a string. */
+    type PluralLabel = { [K in Label]: (typeof ms)[K] extends string ? never : K }[Label];
+    /** The labels with one wording whatever the numbers in them. */
+    type TextLabel = Exclude<Label, PluralLabel>;
+    /** A plural label's wordings, by the CLDR category `Intl.PluralRules` picks for the count.
+     * Only `other` is in every language. */
+    type Forms = { [C in Intl.LDMLPluralRule]?: string } & { other: string };
+    /** `T`, checked to be a table with exactly the labels `Keys`, giving each plural label a
+     * wording for every category in `C` (the ones `Intl.PluralRules` has for the language).
+     * A missing, extra or misshapen entry is a type error here, naming the table. */
+    type Table<
+      C extends Intl.LDMLPluralRule,
+      T extends { [K in Keys]: K extends PluralLabel ? Record<C | 'other', string> : string } & {
+        [K in Exclude<keyof T, Keys>]: never;
+      },
+      Keys extends Label = Label,
+    > = T;
+    /** English plural wordings; every other label is its own English text. */
+    const en: Table<'one', typeof import('../src/(common)/Locale/en.json'), PluralLabel>;
+    const ru: Table<'one' | 'few' | 'many', typeof import('../src/(common)/Locale/ru.json')>;
+    const uk: Table<'one' | 'few' | 'many', typeof import('../src/(common)/Locale/uk.json')>;
+    const be: Table<'one' | 'few' | 'many', typeof import('../src/(common)/Locale/be.json')>;
+    const pl: Table<'one' | 'few' | 'many', typeof import('../src/(common)/Locale/pl.json')>;
+    const cs: Table<'one' | 'few' | 'many', typeof import('../src/(common)/Locale/cs.json')>;
+    const de: Table<'one', typeof import('../src/(common)/Locale/de.json')>;
+    const es: Table<'one' | 'many', typeof import('../src/(common)/Locale/es.json')>;
+    const pt: Table<'one' | 'many', typeof import('../src/(common)/Locale/pt.json')>;
+    const it: Table<'one' | 'many', typeof import('../src/(common)/Locale/it.json')>;
+    const fr: Table<'one' | 'many', typeof import('../src/(common)/Locale/fr.json')>;
+    const tr: Table<'one', typeof import('../src/(common)/Locale/tr.json')>;
+    const uz: Table<'one', typeof import('../src/(common)/Locale/uz.json')>;
+    const kk: Table<'one', typeof import('../src/(common)/Locale/kk.json')>;
+    const id: Table<never, typeof import('../src/(common)/Locale/id.json')>;
     /** One argument per `%s` in `S`. */
     type Args<S extends string, A extends unknown[] = []> = S extends `${string}%s${infer Rest}`
       ? Args<Rest, [...A, unknown]>
       : A;
-    /** `label` in the configured language (`ms` when set, else unchanged English). Extra
-     * args fill each `%s` in turn, one per `%s`. */
-    const t: <L extends Label>(label: L, ...args: Args<L>) => string;
+    /** `text` with `args` filling each `%s` in turn; a `%s` left without one stays as it is. */
+    const fill: (text: string, args: readonly unknown[]) => string;
+    /** `label` in the configured language (unchanged in English). Extra args fill each `%s`
+     * in turn, one per `%s`. */
+    const t: <L extends TextLabel>(label: L, ...args: Args<L>) => string;
+    /** `label` in the configured language, in the plural form its rules pick for `count`, with
+     * `count` for each `%d` and extra args for each `%s`, as in `t`. */
+    const plural: <L extends PluralLabel>(label: L, count: number, ...args: Args<L>) => string;
   }
 
   /** Commands as they are written: keyed by the name the bindings point at. */

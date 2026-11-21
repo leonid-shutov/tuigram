@@ -1,10 +1,13 @@
 /** Static wording for mtcute's coarse last-seen buckets — everything but the exact-offline case,
- * which is the only one that needs real date math. */
+ * which is the only one that needs real date math. Labels, translated when painted, so a
+ * `language` change applies to the next paint.
+ * @typedef {Exclude<import('../../../../types/domain').Presence['status'], 'online' | 'offline'>} Bucket
+ * @type {Record<Bucket, Locale.TextLabel>} */
 const BUCKET_LABEL = {
-  recently: Locale.t('last seen recently'),
-  within_week: Locale.t('last seen within a week'),
-  within_month: Locale.t('last seen within a month'),
-  long_time_ago: Locale.t('last seen a long time ago'),
+  recently: 'last seen recently',
+  within_week: 'last seen within a week',
+  within_month: 'last seen within a month',
+  long_time_ago: 'last seen a long time ago',
 };
 
 /** @param {import('../../../../types/domain').Presence} presence */
@@ -18,11 +21,11 @@ const describe = (presence) => {
       : presence.lastOnline.toLocaleDateString();
     return Locale.t('last seen %s', when);
   }
-  return BUCKET_LABEL[presence.status];
+  return Locale.t(BUCKET_LABEL[presence.status]);
 };
 
 /** What each status has someone doing, as Telegram's own clients word it.
- * @type {Record<import('../../../../types/domain').TypingStatus, Locale.Label>} */
+ * @type {Record<import('../../../../types/domain').TypingStatus, Locale.TextLabel>} */
 const DOING = {
   typing: 'typing',
   record_video: 'recording a video',
@@ -50,7 +53,7 @@ const describeTyping = ([first, second, ...rest]) => {
       : Locale.t('%s is %s…', first.name, Locale.t(DOING[first.status]));
   if (rest.length === 0 && first.name !== null && second.name !== null)
     return Locale.t('%s and %s are typing…', first.name, second.name);
-  return Locale.t('%s people are typing…', 2 + rest.length);
+  return Locale.plural('%d people are typing…', 2 + rest.length);
 };
 
 /** @type {ChatSection['paintPresence']} */

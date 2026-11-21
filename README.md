@@ -154,7 +154,7 @@ Cyrillic layout without switching back — `о` moves down, `пп` is `gg`, and 
 - Per-sender name colors in groups, and a stable per-chat emoji glyph you can change (`e`)
 - Endless upward history paging
 - 15 themes that paint their own background, so they look the same on any terminal
-- An English or Bahasa Melayu interface (`language`); message text itself is never translated
+- An interface in English, Bahasa Melayu, Russian, Ukrainian, Belarusian, Polish, Czech, German, Spanish, Brazilian Portuguese, Italian, French, Turkish, Uzbek, Kazakh or Indonesian (`language`); message text itself is never translated
 - A check for a newer release at startup, with a one-key upgrade (`shift+u`)
 
 ## Configuration
@@ -181,7 +181,7 @@ Optional, and read from `$XDG_CONFIG_HOME/tuigram/config.json`:
 | `dialogEmoji`   | `true`      | `true`, `false` — turn off on fonts with no emoji coverage                                                                                                                                     |
 | `hints`         | `true`      | `true`, `false` — set to false to hide the key hint bar and reclaim its row                                                                                                                    |
 | `receipt`       | `tick`      | `tick`, `monkey` — what heads the bar beside your messages the other side hasn't seen; `tick` is a plain ✓, `monkey` a 🙈                                                                      |
-| `language`      | `en`        | `en`, `ms` — the interface language; `ms` is Bahasa Melayu                                                                                                                                     |
+| `language`      | `en`        | `en`, `ms`, `ru`, `uk`, `be`, `pl`, `cs`, `de`, `es`, `pt`, `it`, `fr`, `tr`, `uz`, `kk`, `id` — the interface language                                                                        |
 | `proxy`         | _(none)_    | a proxy URL — `socks5://`, `socks4://`, `http://`/`https://`, or a `t.me/proxy?...` MTProxy link; connects directly if unset                                                                   |
 | `updateCheck`   | `true`      | `true`, `false` — check registry.npmjs.org (installer/npm/mise) or the tap's formula (brew) at startup; skipped when `proxy` is set                                                            |
 

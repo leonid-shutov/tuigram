@@ -10,7 +10,7 @@
     divider.parent?.remove(divider);
     return;
   }
-  const title = ` ${count} new `;
+  const title = ` ${Locale.plural('%d new', count)} `;
   if (divider.title !== title) divider.title = title;
   if (divider.parent !== view.slot) view.slot.insertBefore(divider, view.box);
 };

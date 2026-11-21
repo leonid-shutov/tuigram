@@ -26,9 +26,14 @@ const inherit = (proto, props) =>
   Object.create(proto, Object.fromEntries(Object.entries(props).map(([key, value]) => [key, { value }])));
 
 /** The whole app in a test world (docs/TESTING.md). */
-const boot = async ({ telegram, width = 80, height = 24, env = {} }) => {
+const boot = async ({ telegram, width = 80, height = 24, env = {}, config = null }) => {
   const home = await fsp.mkdtemp(path.join(os.tmpdir(), 'tuigram-test-'));
   const removeHome = () => fsp.rm(home, { recursive: true, force: true, maxRetries: 5 });
+  if (config !== null) {
+    const configDir = path.join(home, 'config', 'tuigram');
+    await fsp.mkdir(configDir, { recursive: true });
+    await fsp.writeFile(path.join(configDir, 'config.json'), JSON.stringify(config));
+  }
   const { world, terminal, spawned, fetched } = await createTestWorld({ telegram, width, height });
 
   const logs = [];

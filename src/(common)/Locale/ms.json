@@ -179,10 +179,14 @@
   "choosing a sticker": "memilih pelekat",
   "%s is %s…": "%s sedang %s…",
   "%s and %s are typing…": "%s dan %s sedang menaip…",
-  "%s people are typing…": "%s orang sedang menaip…",
+  "%d people are typing…": {
+    "other": "%d orang sedang menaip…"
+  },
   "Today": "Hari ini",
   "Yesterday": "Semalam",
-  "new": "baharu",
+  "%d new": {
+    "other": "%d baharu"
+  },
   "couldn’t load chats": "tidak dapat memuatkan sembang",
   "tuigram %s is available": "tuigram %s tersedia",
   " upgrade": " naik taraf",

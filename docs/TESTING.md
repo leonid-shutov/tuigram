@@ -99,11 +99,12 @@ Chats are private chats only, for now: no groups, channels, media or folders.
 
 ## Driving the app: `boot()`
 
-`boot({ telegram, width = 80, height = 24, env = {} })` starts the app and resolves once it has
+`boot({ telegram, width = 80, height = 24, env = {}, config = null })` starts the app and resolves once it has
 loaded. It rejects, with everything the app logged, if the app exits or crashes while starting.
 `env` adds to, or overrides, the environment the app sees. That environment already has every
 `XDG_*` directory pointing into the test's own home, and an app key in `TUIGRAM_API_ID` and
-`TUIGRAM_API_HASH`, so the setup form is skipped.
+`TUIGRAM_API_HASH`, so the setup form is skipped. `config` is written to the test home's
+`config.json` before the app starts, as a user's settings would be.
 
 The handle it resolves to:
 

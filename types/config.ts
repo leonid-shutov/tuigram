@@ -3,8 +3,13 @@ export type ImageProtocol = 'auto' | 'kitty' | 'sixel' | 'blocks' | 'off';
 
 export type Receipt = 'monkey' | 'tick';
 
-/** Interface language: 'en' (default) or 'ms' (Bahasa Melayu). */
-export type Language = 'en' | 'ms';
+/** Interface language: 'en' (default), 'ms' (Bahasa Melayu), 'ru' (Russian), 'uk' (Ukrainian),
+ * 'be' (Belarusian), 'pl' (Polish), 'cs' (Czech), 'de' (German), 'es' (Spanish), 'pt' (Brazilian
+ * Portuguese), 'it' (Italian), 'fr' (French), 'tr' (Turkish), 'uz' (Uzbek, Latin script),
+ * 'kk' (Kazakh, Cyrillic script) or 'id' (Indonesian). Also the BCP 47 tag `Intl.PluralRules`
+ * picks plural forms by. */
+export type Language =
+  'en' | 'ms' | 'ru' | 'uk' | 'be' | 'pl' | 'cs' | 'de' | 'es' | 'pt' | 'it' | 'fr' | 'tr' | 'uz' | 'kk' | 'id';
 
 export type ThemePalette = {
   bg: string;
@@ -94,7 +99,7 @@ export type Source = {
   hints?: boolean;
   /** Defaults to 'monkey'. */
   receipt?: Receipt;
-  /** Interface language. Defaults to 'en'; 'ms' is Bahasa Melayu. */
+  /** Interface language. Defaults to 'en'; see `Language`. */
   language?: Language;
   /** Proxy URL to connect through, e.g. `socks5://user:pass@host:port`,
    * `http://host:port`, or a `t.me/proxy?...` MTProxy link. Unset connects directly. */
