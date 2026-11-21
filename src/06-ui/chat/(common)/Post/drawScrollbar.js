@@ -3,7 +3,6 @@ const TRACK = config.theme.borderChars?.vertical ?? tui.BorderChars[config.theme
 const THUMB_FG = tui.parseColor(config.theme.thumb);
 const TRACK_FG = tui.parseColor(config.theme.muted);
 const BG = tui.parseColor(config.theme.bg);
-const HINT = ' shift+↓/↑ scroll ';
 
 /** @param {import('@opentui/core').TextRenderable} text */
 const thumbOf = ({ height, scrollHeight, scrollY, maxScrollY }) => {
@@ -17,19 +16,17 @@ const thumbOf = ({ height, scrollHeight, scrollY, maxScrollY }) => {
   return { start, end: start + length };
 };
 
-/** @type {typeof Bubble.drawScrollbar} */
+/** @type {typeof Post.drawScrollbar} */
 (view, buffer) => {
   const { box, text } = view;
   if (!text.visible || text.maxScrollY === 0) return;
   const { start, end } = thumbOf(text);
+  // The box's last column: its right border, or the padding a style without one ends in.
   const x = box.screenX + box.width - 1;
   for (let row = 0; row < text.height; row++) {
     const y = text.screenY + row;
     const onThumb = row >= start && row < end;
     if (box.focused) buffer.drawText(onThumb ? THUMB : TRACK, x, y, onThumb ? THUMB_FG : TRACK_FG, BG);
     else if (onThumb) buffer.drawText(THUMB, x, y, box.borderColor, BG);
-  }
-  if (box.focused && HINT.length + 3 <= box.width) {
-    buffer.drawText(HINT, x - 1 - HINT.length, box.screenY + box.height - 1, TRACK_FG, BG);
   }
 };

@@ -1,4 +1,4 @@
-// A thumbnail lands on its medium in the store, and the bubble redraws from the updated message —
+// A thumbnail lands on its medium in the store, and the post redraws from the updated message —
 // so it outlives an album flip, and an edit carries it forward with the rest of the media.
 /** @type {Actions['loadThumb']} */
 ({ id, chatId, media }) => {

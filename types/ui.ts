@@ -98,7 +98,7 @@ declare global {
 
   // ── 6-ui/(common) ─────────────────────────────────────────────────────────────────────
   namespace Sender {
-    /** A stable colour per sender, for names in group bubbles, forward lines and quotes. */
+    /** A stable colour per sender, for names in group posts, forward lines and quotes. */
     const color: (key: string) => string;
   }
 
@@ -106,7 +106,7 @@ declare global {
    * line standing in for a sender), `body` muted under it, or a bare bar when null. */
   type QuoteLines = { color: string; head: string; body: string | null; italic: boolean };
 
-  /** A bar-led two-line quote: of what a message answers, in its bubble and in the message box. */
+  /** A bar-led two-line quote: of what a message answers, in its post and in the message box. */
   namespace Quote {
     const from: (replyTo: Omit<NonNullable<Message['replyTo']>, 'id'>) => QuoteLines;
     /** Each line ellipsized to `cells`, bar included. */
@@ -119,26 +119,78 @@ declare global {
   }
 
   // ── 6-ui/chat ─────────────────────────────────────────────────────────────────────────
-  /** A message drawn as a bordered box: album counter, picture and media label above the text. */
-  namespace Bubble {
-    /** Build a message's bubble, painted. Its picture exists only when some medium is drawable. */
-    const create: (message: ChatMessage) => BubbleView;
-    /** Redraw every node from `view.message` and `view.mediumIndex`; the other Bubble functions call it. */
-    const paint: (view: BubbleView) => void;
+  /** A message as the chat draws it: its body (forward line, reply, album counter, picture, media
+   * label, text, reactions) in the frame of the style `messageStyle` names. */
+  namespace Post {
+    /** Build a message's post in the configured style, painted. Its picture exists only when some
+     * medium is drawable. `place` puts it among its neighbours. */
+    const create: (message: ChatMessage) => PostView;
+    /** A message's body nodes, the same in every style, in the order a frame stacks them; `nodes`
+     * holds them all, null for a forward line the message hasn't got. */
+    const body: (message: ChatMessage) => PostBody & { nodes: (_opentui.Renderable | null)[] };
+    /** The focusable box a style puts the body in: what every style shares, under `options`. Its
+     * border lights up in the `selected` colour while the post is under the cursor. */
+    const box: (options: _opentui.BoxOptions & { children?: OpenTUIChildren }) => _opentui.BoxRenderable;
+    /** Who wrote the message, for a header or a lead: "You" in our border colour, or a name in the
+     * sender's colour. */
+    const author: (message: ChatMessage) => { name: string; color: string };
+    /** The row over a post's body: `author`'s name in bold, then `aside` muted. */
+    const header: (author: { name: string; color: string }, aside?: string) => _opentui.TextRenderable;
+    /** Fit the post to its neighbours: the space above it, its header, the outbox gutter. Writes
+     * only what changed; `render` calls it on every pass. */
+    const place: (view: PostView, at: PostPlace) => void;
+    /** Redraw every node from `view.message` and `view.mediumIndex`; the other Post functions call it. */
+    const paint: (view: PostView) => void;
     /** Draw a new copy of the message: an edit, or a thumbnail that finished downloading. */
-    const update: (view: BubbleView, message: ChatMessage) => void;
+    const update: (view: PostView, message: ChatMessage) => void;
     /** Flip an album by `step` media, wrapping around. No-op with fewer than two. */
-    const flipAlbum: (view: BubbleView, step: number) => void;
-    /** Draw the scrollbar on the right border of a bubble whose text the height cap cut off. */
-    const drawScrollbar: (view: BubbleView, buffer: _opentui.OptimizedBuffer) => void;
-    /** Cells our bubbles in the outbox-unread run keep clear on their right for its bar. */
+    const flipAlbum: (view: PostView, step: number) => void;
+    /** Draw the scrollbar down the box's last column when the height cap cut the text off. */
+    const drawScrollbar: (view: PostView, buffer: _opentui.OptimizedBuffer) => void;
+    /** Cells kept clear beside a post for the outbox-unread bar, on the style's gutter side. */
     const GUTTER: number;
-    /** Bubble size in cells, or null when the medium has no drawable image. */
+    /** Picture size in cells, or null when the medium has no drawable image. */
     const size: (media: ImageMedia) => { cols: number; rows: number } | null;
     /** The size of the first drawable medium among `media`, shared by every picture in the album. */
     const albumSize: (media: _Media[]) => { cols: number; rows: number } | null;
   }
-  /** The row of reactions under a bubble's text. */
+
+  /** What a style builds around a post's body. */
+  type PostFrame = {
+    /** The frame's outermost node, the slot's last child. */
+    root: _opentui.Renderable;
+    /** The focusable box holding the body: the cursor focuses it, and its border shows it. */
+    box: _opentui.BoxRenderable;
+    /** The row over the body that `place` shows only at the head of a run; null for none. */
+    header: _opentui.TextRenderable | null;
+  };
+
+  /** A way of drawing messages, one per `messageStyle`: its frame, and how it spaces its posts. */
+  type PostStyle = {
+    /** Put the body in this style's frame: its border, its header or lead, its alignment. */
+    frame(message: ChatMessage, body: (_opentui.Renderable | null)[]): PostFrame;
+    /** Blank rows above a post: apart from the post before it, or continuing its run. */
+    gap: { apart: number; run: number };
+    /** Where the outbox-unread bar goes: right of the run's posts, which make room for it, or in a
+     * gutter left of every post. */
+    gutter: 'right' | 'left';
+  };
+
+  /** The styles, by `messageStyle`. */
+  const Styles: Record<MessageStyle, PostStyle>;
+
+  /** Where a post sits among its neighbours, as `render` lays the window out. */
+  type PostPlace = {
+    /** The window's oldest post: nothing above it to keep apart from. */
+    first: boolean;
+    /** Same sender, same day and soon after the post before it (`Message.continues`), and not the
+     * first new one. */
+    continued: boolean;
+    /** In the outbox-unread run, beside the bar. */
+    outboxUnread: boolean;
+  };
+
+  /** The row of reactions under a post's text. */
   namespace Reactions {
     /** One line, `👍 3  ❤ 1  +2`: ours highlighted, the first few shown and the rest counted. */
     const paint: (reactions: Message['reactions']) => _opentui.StyledText;
@@ -146,24 +198,19 @@ declare global {
     const count: (count: number) => string;
   }
 
-  /** An empty thumbnail slot of `size` cells; `Bubble.paint` sets the source of the part on screen. */
+  /** An empty thumbnail slot of `size` cells; `Post.paint` sets the source of the part on screen. */
   const Picture: (
     protocol: _opentui.ImageRenderProtocol,
     size: { cols: number; rows: number },
   ) => _opentui.ImageRenderable;
 
-  /** One bubble, its nodes and what they draw. Only the Bubble functions write to it. */
-  type BubbleView = {
-    /** The scroll's child for this message: the bubble, under its day separator and the unread
-     * divider when it has them, capped at the viewport's height. */
-    slot: _opentui.BoxRenderable;
-    /** The bordered bubble itself. */
-    box: _opentui.BoxRenderable;
+  /** A post's body nodes, as its view holds them. */
+  type PostBody = {
     /** The two-line quote of what the message answers; hidden when it answers nothing. */
     reply: _opentui.TextRenderable;
     /** The album's `‹ 2/4 ›`; hidden for a lone message. */
     counter: _opentui.TextRenderable;
-    /** Null when no part was drawable when the bubble was built, or images are off. */
+    /** Null when no part was drawable when the post was built, or images are off. */
     picture: _opentui.ImageRenderable | null;
     /** The current part's media label; hidden when its picture says it all. */
     label: _opentui.TextRenderable;
@@ -171,11 +218,21 @@ declare global {
     text: _opentui.TextRenderable;
     /** One line of reactions under the text; hidden when there are none. */
     reactions: _opentui.TextRenderable;
-    /** The message this bubble draws, thumbnails included. */
-    message: ChatMessage;
-    /** Index into `message.media` of the medium on screen. */
-    mediumIndex: number;
   };
+
+  /** One post, its nodes and what they draw. Only the Post functions write to it. */
+  type PostView = PostBody &
+    PostFrame & {
+      /** The scroll's child for this message: the frame, under its day separator and the unread
+       * divider when it has them, capped at the viewport's height. */
+      slot: _opentui.BoxRenderable;
+      /** The style the post was built in, for good. */
+      style: PostStyle;
+      /** The message this post draws, thumbnails included. */
+      message: ChatMessage;
+      /** Index into `message.media` of the medium on screen. */
+      mediumIndex: number;
+    };
 
   /** Where the chat's two runs start, as indices into the messages `render` is given (their length
    * for none): `outboxUnreadFrom`, ours the partner hasn't read, beside the 🙈 bar;
@@ -196,19 +253,22 @@ declare global {
     /** Move the cursor, in messages. */
     down(count?: number): void;
     up(count?: number): void;
-    /** Scroll the selected message's text inside its bubble, in lines. No-op when the bubble fits. */
+    /** Scroll the selected message's text inside its post, in lines. No-op when the post fits. */
     scrollMessage(lines: number): void;
     /** The oldest message loaded so far, which also asks for more history. */
     first(): void;
-    /** Start over on another chat: drop the last chat's bubbles, forget the cursor and clear the
-     * status. Its bubbles and border come with the repaints of the freshly opened store. */
+    /** Start over on another chat: drop the last chat's posts, forget the cursor and clear the
+     * status. Its posts and border come with the repaints of the freshly opened store. */
     open(): void;
-    /** Leave the pane empty, saying no chat is open: no name, no status, no spinner. The bubbles
+    /** Leave the pane empty, saying no chat is open: no name, no status, no spinner. The posts
      * go with the repaint of the closed store. */
     close(): void;
-    /** Make the bubbles match the open chat: one per message, in order, reusing each bubble whose
-     * id is still held, with the 🙈 bar and the unread divider where `marks` put them. */
+    /** Make the posts match the open chat: one per message, in order, reusing each post whose id
+     * is still held, with the 🙈 bar and the unread divider where `marks` put them. */
     render(messages: readonly ChatMessage[], marks: ChatMarks): void;
+    /** Build every post again in the style `messageStyle` now names, keeping the messages, the marks
+     * and the cursor. */
+    restyle(): void;
     /** Put the chat's glyph and name on the top border. */
     paintName(chatId: number, name: string): void;
     /** Draw who is typing on the top border, or failing that the partner's online/last-seen state;
@@ -236,49 +296,49 @@ declare global {
     Emitting & {
       /** True only while the chat is the selected section — gates whether the cursor takes opentui focus. */
       focused: boolean;
-      /** The bubbles in display order, by message id, as `render` last left them. */
-      views: _KeyedList<BubbleView, number>;
-      /** Day key (see `Day.key`) to the separator on top of the slot of that day's earliest bubble. */
+      /** The posts in display order, by message id, as `render` last left them. */
+      views: _KeyedList<PostView, number>;
+      /** Day key (see `Day.key`) to the separator on top of the slot of that day's earliest post. */
       days: Map<string, _opentui.TextRenderable>;
       /** The message under the cursor, by id, so the cursor survives messages landing above it;
        * `null` when nothing is selected. */
       selectedMessageId: number | null;
       /** The spinner `spin` last started; stopping it again is a no-op. */
       spinner: { stop(): void };
-      /** Where the outbox-unread run `render` last laid out the gutter for starts in `views`, which
-       * line up with its messages one for one; `views.length` for none. */
-      outboxUnreadFrom: number;
-      /** Draw the bar beside the bubbles from `outboxUnreadFrom` on, in the gutter right of them.
-       * Runs as the scroll content's `renderAfter`. */
+      /** The marks `render` last laid the posts out by, as indices into `views`, which line up with
+       * its messages one for one. */
+      marks: ChatMarks;
+      /** Draw the bar beside the posts from `marks.outboxUnreadFrom` on, in the gutter on their
+       * style's side. Runs as the scroll content's `renderAfter`. */
       drawOutboxUnread(buffer: _opentui.OptimizedBuffer): void;
-      /** Where the run of new messages `render` last placed the divider above starts in `views`;
-       * `views.length` for none. */
-      inboxUnreadFrom: number;
-      /** The rule across the section above the first new bubble, counting the new ones; out of the
+      /** The rule across the section above the first new post, counting the new ones; out of the
        * scroll while there are none. */
       divider: _opentui.BoxRenderable;
       /** "No chat open", over the empty pane; shown from `close` until `open`. */
       empty: _opentui.BoxRenderable;
-      /** Put the divider in the slot of the bubble at `inboxUnreadFrom`, above the bubble, saying
-       * `count` new; or take it out when there is no such bubble. */
+      /** Put the divider in the slot of the post at `marks.inboxUnreadFrom`, above the post, saying
+       * `count` new; or take it out when there is no such post. */
       placeDivider(count: number): void;
       /** The newest message id the cursor has reached this visit, album parts included; 0 before it
        * has reached any. Only grows until `open` resets it. */
       readUpTo: number;
-      /** Draw how many messages from `inboxUnreadFrom` on are someone else's and past `readUpTo`
+      /** Draw how many messages from `marks.inboxUnreadFrom` on are someone else's and past `readUpTo`
        * on the bottom border's right, as `Message.inboxUnreadCount` counts them; blank for none. */
       paintUnreadLeft(): void;
       /** Derived, recomputed on every read: the cursor's position in `views`, -1 when unset. */
       readonly selectedIndex: number;
-      /** Give every day one separator, on top of its earliest bubble's slot, and drop the rest. */
+      /** Give every day one separator, on top of its earliest post's slot, and drop the rest. */
       redate(): void;
-      /** Put the cursor on the bubble at `index`, clamped, and bring it into view. */
+      /** Put the cursor on the post at `index`, clamped, and bring it into view. */
       selectAt(index: number): void;
       /** Draw the selected message's day and time on the bottom border; blank with no selection. */
       paintDate(): void;
-      /** Derived, recomputed on every read: the TextRenderable under the cursor — the bubble's
+      /** Derived, recomputed on every read: the TextRenderable under the cursor — the post's
        * scroll window — or `null` when the chat is empty. */
       readonly selectedText: _opentui.TextRenderable | null;
+      /** Derived, recomputed on every read: how to scroll the selected post's text while its height
+       * cap cuts it off and the chat is selected; blank otherwise. A live part of the bottom border. */
+      readonly scrollHint: string;
     };
 
   // ── 6-ui/messagePrompt ────────────────────────────────────────────────────────────────

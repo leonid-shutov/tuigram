@@ -159,15 +159,15 @@ A selection is shown by color, which a text frame doesn't keep, so `app.focused(
 `app.selectedChat()` read it from opentui's tree of elements instead, the way a web test asks
 the DOM what has focus rather than looking at pixels:
 
-- **In a chat, the selected message is the focused bubble.** The app gives the selected bubble
+- **In a chat, the selected message is the focused post.** The app gives the selected post
   opentui's focus, and opentui draws a focused element in its focus color. `app.focused()` takes
   the renderer's focused element and joins the text of its visible text elements. The chat pane
-  has to have focus: while it doesn't, no bubble is selected, on screen or here.
+  has to have focus: while it doesn't, no post is selected, on screen or here.
 - **In the chat list, the selected row is the list's selected option.** `app.selectedChat()`
   finds the list by the id the app gives it, `dialogsList`, and returns the selected option's
   first line. If the id ever changes, it fails saying so.
 
-What this leaves out is the drawing: that the focused bubble's border and the selected row's
+What this leaves out is the drawing: that the focused post's border and the selected row's
 background really are drawn in a distinct color. That is opentui's job, and every built-in theme
 draws both distinctly. Reading the drawn cells' colors instead was tried and dropped: 12 of the
 15 built-in themes have no `selected` color of their own and fall back to the accent color,

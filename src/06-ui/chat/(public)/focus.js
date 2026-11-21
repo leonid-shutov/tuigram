@@ -4,6 +4,6 @@
   self.component.borderColor = config.theme.accent;
   self.component.titleColor = config.theme.accent;
   self.selectAt(self.selectedIndex);
-  // An empty chat has no bubble to take focus, and the keymap layer needs something focused.
+  // An empty chat has no post to take focus, and the keymap layer needs something focused.
   if (self.selectedIndex < 0) self.component.focus();
 };

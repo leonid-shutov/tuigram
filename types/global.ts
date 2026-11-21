@@ -33,6 +33,7 @@ import {
   ResolvedTheme,
   ImageProtocol as _ImageProtocol,
   Receipt as _Receipt,
+  MessageStyle as _MessageStyle,
   Language as _Language,
   ConfigSchema,
 } from './config';
@@ -53,6 +54,7 @@ import { Result as _Result } from 'metautil';
 declare global {
   type ImageProtocol = _ImageProtocol;
   type Receipt = _Receipt;
+  type MessageStyle = _MessageStyle;
   type Language = _Language;
   /** Global because `Media.isFile` narrows to it and `8-actions` passes it around. */
   type FileMedia = _FileMedia;
@@ -82,11 +84,13 @@ declare global {
     theme: ResolvedTheme;
     /** Whether the dialogs list and the chat pane header prefix each peer with an emoji. */
     dialogEmoji: boolean;
-    /** How chat bubbles draw thumbnails; 'off' keeps the text placeholders. */
+    /** How chat posts draw thumbnails; 'off' keeps the text placeholders. */
     imageProtocol: ImageProtocol;
     /** Whether the key hint bar occupies the bottom row. */
     hints: boolean;
     receipt: Receipt;
+    /** How the chat frames each message; see `Styles`. */
+    messageStyle: MessageStyle;
     /** Interface language: 'en' (English) or 'ms' (Bahasa Melayu). */
     language: Language;
   };
@@ -131,6 +135,7 @@ declare global {
         senderColors: string[];
         imageProtocols: ImageProtocol[];
         receipts: Receipt[];
+        messageStyles: MessageStyle[];
         languages: Language[];
       };
       fields: ConfigSchema;
@@ -439,6 +444,8 @@ declare global {
     const key: (date: Date) => string;
     /** `Today`, `Yesterday`, else `Mon, 6 Oct` — with the year only when it isn't `now`'s. */
     const label: (date: Date, now?: Date) => string;
+    /** The time of day, as the locale writes it: `20:15`. */
+    const time: (date: Date) => string;
   }
 
   namespace Base64 {

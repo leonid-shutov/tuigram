@@ -28,7 +28,9 @@ async () => {
     else Result.from(() => node.fs.unlinkSync(settingsSeed));
   }
 
+  const { messageStyle } = config;
   config.reload();
+  if (config.messageStyle !== messageStyle) ui.chat.restyle();
   actions.repaintDialogs();
   actions.repaintChatTitle();
   actions.repaintHints();

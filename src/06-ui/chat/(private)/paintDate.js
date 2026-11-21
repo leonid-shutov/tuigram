@@ -3,6 +3,5 @@
 /** @type {ChatSelf['paintDate']} */
 () => {
   const date = self.selectedMessage?.date;
-  const time = date?.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-  self.component.setTitlePart('date', date === undefined ? '' : `${Day.label(date)} ${time}`);
+  self.component.setTitlePart('date', date === undefined ? '' : `${Day.label(date)} ${Day.time(date)}`);
 };

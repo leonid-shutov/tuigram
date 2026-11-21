@@ -19,7 +19,7 @@
         return;
       }
       // The same path as a message from the stream: it dedupes against the update that follows,
-      // and lands the bubble when the forward went into the chat that is open.
+      // and lands the post when the forward went into the chat that is open.
       actions.receiveMessage(sent.unwrap());
       const name = dialogs.find((dialog) => dialog.chatId === toChatId)?.name ?? 'chat';
       ui.chat.flashStatus(`forwarded to ${name}`);

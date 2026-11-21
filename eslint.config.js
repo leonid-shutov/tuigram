@@ -98,7 +98,8 @@ module.exports = [
         Frame: true,
 
         // chat common
-        Bubble: true,
+        Post: true,
+        Styles: true,
         Picture: true,
         Reactions: true,
 

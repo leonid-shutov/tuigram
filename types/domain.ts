@@ -12,7 +12,7 @@ export type MediaImage = {
   thumbKey: string | null;
   /** Path to the larger thumbnail on disk, once `actions.loadThumb` has downloaded it. */
   thumb: string | null;
-  /** Dimensions of the full medium, used to size the bubble before any pixels arrive. */
+  /** Dimensions of the full medium, used to size the post before any pixels arrive. */
   width: number;
   height: number;
 };

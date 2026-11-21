@@ -4,11 +4,11 @@ const put = (node, content) => {
   node.visible = content !== '';
 };
 
-// A line past this, bar included, is clipped, so a long quote never widens the bubble past a
+// A line past this, bar included, is clipped, so a long quote never widens the post past a
 // picture's width.
 const QUOTE_CELLS = 41;
 
-/** @type {typeof Bubble.paint} */
+/** @type {typeof Post.paint} */
 (view) => {
   const { message, mediumIndex, picture, reply, label, counter, text, reactions } = view;
   reply.visible = message.replyTo !== null;

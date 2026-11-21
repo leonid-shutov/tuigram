@@ -31,9 +31,9 @@ declare global {
     preloadChats(): Promise<void>;
     /** Fetch the open chat's next page of older history, under a spinner; reports a failure. */
     loadOlder(): Promise<void>;
-    /** Fetch a message's 320px thumbnail, if it has one, and push it into its bubble. */
+    /** Fetch a message's 320px thumbnail, if it has one, and push it into its post. */
     loadThumb(message: Message): void;
-    /** Resolve the sender and text of what each message replies to, and push them into its bubble.
+    /** Resolve the sender and text of what each message replies to, and push them into its post.
      * The messages are one chat's; those not cached are skipped. */
     loadReplies(messages: Message[]): void;
     /** Put the prompt in reply mode for the focused message and focus it. */
@@ -98,7 +98,7 @@ declare global {
     /** Shut down and have bin/tuigram.js start the app again from scratch: on wake from sleep
      * and on ctrl+r. */
     restart(): void;
-    /** Push the open chat's messages to the pane as bubbles, with the run of ours its partner hasn't
+    /** Push the open chat's messages to the pane as posts, with the run of ours its partner hasn't
      * read yet and the divider above the ones we hadn't when it came into view. Runs on every
      * `change` of store.chat (the messages, the divider) and store.dialogs (the read mark). */
     repaintChat(): void;
@@ -113,9 +113,9 @@ declare global {
     repaintDialogs(): void;
     /** Redraw the hint bar for whichever section is focused. Follows every `navigation.select`. */
     repaintHints(): void;
-    /** Send a text, as a reply to `replyTo` when given: an optimistic pending bubble, then the real send. */
+    /** Send a text, as a reply to `replyTo` when given: an optimistic pending post, then the real send. */
     send(text: string, replyTo?: number | null): Promise<void>;
-    /** Attach a local file: an optimistic pending bubble, then the real upload via mtcute. */
+    /** Attach a local file: an optimistic pending post, then the real upload via mtcute. */
     sendFile(filePath: string, replyTo?: number | null): Promise<void>;
     /** Mark the open chat read, here and on Telegram, when the window is focused and it has anything
      * unread. Runs whenever the open chat may have just been seen: it opened, a message landed in

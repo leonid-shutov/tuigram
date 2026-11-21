@@ -3,6 +3,10 @@ export type ImageProtocol = 'auto' | 'kitty' | 'sixel' | 'blocks' | 'off';
 
 export type Receipt = 'monkey' | 'tick';
 
+/** How the chat frames each message: a bordered `bubble`, a `bar` down its left edge (or its outer
+ * edge, `bar-mirrored`), a `thread` of left-aligned posts under their sender's name, or `irc` lines. */
+export type MessageStyle = 'bubble' | 'bar' | 'bar-mirrored' | 'thread' | 'irc';
+
 /** Interface language: 'en' (default) or 'ms' (Bahasa Melayu). */
 export type Language = 'en' | 'ms';
 
@@ -88,12 +92,14 @@ export type Source = {
   /** Peer glyphs in the dialogs list and the chat pane header. Defaults to true; set to false
    * on terminals whose font has no emoji coverage. */
   dialogEmoji?: boolean;
-  /** How chat bubbles draw thumbnails. Defaults to 'auto'. */
+  /** How chat posts draw thumbnails. Defaults to 'auto'. */
   imageProtocol?: ImageProtocol;
   /** The key hint bar along the bottom edge. Defaults to true; set to false to reclaim the row. */
   hints?: boolean;
   /** Defaults to 'monkey'. */
   receipt?: Receipt;
+  /** Defaults to 'bubble'. */
+  messageStyle?: MessageStyle;
   /** Interface language. Defaults to 'en'; 'ms' is Bahasa Melayu. */
   language?: Language;
   /** Proxy URL to connect through, e.g. `socks5://user:pass@host:port`,
@@ -118,6 +124,7 @@ export type ConfigSchema = {
   hints: ConfigSchemaField<boolean>;
   imageProtocol: ConfigSchemaField<ImageProtocol>;
   receipt: ConfigSchemaField<Receipt>;
+  messageStyle: ConfigSchemaField<MessageStyle>;
   language: ConfigSchemaField<Language>;
   proxy: ConfigSchemaField<string | undefined>;
   updateCheck: ConfigSchemaField<boolean>;

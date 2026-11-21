@@ -43,7 +43,7 @@ const asciiBorderChars = {
       warning: '#f2c94c',
     },
     borderStyle: 'rounded',
-    selfBorder: '#57d977', // green — self bubbles (incoming stay blue)
+    selfBorder: '#57d977', // green — our posts (incoming stay blue)
     selected: '#ffb347', // amber — distinct from both
   },
   'aqua-lime': {
@@ -60,7 +60,7 @@ const asciiBorderChars = {
       warning: '#fde047',
     },
     borderStyle: 'rounded',
-    selfBorder: '#a3e635', // lime — self bubbles (incoming stay aqua)
+    selfBorder: '#a3e635', // lime — our posts (incoming stay aqua)
     selected: '#ff6ec7', // pink — distinct from both
   },
   daylight: {
@@ -77,7 +77,7 @@ const asciiBorderChars = {
       warning: '#a16207',
     },
     borderStyle: 'rounded',
-    selfBorder: '#16a34a', // green — self bubbles (incoming stay blue)
+    selfBorder: '#16a34a', // green — our posts (incoming stay blue)
     selected: '#d97706', // orange — distinct on the light background
     senderColors: ['#b4342a', '#8a6d00', '#2f7d32', '#00707d', '#1d4ed8', '#7c3aed', '#a1560a', '#0f766e'],
   },

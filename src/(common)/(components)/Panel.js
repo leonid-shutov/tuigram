@@ -18,7 +18,9 @@ const SPINNER_INTERVAL_MS = 120;
 // title is native state that a setter stages for a later frame, so it can't follow this frame's
 // width. An edge with parts should get no `title` / `bottomTitle` of its own; it would show under
 // these. A flash shows over a part for a while, and a spinner until it's stopped; writes to the
-// part meanwhile land underneath them, and are what shows once they're over.
+// part meanwhile land underneath them, and are what shows once they're over. A part set to a
+// function is live: it is called for its text on every frame, for a part that follows state nothing
+// tells the panel about.
 Component(
   class PanelRenderable extends tui.BoxRenderable {
     /**
@@ -28,7 +30,7 @@ Component(
     constructor(ctx, { titleParts = {}, ...options }) {
       super(ctx, options);
       this.titleParts = titleParts;
-      /** @type {Map<string, string>} */
+      /** @type {Map<string, PanelPartText>} */
       this.partTexts = new Map(
         Object.values(titleParts).flatMap((edge) =>
           Object.values(edge).flatMap((names) => names.map((name) => [name, ''])),
@@ -42,7 +44,7 @@ Component(
 
     /**
      * @param {string} name
-     * @param {string} text
+     * @param {PanelPartText} text
      */
     setTitlePart(name, text) {
       if (!this.partTexts.has(name)) throw new Error(`Panel has no title part "${name}"`);
@@ -117,7 +119,8 @@ Component(
       if (flash) return flash.text;
       const frame = this.spinners.get(name)?.frame ?? -1;
       if (frame >= 0) return SPINNER_FRAMES[frame];
-      return this.partTexts.get(name) ?? '';
+      const text = this.partTexts.get(name) ?? '';
+      return typeof text === 'function' ? text() : text;
     }
 
     /**

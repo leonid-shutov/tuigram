@@ -3,7 +3,7 @@
 // exact even when the divider's isn't; the sent message that dismisses the divider clears it too.
 /** @type {ChatSelf['paintUnreadLeft']} */
 () => {
-  const below = [...self.views].slice(self.inboxUnreadFrom).map(({ message }) => message);
+  const below = [...self.views].slice(self.marks.inboxUnreadFrom).map(({ message }) => message);
   const left = Message.inboxUnreadCount(below, self.readUpTo);
   self.component.setTitlePart('unreadLeft', left === 0 ? '' : `↓ ${left} ${Locale.t('new')}`);
 };

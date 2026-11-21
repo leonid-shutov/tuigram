@@ -5,5 +5,5 @@
 /** @type {ChatSection['resume']} */
 () => {
   ScrollBox.scrollToBottom(self.scroll);
-  self.selectAt(self.inboxUnreadFrom);
+  self.selectAt(self.marks.inboxUnreadFrom);
 };

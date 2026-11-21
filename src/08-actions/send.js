@@ -3,7 +3,7 @@ async (text, replyTo = null) => {
   const chatId = store.chat.openChatId;
   if (chatId === null) return;
 
-  // The original is on screen — it was just picked — so the pending bubble quotes it at once.
+  // The original is on screen — it was just picked — so the pending post quotes it at once.
   const quoted = replyTo === null ? null : { id: replyTo, ...Message.quote(store.chat.findConfirmed(chatId, replyTo)) };
   const pending = Message.pending(text, [], quoted);
   // Writing to the chat answers what was new in it, as in Telegram's own clients.

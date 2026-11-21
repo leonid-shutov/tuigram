@@ -1,10 +1,9 @@
 ({
   focused: false,
-  views: KeyedList.from([], (/** @type {BubbleView} */ view) => view.message.id),
+  views: KeyedList.from([], (/** @type {PostView} */ view) => view.message.id),
   days: new Map(),
   selectedMessageId: null,
   spinner: { stop: () => {} },
-  outboxUnreadFrom: 0,
-  inboxUnreadFrom: 0,
+  marks: { outboxUnreadFrom: 0, inboxUnreadFrom: 0, inboxUnreadCount: 0 },
   readUpTo: 0,
 });

@@ -1,16 +1,16 @@
-// Bubble dimensions, in cells, for a medium the chat can draw.
+// Post dimensions, in cells, for a medium the chat can draw.
 //
 // Sized from the full medium's own width/height, which ride along with the message — never
-// from the decoded thumbnail. That keeps a bubble's height final from the moment it is built,
+// from the decoded thumbnail. That keeps a post's height final from the moment it is built,
 // so a thumbnail landing later never reflows the chat and never fights preserveScroll's
 // height-based anchoring. Terminal cells run about 2:1, so a square image wants half as many
-// rows as columns. This is the nominal size only: on a bubble capped by the viewport (see
-// Bubble/create.js), layout may draw the picture shorter than `rows`, down to Picture's own floor.
+// rows as columns. This is the nominal size only: on a post capped by the viewport (see
+// Post/create.js), layout may draw the picture shorter than `rows`, down to Picture's own floor.
 const COLS = 40;
 const MAX_ROWS = 20;
 const CELL_ASPECT = 2;
 
-/** @type {typeof Bubble.size} */
+/** @type {typeof Post.size} */
 (media) => {
   const { width, height } = media;
   // A medium whose dimensions the sender omitted has nothing to lay out from.

@@ -2,6 +2,19 @@
 
 ## [Unreleased]
 
+### Added
+
+- A `messageStyle` setting, for anyone who'd rather not have a box around every message:
+  `bubble` (the default), `bar` and `bar-mirrored` keep yours on the right with only a line down
+  each message's edge, `thread` lists every message on the left under its sender's name and time,
+  and `irc` gives each message a line after its time and sender. Changing it with `ctrl+e`
+  redraws the open chat right away.
+
+### Changed
+
+- "shift+↓/↑ scroll", shown while the selected message is too tall to fit, is now on the chat's
+  bottom border instead of the message's own.
+
 ## [1.7.0] - 2026-11-20
 
 ### Added

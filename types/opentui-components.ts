@@ -54,10 +54,13 @@ type _PanelOptions = _opentui.BoxOptions & {
   titleParts?: { top?: _PanelEdge; bottom?: _PanelEdge };
 };
 
+/** A title part's text, or a function called for it on every frame: a live part. */
+type _PanelPartText = string | (() => string);
+
 /** A box whose edge titles are built from named parts. */
 interface _PanelRenderable extends _opentui.BoxRenderable {
-  /** Set a declared title part's text. */
-  setTitlePart(name: string, text: string): void;
+  /** Set a declared title part's text, or make it live. */
+  setTitlePart(name: string, text: _PanelPartText): void;
   /** Show `text` over a declared part for `ms`; the part's own text comes back after. */
   flashTitlePart(name: string, text: string, ms: number): void;
   /** Spin over a declared part, after `delay` ms, until the returned spinner is stopped; the part's
@@ -129,6 +132,7 @@ declare global {
   type PanelEdge = _PanelEdge;
   type ComposedEdge = _ComposedEdge;
   type PanelOptions = _PanelOptions;
+  type PanelPartText = _PanelPartText;
   type PanelRenderable = _PanelRenderable;
   type FileEntry = _FileEntry;
   type FilePickerKeyBinding = _FilePickerKeyBinding;

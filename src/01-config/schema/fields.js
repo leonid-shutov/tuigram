@@ -20,6 +20,11 @@
     hotReload: true,
     validate: (value) => config.schema.defaults.imageProtocols.some((protocol) => protocol === value),
   },
+  messageStyle: {
+    default: 'bubble',
+    hotReload: true, // openConfig rebuilds the open chat's posts in the new style
+    validate: (value) => config.schema.defaults.messageStyles.some((style) => style === value),
+  },
   receipt: {
     default: 'tick',
     hotReload: true,

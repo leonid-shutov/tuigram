@@ -1,7 +1,7 @@
-/** @type {typeof Bubble.flipAlbum} */
+/** @type {typeof Post.flipAlbum} */
 (view, step) => {
   const count = view.message.media.length;
   if (count < 2) return;
   view.mediumIndex = (view.mediumIndex + step + count) % count;
-  Bubble.paint(view);
+  Post.paint(view);
 };

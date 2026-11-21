@@ -164,6 +164,7 @@ Optional, and read from `$XDG_CONFIG_HOME/tuigram/config.json`:
 ```json
 {
   "theme": "aqua-lime",
+  "messageStyle": "bubble",
   "imageProtocol": "auto",
   "dialogEmoji": true,
   "hints": true,
@@ -177,6 +178,7 @@ Optional, and read from `$XDG_CONFIG_HOME/tuigram/config.json`:
 | Key             | Default     | Values                                                                                                                                                                                         |
 | --------------- | ----------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `theme`         | `aqua-lime` | `tokyo-night`, `blue-green`, `aqua-lime`, `daylight`, `nord`, `gruvbox`, `catppuccin`, `dracula`, `rose-pine`, `solarized-dark`, `mono`, `high-contrast`, `crt-amber`, `y2k`, `ascii-terminal` |
+| `messageStyle`  | `bubble`    | `bubble`, `bar`, `bar-mirrored`, `thread`, `irc` — how each message is framed; see below                                                                                                       |
 | `imageProtocol` | `auto`      | `auto`, `kitty`, `sixel`, `blocks`, `off`                                                                                                                                                      |
 | `dialogEmoji`   | `true`      | `true`, `false` — turn off on fonts with no emoji coverage                                                                                                                                     |
 | `hints`         | `true`      | `true`, `false` — set to false to hide the key hint bar and reclaim its row                                                                                                                    |
@@ -184,6 +186,12 @@ Optional, and read from `$XDG_CONFIG_HOME/tuigram/config.json`:
 | `language`      | `en`        | `en`, `ms` — the interface language; `ms` is Bahasa Melayu                                                                                                                                     |
 | `proxy`         | _(none)_    | a proxy URL — `socks5://`, `socks4://`, `http://`/`https://`, or a `t.me/proxy?...` MTProxy link; connects directly if unset                                                                   |
 | `updateCheck`   | `true`      | `true`, `false` — check registry.npmjs.org (installer/npm/mise) or the tap's formula (brew) at startup; skipped when `proxy` is set                                                            |
+
+`messageStyle` picks how the chat draws messages. `bubble` puts each one in a bordered box, yours on
+the right; `bar` keeps that layout with only a line down each message's left edge, and
+`bar-mirrored` puts the line on the outer edge instead. `thread` puts every message on the left
+under its sender's name and time, once per run of messages; `irc` gives each message a line of its
+own after its time and sender. A change applies to the open chat as soon as the editor closes.
 
 `daylight` is the light theme. `ascii-terminal` draws its borders out of `+`, `-` and `|` for fonts
 without box-drawing glyphs. Unknown keys and invalid values are ignored — each falls back to its
