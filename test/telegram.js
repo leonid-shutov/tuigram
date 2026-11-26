@@ -37,6 +37,8 @@ const createTelegram = async () => {
   const users = new Map([[SELF_ID, self]]);
   // Each chat's messages, oldest first; a chat is here once it has one.
   const chats = new Map();
+  // The account's chat folders, as `messages.getDialogFilters` lists them.
+  const folders = [];
   // Each chat's read position: the id of the newest message the account has read in it.
   const readUpTo = new Map();
   // Each chat's deleted messages, in the order they went: `{ message, forEveryone }`.
@@ -44,6 +46,7 @@ const createTelegram = async () => {
   const unanswered = [];
   let callCount = 0;
   let nextUserId = 100;
+  let nextFolderId = 2;
 
   // Signed in, or mtcute drops every update (docs/MTCUTE_BUGS.md).
   await client.prepare();
@@ -105,7 +108,7 @@ const createTelegram = async () => {
       unreadCount: 0,
     }),
     'updates.getDifference': () => ({ _: 'updates.differenceEmpty', date: client.getNextDate(), seq: 0 }),
-    'messages.getDialogFilters': () => ({ _: 'messages.dialogFilters', filters: [] }),
+    'messages.getDialogFilters': () => ({ _: 'messages.dialogFilters', filters: folders }),
     // Every dialog fits on the first page, so any later page (one with an offset) is empty.
     'messages.getDialogs': ({ offsetId }) => {
       // A chat whose every message was deleted drops out of the list, as on Telegram.
@@ -206,6 +209,29 @@ const createTelegram = async () => {
     },
 
     message: (userId, text, options) => void addMessage(userId, text, options),
+
+    // A chat folder with the rules given, as the account set it up: the folder bar lists it.
+    folder: ({ title, ...rules }) => {
+      const id = nextFolderId++;
+      folders.push({
+        _: 'dialogFilter',
+        id,
+        title: { _: 'textWithEntities', text: title, entities: [] },
+        pinnedPeers: [],
+        includePeers: [],
+        excludePeers: [],
+        contacts: false,
+        nonContacts: false,
+        groups: false,
+        broadcasts: false,
+        bots: false,
+        excludeMuted: false,
+        excludeRead: false,
+        excludeArchived: false,
+        ...rules,
+      });
+      return id;
+    },
 
     // The chat's deleted messages, in the order they went, and whether for the other side too.
     deleted: (userId) =>

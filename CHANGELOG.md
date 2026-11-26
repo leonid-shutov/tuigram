@@ -12,6 +12,8 @@
 - Polish, Czech, German, Spanish, Brazilian Portuguese, Italian, French, Turkish, Uzbek (Latin
   script), Kazakh (Cyrillic script) and Indonesian interfaces: `"language": "pl"`, `"cs"`,
   `"de"`, `"es"`, `"pt"`, `"it"`, `"fr"`, `"tr"`, `"uz"`, `"kk"` or `"id"` in `config.json`.
+- The mouse: a click on a chat row opens it, a click on the folder name opens the folder list,
+  and a click on a row there picks it.
 
 ### Fixed
 

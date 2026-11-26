@@ -9,5 +9,8 @@ Panel({
   focusedBorderColor: config.theme.accent,
   titleColor: config.theme.muted,
   titleParts: { top: { left: ['label', 'folder'] }, bottom: { right: ['status'] } },
+  onTitlePartClick: (name) => {
+    if (name === 'folder') actions.pickFolder();
+  },
   children: [self.list],
 });

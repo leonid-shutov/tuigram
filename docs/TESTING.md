@@ -76,12 +76,13 @@ opens follows from the order the messages were added in, so say so on the line t
 `createTelegram()` resolves to a fake account signed in as "Me" (user id 1). Build what the app
 should find on startup before calling `boot`:
 
-| Call                                            | Effect                                                                                                      |
-| ----------------------------------------------- | ----------------------------------------------------------------------------------------------------------- |
-| `await telegram.user({ firstName, lastName })`  | Someone the account knows. Resolves to their user id.                                                       |
-| `telegram.message(userId, text)`                | A message already in the chat with them, from them. No update is sent.                                      |
-| `telegram.message(userId, text, { out: true })` | The same, sent by the account.                                                                              |
-| `telegram.read(userId)`                         | Marks the chat read up to its newest message, as if read on another device. Messages are unread until then. |
+| Call                                            | Effect                                                                                                          |
+| ----------------------------------------------- | --------------------------------------------------------------------------------------------------------------- |
+| `await telegram.user({ firstName, lastName })`  | Someone the account knows. Resolves to their user id.                                                           |
+| `telegram.message(userId, text)`                | A message already in the chat with them, from them. No update is sent.                                          |
+| `telegram.message(userId, text, { out: true })` | The same, sent by the account.                                                                                  |
+| `telegram.folder({ title, ...rules })`          | A chat folder on the account: the folder bar lists it. `rules` are TL `DialogFilter` flags, e.g. `nonContacts`. |
+| `telegram.read(userId)`                         | Marks the chat read up to its newest message, as if read on another device. Messages are unread until then.     |
 
 While the app runs:
 
@@ -95,7 +96,7 @@ While the app runs:
 
 The fake doesn't record the calls the app makes, on purpose: see "Asserting" below.
 
-Chats are private chats only, for now: no groups, channels, media or folders.
+Chats are private chats only, for now: no groups, channels or media.
 
 ## Driving the app: `boot()`
 
@@ -120,6 +121,7 @@ The handle it resolves to:
 | `await app.frame()`                     | The screen now, as text.                                                                                                                                                                                     |
 | `app.press(key, modifiers)`             | One key: a character (`'j'`), or a name from opentui's `KeyCodes` (`'RETURN'`, `'ESCAPE'`, `'TAB'`, `'ARROW_UP'`, …). `modifiers` is `{ ctrl, shift, meta }`.                                                |
 | `await app.type(text)`                  | Types `text`, one key at a time.                                                                                                                                                                             |
+| `await app.click(x, y)`                 | Clicks the terminal cell at column `x`, row `y` (both 0-based), as a mouse would.                                                                                                                            |
 | `app.spawned`                           | The programs the app started, as `{ cmd, args }`. None of them ran.                                                                                                                                          |
 | `app.fetched`                           | The URLs it requested. Every request failed, as with no network.                                                                                                                                             |
 | `app.logs`                              | What the app logged, wrote to stderr, or reported as a crash.                                                                                                                                                |

@@ -79,6 +79,7 @@ module.exports = [
         QRCode: true,
         FilePicker: true,
         Select: true,
+        SelectRow: true,
         SearchList: true,
         Panel: true,
         Textarea: true,

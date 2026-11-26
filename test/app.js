@@ -150,6 +150,7 @@ const boot = async ({ telegram, width = 80, height = 24, env = {}, config = null
 
     press: (key, modifiers) => terminal.setup.mockInput.pressKey(key, modifiers),
     type: (text) => terminal.setup.mockInput.typeText(text),
+    click: (x, y) => terminal.setup.mockMouse.click(x, y),
 
     stop: async () => {
       context.Crash.exit(null, 0);
