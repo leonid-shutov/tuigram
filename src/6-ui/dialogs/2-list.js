@@ -22,4 +22,16 @@ Select.paintMarker(dialogsList, (/** @type {DialogOption} */ option) =>
   option.isMuted ? MUTED_UNREAD_COLOR : UNREAD_COLOR,
 );
 
+// A click on a chat row opens it, as Enter does. opentui's Select handles no mouse of its own;
+// SelectRow works out which row is under the pointer.
+dialogsList.onMouseDown = (event) => {
+  if (event.button !== 0) return;
+  const index = SelectRow(dialogsList, event.y);
+  if (index === -1) return;
+  // Keep opentui from focusing the list after the click: the chat it opens takes the focus.
+  event.preventDefault();
+  dialogsList.setSelectedIndex(index);
+  self.open();
+};
+
 dialogsList;

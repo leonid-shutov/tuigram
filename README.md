@@ -148,6 +148,8 @@ Cyrillic layout without switching back — `о` moves down, `пп` is `gg`, and 
   instantly, then an 800px version downloads in the background; albums flip with `h` / `l`
 - Rich previews for ~18 media types, in the chat list and in the message pane
 - Fuzzy chat search, forgiving of a wrong keyboard layout
+- Mouse: a chat opens when its row is clicked, the folder name picks a folder, and a picker row
+  is taken
 - Telegram chat folders
 - Sending text and files; replying to, forwarding, copying, editing and deleting messages
 - Desktop notifications; muted chats stay quiet

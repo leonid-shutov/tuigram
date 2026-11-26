@@ -47,11 +47,15 @@ type _ComposedEdge = {
   alignment: 'left' | 'right';
   right?: string;
   center?: string;
+  /** The parts `title` was composed from, at their x in the edge string. */
+  parts: { name: string; x: number; width: number }[];
 };
 
 type _PanelOptions = _opentui.BoxOptions & {
   /** The parts each edge's title is built from: a group per side, in drawing order. */
   titleParts?: { top?: _PanelEdge; bottom?: _PanelEdge };
+  /** Called when a drawn title part is clicked, with the part's name. */
+  onTitlePartClick?: (name: string) => void;
 };
 
 /** A box whose edge titles are built from named parts. */
@@ -167,6 +171,8 @@ declare global {
   const QRCode: ComponentFactory<QRCodeOptions, QRCodeRenderable>;
   const SearchList: ComponentFactory<_SearchListOptions, _SearchListRenderable>;
   const Panel: ComponentFactory<_PanelOptions, _PanelRenderable>;
+  /** The option under terminal row `y` in an opentui Select, or -1; opentui has no click handling. */
+  const SelectRow: (select: _opentui.SelectRenderable, y: number) => number;
   const FilePicker: ComponentFactory<_FilePickerOptions, _FilePickerRenderable> & {
     Events: {
       /** A file was chosen. Payload: its absolute path. The renderable does not hide itself. */

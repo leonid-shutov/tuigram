@@ -25,9 +25,16 @@ Component(
      * @param {import('@opentui/core').RenderContext} ctx
      * @param {PanelOptions} options
      */
-    constructor(ctx, { titleParts = {}, ...options }) {
+    constructor(ctx, { titleParts = {}, onTitlePartClick, ...options }) {
       super(ctx, options);
       this.titleParts = titleParts;
+      /** @type {((name: string) => void) | undefined} */
+      this.onTitlePartClick = onTitlePartClick;
+      // Parts of the edge titles as last drawn, in panel coordinates: a click on one reaches the
+      // handler below by walking these, since opentui's hit test only knows the panel as a whole.
+      /** @type {{ name: string, x: number, y: number, width: number }[]} */
+      this.hitRegions = [];
+      this.onMouseDown = this.clickTitlePart;
       /** @type {Map<string, string>} */
       this.partTexts = new Map(
         Object.values(titleParts).flatMap((edge) =>
@@ -38,6 +45,20 @@ Component(
       this.flashes = new Map();
       /** @type {Map<string, { frame: number, timer?: NodeJS.Timeout }>} */
       this.spinners = new Map();
+    }
+
+    /** @param {import('@opentui/core').MouseEvent} event */
+    clickTitlePart(event) {
+      const click = this.onTitlePartClick;
+      if (click === undefined || event.button !== 0) return;
+      const x = event.x - this.screenX;
+      const y = event.y - this.screenY;
+      const hit = this.hitRegions.find((part) => part.y === y && x >= part.x && x < part.x + part.width);
+      if (hit === undefined) return;
+      // Keep opentui from focusing the panel on the way out: the click is the action.
+      event.preventDefault();
+      event.stopPropagation();
+      click(hit.name);
     }
 
     /**
@@ -124,10 +145,13 @@ Component(
      * @param {string[]} names
      * @param {number} [room] Cells for the parts, padding excluded.
      * @param {boolean} [whole] Drop a part that doesn't fit instead of clipping it.
+     * @returns {{ text: string, parts: { name: string, x: number, width: number }[] } | null}
      */
     composeTitle(names, room = this.width - INSET * 2 - PADDING, whole = false) {
       /** @type {string[]} */
       const shown = [];
+      /** @type {{ name: string, text: string }[]} */
+      const kept = [];
       for (const name of names) {
         const text = this.partText(name);
         if (text === '') continue;
@@ -135,15 +159,28 @@ Component(
         const clipped = Cells.clip(text, room - gap).trimEnd();
         if (clipped === '' || (whole && clipped !== text)) break;
         shown.push(clipped);
+        kept.push({ name, text: clipped });
         room -= gap + Cells.width(clipped);
       }
-      return shown.length === 0 ? undefined : ` ${shown.join(SEPARATOR)} `;
+      if (shown.length === 0) return null;
+
+      /** @type {{ name: string, x: number, width: number }[]} */
+      const parts = [];
+      let x = 1; // The leading space the title opens with.
+      for (const [index, part] of kept.entries()) {
+        if (index > 0) x += SEPARATOR.length;
+        const width = Cells.width(part.text);
+        parts.push({ name: part.name, x, width });
+        x += width;
+      }
+      return { text: ` ${shown.join(SEPARATOR)} `, parts };
     }
 
     // Composed against the width of this very frame, and drawn over the border opentui paints.
     /** @param {import('@opentui/core').OptimizedBuffer} buffer */
     renderSelf(buffer) {
       super.renderSelf(buffer);
+      this.hitRegions = [];
       const top = this.titleParts.top && this.composeEdge(this.titleParts.top);
       const bottom = this.titleParts.bottom && this.composeEdge(this.titleParts.bottom);
       if (top) this.drawEdge(buffer, top, this.screenY);
@@ -157,6 +194,10 @@ Component(
      */
     drawEdge(buffer, edge, y) {
       if (edge.title !== undefined) {
+        const x = edge.alignment === 'left' ? INSET : this.width - INSET - Cells.width(edge.title);
+        for (const part of edge.parts) {
+          this.hitRegions.push({ name: part.name, x: x + part.x, y: y - this.screenY, width: part.width });
+        }
         if (edge.alignment === 'left') this.drawTitle(buffer, edge.title, INSET, y);
         else this.drawRight(buffer, edge.title, y);
       }
@@ -180,11 +221,24 @@ Component(
     composeEdge({ left = [], right = [], center = [] }) {
       const middle = this.composeTitle(center, undefined, true);
       const title = this.composeTitle(left);
-      if (title === undefined) {
-        return { title: this.composeTitle(right), alignment: 'right', center: middle };
+      if (title === null) {
+        const rightEdge = this.composeTitle(right);
+        return {
+          title: rightEdge?.text,
+          alignment: 'right',
+          center: middle?.text,
+          parts: rightEdge?.parts ?? [],
+        };
       }
-      const room = this.width - INSET * 2 - PADDING - Cells.width(title) - TITLE_GAP;
-      return { title, alignment: 'left', right: this.composeTitle(right, room, true), center: middle };
+      const room = this.width - INSET * 2 - PADDING - Cells.width(title.text) - TITLE_GAP;
+      const rightEdge = this.composeTitle(right, room, true);
+      return {
+        title: title.text,
+        alignment: 'left',
+        right: rightEdge?.text,
+        center: middle?.text,
+        parts: title.parts,
+      };
     }
 
     /**
