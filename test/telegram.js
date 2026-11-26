@@ -37,6 +37,8 @@ const createTelegram = async () => {
   const users = new Map([[SELF_ID, self]]);
   // Each chat's messages, oldest first; a chat is here once it has one.
   const chats = new Map();
+  // The chats the account archived: Telegram lists them in folder 1, out of the main list.
+  const archived = new Set();
   // Each chat's read position: the id of the newest message the account has read in it.
   const readUpTo = new Map();
   // Each chat's deleted messages, in the order they went: `{ message, forEveryone }`.
@@ -91,6 +93,7 @@ const createTelegram = async () => {
     unreadMentionsCount: 0,
     unreadReactionsCount: 0,
     notifySettings: { _: 'peerNotifySettings' },
+    folderId: archived.has(userId) ? 1 : 0,
   });
 
   const answers = {
@@ -107,9 +110,11 @@ const createTelegram = async () => {
     'updates.getDifference': () => ({ _: 'updates.differenceEmpty', date: client.getNextDate(), seq: 0 }),
     'messages.getDialogFilters': () => ({ _: 'messages.dialogFilters', filters: [] }),
     // Every dialog fits on the first page, so any later page (one with an offset) is empty.
-    'messages.getDialogs': ({ offsetId }) => {
+    // Telegram splits the archive from the main list with `folderId`: 1 for the archive, 0 for the rest.
+    'messages.getDialogs': ({ offsetId, folderId }) => {
       // A chat whose every message was deleted drops out of the list, as on Telegram.
-      const listed = [...chats.keys()].filter((userId) => historyOf(userId).length > 0);
+      const inFolder = (userId) => folderId === undefined || (folderId === 1) === archived.has(userId);
+      const listed = [...chats.keys()].filter((userId) => historyOf(userId).length > 0 && inFolder(userId));
       const page = offsetId === 0 ? listed.toSorted((a, b) => lastOf(b).id - lastOf(a).id) : [];
       return {
         _: 'messages.dialogs',
@@ -206,6 +211,9 @@ const createTelegram = async () => {
     },
 
     message: (userId, text, options) => void addMessage(userId, text, options),
+
+    // The chat is archived on Telegram: out of the main list, in folder 1, as the apps' archive is.
+    archive: (userId) => void archived.add(userId),
 
     // The chat's deleted messages, in the order they went, and whether for the other side too.
     deleted: (userId) =>

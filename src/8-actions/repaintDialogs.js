@@ -5,6 +5,6 @@
   const folder = store.folders.selected;
   ui.dialogs.render(store.dialogs.inFolder(folder));
   // Without folders of its own, the account has no folder to name.
-  if (store.folders.hasCustom) ui.dialogs.setFolder(folder.title);
+  if (store.folders.hasCustom) ui.dialogs.setFolder(Folder.title(folder));
   else ui.dialogs.clearFolder();
 };

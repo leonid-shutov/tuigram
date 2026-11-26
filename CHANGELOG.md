@@ -12,6 +12,8 @@
 - Polish, Czech, German, Spanish, Brazilian Portuguese, Italian, French, Turkish, Uzbek (Latin
   script), Kazakh (Cyrillic script) and Indonesian interfaces: `"language": "pl"`, `"cs"`,
   `"de"`, `"es"`, `"pt"`, `"it"`, `"fr"`, `"tr"`, `"uz"`, `"kk"` or `"id"` in `config.json`.
+- Archived chats: the archive is its own folder after "All chats", the chat search finds its
+  chats, and opening one from there switches the list to it.
 
 ### Fixed
 

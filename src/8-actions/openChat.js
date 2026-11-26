@@ -1,5 +1,13 @@
 /** @type {Actions['openChat']} */
 async (chatId) => {
+  // An archived chat picked from search is not in the folder on screen; show the archive, so the
+  // list keeps a row for it and the selection lands on it.
+  if (
+    store.dialogs.isArchived(chatId) &&
+    !store.dialogs.inFolder(store.folders.selected).some((dialog) => dialog.chatId === chatId)
+  ) {
+    store.folders.select(Folder.ARCHIVE.id);
+  }
   ui.dialogs.select(chatId);
   navigation.select('chat');
   if (store.chat.isOpen(chatId)) return;

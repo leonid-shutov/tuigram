@@ -81,6 +81,7 @@ should find on startup before calling `boot`:
 | `await telegram.user({ firstName, lastName })`  | Someone the account knows. Resolves to their user id.                                                       |
 | `telegram.message(userId, text)`                | A message already in the chat with them, from them. No update is sent.                                      |
 | `telegram.message(userId, text, { out: true })` | The same, sent by the account.                                                                              |
+| `telegram.archive(userId)`                      | The chat is archived: out of "All chats", in the archive folder.                                            |
 | `telegram.read(userId)`                         | Marks the chat read up to its newest message, as if read on another device. Messages are unread until then. |
 
 While the app runs:

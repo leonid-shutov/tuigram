@@ -234,6 +234,12 @@ declare global {
   namespace Folder {
     /** "All chats": every chat outside the archive, in the main list's own order. */
     const ALL: _Folder;
+    /** The archive: a list of its own, with the folder id Telegram reserves for it. */
+    const ARCHIVE: _Folder;
+    /** The folders to move between: "All chats", the archive when it has chats, then the user's. */
+    const withArchive: (folders: readonly _Folder[], archived: boolean) => _Folder[];
+    /** A folder's title as the interface shows it: the archive's follows the language, the user's their own text. */
+    const title: (folder: _Folder) => string;
     /** Whether a folder's rules and peer lists take in this dialog; Telegram's own filter, ported. */
     const includes: (folder: _Folder, dialog: Dialog) => boolean;
     /** The folder's chats: its pinned ones in their order, then the rest, latest activity first. */
