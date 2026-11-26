@@ -52,9 +52,9 @@
     "@leonid-shutov/uncommonjs": "^3.0.0",
     "@mtcute/dispatcher": "^0.32.8",
     "@mtcute/node": "^0.32.8",
-    "@opentui/core": "^0.9.2",
-    "@opentui/keymap": "^0.9.2",
-    "@opentui/qrcode": "^0.9.2",
+    "@opentui/core": "^0.9.8",
+    "@opentui/keymap": "^0.9.8",
+    "@opentui/qrcode": "^0.9.8",
     "metautil": "6.0.0-alpha.0",
     "string-width": "^9.0.0"
   },
