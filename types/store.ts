@@ -72,6 +72,8 @@ declare global {
     all(): Dialog[];
     /** The archive's own list, in the order it arrived: pinned chats first, then the newest. */
     archived(): Dialog[];
+    /** Whether the archive has a chat in it, without copying the archive as `archived()` does. */
+    readonly hasArchived: boolean;
     /** What a folder shows; "All chats" is `all()`, the archive `archived()`, any other folder
      * also reaches into the archive. */
     inFolder(folder: Folder): Dialog[];

@@ -18,7 +18,4 @@ async () => {
   } catch (error) {
     Crash.soft(error);
   }
-  // The folders may have landed before the archive's first page: place them again now that we know
-  // whether the archive has anything in it.
-  actions.placeFolders(store.folders.list);
 };

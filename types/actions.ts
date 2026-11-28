@@ -26,6 +26,9 @@ declare global {
     /** Put `folders` in the store, with the archive after "All chats" once it has a chat, and
      * repaint the hints for the folder keys that come with them. */
     placeFolders(folders: readonly Folder[]): void;
+    /** Place the folders again when the archive gains its first chat or loses its last, so the
+     * archive is a folder exactly while it has one. Runs on every dialogs change; cheap otherwise. */
+    followArchive(): void;
     /** Fill a cached chat, open or not, with its first page: its newest messages, the ones it
      * opens with, reaching back to its unread divider when Telegram gives that many at once. */
     loadFirstPage(chatId: number): Promise<void>;

@@ -201,6 +201,7 @@ export type Presence = {
 export type DialogOption = { chatId: number; name: string; description: string; marker: string; isMuted: boolean };
 
 export type LinkedDialogsHandle = {
+  readonly size: number;
   find(chatId: number): Dialog | null;
   findNode(chatId: number): import('./collections').LinkedListNode<Dialog> | null;
   bump(node: import('./collections').LinkedListNode<Dialog>): void;
