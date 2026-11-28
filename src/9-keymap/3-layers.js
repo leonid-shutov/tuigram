@@ -20,7 +20,7 @@ void keymap.engine.registerLayer({
 void keymap.engine.registerLayer({
   target: ui.dialogs.component,
   targetMode: 'focus-within',
-  enabled: () => store.folders.hasCustom,
+  enabled: () => store.folders.hasOthers,
   commands: named(commands.folders),
   bindings: bindings.folders,
 });

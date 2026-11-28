@@ -139,7 +139,8 @@ export type InboxUnread = { after: number; count: number };
 
 /**
  * A Telegram chat folder: a filter over the dialogs, never a list of its own. `id` 0 is
- * "All chats", which the dialogs store renders as its own list rather than through the filter.
+ * "All chats" and `id` 1 the archive, which the dialogs store renders as its own lists rather
+ * than through the filter; the user's folders start at 2.
  */
 export type Folder = {
   id: number;
@@ -200,6 +201,7 @@ export type Presence = {
 export type DialogOption = { chatId: number; name: string; description: string; marker: string; isMuted: boolean };
 
 export type LinkedDialogsHandle = {
+  readonly size: number;
   find(chatId: number): Dialog | null;
   findNode(chatId: number): import('./collections').LinkedListNode<Dialog> | null;
   bump(node: import('./collections').LinkedListNode<Dialog>): void;

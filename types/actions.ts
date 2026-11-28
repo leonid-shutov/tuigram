@@ -23,6 +23,12 @@ declare global {
     loadDialogs(): Promise<void>;
     /** Fetch the account's folders into the store and repaint. Reruns whenever Telegram changes them. */
     loadFolders(): void;
+    /** Put `folders` in the store, with the archive after "All chats" once it has a chat, and
+     * repaint the hints for the folder keys that come with them. */
+    placeFolders(folders: readonly Folder[]): void;
+    /** Place the folders again when the archive gains its first chat or loses its last, so the
+     * archive is a folder exactly while it has one. Runs on every dialogs change; cheap otherwise. */
+    followArchive(): void;
     /** Fill a cached chat, open or not, with its first page: its newest messages, the ones it
      * opens with, reaching back to its unread divider when Telegram gives that many at once. */
     loadFirstPage(chatId: number): Promise<void>;
@@ -69,7 +75,8 @@ declare global {
     openChat(chatId: number): Promise<void>;
     /** Close the open chat and focus the chat list, its cursor still on the chat. No-op with none open. */
     closeChat(): void;
-    /** Open the picker over every chat; a pick opens that chat. */
+    /** Open the picker over every chat, archived ones too; a pick opens that chat, switching the
+     * list to "All chats" or the archive first when the folder on screen has no row for it. */
     searchChats(): void;
     /** Open the picker on what the focused pane can do; picking a command runs it there. */
     showKeys(): void;

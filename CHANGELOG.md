@@ -12,12 +12,17 @@
 - Polish, Czech, German, Spanish, Brazilian Portuguese, Italian, French, Turkish, Uzbek (Latin
   script), Kazakh (Cyrillic script) and Indonesian interfaces: `"language": "pl"`, `"cs"`,
   `"de"`, `"es"`, `"pt"`, `"it"`, `"fr"`, `"tr"`, `"uz"`, `"kk"` or `"id"` in `config.json`.
+- Archived chats: the archive is its own folder after "All chats", and the chat search finds its
+  chats.
 
 ### Fixed
 
 - The unread divider (`── 3 new ──`) is translated; it stayed in English in Bahasa Melayu.
 - The coarse last-seen statuses (`last seen recently` and the like) follow a `language` change
   without a restart.
+- A chat picked from the chat search is highlighted in the chat list: when the folder on screen
+  leaves it out, the list switches to "All chats", or to the archive for an archived chat.
+- "All chats" is translated; it stayed in English in every language.
 
 ## [1.7.0] - 2026-11-20
 

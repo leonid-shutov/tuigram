@@ -13,6 +13,9 @@
       pinned.findNode((d) => d.chatId === chatId) ?? unpinned.findNode((d) => d.chatId === chatId);
 
     return {
+      get size() {
+        return pinned.size + unpinned.size;
+      },
       find: (chatId) => findNode(chatId)?.value ?? null,
       findNode,
       bump: (node) => {

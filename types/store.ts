@@ -70,7 +70,12 @@ declare global {
     archive: LinkedDialogsHandle;
     /** The main list, archive aside: what "All chats" shows and the chat search reads. */
     all(): Dialog[];
-    /** What a folder shows; "All chats" is `all()`, any other folder also reaches the archive. */
+    /** The archive's own list, in the order it arrived: pinned chats first, then the newest. */
+    archived(): Dialog[];
+    /** Whether the archive has a chat in it, without copying the archive as `archived()` does. */
+    readonly hasArchived: boolean;
+    /** What a folder shows; "All chats" is `all()`, the archive `archived()`, any other folder
+     * also reaches into the archive. */
     inFolder(folder: Folder): Dialog[];
     /** A dialog in either the main list or the archive. */
     find(chatId: number): Dialog | null;
@@ -104,9 +109,10 @@ declare global {
    */
   type DialogsStore = Omit<
     DialogsStoreSelf,
-    'list' | 'archive' | 'emitter' | 'emit' | 'all' | 'inFolder' | 'find' | 'receive'
+    'list' | 'archive' | 'emitter' | 'emit' | 'all' | 'archived' | 'inFolder' | 'find' | 'receive'
   > & {
     all(): Readonly<Dialog>[];
+    archived(): Readonly<Dialog>[];
     inFolder(folder: Folder): Readonly<Dialog>[];
     find(chatId: number): Readonly<Dialog> | null;
     receive(message: Message): Readonly<Dialog>;
@@ -114,7 +120,8 @@ declare global {
 
   /** The folders store as its own files see it through `self`: everything, writable. */
   type FoldersStoreSelf = StoreEvents & {
-    /** In the user's order, "All chats" among them; just that one until the folders load. */
+    /** In the user's order, "All chats" among them and the archive when it has chats; just "All
+     * chats" until the folders load. */
     list: Folder[];
     selectedId: number;
     setAll(folders: Folder[]): void;
@@ -122,8 +129,8 @@ declare global {
     select(folderId: number): void;
     /** Select the folder `step` away from the current one, wrapping around. */
     step(step: number): void;
-    /** Whether the account has folders of its own beyond "All chats". */
-    readonly hasCustom: boolean;
+    /** Whether there is another folder to move between: the archive, or the user's own. */
+    readonly hasOthers: boolean;
   };
 
   /** The folders store as the rest of the app sees it: read-only but for its mutators. */
