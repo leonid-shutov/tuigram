@@ -128,7 +128,7 @@ declare global {
     /** Select the folder `step` away from the current one, wrapping around. */
     step(step: number): void;
     /** Whether there is another folder to move between: the archive, or the user's own. */
-    readonly hasCustom: boolean;
+    readonly hasOthers: boolean;
   };
 
   /** The folders store as the rest of the app sees it: read-only but for its mutators. */

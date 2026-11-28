@@ -39,6 +39,8 @@ const createTelegram = async () => {
   const chats = new Map();
   // The chats the account archived: Telegram lists them in folder 1, out of the main list.
   const archived = new Set();
+  // The account's own folders, as Telegram's `dialogFilter`s, in the user's order.
+  const folders = [];
   // Each chat's read position: the id of the newest message the account has read in it.
   const readUpTo = new Map();
   // Each chat's deleted messages, in the order they went: `{ message, forEveryone }`.
@@ -108,7 +110,7 @@ const createTelegram = async () => {
       unreadCount: 0,
     }),
     'updates.getDifference': () => ({ _: 'updates.differenceEmpty', date: client.getNextDate(), seq: 0 }),
-    'messages.getDialogFilters': () => ({ _: 'messages.dialogFilters', filters: [] }),
+    'messages.getDialogFilters': () => ({ _: 'messages.dialogFilters', filters: folders }),
     // Every dialog fits on the first page, so any later page (one with an offset) is empty.
     // Telegram splits the archive from the main list with `folderId`: 1 for the archive, 0 for the rest.
     'messages.getDialogs': ({ offsetId, folderId }) => {
@@ -214,6 +216,17 @@ const createTelegram = async () => {
 
     // The chat is archived on Telegram: out of the main list, in folder 1, as the apps' archive is.
     archive: (userId) => void archived.add(userId),
+
+    // A folder the user made that takes in just these chats. Its ids start at 2, as on Telegram.
+    folder: (title, userIds) =>
+      void folders.push({
+        _: 'dialogFilter',
+        id: folders.length + 2,
+        title: { _: 'textWithEntities', text: title, entities: [] },
+        pinnedPeers: [],
+        includePeers: userIds.map((userId) => ({ _: 'inputPeerUser', userId, accessHash: Long.fromNumber(userId) })),
+        excludePeers: [],
+      }),
 
     // The chat's deleted messages, in the order they went, and whether for the other side too.
     deleted: (userId) =>

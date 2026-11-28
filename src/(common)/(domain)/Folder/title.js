@@ -1,10 +1,8 @@
-// A user-made folder's title is their own text, in whatever language they wrote it. The archive's
-// is one of our labels, so it follows the interface language.
+// "All chats" and the archive are ours to name, so their titles follow the interface language. A
+// folder the user made keeps their own text, in whatever language they wrote it.
 /** @type {typeof Folder.title} */
-(folder) =>
-  folder.id === Folder.ARCHIVE.id
-    ? Locale.t(
-        // eslint-disable-next-line no-extra-parens -- JSDoc type-assertion cast, not redundant
-        /** @type {Locale.TextLabel} */ (folder.title),
-      )
-    : folder.title;
+(folder) => {
+  if (folder.id === Folder.ALL.id) return Locale.t('All chats');
+  if (folder.id === Folder.ARCHIVE.id) return Locale.t('Archived chats');
+  return folder.title;
+};

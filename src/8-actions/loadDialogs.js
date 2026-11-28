@@ -18,7 +18,7 @@ async () => {
   } catch (error) {
     Crash.soft(error);
   }
-  // The folders may have loaded before the archive's first page: the archive is a folder only now
-  // that we know whether it has anything in it.
-  store.folders.setAll(Folder.withArchive(store.folders.list, store.dialogs.archived().length > 0));
+  // The folders may have landed before the archive's first page: place them again now that we know
+  // whether the archive has anything in it.
+  actions.placeFolders(store.folders.list);
 };
